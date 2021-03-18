@@ -1,0 +1,155 @@
+{
+  "fr": {
+    "nav": {
+      "compte": "Compte",
+      "projets": "Mes projets",
+      "bd": "Mes bases de données",
+      "recherche": "Explorer",
+      "favoris": "Mes favoris",
+      "automation": "Automation",
+      "signalements": "Signaler un problème"
+    },
+    "acceuil": {
+      "entête": "Bienvenue à RésEau",
+      "soustitre": "Le système distribué et ouvert pour le partage de données scientifiques.",
+      "orientation": "Un peu perdu.e ?",
+      "liens": {
+        "docs": "Lire la documentation",
+        "recherche": "Trouver des données",
+        "projet": "Démarrer un projet"
+      }
+    },
+    "compte": {
+      "entête": "Paramètres de compte",
+      "onglets": {
+        "compte": {
+          "entête": "Mon compte",
+          "info": "Information",
+          "dispositifs": "Dispositifs"
+        },
+        "thème": {
+          "entête": "Thème et langues",
+          "couleurs": "Couleurs",
+          "langue": "Langue",
+          "culture": "Culture"
+        },
+        "réseau": {
+          "entête": "Réseau",
+          "équipes": "Équipes",
+          "connexions": "Connexions"
+        }
+      },
+      "options": {
+        "thèmeNuit": "Claire/Sombre",
+        "thèmeImages": "Thème images",
+        "langue": "Langage d'interface",
+        "numération": "Système de numération"
+      }
+    },
+    "projets": {
+      "entête": "Mes projets",
+      "filtrer": "Filtrer",
+      "nouveau": {
+        "entête": "Nouveau Projet",
+        "détails": "Créer un nouveau projet"
+      }
+    },
+    "bd": {
+      "entête": "Mes bases de données",
+      "filtrer": "Filtrer",
+      "nouveau": {
+        "entête": "Nouvelle BD",
+        "détails": "Créer une nouvelle base de données"
+      }
+    },
+    "recherche": {
+      "entête": "Explorez les données",
+      "soustitre": "Recherchez mots clefs, région géographique, variable..."
+    },
+    "favoris": {
+      "entête": "Mes favoris"
+    },
+    "automation": {
+      "entête": "Automation",
+      "soustitre": "Automatisez la mise à jour de vos bases de données"
+    },
+    "signalements": {
+      "entête": "Signaler une erreur"
+    },
+    "tableau": {
+      "vide": "Aucune donnée"
+    }
+  },
+  "kaq": {
+    "acceuil": {
+      "entête": "Ütz ipetik pa RésEau"
+    }
+  },
+  "த": {
+    "acceuil": {
+      "entête": "ரெஸோக்கு உங்களே வரவேற்கிறோம்",
+      "soustitre": "திறந்த அறிவியல் தகவல்களுக்காக ஒரு விநியோகிக்கப்பட்ட வலை."
+    },
+    "compte": {
+      "entête": "கணக்கு அமைப்புகள்"
+    }
+  },
+  "ار": {
+    "acceuil": {
+      "entête": "خوش ممدید!"
+    }
+  },
+  "हिं": {
+    "acceuil": {
+      "entête": "आपका स्वागत हो"
+    }
+  },
+  "বাং": {
+    "acceuil": {
+      "entête": "আপনাকে স্বাগতম"
+    }
+  },
+  "తె": {
+    "acceuil": {
+      "entête": "మీకు స్నాగతం ఉంది"
+    }
+  },
+  "en": {
+    "nav": {
+      "compte": "Account",
+      "projets": "My projects",
+      "bd": "My databases",
+      "recherche": "Explore",
+      "favoris": "Favourites",
+      "signalements": "Report a bug"
+    },
+    "acceuil": {
+      "entête": "Welcome to RésEau",
+      "soustitre": "The distributed and open system for scientific data sharing.",
+      "orientation": "Feeling lost ?",
+      "liens": {
+        "docs": "Read the documentation",
+        "recherche": "Find data",
+        "projet": "Start a project"
+      }
+    },
+    "compte": {
+      "entête": "Account settings"
+    },
+    "projets": {
+      "entête": "My projects"
+    },
+    "bd": {
+      "entête": "My databases"
+    },
+    "recherche": {
+      "entête": "Explore data"
+    },
+    "favoris": {
+      "entête": "My favourites"
+    },
+    "signalements": {
+      "entête": "Report a bug"
+    }
+  }
+}

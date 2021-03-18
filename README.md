@@ -1,31 +1,49 @@
-# reseau
+# RésEau
 
-## Project setup
+## Installation
+
+### Installation du client
 ```
-yarn install
+npm install reseau -g
 ```
 
-### Compiles and hot-reloads for development
+## Développement
+Nous utilisons `Électron` afin de générer et l'application Internet,
+et le logiciel installable à base d'un seul projet de code.
+
+### Compilation en mode développement
+Pour développer en mode Internet, utilisez:
 ```
 yarn serve
 ```
 
-### Compiles and minifies for production
+Pour développer en mode Électron, utilisez:
+```
+yarn electron:serve
+```
+
+### Compilation en mode production
+Pour compiler en mode production Internet, utilisez:
 ```
 yarn build
 ```
 
-### Run your unit tests
+Pour compiler en mode production Électron, utilisez:
+```
+yarn electron:build
+```
+
+### Exécution des tests d'unité
 ```
 yarn test:unit
 ```
 
-### Run your end-to-end tests
+### Exécution des tests complets
 ```
 yarn test:e2e
 ```
 
-### Lints and fixes files
+### Pour reformatter les fichiers de code
 ```
 yarn lint
 ```
