@@ -16,7 +16,7 @@
   },
   "main": "background.js",
   "bin": {
-    "réseau": "./moteur/index.js"
+    "cnstl": "./moteur/index.js"
   },
   "dependencies": {
     "@types/node-localstorage": "^1.3.0",
