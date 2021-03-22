@@ -1,7 +1,7 @@
 <template>
   <v-container class="text-center">
     <v-row class="text-center">
-      <alerte-conditions v-if="!conditionsAcceptées"/>
+      <alerte-conditions v-if="!conditionsAcceptées" />
       <v-col cols="12">
         <v-img
           :src="require('@/assets/logo.svg')"
@@ -35,7 +35,9 @@
             width="175"
             outlined
             tile
-            @click="lien.page ? $router.push(lien.page) : ouvrirNavigateur(lien.href)"
+            @click="
+              lien.page ? $router.push(lien.page) : ouvrirNavigateur(lien.href)
+            "
           >
             <v-img :src="image(lien.img)" class="mx-4 mt-4" contain />
             <v-card-text>{{ $t(lien.text) }}</v-card-text>
@@ -54,14 +56,15 @@
 </template>
 
 <script lang="ts">
-import { shell } from "electron";
+import isElectron from "is-electron";
 import { Component, Vue } from "vue-property-decorator";
 
-import alerteConditions from "@/components/commun/alerteConditions"
-import mixinImage from "@/mixins/images"
+import alerteConditions from "@/components/commun/alerteConditions";
+import mixinImage from "@/mixins/images";
 
-import xlsx from 'xlsx';  // À faire: enlever une fois que tout fonctionne
-window.xlsx = xlsx
+import xlsx from "xlsx"; // À faire: enlever une fois que tout fonctionne
+window.xlsx = xlsx;
+
 
 @Component({
   data: function() {
@@ -88,13 +91,19 @@ window.xlsx = xlsx
   mixins: [mixinImage],
   components: { alerteConditions },
   computed: {
-    conditionsAcceptées: function () {
-      return this.$store.state.conditions.acceptées
+    conditionsAcceptées: function() {
+      return this.$store.state.conditions.acceptées;
     }
   },
   methods: {
-    ouvrirNavigateur: function (lien:string) {
-      shell.openExternal(lien)
+    ouvrirNavigateur: async function(lien: string) {
+      if (isElectron()) {
+        const electron = await import("electron");
+        const { shell } = electron
+        shell.openExternal(lien);
+      } else {
+        window.open(lien, '_newtab')
+      }
     }
   }
 })

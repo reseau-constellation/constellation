@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { shell } from "electron";
+import isElectron from "is-electron";
 
 import Titre from "@/components/commun/Titre";
 import mixinImage from "@/mixins/images";
@@ -40,8 +40,14 @@ export default {
   components: { Titre },
   mixins: [mixinImage],
   methods: {
-    ouvrirNavigateur: function (lien:string) {
-      shell.openExternal(lien)
+    ouvrirNavigateur: async function(lien: string) {
+      if (isElectron()) {
+        const electron = await import("electron");
+        const { shell } = electron
+        shell.openExternal(lien);
+      } else {
+        window.open(lien, '_newtab')
+      }
     }
   }
 };
