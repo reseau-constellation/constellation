@@ -2,18 +2,20 @@
   <v-container class="text-center">
     <titre
       :entête="$t('automation.entête')"
-      :image="require('@/assets/undraw/undraw_real-time_sync_o57k.svg')"
+      :image="image('automation')"
       :soustitre="$t('automation.soustitre')"
     />
   </v-container>
 </template>
 
 <script>
-import Titre from "@/components/commun/Titre"
+import Titre from "@/components/commun/Titre";
+import mixinImage from "@/mixins/images";
 
 export default {
   name: "Compte",
-  components: { Titre }
+  components: { Titre },
+  mixins: [mixinImage]
 };
 </script>
 

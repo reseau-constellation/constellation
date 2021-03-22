@@ -34,7 +34,7 @@ const routes: Array<RouteConfig> = [
     component: () => import("@/views/BD/VisBD.vue")
   },
   {
-    path: "/tableau/visualiser/:id",
+    path: "/bd/visualiser/:id/tableau/:idTableau",
     component: () => import("@/views/BD/VisTableau.vue")
   },
   {
@@ -51,10 +51,16 @@ const routes: Array<RouteConfig> = [
     path: "/automation",
     name: "Automation",
     component: () => import("@/views/Automation.vue")
-  },{
+  },
+  {
     path: "/signalements",
     name: "Signalements",
     component: () => import("@/views/Signalements.vue")
+  },
+  {
+    path: "/conditions",
+    name: "Conditions",
+    component: () => import("@/views/Conditions.vue")
   },
   { path: "*", redirect: "/" }
 ];
@@ -62,7 +68,14 @@ const routes: Array<RouteConfig> = [
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 });
 
 export default router;

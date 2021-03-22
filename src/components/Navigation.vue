@@ -5,10 +5,10 @@
         <v-list-item class="px-2">
           <v-avatar>
             <v-img
-              alt="Vuetify Logo"
+              alt="Logo Constellation"
               class="shrink mr-2"
               contain
-              src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+              :src="require('@/assets/logo-petit.svg')"
               transition="scale-transition"
               width="40"
             />

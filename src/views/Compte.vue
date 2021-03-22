@@ -25,10 +25,12 @@ import titre from "@/components/commun/Titre";
 import paramètres from "@/components/compte/paramètres";
 import réseau from "@/components/compte/réseau";
 import thème from "@/components/compte/thème";
+import mixinImage from "@/mixins/images";
 
 export default {
   name: "Compte",
   components: { titre, réseau, thème, paramètres },
+  mixins: [mixinImage],
   data: function() {
     return {
       onglet: null,
@@ -37,8 +39,8 @@ export default {
   computed: {
     imageProfil: function() {
       const options = [
-        require("@/assets/undraw/undraw_female_avatar_w3jk.svg"),
-        require("@/assets/undraw/undraw_male_avatar_323b.svg")
+        this.image("profilFemme"),
+        this.image("profilHomme")
       ];
       // Dans le doute, on garde ça équitable :)
       return options[Math.floor(Math.random() * options.length)];

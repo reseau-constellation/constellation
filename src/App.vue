@@ -14,6 +14,7 @@
 import Vue from "vue";
 import Navigation from "@/components/Navigation.vue";
 import opsLangue from "@/components/OpsLangue.vue";
+import mixinLangue from "@/mixins/langues";
 
 export default Vue.extend({
   name: "App",
@@ -25,7 +26,16 @@ export default Vue.extend({
 
   data: () => ({
     //
-  })
+  }),
+
+  mixins: [mixinLangue],
+
+  mounted: function () {
+    const langue = this.$store.state.paramètres.langue
+    if (langue) this.changerLangue(langue)
+    const thèmeNuit = this.$store.state.paramètres.thèmeNuit
+    this.$vuetify.theme.dark = thèmeNuit
+  }
 });
 </script>
 

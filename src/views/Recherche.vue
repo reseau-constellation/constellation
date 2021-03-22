@@ -2,7 +2,7 @@
   <v-container class="text-center">
     <titre
       :entête="$t('recherche.entête')"
-      :image="require('@/assets/undraw/undraw_not_found_60pq.svg')"
+      :image="image('recherche')"
       :soustitre="$t('recherche.soustitre')"
     />
     <v-text-field outlined class="mx-10 mt-0"></v-text-field>
@@ -10,11 +10,13 @@
 </template>
 
 <script>
-import Titre from "@/components/commun/Titre"
+import Titre from "@/components/commun/Titre";
+import mixinImage from "@/mixins/images";
 
 export default {
   name: "Recherche",
-  components: { Titre }
+  components: { Titre },
+  mixins: [mixinImage]
 };
 </script>
 

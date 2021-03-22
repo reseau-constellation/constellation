@@ -6,7 +6,7 @@
       </v-icon>
     </v-list-item-action>
     <v-list-item-content>
-      <v-list-item-title>{{ nom }}</v-list-item-title>
+      <v-list-item-title>{{ codeÀNomLangue(code) || code }}</v-list-item-title>
     </v-list-item-content>
     <v-list-item-action>
       <v-icon v-if="progrès === 1" color="primary"
@@ -24,9 +24,12 @@
 </template>
 
 <script>
+import { rubi_chabäl as codeÀNomLangue} from "nuchabal";
+
 export default {
   name: "opsLangue",
-  props: ["sélectionnée", "progrès", "nom"]
+  props: ["sélectionnée", "progrès", "code"],
+  methods: { codeÀNomLangue }
 }
 </script>
 

@@ -2,17 +2,19 @@
   <v-container class="text-center">
     <titre
       :entête="$t('favoris.entête')"
-      :image="require('@/assets/undraw/undraw_Appreciation_re_p6rl.svg')"
+      :image="image('favoris')"
     />
   </v-container>
 </template>
 
 <script>
 import Titre from "@/components/commun/Titre"
+import mixinImage from "@/mixins/images";
 
 export default {
   name: "Favoris",
-  components: { Titre }
+  components: { Titre },
+  mixins: [mixinImage]
 };
 </script>
 

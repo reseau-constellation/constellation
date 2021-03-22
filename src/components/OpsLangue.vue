@@ -7,7 +7,16 @@
     min-width="225"
   >
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" absolute top right fab small class="mt-8">
+      <v-btn
+        v-on="on"
+        absolute
+        top
+        :right="!$vuetify.rtl"
+        :left="$vuetify.rtl"
+        fab
+        small
+        class="mt-8"
+      >
         <v-icon>mdi-earth</v-icon>
       </v-btn>
     </template>
@@ -15,7 +24,7 @@
       <op-langue
         v-for="lng in langues"
         :key="lng"
-        :nom="lng"
+        :code="lng"
         :sélectionnée="lng === langue"
         :progrès="progrès(lng)"
         @click="changerLangue(lng)"

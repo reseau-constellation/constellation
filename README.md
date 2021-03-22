@@ -1,4 +1,4 @@
-# RésEau
+# Constellation
 
 ## Installation
 

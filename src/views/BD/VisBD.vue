@@ -100,7 +100,7 @@
           >
             <item-tableau
              v-for="t in bd.tableaux" :key="t" :id="t"
-             @click="$router.push(`/tableau/visualiser/${t}`)"
+             @click="$router.push(`/bd/visualiser/${idBD}/tableau/${t}`)"
             />
           </transition-group>
         </v-list>
@@ -114,6 +114,7 @@
 import { BDParId } from "@/ipa/bds"
 import { nomBD } from '@/ipa/utils'
 import itemTableau from '@/components/BD/itemTableau'
+import { couper } from "@/utils"
 
 export default {
   name: "visBD",
@@ -134,7 +135,7 @@ export default {
     petitPousset: function() {
       return [
         {text: 'Données', href: '/bd'},
-        {text: this.bd ? this.nom : this.idBD}
+        {text: couper(this.bd ? this.nom : this.idBD, 35)}
       ]
     }
   },

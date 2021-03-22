@@ -1,16 +1,16 @@
 <template>
   <v-row class="mt-3 text-center">
     <v-col>
-      <h1 class="display-2 font-weight-bold mb-3">
+      <h1 class="display-2 font-weight-bold">
         {{ entête }}
       </h1>
     </v-col>
     <v-col v-if="image" cols="12">
       <v-img
         :src="image"
-        class="my-3"
+        class="mb-3"
         contain
-        height="150"
+        height="175"
       />
     </v-col>
     <v-col v-if="soustitre" cols="12">

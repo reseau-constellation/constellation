@@ -21,9 +21,9 @@
         height="100px"
         contain
       ></v-img>
-      <v-card-title v-if="this.bd">
-        {{ nom }}</v-card-title>
-      <v-card-subtitle>{{ idBD }}</v-card-subtitle>
+      <v-card-title v-if="this.tableau">
+        {{ couper(nom, 45) }}</v-card-title>
+      <v-card-subtitle>{{ idTableau }}</v-card-subtitle>
       <v-card-text>
         <v-data-table
          :headers="entête"
@@ -42,13 +42,15 @@
 </template>
 
 <script>
-import { BDParId } from "@/ipa/bds"
-import { nomBD } from '@/ipa/utils'
+import { obtTableau } from "@/ipa/tableaux"
+import { nomBD } from "@/ipa/utils"
+import { couper } from "@/utils"
 
 export default {
   name: "visTableau",
   data: function() {
     return {
+      tableau: null,
       données: [
         { date: '2000-01-01', préc: '2', tmax: '24', tmin: '18' },
         { date: '2000-01-02', préc: '0', tmax: '22', tmin: '13' },
@@ -64,21 +66,26 @@ export default {
   computed: {
     nom: function() {
       const lngs = [this.$i18n.locale, ...this.$i18n.fallbackLocale];
-      return nomBD(this.bd, lngs)
+      return nomBD(this.tableau, lngs)
     },
     idBD: function() {
       return this.$route.params.id
     },
+    idTableau: function() {
+      return this.$route.params.idTableau
+    },
     petitPousset: function() {
+      console.log(this.idBD, this.idTableau)
       return [
         {text: 'Données', href: '/bd'},
-        {text: this.tableau, href: `/bd/`},
-        {text: this.bd ? this.nom : this.idBD}
+        {text: couper(this.idBD, 15), href: `/bd/visualiser/${this.idBD}`},
+        {text: couper(this.tableau ? this.nom : this.idTableau, 15)}
       ]
     }
   },
+  methods: { couper },
   mounted: function() {
-    BDParId(this.idBD).then(bd=>{this.bd = bd})
+    obtTableau(this.idTableau).then(tbl=>{this.tableau = tbl})
   }
 }
 </script>

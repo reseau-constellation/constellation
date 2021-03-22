@@ -11,7 +11,7 @@
 
 <script>
 import { nomBD } from "@/ipa/utils";
-import { obtTableau } from "@/ipa/bds"
+import { obtTableau } from "@/ipa/tableaux"
 export default {
   name: "itemTableau",
   props: ["id"],
