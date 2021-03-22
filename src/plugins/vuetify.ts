@@ -1,15 +1,14 @@
 import Vue from "vue";
 import Vuetify from "vuetify/lib/framework";
 import VueI18n from "vue-i18n";
-import { store } from "@/config";
 import messages from "./trads.json";
 
 Vue.use(Vuetify);
 Vue.use(VueI18n);
 
 export const i18n = new VueI18n({
-  locale: store.getItem("langue.principale") || "fr",
-  // fallbackLocale: JSON.parse(store.getItem("langue.secondaire")) || "fr",
+  locale: "fr",
+  fallbackLocale: ["fr"],
   messages: messages
 });
 
