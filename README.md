@@ -4,7 +4,7 @@
 
 ### Installation du client
 ```
-npm install reseau -g
+npm install constallation -g
 ```
 
 ## Développement

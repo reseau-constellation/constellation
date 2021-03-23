@@ -72,7 +72,7 @@ window.xlsx = xlsx;
       liens: [
         {
           text: "acceuil.liens.docs",
-          href: `https://reseau.readthedocs.org/${this.$i18n.locale}/latest`,
+          href: `https://constallation.readthedocs.org/${this.$i18n.locale}/latest`,
           img: "docs"
         },
         {
