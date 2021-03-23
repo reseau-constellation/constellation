@@ -6,22 +6,27 @@
       :soustitre="$t('signalements.soustitre')"
     />
     <v-btn
-      tiled outlined class="mx-2"
-      @click="ouvrirNavigateur('https://github.com/julienmalard/constellation/issues')"
+      tiled
+      outlined
+      class="mx-2"
+      @click="
+        ouvrirNavigateur('https://github.com/julienmalard/constellation/issues')
+      "
       append
     >
-      {{ $t('signalements.bouton') }}
+      {{ $t("signalements.bouton") }}
       <v-icon right>
         mdi-open-in-new
       </v-icon>
     </v-btn>
     <v-btn
       class="mx-2"
-      tiled outlined
+      tiled
+      outlined
       href="mailto:julien.malard@mail.mcgill.ca"
       append
     >
-      {{ $t('signalements.boutonCourriel') }}
+      {{ $t("signalements.boutonCourriel") }}
       <v-icon right>
         mdi-email
       </v-icon>
@@ -29,10 +34,10 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import isElectron from "is-electron";
 
-import Titre from "@/components/commun/Titre";
+import Titre from "@/components/commun/Titre.vue";
 import mixinImage from "@/mixins/images";
 
 export default {
@@ -40,13 +45,13 @@ export default {
   components: { Titre },
   mixins: [mixinImage],
   methods: {
-    ouvrirNavigateur: async function(lien: string) {
+    ouvrirNavigateur: async function(lien) {
       if (isElectron()) {
         const electron = await import("electron");
-        const { shell } = electron
+        const { shell } = electron;
         shell.openExternal(lien);
       } else {
-        window.open(lien, '_newtab')
+        window.open(lien, "_newtab");
       }
     }
   }

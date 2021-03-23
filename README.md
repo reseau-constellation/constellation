@@ -33,6 +33,11 @@ Pour compiler en mode production Électron, utilisez:
 yarn electron:build
 ```
 
+### Publication du site internet
+```
+yarn deploy
+```
+
 ### Exécution des tests d'unité
 ```
 yarn test:unit
@@ -43,7 +48,7 @@ yarn test:unit
 yarn test:e2e
 ```
 
-### Pour reformatter les fichiers de code
+### Pour reformatter le code
 ```
 yarn lint
 ```

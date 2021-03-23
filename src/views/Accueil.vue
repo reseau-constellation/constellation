@@ -55,16 +55,12 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import isElectron from "is-electron";
 import { Component, Vue } from "vue-property-decorator";
 
 import alerteConditions from "@/components/commun/alerteConditions";
 import mixinImage from "@/mixins/images";
-
-import xlsx from "xlsx"; // À faire: enlever une fois que tout fonctionne
-window.xlsx = xlsx;
-
 
 @Component({
   data: function() {
@@ -96,13 +92,13 @@ window.xlsx = xlsx;
     }
   },
   methods: {
-    ouvrirNavigateur: async function(lien: string) {
+    ouvrirNavigateur: async function(lien) {
       if (isElectron()) {
         const electron = await import("electron");
-        const { shell } = electron
+        const { shell } = electron;
         shell.openExternal(lien);
       } else {
-        window.open(lien, '_newtab')
+        window.open(lien, "_newtab");
       }
     }
   }

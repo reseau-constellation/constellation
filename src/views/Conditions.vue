@@ -16,7 +16,14 @@
             :label="$t('conditions.jaccepte')"
             @change="e => accepter(e)"
           />
-          <v-btn color="primary" tiled outlined small class="mb-5" @click="$router.push('/accueil')">
+          <v-btn
+            color="primary"
+            tiled
+            outlined
+            small
+            class="mb-5"
+            @click="$router.push('/accueil')"
+          >
             {{ $t("conditions.retour") }}
           </v-btn>
         </span>
@@ -26,7 +33,7 @@
 </template>
 
 <script>
-import Titre from "@/components/commun/Titre"
+import Titre from "@/components/commun/Titre";
 import mixinImage from "@/mixins/images";
 import marked from "marked";
 
@@ -98,14 +105,14 @@ export default {
           texte: "p3_3"
         }
       ]
-    }
+    };
   },
   methods: {
-    compilerMarkdown: (texte) => {
+    compilerMarkdown: texte => {
       return marked(texte, { sanitize: true });
     },
     accepter: function(acceptées) {
-      this.$store.commit('conditions/accepterConditions', { acceptées })
+      this.$store.commit("conditions/accepterConditions", { acceptées });
     }
   }
 };

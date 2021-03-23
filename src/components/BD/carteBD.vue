@@ -6,7 +6,9 @@
     @click="$emit('click')"
   >
     <v-img
-      :src="bd.logo || require('@/assets/undraw/undraw_Projections_re_1mrh.svg')"
+      :src="
+        bd.logo || require('@/assets/undraw/undraw_Projections_re_1mrh.svg')
+      "
       height="100px"
       contain
     ></v-img>
@@ -81,14 +83,14 @@
 </template>
 
 <script>
-import { nomBD } from '@/ipa/utils'
+import { nomBD } from "@/ipa/utils";
 export default {
   name: "carteBD",
   props: ["bd"],
   computed: {
     nom: function() {
       const lngs = [this.$i18n.locale, ...this.$i18n.fallbackLocale];
-      return nomBD(this.bd, lngs)
+      return nomBD(this.bd, lngs);
     }
   }
 };

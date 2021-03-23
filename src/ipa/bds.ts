@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid"
+import { v4 as uuidv4 } from "uuid";
 
 export const l = [
   {
@@ -9,11 +9,14 @@ export const l = [
       en: "Climate Lake Atitlán"
     },
     motsClefs: ["hydrologie", "météorologie"],
-    variables: ["précipitation", "température maximale", "température minimale", "point de rosée"],
+    variables: [
+      "précipitation",
+      "température maximale",
+      "température minimale",
+      "point de rosée"
+    ],
     emplacement: ["Guatemala", "Amérique", "Amérique du Nord"],
-    tableaux: [
-      uuidv4(), uuidv4()
-    ]
+    tableaux: [uuidv4(), uuidv4()]
   },
   {
     id: uuidv4(),
@@ -23,9 +26,7 @@ export const l = [
       en: "Coconut insect populations"
     },
     motsClefs: [],
-    tableaux: [
-      uuidv4(), uuidv4(), uuidv4()
-    ]
+    tableaux: [uuidv4(), uuidv4(), uuidv4()]
   }
 ];
 
@@ -37,7 +38,7 @@ export async function* obtBDs() {
   }
 }
 
-export async function BDParId(id) {
+export async function BDParId(id: string) {
   await new Promise(resolve => setTimeout(resolve, 1000));
-  return l.find(bd=>bd.id === id)
+  return l.find(bd => bd.id === id);
 }

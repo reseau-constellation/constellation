@@ -1,15 +1,13 @@
 <template>
   <v-container class="text-center">
-    <titre
-      :entête="$t('bd.entête')"
-    />
+    <titre :entête="$t('bd.entête')" />
     <v-row>
       <v-col cols="12">
         <v-text-field
-         outlined
-         append-icon="mdi-filter"
-         :label="$t('bd.filtrer')"
-         class="mx-10"
+          outlined
+          append-icon="mdi-filter"
+          :label="$t('bd.filtrer')"
+          class="mx-10"
         ></v-text-field>
       </v-col>
       <v-col cols="12">
@@ -38,8 +36,12 @@
             <v-card-subtitle>{{ $t("bd.nouveau.détails") }}</v-card-subtitle>
             <v-card-text> </v-card-text>
           </v-card>
-          <carte-bd v-for="bd in bds" :key="bd.id" :bd="bd"
-          @click="$router.push(`bd/visualiser/${bd.id}`)" />
+          <carte-bd
+            v-for="bd in bds"
+            :key="bd.id"
+            :bd="bd"
+            @click="$router.push(`bd/visualiser/${bd.id}`)"
+          />
         </transition-group>
       </v-col>
     </v-row>
@@ -49,7 +51,7 @@
 <script>
 import { obtBDs } from "@/ipa/bds";
 import carteBd from "@/components/BD/carteBD";
-import Titre from "@/components/commun/Titre"
+import Titre from "@/components/commun/Titre";
 
 export default {
   name: "BD",

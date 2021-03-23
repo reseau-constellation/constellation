@@ -10,7 +10,7 @@
   </v-app>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import Navigation from "@/components/Navigation.vue";
 import opsLangue from "@/components/OpsLangue.vue";
@@ -30,11 +30,11 @@ export default Vue.extend({
 
   mixins: [mixinLangue],
 
-  mounted: function () {
-    const langue = this.$store.state.paramètres.langue
-    if (langue) this.changerLangue(langue)
-    const thèmeNuit = this.$store.state.paramètres.thèmeNuit
-    this.$vuetify.theme.dark = thèmeNuit
+  mounted: function() {
+    const langue = this.$store.state.paramètres.langue;
+    if (langue) this.changerLangue(langue);
+    const thèmeNuit = this.$store.state.paramètres.thèmeNuit;
+    this.$vuetify.theme.dark = thèmeNuit;
   }
 });
 </script>

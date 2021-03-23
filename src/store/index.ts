@@ -6,9 +6,9 @@ import paramètres from "./paramètres";
 
 Vue.use(Vuex);
 
-const vuexLocal = new VuexPersistence<RootState>()
+const vuexLocal = new VuexPersistence();
 
-export default new Vuex.Store<State>({
+export default new Vuex.Store({
   modules: { conditions, paramètres },
   plugins: [vuexLocal.plugin]
 });

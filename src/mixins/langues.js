@@ -9,7 +9,7 @@ export default {
   data: function() {
     return {
       orig: ORIG
-    }
+    };
   },
   computed: {
     langue: function() {

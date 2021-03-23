@@ -1,22 +1,22 @@
-import { v4 as uuidv4 } from "uuid"
-import { l } from "./bds"
+import { v4 as uuidv4 } from "uuid";
+import { l } from "./bds";
 
 const p = [
   {
     id: uuidv4(),
     nom: {
-      "fr": "Météorologie"
+      fr: "Météorologie"
     },
-    bds: l.map(b=>b.id)
+    bds: l.map(b => b.id)
   },
   {
     id: uuidv4(),
     nom: {
-      "fr": "Un autre exemple"
+      fr: "Un autre exemple"
     },
-    bds: l.map(b=>b.id)
+    bds: l.map(b => b.id)
   }
-]
+];
 
 export async function* obtProjets() {
   for (const i of p) {

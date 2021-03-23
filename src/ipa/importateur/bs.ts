@@ -1,3 +1,1 @@
-export default class BD {
-  
-}
+export default class BD {}

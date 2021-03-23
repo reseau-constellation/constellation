@@ -33,15 +33,12 @@ export default {
   mixins: [mixinImage],
   data: function() {
     return {
-      onglet: null,
+      onglet: null
     };
   },
   computed: {
     imageProfil: function() {
-      const options = [
-        this.image("profilFemme"),
-        this.image("profilHomme")
-      ];
+      const options = [this.image("profilFemme"), this.image("profilHomme")];
       // Dans le doute, on garde ça équitable :)
       return options[Math.floor(Math.random() * options.length)];
     }

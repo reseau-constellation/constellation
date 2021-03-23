@@ -22,13 +22,10 @@
           :value="thèmeImages"
           :label="$t('compte.options.thèmeImages')"
           class="mt-0"
-          @change="(e) => changerThèmeImages(e)"
+          @change="e => changerThèmeImages(e)"
         >
           <v-radio value="unDraw" label="unDraw" />
-          <v-radio
-            value="வவவ"
-            label="வள்ளுவர் வள்ளலார் வட்டம்"
-          />
+          <v-radio value="வவவ" label="வள்ளுவர் வள்ளலார் வட்டம்" />
         </v-radio-group>
       </v-col>
       <v-col cols="4">
@@ -60,24 +57,27 @@
         </v-select>
         <v-select
           :value="systèmeNum"
-          :items="[{text: $t('communs.auto'), value: null}, ...systèmesNum]"
+          :items="[{ text: $t('communs.auto'), value: null }, ...systèmesNum]"
           :label="$t('compte.options.numération')"
           outlined
           dense
           hide-details
           prepend-icon="mdi-abacus"
           class="py-5"
-          @change="(e) => changerNumération(e)"
+          @change="e => changerNumération(e)"
         >
           <template v-slot:item="{ on, item }">
-            <v-list-item
-              v-on = "on"
-            >
+            <v-list-item v-on="on">
               <v-list-item-content>
                 {{ item.text || item }}
               </v-list-item-content>
               <v-list-item-action>
-                {{ chifreÀTexte(123.45, item.value === null ? numLangue(langue) || 'latin'  : item ) }}
+                {{
+                  chifreÀTexte(
+                    123.45,
+                    item.value === null ? numLangue(langue) || "latin" : item
+                  )
+                }}
               </v-list-item-action>
             </v-list-item>
           </template>
@@ -90,7 +90,10 @@
 <script>
 import opLangue from "@/components/commun/OpLangue";
 import mixinLangues from "@/mixins/langues";
-import { rubi_chabäl as codeÀNomLangue, rajilanïk_chabäl as numLangue } from "nuchabal";
+import {
+  rubi_chabäl as codeÀNomLangue,
+  rajilanïk_chabäl as numLangue
+} from "nuchabal";
 import { முறைமைகள் as systèmesNum, உரைக்கு as chifreÀTexte } from "ennikkai";
 
 export default {
@@ -105,24 +108,24 @@ export default {
   },
   watch: {
     thèmeNuit: function(val) {
-      this.$store.commit('paramètres/changerThèmeNuit', { val })
+      this.$store.commit("paramètres/changerThèmeNuit", { val });
       this.$vuetify.theme.dark = val;
     }
   },
   computed: {
     thèmeImages: function() {
-      return this.$store.state.paramètres.thèmeImages
+      return this.$store.state.paramètres.thèmeImages;
     }
   },
   methods: {
-    codeÀNomLangue, numLangue, chifreÀTexte,
+    codeÀNomLangue,
+    numLangue,
+    chifreÀTexte,
     changerThèmeImages: function(thème) {
-      this.$store.commit('paramètres/changerThèmeImage', { thème })
+      this.$store.commit("paramètres/changerThèmeImage", { thème });
     }
   }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

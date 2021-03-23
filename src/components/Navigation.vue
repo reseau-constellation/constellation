@@ -63,7 +63,8 @@ export default {
       {
         page: "automation",
         icône: "mdi-sync"
-      },{
+      },
+      {
         page: "signalements",
         icône: "mdi-bug"
       }

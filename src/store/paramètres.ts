@@ -3,23 +3,23 @@ export default {
   state: {
     langue: null,
     numération: null,
-    thèmeImages: 'unDraw',
+    thèmeImages: "unDraw",
     thèmeNuit: false
   },
   mutations: {
-    changerNumération (state, payload) {
-      state.numération = payload.système
+    changerNumération(state: any, payload: { système: string }) {
+      state.numération = payload.système;
     },
-    changerThèmeImage (state, payload) {
-      state.thèmeImages = payload.thème
+    changerThèmeImage(state: any, payload: { thème: string }) {
+      state.thèmeImages = payload.thème;
     },
-    changerLangue (state, payload) {
-      state.langue = payload.langue
+    changerLangue(state: any, payload: { langue: string }) {
+      state.langue = payload.langue;
     },
-    changerThèmeNuit (state, payload) {
-      state.thèmeNuit = payload.val
+    changerThèmeNuit(state: any, payload: { val: string }) {
+      state.thèmeNuit = payload.val;
     }
   },
   actions: {},
   modules: {}
-}
+};

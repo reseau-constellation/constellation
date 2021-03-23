@@ -53,7 +53,7 @@
 <script>
 import Titre from "@/components/commun/Titre";
 import { obtProjets } from "@/ipa/projets";
-import carteProjet from "@/components/Projets/carteProjet"
+import carteProjet from "@/components/Projets/carteProjet";
 
 export default {
   name: "Projets",

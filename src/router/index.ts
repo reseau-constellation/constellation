@@ -26,7 +26,7 @@ const routes: Array<RouteConfig> = [
     component: () => import("@/views/BD/BD.vue")
   },
   {
-    path: "/bd/créer",
+    path: "/bd/créer"
     // component: () => import("@/views/CréerBD.vue")
   },
   {
@@ -69,11 +69,11 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
-  scrollBehavior (to, from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
-      return savedPosition
+      return savedPosition;
     } else {
-      return { x: 0, y: 0 }
+      return { x: 0, y: 0 };
     }
   }
 });

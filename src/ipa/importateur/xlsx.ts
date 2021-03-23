@@ -1,20 +1,20 @@
-import BD from './bs'
+import BD from "./bs";
 
-import xlsx from 'xlsx'
+import xlsx from "xlsx";
 // '/Users/julienmalard/Documents/Projet Wietske Medema/BD test/Copy of Wilmot_2016-2018_FWIS.xlsm'
 // XLSX.readFile('test.xlsx')
 
-LETTRES = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-const séq = n => Array.from(Array(n).keys()).map(x=>x+1)
+const LETTRES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const séq = (n: number) => Array.from(Array(n).keys()).map(x => x + 1);
 
-const lettreÀNombre = function(lettre) {
-  let n = 0
-  for (l of lettre) {
-    n *= LETTRES.length
-    n += l
+const lettreÀNombre = function(lettre: string) {
+  let n = 0;
+  for (const l in [...lettre]) {
+    n *= LETTRES.length;
+    n += LETTRES.indexOf(l);
   }
-}
-
+};
+/*
 const nombreÀLettre = function(nombre) {
 
 }
@@ -33,7 +33,7 @@ class BDXlsx extens BD {
   static ext = ['ods', 'xlsx', 'xls']
 
   valeurs(tableau, cols) {
-    
+
   }
 
   obtTableau(nom) {
@@ -59,3 +59,4 @@ class BDXlsx extens BD {
   }
 
 }
+*/

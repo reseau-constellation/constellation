@@ -11,7 +11,7 @@
 
 <script>
 import { nomBD } from "@/ipa/utils";
-import { obtTableau } from "@/ipa/tableaux"
+import { obtTableau } from "@/ipa/tableaux";
 export default {
   name: "itemTableau",
   props: ["id"],
@@ -27,11 +27,11 @@ export default {
     }
   },
   mounted: function() {
-    obtTableau(this.id).then(t=>{this.tableau = t})
+    obtTableau(this.id).then(t => {
+      this.tableau = t;
+    });
   }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

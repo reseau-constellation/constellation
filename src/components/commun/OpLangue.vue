@@ -9,9 +9,7 @@
       <v-list-item-title>{{ codeÀNomLangue(code) || code }}</v-list-item-title>
     </v-list-item-content>
     <v-list-item-action>
-      <v-icon v-if="progrès === 1" color="primary"
-        >mdi-check-circle</v-icon
-      >
+      <v-icon v-if="progrès === 1" color="primary">mdi-check-circle</v-icon>
       <v-progress-circular
         v-else
         :value="progrès * 100"
@@ -24,15 +22,13 @@
 </template>
 
 <script>
-import { rubi_chabäl as codeÀNomLangue} from "nuchabal";
+import { rubi_chabäl as codeÀNomLangue } from "nuchabal";
 
 export default {
   name: "opsLangue",
   props: ["sélectionnée", "progrès", "code"],
   methods: { codeÀNomLangue }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>
