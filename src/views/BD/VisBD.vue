@@ -297,7 +297,10 @@ export default {
       return this.$route.params.id;
     },
     petitPousset: function() {
-      return [{ text: "Données", href: "/bd" }, { text: couper(this.nom, 35) }];
+      return [
+        { text: "Données", href: "/bd" },
+        { text: couper(this.nom, 35), disabled: true }
+      ];
     },
     licenceApprouvée: function() {
       console.log(licences, this.licence);

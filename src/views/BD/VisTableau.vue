@@ -88,7 +88,7 @@ export default {
       return [
         { text: "Données", href: "/bd" },
         { text: couper(this.idBD, 15), href: `/bd/visualiser/${this.idBD}` },
-        { text: couper(this.tableau ? this.nom : this.idTableau, 15) }
+        { text: couper(this.tableau ? this.nom : this.idTableau, 15), disabled: true }
       ];
     },
     ...mapGetters({
