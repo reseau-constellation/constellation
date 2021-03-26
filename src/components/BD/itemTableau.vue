@@ -3,11 +3,7 @@
     <v-list-item-content>
       {{ couper(tableau ? nom : id, 25) }}
       <div>
-        <jeton-variable
-          v-for="m in variables"
-          :key="m"
-          :id="m"
-        />
+        <jeton-variable v-for="m in variables" :key="m" :id="m" />
       </div>
     </v-list-item-content>
     <v-list-item-action>
@@ -44,7 +40,7 @@ export default {
     obtTableau(this.id).then(t => {
       this.tableau = t;
     });
-    obtVarsTableau(this.id).then(vrs => (this.variables = vrs))
+    obtVarsTableau(this.id).then(vrs => (this.variables = vrs));
   }
 };
 </script>

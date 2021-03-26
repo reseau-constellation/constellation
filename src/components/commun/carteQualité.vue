@@ -5,7 +5,7 @@
     </v-card-title>
     <v-card-subtitle v-if="permissionÉcrire">
       Un meilleur score augmente la confiance que les autres porteront à vos
-      données et favorisera vos données dans les recherches.
+      données et favorisera le classement de vos données dans les recherches.
     </v-card-subtitle>
 
     <v-card-text>

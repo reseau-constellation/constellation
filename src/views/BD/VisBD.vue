@@ -46,7 +46,11 @@
           <v-card flat width="250" class="mx-3 mb-3">
             <p class="mb-0 text-overline">Information</p>
             <v-list>
-              <v-menu offset-x :disabled="!score">
+              <v-menu
+                offset-x
+                :disabled="!score"
+                :close-on-content-click="false"
+              >
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>

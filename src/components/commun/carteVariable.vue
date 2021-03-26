@@ -10,7 +10,12 @@
     <v-card-text>
       <p class="mb-0 text-overline">Unités</p>
       <p class="mb-0 text-overline">Noms</p>
-      <v-list v-if="noms" dense class="overflow-y-auto" style="max-height: 200px">
+      <v-list
+        v-if="noms"
+        dense
+        class="overflow-y-auto"
+        style="max-height: 200px"
+      >
         <v-list-item v-for="l in Object.keys(noms)" :key="l">
           <v-row>
             <v-col cols="4">
