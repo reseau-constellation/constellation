@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { isValidAddress } from "orbit-db"
 import { obtVarsTableau } from "./tableaux";
 import { tempsAléatoire } from "./utils";
 
@@ -6,7 +7,7 @@ interface BaseDeDonnées {
   id: string;
   nom: string;
   détails: string;
-  licence: string;
+  licence?: string;
   tableaux: string[];
   motsClefs: string[];
 }
@@ -16,26 +17,14 @@ export const l: BaseDeDonnées[] = [
     id: "fb5c56fc-5cfa-412b-9884-e335638b4a16",
     nom: "xxx",
     licence: "CC-BY-SA-4_0",
-    détails: {
-      kaq: "Ruxe'el tzij richin ruwäch q'ij pa ri choy Atitlán",
-      fr:
-        "Données météorologiques du bassin versant du lac Atitlán au Guatemala",
-      en: "Meteorological data from Lake Atitlán watershed, Guatemala"
-    },
+    détails: "xxx",
     motsClefs: ["hydrologie", "météorologie"],
-    variables: [
-      "précipitation",
-      "température maximale",
-      "température minimale",
-      "point de rosée"
-    ],
-    emplacement: ["Guatemala", "Amérique", "Amérique du Nord"],
     tableaux: [uuidv4(), uuidv4()]
   },
   {
     id: "fb5c56fc-5cfa-412b-9884-e335638b4a17",
     nom: "xxx",
-    détails: {},
+    détails: "xxx",
     motsClefs: [],
     tableaux: [uuidv4(), uuidv4(), uuidv4()]
   },
@@ -43,14 +32,18 @@ export const l: BaseDeDonnées[] = [
     id: "fb5c56fc-5cfa-412b-9884-e335638b4a18",
     nom: "xxx",
     licence: "Ma licence",
-    détails: {},
+    détails: "xxx",
     motsClefs: [],
     tableaux: [uuidv4(), uuidv4(), uuidv4()]
   }
 ];
 
-export async function BDParId(id: string): Promise<BaseDeDonnées> {
+export async function BDParId(id: string): Promise<BaseDeDonnées | undefined> {
   await new Promise(resolve => setTimeout(resolve, tempsAléatoire()));
+  if (isValidAddress(id)) {
+    const bd = await données.ouvrirBD(id)
+    return bd.all()
+  }
   return l.find(bd => bd.id === id);
 }
 
@@ -63,7 +56,7 @@ export async function* obtBDs(): AsyncIterator<BaseDeDonnées> {
 }
 
 export async function obtTableauxBD(id: string) {
-  const bd = await BDParId(id);
+  await BDParId(id);
   return [uuidv4(), uuidv4(), uuidv4()];
 }
 
@@ -90,6 +83,22 @@ export async function obtNomsBD(
       fr: "Populations insectes noix de coco",
       en: "Coconut insect populations"
     };
+  }
+}
+
+export async function obtDétailsBD(
+  id: string
+): Promise<{ [key: string]: string }> {
+  await BDParId(id);
+  if (id === "fb5c56fc-5cfa-412b-9884-e335638b4a16") {
+    return {
+      kaq: "Ruxe'el tzij richin ruwäch q'ij pa ri choy Atitlán",
+      fr:
+        "Données météorologiques du bassin versant du lac Atitlán au Guatemala",
+      en: "Meteorological data from Lake Atitlán watershed, Guatemala"
+    };
+  } else {
+    return {};
   }
 }
 
