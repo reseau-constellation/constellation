@@ -83,14 +83,14 @@
 </template>
 
 <script>
-import { nomBD } from "@/ipa/utils";
+import { traduireNom } from "@/utils";
 export default {
   name: "carteProjet",
   props: ["projet"],
   computed: {
     nom: function() {
       const lngs = [this.$i18n.locale, ...this.$i18n.fallbackLocale];
-      return nomBD(this.projet, lngs);
+      return traduireNom(this.projet.nom, lngs);
     }
   }
 };

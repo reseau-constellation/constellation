@@ -1,6 +1,15 @@
 <template>
   <v-list-item @click="$emit('click')">
-    <v-list-item-title>{{ tableau ? nom : id }}</v-list-item-title>
+    <v-list-item-content>
+      {{ couper(tableau ? nom : id, 25) }}
+      <div>
+        <jeton-variable
+          v-for="m in variables"
+          :key="m"
+          :id="m"
+        />
+      </div>
+    </v-list-item-content>
     <v-list-item-action>
       <v-btn icon color="error" @click.stop="effacer">
         <v-icon>mdi-delete</v-icon>
@@ -10,26 +19,32 @@
 </template>
 
 <script>
-import { nomBD } from "@/ipa/utils";
-import { obtTableau } from "@/ipa/tableaux";
+import { traduireNom, couper } from "@/utils";
+import { obtTableau, obtVarsTableau } from "@/ipa/tableaux";
+import jetonVariable from "@/components/commun/jetonVariable";
+
 export default {
   name: "itemTableau",
   props: ["id"],
+  components: { jetonVariable },
   data: function() {
     return {
-      tableau: null
+      tableau: null,
+      variables: []
     };
   },
   computed: {
     nom: function() {
       const lngs = [this.$i18n.locale, ...this.$i18n.fallbackLocale];
-      return nomBD(this.tableau, lngs);
+      return traduireNom(this.tableau.nom, lngs);
     }
   },
+  methods: { couper },
   mounted: function() {
     obtTableau(this.id).then(t => {
       this.tableau = t;
     });
+    obtVarsTableau(this.id).then(vrs => (this.variables = vrs))
   }
 };
 </script>

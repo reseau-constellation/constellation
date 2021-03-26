@@ -2,7 +2,7 @@
   <v-container>
     <titre :entête="$t('conditions.entête')" :image="image('conditions')" />
 
-    <v-card flat class="px-5">
+    <v-card flat class="px-5 text-justify">
       <template v-for="(c, i) in conditions">
         <div
           v-if="c.genre === 'p' || c.genre === 't'"
@@ -35,7 +35,7 @@
 <script>
 import Titre from "@/components/commun/Titre";
 import mixinImage from "@/mixins/images";
-import marked from "marked";
+import { compilerMarkdown } from "@/utils";
 
 export default {
   name: "Favoris",
@@ -103,14 +103,24 @@ export default {
         {
           genre: "p",
           texte: "p3_3"
+        },
+        {
+          genre: "t",
+          texte: "t4"
+        },
+        {
+          genre: "p",
+          texte: "p4_1"
+        },
+        {
+          genre: "p",
+          texte: "p4_2"
         }
       ]
     };
   },
   methods: {
-    compilerMarkdown: texte => {
-      return marked(texte, { sanitize: true });
-    },
+    compilerMarkdown,
     accepter: function(acceptées) {
       this.$store.commit("conditions/accepterConditions", { acceptées });
     }

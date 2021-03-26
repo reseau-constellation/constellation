@@ -33,7 +33,10 @@ const imagesThème = {
   },
   conditions: {
     unDraw: require("@/assets/undraw/undraw_Terms_re_6ak4.svg"),
-    வவவ: require("@/assets/வவவ/உறியடி.svg")
+    வவவ: require("@/assets/வவவ/கபடி_ஆட்டம்.svg")
+  },
+  logoBD: {
+    unDraw: require("@/assets/undraw/undraw_Projections_re_1mrh.svg")
   }
 };
 

@@ -2,7 +2,7 @@
 
 <script>
 export default {
-  name: "AQ"
+  name: "NouvelleBD"
 };
 </script>
 

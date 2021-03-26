@@ -1,3 +1,5 @@
+import { rajilanïk_chabäl as numLangue } from "nuchabal";
+
 export default {
   namespaced: true,
   state: {
@@ -21,5 +23,11 @@ export default {
     }
   },
   actions: {},
+  getters: {
+    systèmeNumération: (state: any) => {
+      const num = state.numération;
+      return num === null ? numLangue(state.langue) || "latin" : num;
+    }
+  },
   modules: {}
 };

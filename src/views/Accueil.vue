@@ -25,7 +25,7 @@
           {{ $t("acceuil.orientation") }}
         </h2>
 
-        <v-row justify="center d-flex justify-space-around">
+        <v-row class="center d-flex justify-space-around">
           <v-card
             v-for="(lien, i) in liens"
             :key="i"
@@ -35,9 +35,7 @@
             width="175"
             outlined
             tile
-            @click="
-              lien.page ? $router.push(lien.page) : ouvrirNavigateur(lien.href)
-            "
+            @click="lien.page ? $router.push(lien.page) : ouvrirLien(lien.href)"
           >
             <v-img :src="image(lien.img)" class="mx-4 mt-4" contain />
             <v-card-text>{{ $t(lien.text) }}</v-card-text>
@@ -45,13 +43,33 @@
         </v-row>
       </v-col>
       <v-col class="mb-5" cols="12">
-        <router-link to="/conditions">
-          <p>
-            {{ $t("conditions.entête") }}
-          </p>
-        </router-link>
+        <v-btn
+          color="primary"
+          tiled
+          outlined
+          small
+          class="mx-2"
+          @click="$router.push('/conditions')"
+        >
+          {{ $t("conditions.entête") }}
+        </v-btn>
+        <v-btn
+          v-if="!isElectron()"
+          color="primary"
+          tiled
+          outlined
+          small
+          class="mx-2"
+          @click="
+            ouvrirLien('https://github.com/julienmalard/constellation/releases')
+          "
+        >
+          {{ $t("communs.btnInstaller") }}
+          <v-icon right>mdi-download</v-icon>
+        </v-btn>
       </v-col>
     </v-row>
+    <message-installer />
   </v-container>
 </template>
 
@@ -59,10 +77,13 @@
 import isElectron from "is-electron";
 import { Component, Vue } from "vue-property-decorator";
 
+import messageInstaller from "@/components/commun/messageInstaller";
 import alerteConditions from "@/components/commun/alerteConditions";
 import mixinImage from "@/mixins/images";
+import { ouvrirLien } from "@/utils";
 
 @Component({
+  components: { alerteConditions, messageInstaller },
   data: function() {
     return {
       liens: [
@@ -85,23 +106,12 @@ import mixinImage from "@/mixins/images";
     };
   },
   mixins: [mixinImage],
-  components: { alerteConditions },
   computed: {
     conditionsAcceptées: function() {
       return this.$store.state.conditions.acceptées;
     }
   },
-  methods: {
-    ouvrirNavigateur: async function(lien) {
-      if (isElectron()) {
-        const electron = await import("electron");
-        const { shell } = electron;
-        shell.openExternal(lien);
-      } else {
-        window.open(lien, "_newtab");
-      }
-    }
-  }
+  methods: { ouvrirLien, isElectron }
 })
 export default class Home extends Vue {}
 </script>

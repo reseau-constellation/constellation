@@ -1,8 +1,1 @@
-export function nomBD(bd: { nom: string }, langues: string[]) {
-  let nom;
-  for (const l in langues) {
-    nom = bd.nom[l];
-    if (nom) break;
-  }
-  return nom || Object.values(bd.nom)[0];
-}
+export const tempsAléatoire = (n = 2) => Math.floor(Math.random() * n * 1000);

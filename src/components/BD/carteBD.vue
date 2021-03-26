@@ -2,7 +2,7 @@
   <v-card
     class="mx-4 my-5 px-3 py-5 justify-start text-start"
     min-height="200px"
-    width="250px"
+    max-width="300px"
     @click="$emit('click')"
   >
     <v-img
@@ -14,84 +14,94 @@
     ></v-img>
 
     <v-card-title
-      >{{ nom }}
+      >{{ couper(nom, 20) }}
       <v-spacer />
-      <!--<v-btn v-if="பதிவிறக்கம்.கிட்"
-        :href="பதிவிறக்கம்.கிட்"
-        icon
-        rel=”noopener”
-        target="_blank">
-        <v-icon>mdi-git</v-icon>
-      </v-btn>
-      <v-btn v-if="பதிவிறக்கம்.ஆவணங்கள்"
-        :href="பதிவிறக்கம்.ஆவணங்கள்"
-        icon
-        rel=”noopener”
-        target="_blank">
-        <v-icon>mdi-file-document-multiple-outline</v-icon>
-      </v-btn> -->
+      <lien-orbite :lien="bd.id" />
     </v-card-title>
     <v-divider />
-    <v-card-subtitle>{{ bd.détails }}</v-card-subtitle>
+    <v-card-subtitle>{{ détails }}</v-card-subtitle>
     <v-card-text>
-      <!--
-      <v-chip v-if="பதிவிறக்கம்.வகை"
-       outlined label small class="ma-1"
-       @click="வகைகள்=[பதிவிறக்கம்.வகை]"
-      >
-       <v-icon left small>
-        {{ வகை_படவுரு(பதிவிறக்கம்.வகை) }}
-       </v-icon>
-       {{ பதிவிறக்கம்.வகை }}
-      </v-chip>
-
-      <v-chip v-if="பதிவிறக்கம்.நிலை"
-       outlined label small class="ma-1"
-       @click="நிலைகள்=[பதிவிறக்கம்.நிலை]"
-      >
-       <v-icon left small>
-         {{ மேம்பாடு_படவுரு(பதிவிறக்கம்.நிலை) }}
-       </v-icon>
-       {{ பதிவிறக்கம்.நிலை }}
-     </v-chip>
-
       <v-chip
-       v-for="நி in பதிவிறக்கம்.நிரல்மொழி" :key="நி"
-       outlined label small class="ma-1"
-       @click="நிரல்மொழிகள்=[நி]"
+        outlined
+        label
+        small
+        class="me-1 my-1"
+        @click.stop="
+          licenceApprouvée ? ouvrirLien($t(`licences.${bd.licence}.lien`)) : ''
+        "
       >
-       <v-icon left small>
-        {{ நிரல்மொழி_படவுரு(நி) }}
-       </v-icon>
-       {{ நி }}
-     </v-chip>
-
-      <div v-if="பதிவிறக்கம்.பதிவிறக்கம்" class="mt-2">
-        பதிவிறக்கம்
-        <v-divider/>
-        <div v-for="ப in பதிவிறக்கம்.பதிவிறக்கம்" :key="ப">
-          <v-chip label class="ms-5 my-2 px-2">
-            {{ ப }}
-            <v-btn icon small>
-              <v-icon small>mdi-content-copy</v-icon>
-            </v-btn>
-          </v-chip>
-        </div>
-      </div> -->
+        <v-icon left small :color="licenceApprouvée ? 'secondary' : 'error'">
+          {{ bd.licence ? "mdi-scale-balance" : "mdi-alert-outline" }}
+        </v-icon>
+        {{
+          bd.licence && !licenceApprouvée
+            ? bd.licence
+            : $t(`licences.${bd.licence || "introuvable"}.nom`)
+        }}
+      </v-chip>
     </v-card-text>
+    <v-card-actions>
+      <v-spacer />
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-show="épinglée !== null"
+            icon
+            v-bind="attrs"
+            v-on="on"
+            @click.stop="épinglée = !épinglée"
+          >
+            <v-icon>{{ épinglée ? "mdi-pin" : "mdi-pin-outline" }}</v-icon>
+          </v-btn>
+        </template>
+        <span>Tooltip</span>
+      </v-tooltip>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import { nomBD } from "@/ipa/utils";
+import { traduireNom, couper, ouvrirLien } from "@/utils";
+import lienOrbite from "@/components/commun/lienOrbite";
+
+import { licences } from "@/ipa/licences";
+
+import { permissionÉcrire, obtNomsBD } from "@/ipa/bds";
+
 export default {
   name: "carteBD",
   props: ["bd"],
+  components: { lienOrbite },
+  data: function() {
+    return {
+      épinglée: true,
+      nomsBD: null,
+      variables: []
+    };
+  },
   computed: {
+    idBD: function() {
+      return this.bd.id;
+    },
+    langues: function() {
+      return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
+    },
     nom: function() {
-      const lngs = [this.$i18n.locale, ...this.$i18n.fallbackLocale];
-      return nomBD(this.bd, lngs);
+      return this.nomsBD ? traduireNom(this.nomsBD, this.langues) : this.idBD;
+    },
+    détails: function() {
+      return traduireNom(this.bd.détails, this.langues);
+    },
+    licenceApprouvée: function() {
+      return this.bd.licence && licences.includes(this.bd.licence);
     }
+  },
+  methods: {
+    couper,
+    ouvrirLien
+  },
+  mounted: function() {
+    obtNomsBD(this.idBD).then(noms => (this.nomsBD = noms));
   }
 };
 </script>

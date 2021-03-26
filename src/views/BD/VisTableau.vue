@@ -20,52 +20,62 @@
       </v-card-subtitle>
       <v-img
         :src="
-          bd && bd.logo
-            ? bd.logo
+          tableau && tableau.logo
+            ? tableau.logo
             : require('@/assets/undraw/undraw_Projections_re_1mrh.svg')
         "
         height="100px"
         contain
       ></v-img>
-      <v-card-title v-if="this.tableau"> {{ couper(nom, 45) }}</v-card-title>
-      <v-card-subtitle>{{ idTableau }}</v-card-subtitle>
+      <v-card-title v-if="this.tableau">
+        {{ couper(nom, 45) }}
+        <lien-orbite :lien="idBD" />
+        <v-spacer />
+        <lienTélécharger :lien="idBD" />
+      </v-card-title>
+
       <v-card-text>
-        <v-data-table :headers="entête" :items="données">
+        <p class="mb-0 text-overline">Données</p>
+        <v-divider />
+        <v-data-table v-if="entête" :headers="entête" :items="données">
           <template v-slot:no-data>
             {{ $t("tableau.vide") }}
           </template>
+          <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item }">
+            {{ formatterChiffre(item[c.value]) }}
+          </template>
         </v-data-table>
+        <v-skeleton-loader v-else type="image" />
       </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script>
-import { obtTableau } from "@/ipa/tableaux";
-import { nomBD } from "@/ipa/utils";
+import { mapGetters } from "vuex";
+
+import { obtTableau, obtDonnéesTableau, obtVarsTableau } from "@/ipa/tableaux";
+import { traduireNom } from "@/utils";
 import { couper } from "@/utils";
+import { உரைக்கு } from "ennikkai";
+
+import lienOrbite from "@/components/commun/lienOrbite";
+import lienTélécharger from "@/components/commun/lienTélécharger";
 
 export default {
   name: "visTableau",
+  components: { lienOrbite, lienTélécharger },
   data: function() {
     return {
       tableau: null,
-      données: [
-        { date: "2000-01-01", préc: "2", tmax: "24", tmin: "18" },
-        { date: "2000-01-02", préc: "0", tmax: "22", tmin: "13" }
-      ],
-      entête: [
-        { text: "Date", value: "date" },
-        { text: "Précipitation", value: "préc" },
-        { text: "Température max", value: "tmax" },
-        { text: "Température min", value: "tmin" }
-      ]
+      données: [],
+      entête: null
     };
   },
   computed: {
     nom: function() {
       const lngs = [this.$i18n.locale, ...this.$i18n.fallbackLocale];
-      return nomBD(this.tableau, lngs);
+      return traduireNom(this.tableau.nom, lngs);
     },
     idBD: function() {
       return this.$route.params.id;
@@ -80,13 +90,22 @@ export default {
         { text: couper(this.idBD, 15), href: `/bd/visualiser/${this.idBD}` },
         { text: couper(this.tableau ? this.nom : this.idTableau, 15) }
       ];
+    },
+    ...mapGetters({
+      systèmeNumération: "paramètres/systèmeNumération"
+    })
+  },
+  methods: {
+    couper,
+    formatterChiffre: function(n) {
+      console.log(n, this.systèmeNumération);
+      return உரைக்கு(n, this.systèmeNumération);
     }
   },
-  methods: { couper },
-  mounted: function() {
-    obtTableau(this.idTableau).then(tbl => {
-      this.tableau = tbl;
-    });
+  mounted: async function() {
+    this.tableau = await obtTableau(this.idTableau);
+    this.entête = await obtVarsTableau(this.tableau.bdOrbite);
+    this.données = await obtDonnéesTableau(this.tableau.bdOrbite);
   }
 };
 </script>

@@ -10,7 +10,7 @@
       outlined
       class="mx-2"
       @click="
-        ouvrirNavigateur('https://github.com/julienmalard/constellation/issues')
+        ouvrirLien('https://github.com/julienmalard/constellation/issues')
       "
       append
     >
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import isElectron from "is-electron";
+import { ouvrirLien } from "@/utils";
 
 import Titre from "@/components/commun/Titre.vue";
 import mixinImage from "@/mixins/images";
@@ -44,17 +44,7 @@ export default {
   name: "Signalements",
   components: { Titre },
   mixins: [mixinImage],
-  methods: {
-    ouvrirNavigateur: async function(lien) {
-      if (isElectron()) {
-        const electron = await import("electron");
-        const { shell } = electron;
-        shell.openExternal(lien);
-      } else {
-        window.open(lien, "_newtab");
-      }
-    }
-  }
+  methods: { ouvrirLien }
 };
 </script>
 

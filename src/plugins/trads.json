@@ -1,7 +1,9 @@
 {
   "fr": {
     "communs": {
-      "auto": "Automatique"
+      "auto": "Automatique",
+      "messageInstaller": "La version navigateur de Constellation est limitée par la mémoire disponible dans votre navigateur. Il est préférable d'installer le logiciel pour toute analyse importante.",
+      "btnInstaller": "Installer Constellation"
     },
     "alerteConditions": {
       "texte": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
@@ -31,7 +33,11 @@
       "onglets": {
         "compte": {
           "entête": "Mon compte",
-          "info": "Information",
+          "info": "Information générale",
+          "infoPublique": "Ces informations sont publiques",
+          "nom": "Votre nom",
+          "courriel": "Votre courriel",
+          "image": "Votre image de profil",
           "dispositifs": "Dispositifs"
         },
         "thème": {
@@ -97,7 +103,7 @@
       "p0_2": "Ces conditions ont été écrites par des scientifiques, pas par des avocats. Cela veut aussi dire que vous n'aurez pas besoin d'un avocat pour les comprendre. En revanche, s'il vous plaît utilisez le gros bon sens et n'essayez pas de jouer sur le sens des mots afin d'y trouver des échappatoirs.",
       "p0_3": "Ces conditions furent écrites en français. Les traductions dans d'autres langues sont disponibles grâce aux volontaires de la communauté Constellation. N'hésitez pas à nous contacter si vous avez des doutes !",
       "t1": "Général",
-      "p1_1": "Ce logiciel (Constellation) est distribué en tant que logiciel à source ouverte, sous la [licence AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.fr.html). Votre utilisation de ce logiciel est assujetit aux conditions de ladite licence. Entre autres, veuillez prendre note que ceci est un logiciel libre qui vient avec absolument aucune garantie.",
+      "p1_1": "Ce logiciel (Constellation) est distribué en tant que logiciel à source ouverte, sous la [licence AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.fr.html). Votre utilisation de ce logiciel est assujetit aux conditions de ladite licence. Entre autres, veuillez prendre note que ceci est un logiciel libre qui vient avec **absolument aucune garantie**. *Caballo regalado, no se le mira el colmillo.*",
       "p1_2": "En outre, toute interaction entre utilisateurs ou utilisatrices et assujetie aux [règles de notre communauté](https://www.contributor-covenant.org/fr/version/2/0/code_of_conduct/).",
       "t2": "Utilisation des données",
       "p2_1": "Les données disponibles à travers Constellation ont été contribuées par d'autres membres de la communauté. Chaque personne, au moment de partager ses données, doit spécifier une licence d'accès ouvert ; celle-ci est indiquée sur chaque base de données. Soyez toujours conscient de respecter les licences appartenant aux données que vous utilisez.",
@@ -105,8 +111,40 @@
       "p2_3": "Si quelqu'un d'autre a partagé des données qui vous appartiennent de manière non conforme aux termes de la licence que vous y aviez appliquée et nous résoudrons le problème.",
       "t3": "Vie privée et sécurité",
       "p3_1": "Veuillez prendre note que Constellation est un réseau distribué, ouvert et publique. Tout ce que vous y partagerez (bases de données, votre nom, information de contact) deviendra accessible à tout le réseau.",
-      "p3_2": "Ce qui est vrai de tout système informatique l'est encore plus dans le contexte d'un réseau distribué : une fois que de l'information est partagée avec d'autres personnes, vous avez beau la supprimer vous-même, vous pouvez toujours leur demander gentillement mais il est effectivement impossible de forcer les personnes qui l'ont déjà reçue de la supprimer également. Ne partagez donc que des données que vous voulez partager avec toute la planète Terre.",
-      "p3_3": "En revanche, il n'y a pas de serveur central et vous ne partagez que ce que vous décidez de contribuer. Donc, fini le suivi de vos activités en ligne et de vos données personnelles ! Votre activité d'utilisation, vos activités et intérêts, demeurent sur votre ordinateur (même si vous utilisez la version Internet de ce logiciel)."
+      "p3_2": "Ce qui est vrai de tout système informatique l'est encore plus dans le contexte d'un réseau distribué : une fois que de l'information est partagée avec d'autres personnes, vous pouvez toujours la supprimer vous-même, mais il est effectivement impossible de forcer les personnes qui l'ont déjà reçue de la supprimer également (même si vous pouvez toujours leur demander gentillement). **Ne partagez donc que des données que vous voulez partager avec toute la planète Terre. Ne partagez jamais des données confidentielles sur Constellation**.",
+      "p3_3": "En revanche, il n'y a pas de serveur central et vous ne partagez que ce que vous décidez de contribuer. Donc, fini le suivi de vos activités en ligne et de vos données personnelles ! Votre activité d'utilisation, vos activités et intérêts, demeurent sur votre ordinateur (même si vous utilisez la version Internet de ce logiciel).",
+      "t4": "Crédits",
+      "p4_1": "Ce logiciel fut développé par Julien Malard.",
+      "p4_2": "Les images et l'art proviennent de [unDraw](https://undraw.co/) et de [வள்ளுவர் வள்ளலார் வட்டம்](https://commons.wikimedia.org/wiki/User:Valluvar_Vallalar_Vattam?uselang=ta). Ces derniers sont disponibles selon la licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr)."
+    },
+    "licences": {
+      "CC-BY-SA-4_0": {
+        "nom": "CC BY SA 4.0",
+        "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr"
+      },
+      "CC-BY-4_0": {
+        "nom": "CC BY 4.0",
+        "lien": "https://creativecommons.org/licenses/by/4.0/deed.fr"
+      },
+      "CC-0-1_0": {
+        "nom": "CC 0 1.0",
+        "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.fr"
+      },
+      "ODbl-1_0": {
+        "nom": "ODbl 1.0",
+        "lien": "https://opendatacommons.org/licenses/odbl/summary/"
+      },
+      "ODC-BY-1_0": {
+        "nom": "ODC BY 1.0",
+        "lien": "https://opendatacommons.org/licenses/by/1-0/"
+      },
+      "PDDL": {
+        "nom": "PDDL",
+        "lien": "https://opendatacommons.org/licenses/pddl/"
+      },
+      "introuvable": {
+        "nom": "Licence introuvable"
+      }
     }
   },
   "kaq": {
@@ -140,7 +178,7 @@
   },
   "ار": {
     "acceuil": {
-      "entête": "خوش ممدید!"
+      "entête": "خوش آمدید!"
     }
   },
   "हिं": {
