@@ -1,11 +1,11 @@
 import { AccessControllers } from "orbit-db";
 import { EventEmitter } from "events";
-const pMapSeries = require("p-map-series");
+import path from "path";
+import pMapSeries from "p-map-series";
 
-const மதிப்பீட்டாளர் = "மதிப்பீட்டாளர்";
-const உறுப்பினர் = "உறுப்பினர்";
+const MODÉRATEUR = "MODÉRATEUR";
+const MEMBRE = "MEMBRE";
 
-window.AccessControllers = AccessControllers;
 /*
 MIT License
 
@@ -30,9 +30,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-const path = require("path");
 // Make sure the given address has '/_access' as the last part
-const ensureAddress = address => {
+const ensureAddress = (address: string) => {
   const suffix = address
     .toString()
     .split("/")
@@ -40,10 +39,21 @@ const ensureAddress = address => {
   return suffix === "_access" ? address : path.join(address, "/_access");
 };
 
-class அணுகல்_கட்டுப்படுத்தி extends EventEmitter {
-  constructor(orbitdb, options) {
+interface OptionsControlleurConstellation {
+  membres?: boolean;
+  premierMod?: string;
+  address?: string;
+  name?: string;
+  admin?: string;
+}
+
+class ControlleurConstellation extends EventEmitter {
+  _db: any;
+  _orbitdb: any;
+  _options: OptionsControlleurConstellation;
+
+  constructor(orbitdb: any, options: OptionsControlleurConstellation) {
     super();
-    console.log("constructor", "அணுகல்_கட்டுப்படுத்தி", options);
     this._orbitdb = orbitdb;
     this._db = null;
     this._options = options || {};
@@ -60,11 +70,11 @@ class அணுகல்_கட்டுப்படுத்தி extends Even
   }
 
   // Return true if entry is allowed to be added to the database
-  async canAppend(entry, identityProvider) {
+  async canAppend(entry: any, identityProvider: any) {
     // Write keys and admins keys are allowed
     const access = new Set([
-      ...this.get(மதிப்பீட்டாளர்),
-      ...this.get(உறுப்பினர்)
+      ...this.get(MODÉRATEUR),
+      ...this.get(MEMBRE)
     ]);
     // If the ACL contains the writer's public key or it contains '*'
     if (access.has(entry.identity.id) || access.has("*")) {
@@ -82,7 +92,7 @@ class அணுகல்_கட்டுப்படுத்தி extends Even
     if (this._db) {
       const capabilities = this._db.index;
 
-      const toSet = e => {
+      const toSet = (e: [string, any]) => {
         const key = e[0];
         capabilities[key] = new Set([...(capabilities[key] || []), ...e[1]]);
       };
@@ -94,9 +104,9 @@ class அணுகல்_கட்டுப்படுத்தி extends Even
         // Add the root access controller's 'write' access list
         // as admins on this controller
         ...{
-          மதிப்பீட்டாளர்: new Set([
-            ...(capabilities.மதிப்பீட்டாளர் || []),
-            ...this._db.access._முதல்மதிப்பீட்டாளர்
+          MODÉRATEUR: new Set([
+            ...(capabilities.MODÉRATEUR || []),
+            ...this._db.access._premierMod
           ])
         }
       }).forEach(toSet);
@@ -106,7 +116,7 @@ class அணுகல்_கட்டுப்படுத்தி extends Even
     return {};
   }
 
-  get(capability) {
+  get(capability: string) {
     return this.capabilities[capability] || new Set([]);
   }
 
@@ -114,7 +124,7 @@ class அணுகல்_கட்டுப்படுத்தி extends Even
     await this._db.close();
   }
 
-  async load(address) {
+  async load(address: string) {
     if (this._db) {
       await this._db.close();
     }
@@ -143,7 +153,7 @@ class அணுகல்_கட்டுப்படுத்தி extends Even
     };
   }
 
-  async grant(capability, key) {
+  async grant(capability: string, key: string) {
     // Merge current keys with the new key
     const capabilities = new Set([
       ...(this._db.get(capability) || []),
@@ -152,7 +162,7 @@ class அணுகல்_கட்டுப்படுத்தி extends Even
     await this._db.put(capability, Array.from(capabilities.values()));
   }
 
-  async revoke(capability, key) {
+  async revoke(capability: string, key: string) {
     const capabilities = new Set(this._db.get(capability) || []);
     capabilities.delete(key);
     if (capabilities.size > 0) {
@@ -168,17 +178,16 @@ class அணுகல்_கட்டுப்படுத்தி extends Even
   }
 
   /* Factory */
-  static async create(orbitdb, options = {}) {
-    console.log("create", this.type, { options });
-    const ac = new அணுகல்_கட்டுப்படுத்தி(orbitdb, options);
+  static async create(orbitdb: any, options: OptionsControlleurConstellation = {}) {
+    const ac = new ControlleurConstellation(orbitdb, options);
     await ac.load(
       options.address || options.name || "default-access-controller"
     );
 
     // Add write access from options
-    if (options.முதல்மதிப்பீட்டாளர் && !options.address) {
-      await pMapSeries(options.முதல்மதிப்பீட்டாளர், async e =>
-        ac.grant("மதிப்பீட்டாளர்", e)
+    if (options.premierMod && !options.address) {
+      await pMapSeries(options.premierMod, async (e: string) =>
+        ac.grant(MODÉRATEUR, e)
       );
     }
 
@@ -186,7 +195,13 @@ class அணுகல்_கட்டுப்படுத்தி extends Even
   }
 }
 
-class மதிப்பீட்டாளர்_கட்டுப்படுத்தி {
+interface OptionsControlleurModConstellation {
+  membres?: boolean;
+  premierMod?: string;
+  address?: string;
+}
+
+class ControlleurModConstellation {
   /*
   MIT License
 
@@ -210,34 +225,37 @@ class மதிப்பீட்டாளர்_கட்டுப்படு�
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
   */
+  _membres: boolean;
+  _premierMod: string;
+  _write: string[];
+  _capabilityTypes: string[];
 
-  constructor(முதல்மதிப்பீட்டாளர், options) {
-    this._capabilityTypes = [மதிப்பீட்டாளர்];
+  constructor(premierMod: string, options: OptionsControlleurModConstellation) {
+    this._capabilityTypes = [MODÉRATEUR];
     this._write = []; // Allowed to add other mods or members
-    this._முதல்மதிப்பீட்டாளர் = முதல்மதிப்பீட்டாளர்;
-    this._write.push(this._முதல்மதிப்பீட்டாளர்);
-    this._உறுப்பினர்கள் = Boolean(options.உறுப்பினர்கள்);
-    if (this._உறுப்பினர்கள்) this._capabilityTypes.push(உறுப்பினர்);
-    this._encKeyId = options.encKeyId;
+    this._premierMod = premierMod;
+    this._write.push(this._premierMod);
+    this._membres = Boolean(options.membres);
+    if (this._membres) this._capabilityTypes.push(MEMBRE);
   }
 
-  static get type() {
+  static get type(): string {
     return "controlleur-mod-constellation";
   }
 
-  isMod(id) {
+  isMod(id: string) {
     return this._write.includes(id);
   }
 
-  isValidCapability(capability) {
+  isValidCapability(capability: string) {
     return this._capabilityTypes.includes(capability);
   }
 
   get முதல்மதிப்பீட்டாளர்() {
-    return this._முதல்மதிப்பீட்டாளர்;
+    return this._premierMod;
   }
 
-  async canAppend(entry, identityProvider) {
+  async canAppend(entry: any, identityProvider: any) {
     const entryID = entry.identity.id;
     const capability = entry.payload.key;
     const idAdd = entry.payload.value;
@@ -245,17 +263,9 @@ class மதிப்பீட்டாளர்_கட்டுப்படு�
     const validCapability = this.isValidCapability(capability);
     const validSig = async () =>
       identityProvider.verifyIdentity(entry.identity);
-    console.log({
-      entry,
-      entryID,
-      capability,
-      idAdd,
-      isMod,
-      validCapability,
-      validSig: await validSig()
-    });
+
     if (isMod && validCapability && (await validSig())) {
-      if (capability === மதிப்பீட்டாளர்) {
+      if (capability === MODÉRATEUR) {
         this._write = idAdd;
       }
       return true;
@@ -264,53 +274,52 @@ class மதிப்பீட்டாளர்_கட்டுப்படு�
     return false;
   }
 
-  async load(address) {
+  async load(address: string) {
     const addList = address.split("/");
     const suffix = addList.pop();
-    this._உறுப்பினர்கள் = suffix === "members";
-    const mod = suffix.includes("mod") ? suffix : addList.pop();
-    this._முதல்மதிப்பீட்டாளர் = mod.split("_")[1];
+    this._membres = suffix === "members";
+    const mod = suffix && suffix.includes("mod") ? suffix : addList.pop();
+    if (mod) {
+      this._premierMod = mod.split("_")[1];
+    } else {
+      throw "Premier mod nécessaire";
+    }
   }
 
   async save() {
     // TODO if entire obj saved in manfest, can just pass our own fields
-    let address = `${this.type}/mod_${this._முதல்மதிப்பீட்டாளர்}`;
-    address += this._உறுப்பினர்கள் ? "/members" : "";
+    let address = `${ControlleurModConstellation.type}/mod_${this._premierMod}`;
+    address += this._membres ? "/members" : "";
     const manifest = { address };
-    if (this._encKeyId) manifest.encKeyId = this._encKeyId;
     return manifest;
   }
 
-  static async create(orbitdb, options = {}) {
-    console.log("create", { options }, this.type);
-    let முதல்மதிப்பீட்டாளர், உறுப்பினர்கள், encKeyId;
+  static async create(
+    orbitdb: any,
+    options: OptionsControlleurModConstellation = {}
+  ) {
+    let premierMod, membres;
 
     if (options.address) {
-      உறுப்பினர்கள் = options.address.includes("members");
-      முதல்மதிப்பீட்டாளர் = options.address.split("/")[1].split("_")[1];
-      encKeyId = options.encKeyId;
+      membres = options.address.includes("members");
+      premierMod = options.address.split("/")[1].split("_")[1];
     } else {
-      உறுப்பினர்கள் = options.உறுப்பினர்கள்;
-      முதல்மதிப்பீட்டாளர் = options.முதல்மதிப்பீட்டாளர்;
-      encKeyId = options.encKeyId;
+      membres = options.membres;
+      premierMod = options.premierMod;
     }
 
-    if (!முதல்மதிப்பீட்டாளர்)
-      throw new Error(
-        "மதிப்பீட்டாளர் அணுகல் கட்டுப்படுத்தி: முதல் மதிப்பீட்டாளர் தேவையானது"
-      );
-    return new மதிப்பீட்டாளர்_கட்டுப்படுத்தி(முதல்மதிப்பீட்டாளர், {
-      உறுப்பினர்கள்,
-      encKeyId
+    if (!premierMod) throw new Error("Premier mod nécessaire");
+    return new ControlleurModConstellation(premierMod, {
+      membres
     });
   }
 }
 
 AccessControllers.addAccessController({
-  AccessController: அணுகல்_கட்டுப்படுத்தி
+  AccessController: ControlleurConstellation
 });
 AccessControllers.addAccessController({
-  AccessController: மதிப்பீட்டாளர்_கட்டுப்படுத்தி
+  AccessController: ControlleurModConstellation
 });
 
 export default AccessControllers;

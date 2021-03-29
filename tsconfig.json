@@ -38,7 +38,6 @@
     "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
-    "src/ipa/ipfs.ts"
+    "node_modules"
   ]
 }

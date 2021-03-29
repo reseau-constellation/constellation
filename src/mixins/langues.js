@@ -1,6 +1,8 @@
 import {
   rutzib_chabäl as écriture,
-  rucholanem_tzibanem as orientationÉcriture
+  rubi_chabäl as nomDeLangue,
+  rucholanem_tzibanem as orientationÉcriture,
+  retamabäl_chabäl as infoLangues
 } from "nuchabal";
 
 const ORIG = "fr";
@@ -22,15 +24,22 @@ export default {
     },
     systèmeNum: function() {
       return this.$store.state.paramètres.numération;
+    },
+    languesNuchabal: () => {
+      return Object.keys(infoLangues);
     }
   },
   methods: {
+    nomDeLangue,
+    droiteÀGauche: function(langue) {
+      const orientation = orientationÉcriture(écriture(langue));
+      return orientation && orientation.includes("←");
+    },
     changerLangue(lng) {
       this.$i18n.fallbackLocale = [this.$i18n.locale, "fr"];
       this.$vuetify.lang.current = lng;
       this.$i18n.locale = lng;
-      const orientation = orientationÉcriture(écriture(lng));
-      this.$vuetify.rtl = orientation && orientation.includes("←");
+      this.$vuetify.rtl = this.droiteÀGauche(lng);
       this.$store.commit("paramètres/changerLangue", { langue: lng });
     },
     progrès: function(lng) {

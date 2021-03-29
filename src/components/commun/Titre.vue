@@ -6,7 +6,10 @@
       </h1>
     </v-col>
     <v-col v-if="image" cols="12">
-      <v-img :src="image" class="mb-3" contain height="175" />
+      <v-avatar v-if="imageRonde" size="175" class="mb-3">
+        <v-img :src="image" />
+      </v-avatar>
+      <v-img v-else :src="image" class="mb-3" contain height="175" />
     </v-col>
     <v-col v-if="soustitre" cols="12">
       <h2 class="headline font-weight-bold mb-5">
@@ -19,7 +22,7 @@
 <script>
 export default {
   name: "Titre",
-  props: ["entête", "soustitre", "image"]
+  props: ["entête", "soustitre", "image", "imageRonde"]
 };
 </script>
 

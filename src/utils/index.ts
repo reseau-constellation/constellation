@@ -1,6 +1,7 @@
 import isElectron from "is-electron";
 import DOMPurify from "dompurify";
 import marked from "marked";
+import { rutzib_chabäl as écritureLangue } from "nuchabal";
 
 export function couper(texte: string, nChar: number) {
   if (texte.length <= nChar) {
@@ -16,9 +17,21 @@ export function traduireNom(
   let nom;
   for (const l of langues) {
     nom = dicNom[l];
-    if (nom) break;
+    if (nom) return nom;
   }
-  return nom || Object.values(dicNom)[0];
+  // Si la langue n'est pas disponible, cherchons quelque chose avec au moins le même alphabet
+  const écrituresVoulues = langues.map(l => {
+    return { écriture: écritureLangue(l), langue: l };
+  });
+  for (const { langue, écriture } of écrituresVoulues) {
+    const langueAlternative = Object.keys(dicNom).find(
+      x => écritureLangue(x) === écriture
+    );
+    if (langueAlternative) return dicNom[langueAlternative];
+  }
+
+  // Sinon, tan pis !
+  return Object.values(dicNom)[0];
 }
 
 export async function ouvrirLien(lien: string) {

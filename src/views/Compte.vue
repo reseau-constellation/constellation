@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <titre :entête="$t('compte.entête')" :image="imageProfil" />
+    <titre
+      :entête="$t('compte.entête')"
+      :image="imageProfil"
+      :imageRonde="true"
+    />
     <v-tabs v-model="onglet">
       <v-tab>{{ $t("compte.onglets.compte.entête") }}</v-tab>
       <v-tab>{{ $t("compte.onglets.thème.entête") }}</v-tab>
@@ -26,22 +30,51 @@ import paramètres from "@/components/compte/paramètres";
 import réseau from "@/components/compte/réseau";
 import thème from "@/components/compte/thème";
 import mixinImage from "@/mixins/images";
+import mixinIPA from "@/mixins/ipa";
 
 export default {
   name: "Compte",
   components: { titre, réseau, thème, paramètres },
-  mixins: [mixinImage],
+  mixins: [mixinImage, mixinIPA],
   data: function() {
     return {
-      onglet: null
+      onglet: null,
+      imageCompte: null
     };
   },
   computed: {
     imageProfil: function() {
+      if (this.imageCompte) {
+        return this.imageCompte;
+      }
       const options = [this.image("profilFemme"), this.image("profilHomme")];
       // Dans le doute, on garde ça équitable :)
       return options[Math.floor(Math.random() * options.length)];
     }
+  },
+  methods: {
+    suivreImage: async function() {
+      const oublierImage = await this.$ipa.compte.suivreImage(image => {
+        if (image) {
+          const url = URL.createObjectURL(
+            new Blob([image.buffer], { type: "image/png" })
+          );
+          this.imageCompte = url;
+        } else {
+          this.imageCompte = null;
+        }
+      });
+      this.suivre(oublierImage);
+    }
+  },
+  mounted: function() {
+    this.$ipa.on("pret", this.suivreImage.bind(this));
+    if (this.$ipa.pret) {
+      this.suivreImage();
+    }
+  },
+  unmounted: function() {
+    this.$ipa.off("pret", this.suivreCompte.bind(this));
   }
 };
 </script>

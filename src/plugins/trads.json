@@ -36,6 +36,7 @@
           "info": "Information générale",
           "infoPublique": "Ces informations sont publiques",
           "nom": "Votre nom",
+          "aucunNom": "Aucun nom",
           "courriel": "Votre courriel",
           "image": "Votre image de profil",
           "dispositifs": "Dispositifs"

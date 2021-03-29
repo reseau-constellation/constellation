@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { isValidAddress } from "orbit-db"
+import { isValidAddress } from "orbit-db";
 import { obtVarsTableau } from "./tableaux";
 import { tempsAléatoire } from "./utils";
 
@@ -40,10 +40,6 @@ export const l: BaseDeDonnées[] = [
 
 export async function BDParId(id: string): Promise<BaseDeDonnées | undefined> {
   await new Promise(resolve => setTimeout(resolve, tempsAléatoire()));
-  if (isValidAddress(id)) {
-    const bd = await données.ouvrirBD(id)
-    return bd.all()
-  }
   return l.find(bd => bd.id === id);
 }
 
