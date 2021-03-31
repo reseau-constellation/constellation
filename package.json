@@ -1,24 +1,21 @@
 {
   "name": "constellation",
   "version": "0.1.0",
-  "description": "Le système distribué et ouvert pour le partage de données scientifiques.",
   "private": true,
+  "description": "Le système distribué et ouvert pour le partage de données scientifiques.",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
+    "déployer": "node ./scripts/gh-pages-deploy.js",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps",
-    "déployer": "node ./scripts/gh-pages-deploy.js"
+    "postuninstall": "electron-builder install-app-deps"
   },
   "main": "main.js",
-  "bin": {
-    "cnstl": "./ipa/index.js"
-  },
   "dependencies": {
     "core-js": "^3.6.5",
     "database-js": "^3.0.10",
@@ -54,15 +51,15 @@
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-e2e-cypress": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-pwa": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-typescript": "~4.5.0",
-    "@vue/cli-plugin-unit-mocha": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-plugin-babel": "~4.5.12",
+    "@vue/cli-plugin-e2e-cypress": "~4.5.12",
+    "@vue/cli-plugin-eslint": "~4.5.12",
+    "@vue/cli-plugin-pwa": "~4.5.12",
+    "@vue/cli-plugin-router": "~4.5.12",
+    "@vue/cli-plugin-typescript": "~4.5.12",
+    "@vue/cli-plugin-unit-mocha": "~4.5.12",
+    "@vue/cli-plugin-vuex": "~4.5.12",
+    "@vue/cli-service": "~4.5.12",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",
     "@vue/test-utils": "^1.0.3",
@@ -70,7 +67,7 @@
     "chai-as-promised": "^7.1.1",
     "electron": "^11.0.0",
     "electron-devtools-installer": "^3.1.0",
-    "eslint": "^6.7.2",
+    "eslint": "^7.23.0",
     "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-vue": "^6.2.2",
     "prettier": "^1.19.1",
@@ -79,13 +76,16 @@
     "spectron": "13.0.0",
     "typescript": "~4.2.3",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.6",
-    "vue-cli-plugin-vuetify": "~2.2.2",
+    "vue-cli-plugin-vuetify": "~2.3.1",
     "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.7.0"
   },
+  "bin": {
+    "cnstl": "./ipa/index.js"
+  },
   "license": "AGPL-3.0-or-later",
   "resolutions": {
-    "**/@typescript-eslint/eslint-plugin": "^4.1.1",
-    "**/@typescript-eslint/parser": "^4.1.1"
+    "**/@typescript-eslint/eslint-plugin": "^4.20.0",
+    "**/@typescript-eslint/parser": "^4.20.0"
   }
 }
