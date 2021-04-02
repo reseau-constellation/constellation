@@ -37,9 +37,13 @@
       <v-card-text>
         <p class="mb-0 text-overline">Données</p>
         <v-divider />
-        <v-data-table v-if="entête" :headers="entête" :items="données">
+        <v-data-table v-if="entête" :headers="entête" :items="données" dense>
           <template v-slot:no-data>
             {{ $t("tableau.vide") }}
+          </template>
+          <template v-for="c in entête" v-slot:[`header.${c.value}`]="{ header }">
+            <v-icon x-small @click.stop :key="c.value">mdi-information-outline</v-icon>
+            {{ header.text }}
           </template>
           <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item }">
             {{ formatterChiffre(item[c.value]) }}
@@ -107,7 +111,12 @@ export default {
   },
   mounted: async function() {
     this.tableau = await obtTableau(this.idTableau);
-    this.entête = await obtVarsTableau(this.tableau.bdOrbite);
+    this.entête = [
+      { text: "Date", value: "date" },
+      { text: "Précipitation", value: "préc" },
+      { text: "Température max", value: "tmax" },
+      { text: "Température min", value: "tmin" }
+    ] // await obtVarsTableau(this.tableau.bdOrbite);
     this.données = await obtDonnéesTableau(this.tableau.bdOrbite);
   }
 };
