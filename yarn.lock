@@ -12712,10 +12712,10 @@ nth-check@^1.0.2:
   dependencies:
     boolbase "~1.0.0"
 
-nuchabal@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/nuchabal/-/nuchabal-1.0.3.tgz#e994b76edee16ce1b6349391ebadbcb65e285ce2"
-  integrity sha512-XGb54PDujnld8pxsvTessXS4OoANrJ6XZn3xa5lKvT47LgT0uw+PtYt8X7WoPx4NU5tvxqC31evAxHkQJFTRhg==
+nuchabal@1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/nuchabal/-/nuchabal-1.0.5.tgz#45903c3b9ace2e608657fda8bf25ea8688812b67"
+  integrity sha512-/UOJJbdTys9K9UFFnQxHsxK0XOptKCQj+XDNMUr50FRFUKTxJbwW5c8kBa4fes4Cj2b2um4vRtuwv3fFmdOw9w==
 
 nugget@^2.0.0:
   version "2.0.1"
@@ -17407,10 +17407,10 @@ vuetify-loader@^1.7.0:
     file-loader "^6.2.0"
     loader-utils "^2.0.0"
 
-vuetify@^2.4.0:
-  version "2.4.6"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.4.6.tgz"
-  integrity sha512-oqAWKAin07ip/QuT/p4bL1LegE3MYPbfojrOcj80RATZDSnJyco2PZD8QuIzd0RhYfdAuSTkY8elvHsLu90RuQ==
+vuetify@2.4.9:
+  version "2.4.9"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.4.9.tgz#c4ccf4cf3dc81d426da78913c32d47ab33ede38f"
+  integrity sha512-IS+ZKCk4+RhN8PW9mw6dLSGy0hnFZ0YwOg0Ga+sr9bngbSOI6nw0p+Y/U00vRw8DPScqUmK5cSrI8RhiaTpXow==
 
 vuex-persist@^3.1.3:
   version "3.1.3"
