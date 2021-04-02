@@ -18,7 +18,8 @@ export default {
       return this.$i18n.locale;
     },
     langues: function() {
-      return Object.keys(this.$i18n.messages).sort((a, b) => {
+      const liste_langues = [...new Set([...Object.keys(infoLangues), ...Object.keys(this.$i18n.messages)])]
+      return liste_langues.sort((a, b) => {
         return b === this.orig ? 1 : this.progrès(a) < this.progrès(b) ? 1 : -1;
       });
     },
