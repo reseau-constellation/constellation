@@ -1,5 +1,11 @@
 {
   "fr": {
+    "$vuetify": {
+      "dataIterator": {
+        "rowsPerPageText": "Lignes par page:",
+        "pageText": "{0}-{1} de {2}"
+      }
+    },
     "communs": {
       "auto": "Automatique",
       "messageInstaller": "La version navigateur de Constellation est limitée par la mémoire disponible dans votre navigateur. Il est préférable d'installer le logiciel pour toute analyse importante.",
