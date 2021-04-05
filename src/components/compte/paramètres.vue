@@ -116,7 +116,7 @@ export default {
         this.$ipa.compte.sauvegarderCourriel(courriel);
       }
     },
-    suivreCompte: async function() {
+    initialiserSuivi: async function() {
       const oublierCourriel = await this.$ipa.compte.suivreCourriel(
         courriel => {
           if (courriel) this.courrielOrig = courriel;
@@ -130,15 +130,6 @@ export default {
     effacerImage: async function() {
       await this.$ipa.compte.effacerImage();
     }
-  },
-  mounted: function() {
-    this.$ipa.on("pret", this.suivreCompte.bind(this));
-    if (this.$ipa.pret) {
-      this.suivreCompte();
-    }
-  },
-  destroyed: function() {
-    this.$ipa.off("pret", this.suivreCompte.bind(this));
   }
 };
 </script>

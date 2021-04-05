@@ -53,7 +53,7 @@ export default {
     }
   },
   methods: {
-    suivreImage: async function() {
+    initialiserSuivi: async function() {
       const oublierImage = await this.$ipa.compte.suivreImage(image => {
         if (image) {
           const url = URL.createObjectURL(
@@ -66,15 +66,6 @@ export default {
       });
       this.suivre(oublierImage);
     }
-  },
-  mounted: function() {
-    this.$ipa.on("pret", this.suivreImage.bind(this));
-    if (this.$ipa.pret) {
-      this.suivreImage();
-    }
-  },
-  unmounted: function() {
-    this.$ipa.off("pret", this.suivreCompte.bind(this));
   }
 };
 </script>
