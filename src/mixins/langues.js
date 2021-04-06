@@ -2,8 +2,11 @@ import {
   rutzib_chabäl as écriture,
   rubi_chabäl as nomDeLangue,
   rucholanem_tzibanem as orientationÉcriture,
-  retamabäl_chabäl as infoLangues
+  retamabäl_chabäl as infoLangues,
+  runuk_chabäl as codeLangue
 } from "nuchabal";
+import { உரைக்கு } from "ennikkai";
+import { mapGetters } from "vuex";
 
 const ORIG = "fr";
 
@@ -18,17 +21,22 @@ export default {
       return this.$i18n.locale;
     },
     langues: function() {
-      const liste_langues = [...new Set([...Object.keys(infoLangues), ...Object.keys(this.$i18n.messages)])]
+      const liste_langues = [
+        ...new Set([
+          ...Object.keys(infoLangues),
+          ...Object.keys(this.$i18n.messages)
+        ])
+      ];
       return liste_langues.sort((a, b) => {
         return b === this.orig ? 1 : this.progrès(a) < this.progrès(b) ? 1 : -1;
       });
     },
-    systèmeNum: function() {
-      return this.$store.state.paramètres.numération;
-    },
     languesNuchabal: () => {
       return Object.keys(infoLangues);
-    }
+    },
+    ...mapGetters({
+      systèmeNumération: "paramètres/systèmeNumération"
+    })
   },
   methods: {
     nomDeLangue,
@@ -38,7 +46,7 @@ export default {
     },
     changerLangue(lng) {
       this.$i18n.fallbackLocale = [this.$i18n.locale, "fr"];
-      this.$vuetify.lang.current = lng;
+      this.$vuetify.lang.current = codeLangue(nomDeLangue(lng), "iso");
       this.$i18n.locale = lng;
       this.$vuetify.rtl = this.droiteÀGauche(lng);
       this.$store.commit("paramètres/changerLangue", { langue: lng });
@@ -66,6 +74,9 @@ export default {
     },
     changerNumération: function(système) {
       this.$store.commit("paramètres/changerNumération", { système: système });
+    },
+    formatterChiffre: function(n) {
+      return உரைக்கு(n, this.systèmeNumération);
     }
   }
 };

@@ -72,10 +72,7 @@ class ControlleurConstellation extends EventEmitter {
   // Return true if entry is allowed to be added to the database
   async canAppend(entry: any, identityProvider: any) {
     // Write keys and admins keys are allowed
-    const access = new Set([
-      ...this.get(MODÉRATEUR),
-      ...this.get(MEMBRE)
-    ]);
+    const access = new Set([...this.get(MODÉRATEUR), ...this.get(MEMBRE)]);
     // If the ACL contains the writer's public key or it contains '*'
     if (access.has(entry.identity.id) || access.has("*")) {
       const verifiedIdentity = await identityProvider.verifyIdentity(
@@ -178,7 +175,10 @@ class ControlleurConstellation extends EventEmitter {
   }
 
   /* Factory */
-  static async create(orbitdb: any, options: OptionsControlleurConstellation = {}) {
+  static async create(
+    orbitdb: any,
+    options: OptionsControlleurConstellation = {}
+  ) {
     const ac = new ControlleurConstellation(orbitdb, options);
     await ac.load(
       options.address || options.name || "default-access-controller"

@@ -257,6 +257,8 @@ import itemTableau from "@/components/BD/itemTableau";
 import lienOrbite from "@/components/commun/lienOrbite";
 import lienTélécharger from "@/components/commun/lienTélécharger";
 import mixinImage from "@/mixins/images";
+import mixinLangues from "@/mixins/langues";
+import mixinIPA from "@/mixins/ipa";
 import jetonVariable from "@/components/commun/jetonVariable";
 import carteQualité from "@/components/commun/carteQualité";
 
@@ -269,19 +271,21 @@ export default {
     jetonVariable,
     carteQualité
   },
-  mixins: [mixinImage],
+  mixins: [mixinImage, mixinLangues, mixinIPA],
   data: function() {
     return {
       licence: null,
-      logo: null,
+      détailsBD: {},
+      nomsBD: {},
       permissionÉcrire: false,
+
+      logo: null,
       tableaux: undefined,
-      nomsBD: undefined,
       variables: [],
       géog: ["தமிழ்நாடு", "கோயம்புத்தூர்"],
       motsClefs: ["géographie", "hydrologie"],
       auteurs: null,
-      détailsBD: undefined,
+
       score: null
     };
   },
@@ -290,15 +294,13 @@ export default {
       return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
     },
     nom: function() {
-      return this.nomsBD ? traduireNom(this.nomsBD, this.langues) : this.idBD;
+      return Object.keys(this.nomsBD).length ? traduireNom(this.nomsBD, this.langues) : this.idBD;
     },
     détails: function() {
-      return this.détailsBD
-        ? traduireNom(this.détailsBD, this.langues)
-        : undefined;
+      return traduireNom(this.détailsBD, this.langues)
     },
     idBD: function() {
-      return this.$route.params.id;
+      return decodeURIComponent(this.$route.params.id);
     },
     petitPousset: function() {
       return [
@@ -307,7 +309,6 @@ export default {
       ];
     },
     licenceApprouvée: function() {
-      console.log(licences, this.licence);
       return licences.includes(this.licence);
     },
     logoBD: function() {
@@ -318,30 +319,27 @@ export default {
     couper,
     couleurScore,
     ouvrirLien,
-    miseÀJour: function() {
-      permissionÉcrire(this.idBD).then(x => (this.permissionÉcrire = x));
-      obtNomsBD(this.idBD).then(noms => (this.nomsBD = noms));
-      obtTableauxBD(this.idBD).then(tblx => (this.tableaux = tblx));
-      BDParId(this.idBD).then(bd => (this.licence = bd.licence));
-      obtScoreBD(this.idBD).then(score => (this.score = score));
-      obtAuteursBD(this.idBD).then(auteurs => (this.auteurs = auteurs));
-      this.remplirVariables();
-    },
-    remplirVariables: async function() {
-      for await (const vr of obtVarsBD(this.idBD)) {
-        if (!this.variables.includes(vr)) {
-          this.variables = [...this.variables, vr];
+    initialiserSuivi: async function() {
+      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBD)
+
+      const oublierLicence = await this.$ipa.bds.suivreLicence(
+        this.idBD,
+        licence => {
+          this.licence = licence;
         }
-      }
+      );
+      const oublierNoms = await this.$ipa.bds.suivreNomsBD(
+        this.idBD,
+        noms => {
+          this.nomsBD = noms;
+        });
+      const oublierDétails = await this.$ipa.bds.suivreDescrBD(
+        this.idBD,
+        détails => {
+          this.détailsBD = détails;
+        });
+      this.suivre([oublierLicence, oublierNoms, oublierDétails]);
     }
-  },
-  mounted: function() {
-    this.miseÀJour();
-  },
-  beforeRouteUpdate(to, from, next) {
-    // Répéter la requête lorsque les paramètres de la route changent
-    this.miseÀJour();
-    next();
   }
 };
 </script>

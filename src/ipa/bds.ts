@@ -2,6 +2,108 @@ import { v4 as uuidv4 } from "uuid";
 import { isValidAddress } from "orbit-db";
 import { obtVarsTableau } from "./tableaux";
 import { tempsAléatoire } from "./utils";
+import ClientConstellation, {
+  schémaFonctionSuivi,
+  schémaFonctionOublier
+} from "./client";
+
+export default class BDs {
+  client: ClientConstellation;
+  idBD: string;
+
+  constructor(client: ClientConstellation, id: string) {
+    this.client = client;
+    this.idBD = id;
+  }
+
+  async suivreBDs(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
+    return await this.client.suivreBD(this.idBD, async bd => {
+      const listeBDs = bd
+        .iterator({ limit: -1 })
+        .collect()
+        .map((e: { [key: string]: any }) => e.payload.value);
+      f(listeBDs);
+    });
+  }
+
+  async créerBD(licence: string): Promise<string> {
+    const bdRacine = await this.client.ouvrirBD(this.idBD);
+    const idBdBD = await this.client.créerBDIndépendante('kvstore');
+    await bdRacine.add(idBdBD);
+
+    const bdBD = await this.client.ouvrirBD(idBdBD);
+    await bdBD.set("licence", licence)
+
+    const idBdNoms = await this.client.créerBDIndépendante('kvstore');
+    await bdBD.set("noms", idBdNoms)
+
+    const idBdDescr = await this.client.créerBDIndépendante('kvstore');
+    await bdBD.set("descriptions", idBdDescr);
+
+    const idBdTableaux = await this.client.créerBDIndépendante('feed');
+    await bdBD.set("tableaux", idBdTableaux);
+
+    const idBdMotsClefs = await this.client.créerBDIndépendante('feed');
+    await bdBD.set("motsClefs", idBdMotsClefs);
+
+    return idBdBD;
+  }
+
+  async ajouterNomsBD(id: string, noms: {[key: string]: string}) {
+    const idBdNoms = await this.client.obtIdBd("noms", id)
+    const bdNoms = await this.client.ouvrirBD(idBdNoms)
+    for (const lng in noms) {
+      await bdNoms.set(lng, noms[lng])
+    }
+  }
+
+  async ajouterDescriptionsBD(id: string, descriptions: {[key: string]: string}) {
+    const idBdDescr = await this.client.obtIdBd("descriptions", id)
+    const bdDescr = await this.client.ouvrirBD(idBdDescr)
+    for (const lng in descriptions) {
+      await bdDescr.set(lng, descriptions[lng])
+    }
+  }
+
+  async suivreLicence(id: string, f: schémaFonctionSuivi) {
+    return await this.client.suivreBD(id, async bd => {
+      const licence = await bd.get("licence");
+      f(licence);
+    });
+  }
+
+  async suivreNomsBD(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    const idBDNoms = await this.client.obtIdBd("noms", id);
+    return await this.client.suivreBD(idBDNoms, async bd => {
+      let noms = bd.all;
+      noms = Object.fromEntries(
+        Object.keys(noms).map(x => {
+          return [x, noms[x]];
+        })
+      );
+      f(noms);
+    });
+  }
+
+  async suivreDescrBD(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    const idBdDescr = await this.client.obtIdBd("descriptions", id);
+    return await this.client.suivreBD(idBdDescr, async bd => {
+      let descr = bd.all;
+      descr = Object.fromEntries(
+        Object.keys(descr).map(x => {
+          return [x, descr[x]];
+        })
+      );
+      f(descr);
+    });
+  }
+}
 
 interface BaseDeDonnées {
   id: string;

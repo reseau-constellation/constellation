@@ -1,6 +1,7 @@
 <template>
   <v-container class="text-center">
     <titre :entête="$t('bd.entête')" />
+    {{ idsBds }}
     <v-row>
       <v-col cols="12">
         <v-text-field
@@ -26,18 +27,20 @@
             ></v-img>
 
             <v-card-title
-              >{{ $t("bd.nouveau.entête") }}
+              >{{ $t("bd.nouvelle.entêteCarte") }}
               <v-spacer />
             </v-card-title>
             <v-divider />
-            <v-card-subtitle>{{ $t("bd.nouveau.détails") }}</v-card-subtitle>
+            <v-card-subtitle>{{
+              $t("bd.nouvelle.détailsCarte")
+            }}</v-card-subtitle>
             <v-card-text></v-card-text>
           </v-card>
           <carte-bd
-            v-for="bd in bds"
-            :key="bd.id"
-            :bd="bd"
-            @click="$router.push(`bd/visualiser/${bd.id}`)"
+            v-for="id in idsBds"
+            :key="id"
+            :bd="id"
+            @click="$router.push(`bd/visualiser/${encodeURIComponent(id)}`)"
           />
         </v-slide-x-transition>
       </v-col>
@@ -49,18 +52,23 @@
 import { obtBDs } from "@/ipa/bds";
 import carteBd from "@/components/BD/carteBD";
 import Titre from "@/components/commun/Titre";
+import mixinIPA from "@/mixins/ipa";
 
 export default {
   name: "BD",
   components: { carteBd, Titre },
+  mixins: [mixinIPA],
   data: function() {
     return {
-      bds: []
+      idsBds: []
     };
   },
-  mounted: async function() {
-    for await (const b of obtBDs()) {
-      this.bds = [...this.bds, b];
+  methods: {
+    initialiserSuivi: async function() {
+      const oublierListeBDs = await this.$ipa.bds.suivreBDs(bds => {
+        this.idsBds = bds
+      });
+      this.suivre(oublierListeBDs);
     }
   }
 };

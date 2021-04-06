@@ -76,7 +76,7 @@
 
 <script>
 import mixinIPA from "@/mixins/ipa";
-import boîteNoms from "@/components/compte/boîteNoms/boîte";
+import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import { traduireNom } from "@/utils";
 
 export default {

@@ -16,7 +16,7 @@
     <v-card-title
       >{{ couper(nom, 20) }}
       <v-spacer />
-      <lien-orbite :lien="bd.id" />
+      <lien-orbite :lien="idBD" />
     </v-card-title>
     <v-divider />
     <v-card-subtitle>{{ détails }}</v-card-subtitle>
@@ -27,17 +27,20 @@
         small
         class="me-1 my-1"
         @click.stop="
-          licenceApprouvée ? ouvrirLien($t(`licences.${bd.licence}.lien`)) : ''
+          licenceApprouvée ? ouvrirLien($t(`licences.${licence}.lien`)) : ''
         "
       >
         <v-icon left small :color="licenceApprouvée ? 'secondary' : 'error'">
-          {{ bd.licence ? "mdi-scale-balance" : "mdi-alert-outline" }}
+          {{ licence ? "mdi-scale-balance" : "mdi-alert-outline" }}
         </v-icon>
         {{
-          bd.licence && !licenceApprouvée
-            ? bd.licence
-            : $t(`licences.${bd.licence || "introuvable"}.nom`)
+          licence && !licenceApprouvée
+            ? licence
+            : $t(`licences.${licence || "introuvable"}.nom`)
         }}
+        <v-icon v-if="licenceApprouvée" right small>
+          mdi-open-in-new
+        </v-icon>
       </v-chip>
     </v-card-text>
     <v-card-actions>
@@ -63,45 +66,62 @@
 <script>
 import { traduireNom, couper, ouvrirLien } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite";
-
+import mixinIPA from "@/mixins/ipa";
 import { licences } from "@/ipa/licences";
-
-import { permissionÉcrire, obtNomsBD } from "@/ipa/bds";
 
 export default {
   name: "carteBD",
   props: ["bd"],
   components: { lienOrbite },
+  mixins: [mixinIPA],
   data: function() {
     return {
       épinglée: true,
-      nomsBD: null,
+      licence: null,
+      nomsBD: {},
+      détailsBD: {},
       variables: []
     };
   },
   computed: {
     idBD: function() {
-      return this.bd.id;
+      return decodeURIComponent(this.bd);
     },
     langues: function() {
       return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
     },
     nom: function() {
-      return this.nomsBD ? traduireNom(this.nomsBD, this.langues) : this.idBD;
+      return Object.keys(this.nomsBD).length ? traduireNom(this.nomsBD, this.langues) : this.idBD;
     },
     détails: function() {
-      return traduireNom(this.bd.détails, this.langues);
+      return traduireNom(this.détailsBD, this.langues);
     },
     licenceApprouvée: function() {
-      return this.bd.licence && licences.includes(this.bd.licence);
+      return this.licence && licences.includes(this.licence);
     }
   },
   methods: {
     couper,
-    ouvrirLien
-  },
-  mounted: function() {
-    obtNomsBD(this.idBD).then(noms => (this.nomsBD = noms));
+    ouvrirLien,
+    initialiserSuivi: async function() {
+      const oublierLicence = await this.$ipa.bds.suivreLicence(
+        this.idBD,
+        licence => {
+          this.licence = licence;
+        }
+      );
+      const oublierNoms = await this.$ipa.bds.suivreNomsBD(
+        this.idBD,
+        noms => {
+          this.nomsBD = noms;
+        });
+      const oublierDétails = await this.$ipa.bds.suivreDescrBD(
+        this.idBD,
+        détails => {
+          this.détailsBD = détails;
+        });
+      this.suivre([oublierLicence, oublierNoms, oublierDétails]);
+    }
   }
 };
 </script>

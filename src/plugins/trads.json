@@ -1,11 +1,5 @@
 {
   "fr": {
-    "$vuetify": {
-      "dataIterator": {
-        "rowsPerPageText": "Lignes par page:",
-        "pageText": "{0}-{1} de {2}"
-      }
-    },
     "communs": {
       "auto": "Automatique",
       "messageInstaller": "La version navigateur de Constellation est limitée par la mémoire disponible dans votre navigateur. Il est préférable d'installer le logiciel pour toute analyse importante.",
@@ -77,9 +71,10 @@
     "bd": {
       "entête": "Mes bases de données",
       "filtrer": "Filtrer",
-      "nouveau": {
-        "entête": "Nouvelle BD",
-        "détails": "Créer une nouvelle base de données"
+      "nouvelle": {
+        "entêteCarte": "Nouvelle BD",
+        "détailsCarte": "Créer une nouvelle base de données",
+        "petitPousset": "Nouvelle BD"
       }
     },
     "recherche": {
@@ -143,11 +138,11 @@
       },
       "ODC-BY-1_0": {
         "nom": "ODC BY 1.0",
-        "lien": "https://opendatacommons.org/licenses/by/1-0/"
+        "lien": "https://opendatacommons.org/licenses/by/summary"
       },
       "PDDL": {
         "nom": "PDDL",
-        "lien": "https://opendatacommons.org/licenses/pddl/"
+        "lien": "https://opendatacommons.org/licenses/pddl/summary"
       },
       "introuvable": {
         "nom": "Licence introuvable"

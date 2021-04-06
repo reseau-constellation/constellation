@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import initOrbite from "./orbitdb";
 import initSFIP from "./ipfs";
 import Compte from "./compte";
+import BDs from "./bds";
 
 type FileContent =
   | string
@@ -21,7 +22,8 @@ const schémaRacine = {
   mesProjets: "feed"
 };
 
-export type schémaFonctionSuivi = (bd: any) => void;
+export type schémaFonctionSuivi = (x: any) => void;
+export type schémaFonctionOublier = () => void;
 
 export default class ClientConstellation extends EventEmitter {
   _dir: string;
@@ -31,6 +33,7 @@ export default class ClientConstellation extends EventEmitter {
   orbite: any;
   sfip: any;
   compte?: Compte;
+  bds?: BDs;
   pret: boolean;
 
   constructor(dir = "./sfip-cnstl") {
@@ -54,6 +57,10 @@ export default class ClientConstellation extends EventEmitter {
     await this._bdRacine.load();
     const idBdCompte = await this.créerBD("compte", this._bdRacine, "kvstore");
     this.compte = new Compte(this, idBdCompte);
+
+    const idBdBDs = await this.créerBD("bds", this._bdRacine, "feed");
+    this.bds = new BDs(this, idBdBDs);
+
     this.pret = true;
     this.emit("pret");
   }
@@ -62,7 +69,7 @@ export default class ClientConstellation extends EventEmitter {
     id: string,
     f: schémaFonctionSuivi,
     événements: string[] = ["write", "replicated", "ready"]
-  ) {
+  ): Promise<schémaFonctionOublier> {
     const bd = await this.ouvrirBD(id);
     for (const é of événements) {
       bd.events.on(é, () => f(bd));
@@ -110,12 +117,34 @@ export default class ClientConstellation extends EventEmitter {
       racine = await this.ouvrirBD(racine);
     }
     let idBd = await racine.get(nom);
+    let bd
+
+    // Nous devons confirmer que la base de données spécifiée était du bon genre
+    if (idBd) {
+      try {
+        bd = await this.orbite[type](idBd)
+        return idBd
+      } catch {
+        idBd = null
+      }
+    }
     if (!idBd) {
-      const bd = await this.orbite[type](uuidv4());
+      bd = await this.orbite[type](uuidv4());
       idBd = bd.id;
       await racine.set(nom, idBd);
     }
     return idBd;
+  }
+
+  async créerBDIndépendante(type: string): Promise<string> {
+    const bd = await this.orbite[type](uuidv4());
+    return bd.id;
+  }
+
+  async permissionÉcrire(id: string) {
+    const bd = await this.ouvrirBD(id)
+    const accès = bd.access
+    return accès.write.includes(this.orbite.identity._id)
   }
 
   static async créer() {

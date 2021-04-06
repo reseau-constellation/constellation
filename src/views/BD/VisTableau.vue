@@ -41,12 +41,22 @@
           <template v-slot:no-data>
             {{ $t("tableau.vide") }}
           </template>
-          <template v-for="c in entête" v-slot:[`header.${c.value}`]="{ header }">
-            <v-icon x-small @click.stop :key="c.value">mdi-information-outline</v-icon>
-            {{ header.text }}
+          <template
+            v-for="c in entête"
+            v-slot:[`header.${c.value}`]="{ header }"
+          >
+            <span :key="c.value" @click.stop>
+              <v-icon x-small>mdi-information-outline</v-icon>
+              {{ header.text }}
+            </span>
           </template>
           <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item }">
-            {{ formatterChiffre(item[c.value]) }}
+            <span v-if="c.value === 'date'" :key="c.value">
+              {{ new Date(item[c.value]).toLocaleDateString($i18n.locale) }}
+            </span>
+            <span v-else :key="c.value">
+              {{ formatterChiffre(item[c.value]) }}
+            </span>
           </template>
         </v-data-table>
         <v-skeleton-loader v-else type="image" />
@@ -56,19 +66,18 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 import { obtTableau, obtDonnéesTableau, obtVarsTableau } from "@/ipa/tableaux";
 import { traduireNom } from "@/utils";
 import { couper } from "@/utils";
-import { உரைக்கு } from "ennikkai";
 
 import lienOrbite from "@/components/commun/lienOrbite";
 import lienTélécharger from "@/components/commun/lienTélécharger";
+import mixinLangues from "@/mixins/langues";
 
 export default {
   name: "visTableau",
   components: { lienOrbite, lienTélécharger },
+  mixins: [mixinLangues],
   data: function() {
     return {
       tableau: null,
@@ -88,7 +97,6 @@ export default {
       return this.$route.params.idTableau;
     },
     petitPousset: function() {
-      console.log(this.idBD, this.idTableau);
       return [
         { text: "Données", href: "/bd" },
         { text: couper(this.idBD, 15), href: `/bd/visualiser/${this.idBD}` },
@@ -97,17 +105,10 @@ export default {
           disabled: true
         }
       ];
-    },
-    ...mapGetters({
-      systèmeNumération: "paramètres/systèmeNumération"
-    })
+    }
   },
   methods: {
-    couper,
-    formatterChiffre: function(n) {
-      console.log(n, this.systèmeNumération);
-      return உரைக்கு(n, this.systèmeNumération);
-    }
+    couper
   },
   mounted: async function() {
     this.tableau = await obtTableau(this.idTableau);
@@ -116,7 +117,7 @@ export default {
       { text: "Précipitation", value: "préc" },
       { text: "Température max", value: "tmax" },
       { text: "Température min", value: "tmin" }
-    ] // await obtVarsTableau(this.tableau.bdOrbite);
+    ]; // await obtVarsTableau(this.tableau.bdOrbite);
     this.données = await obtDonnéesTableau(this.tableau.bdOrbite);
   }
 };

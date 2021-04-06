@@ -15,7 +15,6 @@
         <v-col cols="8">
           <v-text-field
             v-model="nom"
-            color="amber"
             outlined
             dense
             hide-details
@@ -49,9 +48,9 @@ export default {
   },
   computed: {
     itemsLangues: function() {
-      return this.languesNuchabal.map(code => {
+      return this.langues.map(code => {
         return {
-          text: this.nomDeLangue(code),
+          text: this.nomDeLangue(code) || code,
           value: code
         };
       });
