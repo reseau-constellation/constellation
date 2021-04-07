@@ -6,9 +6,7 @@
     @click="$emit('click')"
   >
     <v-img
-      :src="
-        bd.logo || require('@/assets/undraw/undraw_Projections_re_1mrh.svg')
-      "
+      :src="logo || require('@/assets/undraw/undraw_Projections_re_1mrh.svg')"
       height="100px"
       contain
     ></v-img>
@@ -78,6 +76,7 @@ export default {
     return {
       épinglée: true,
       licence: null,
+      logo: null,
       nomsBD: {},
       détailsBD: {},
       variables: []

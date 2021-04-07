@@ -12,7 +12,10 @@ export default class Tableaux {
     this.client = client;
   }
 
-  async suivreTableauxBD(id: string, f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
+  async suivreTableauxBD(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBD(id, async bd => {
       const listeTableaux = await bd
         .iterator({ limit: -1 })
@@ -28,11 +31,23 @@ export default class Tableaux {
   }
 
   async ajouterNomsTableau(id: string, noms: { [key: string]: string }) {
-    const idBdNoms = await this.client.obtIdBd("noms", id);
+    const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     const bdNoms = await this.client.ouvrirBD(idBdNoms);
     for (const lng in noms) {
       await bdNoms.set(lng, noms[lng]);
     }
+  }
+
+  async sauvegarderNomTableau(id: string, langue: string, nom: string) {
+    const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
+    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    await bdNoms.set(langue, nom)
+  }
+
+  async effacerNomTableau(id: string, langue: string) {
+    const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
+    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    await bdNoms.del(langue)
   }
 
   async suivreNomsTableau(

@@ -1,7 +1,7 @@
 import isElectron from "is-electron";
 import DOMPurify from "dompurify";
 import marked from "marked";
-import { rutzib_chabäl as écritureLangue } from "nuchabal";
+import { rutzibChabäl as écritureLangue } from "nuchabal";
 
 export function couper(texte: string, nChar: number) {
   if (texte.length <= nChar) {

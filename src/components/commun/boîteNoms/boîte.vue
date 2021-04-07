@@ -1,18 +1,17 @@
 <template>
   <v-card max-width="500">
     <v-card-title>
-      Internationalisez votre nom !
+      {{ $t(titre) }}
     </v-card-title>
     <v-card-subtitle>
-      Le plus de langues vous ajouterez, le plus de chances que les autres
-      membres de Constellation sauront comment vous appeler.
+      {{ $t(sousTitre) }}
     </v-card-subtitle>
     <v-divider></v-divider>
     <item-nouveau-nom
       :languesExistantes="Object.keys(this.noms)"
-      etiquetteLangue="Langue"
-      etiquetteNom="Votre nom"
-      @sauvegarder="sauvegarder"
+      :etiquetteLangue="$t(etiquetteLangue)"
+      :etiquetteNom="$t(etiquetteNom)"
+      @sauvegarder="e => $emit('sauvegarder', e)"
     />
     <v-divider />
     <v-list style="max-height: 300px" class="overflow-y-auto">
@@ -21,9 +20,9 @@
         :key="langue"
         :nomOriginal="nom"
         :langueOriginale="langue"
-        @sauvegarder="sauvegarder"
-        @effacer="effacer"
-        @changerLangue="changerLangue"
+        @sauvegarder="e => $emit('sauvegarder', e)"
+        @effacer="e => $emit('effacer', e)"
+        @changerLangue="e => $emit('changerLangue', e)"
       />
     </v-list>
   </v-card>
@@ -37,7 +36,25 @@ import itemNouveauNom from "./itemNouveauNom";
 export default {
   name: "BoîteNoms",
   components: { itemNom, itemNouveauNom },
-  props: ["noms"],
+  props: {
+    noms: Object,
+    titre: {
+      type: String,
+      default: "boîteNoms.titre"
+    },
+    sousTitre: {
+      type: String,
+      default: "boîteNoms.sousTitre"
+    },
+    etiquetteNom: {
+      type: String,
+      default: "boîteNoms.étiquetteNom"
+    },
+    etiquetteLangue: {
+      type: String,
+      default: "boîteNoms.étiquetteLangue"
+    }
+  },
   mixins: [mixinLangues],
   data: function() {
     return {
@@ -45,9 +62,11 @@ export default {
       nouveauNom: ""
     };
   },
+  mounted: function() {
+    console.log(Object.keys(this.noms)[-1])
+  },
   computed: {
     itemsLangues: function() {
-      console.log(this.langues);
       return this.langues
         .filter(lng => {
           return !Object.keys(this.noms).includes(lng);
@@ -58,18 +77,6 @@ export default {
             value: code
           };
         });
-    }
-  },
-  methods: {
-    sauvegarder(langue, nom) {
-      this.$ipa.compte.sauvegarderNom(langue, nom);
-    },
-    changerLangue(langue, nouvelleLangue, nom) {
-      this.$ipa.compte.effacerNom(langue);
-      this.$ipa.compte.sauvegarderNom(nouvelleLangue, nom);
-    },
-    effacer(langue) {
-      this.$ipa.compte.effacerNom(langue);
     }
   }
 };

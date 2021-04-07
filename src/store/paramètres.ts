@@ -1,4 +1,4 @@
-import { rajilanïk_chabäl as numLangue } from "nuchabal";
+import { rajilanïkChabäl as numLangue } from "nuchabal";
 
 export default {
   namespaced: true,

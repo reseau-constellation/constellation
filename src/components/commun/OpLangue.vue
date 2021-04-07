@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { rubi_chabäl as codeÀNomLangue } from "nuchabal";
+import { rubiChabäl as codeÀNomLangue } from "nuchabal";
 
 export default {
   name: "opsLangue",

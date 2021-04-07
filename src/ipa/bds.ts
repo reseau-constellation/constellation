@@ -47,26 +47,50 @@ export default class BDs {
   }
 
   async ajouterNomsBD(id: string, noms: { [key: string]: string }) {
-    const idBdNoms = await this.client.obtIdBd("noms", id);
+    const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     const bdNoms = await this.client.ouvrirBD(idBdNoms);
     for (const lng in noms) {
       await bdNoms.set(lng, noms[lng]);
     }
   }
 
+  async sauvegarderNomBD(id: string, langue: string, nom: string) {
+    const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
+    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    await bdNoms.set(langue, nom)
+  }
+
+  async effacerNomBD(id: string, langue: string) {
+    const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
+    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    await bdNoms.del(langue)
+  }
+
   async ajouterDescriptionsBD(
     id: string,
     descriptions: { [key: string]: string }
   ) {
-    const idBdDescr = await this.client.obtIdBd("descriptions", id);
+    const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     const bdDescr = await this.client.ouvrirBD(idBdDescr);
     for (const lng in descriptions) {
       await bdDescr.set(lng, descriptions[lng]);
     }
   }
 
+  async sauvegarderDescrBD(id: string, langue: string, nom: string) {
+    const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
+    const bdDescr = await this.client.ouvrirBD(idBdDescr);
+    await bdDescr.set(langue, nom)
+  }
+
+  async effacerbdDescrBD(id: string, langue: string) {
+    const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
+    const bdDescr = await this.client.ouvrirBD(idBdDescr);
+    await bdDescr.del(langue)
+  }
+
   async ajouterTableauBD(id: string): Promise<string> {
-    const idBdTableaux = await this.client.obtIdBd("tableaux", id);
+    const idBdTableaux = await this.client.obtIdBd("tableaux", id, "feed");
     const bdTableaux = await this.client.ouvrirBD(idBdTableaux);
     const idTableau = await this.client.tableaux!.créerTableau();
     await bdTableaux.add(idTableau);
@@ -83,7 +107,7 @@ export default class BDs {
     await bdTableaux.remove(entrée.hash);
 
     // Enfin, effacer les données et le tableau lui-même
-    await this.client.tableaux!.effacerTableau(idTableau)
+    await this.client.tableaux!.effacerTableau(idTableau);
   }
 
   async suivreLicence(id: string, f: schémaFonctionSuivi) {
@@ -105,6 +129,20 @@ export default class BDs {
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdDic(id, "descriptions", f);
+  }
+
+  async suivreTableauxBD(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    const idBdTableaux = await this.client.obtIdBd("tableaux", id, "feed");
+    return await this.client.suivreBD(idBdTableaux, async bd => {
+      const listeTableaux = bd
+        .iterator({ limit: -1 })
+        .collect()
+        .map((e: { [key: string]: any }) => e.payload.value);
+      f(listeTableaux);
+    });
   }
 
   async effacerBD(id: string) {

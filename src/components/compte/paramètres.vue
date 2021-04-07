@@ -29,7 +29,14 @@
                   :label="$t('compte.onglets.compte.nom')"
                 />
               </template>
-              <boîteNoms :noms="noms" />
+              <boîteNoms
+                :noms="noms"
+                titre="compte.onglets.compte.titreBoîteNoms"
+                sousTitre="compte.onglets.compte.sousTitreBoîteNoms"
+                @sauvegarder="sauvegarderNom"
+                @changerLangue="changerLangueNom"
+                @effacer="effacerNom"
+              />
             </v-menu>
           </v-col>
           <v-col cols="4">
@@ -122,6 +129,8 @@ export default {
           if (courriel) this.courrielOrig = courriel;
         }
       );
+      await this.$ipa.compte.effacerNom("[object Object]");
+
       const oublierNoms = await this.$ipa.compte.suivreNoms(noms => {
         this.noms = noms;
       });
@@ -129,6 +138,16 @@ export default {
     },
     effacerImage: async function() {
       await this.$ipa.compte.effacerImage();
+    },
+    sauvegarderNom({ langue, nom }) {
+      this.$ipa.compte.sauvegarderNom(langue, nom);
+    },
+    changerLangueNom({ langueOriginale, langue, nom }) {
+      this.$ipa.compte.effacerNom(langueOriginale);
+      this.$ipa.compte.sauvegarderNom(langue, nom);
+    },
+    effacerNom({ langue }) {
+      this.$ipa.compte.effacerNom(langue);
     }
   }
 };

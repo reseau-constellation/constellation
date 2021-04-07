@@ -64,14 +64,18 @@ export default {
       if (this.nom === "") {
         this.effacer();
       } else {
-        this.$emit("sauvegarder", this.lng, this.nom);
+        this.$emit("sauvegarder", { langue: this.lng, nom: this.nom });
       }
     },
     changerLangue: function() {
-      this.$emit("changerLangue", this.langueOriginale, this.lng, this.nom);
+      this.$emit("changerLangue", {
+        langueOriginale: this.langueOriginale,
+        langue: this.lng,
+        nom: this.nom
+      });
     },
     effacer: function() {
-      this.$emit("effacer", this.lng);
+      this.$emit("effacer", { langue: this.lng });
     }
   },
   mounted: function() {

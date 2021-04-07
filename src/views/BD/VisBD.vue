@@ -21,19 +21,39 @@
       <v-img :src="logoBD" height="100px" contain />
       <v-card-title>
         {{ couper(nom, 40) }}
-        <lien-orbite :lien="idBD" />
 
         <span v-if="permissionÉcrire">
-          <v-btn icon>
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
+          <v-menu
+            offset-x
+            :close-on-content-click="false"
+            transition="slide-y-transition"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-on="on"
+                v-bind="attrs">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+            </template>
+            <boîteNoms
+              :noms="nomsBD"
+              sousTitre="bd.vis.boîteNoms.sousTitre"
+              @sauvegarder="sauvegarderNom"
+              @changerLangue="changerLangueNom"
+              @effacer="effacerNom"
+            />
+          </v-menu>
+
           <v-btn icon>
             <v-icon>mdi-camera-outline</v-icon>
           </v-btn>
         </span>
+        <span>
+          <lien-orbite :lien="idBD" />
+        </span>
         <v-spacer />
-
-        <lienTélécharger :lien="idBD" />
+        <span>
+          <lienTélécharger :lien="idBD" />
+        </span>
 
         <v-dialog v-if="permissionÉcrire" v-model="dialogue" width="500">
           <template v-slot:activator="{ on, attrs }">
@@ -67,7 +87,28 @@
           </v-card>
         </v-dialog>
       </v-card-title>
-      <v-card-subtitle v-if="this.détails">{{ détails }}</v-card-subtitle>
+      <v-card-subtitle v-if="this.descriptions">
+        {{ descriptions }}
+        <v-menu
+          offset-x
+          :close-on-content-click="false"
+          transition="slide-y-transition"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-on="on" x-small
+              v-bind="attrs">
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+          </template>
+          <boîteNoms
+            :noms="descriptionsBD"
+            titre="bd.vis.boîteDescr.titre"
+            @sauvegarder="sauvegarderDescr"
+            @changerLangue="changerLangueDescr"
+            @effacer="effacerDescr"
+          />
+        </v-menu>
+      </v-card-subtitle>
 
       <v-divider />
       <v-card-text>
@@ -220,9 +261,26 @@
         </div>
 
         <v-list>
-          <p class="mb-0 text-overline">Tableaux</p>
+          <p class="mb-0 text-overline">Tableaux
+            <v-btn icon small @click="ajouterTableau">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </p>
           <v-divider />
+          <v-skeleton-loader v-if="tableaux === null" type="paragraph"/>
+          <div v-else-if="!tableaux.length" class="text-center">
+            <p class="text-h5 mt-5">Il n'y a aucun tableau pour l'instant</p>
+            <v-img
+              :src="image('vide')"
+              class="my-5" contain height="175px"
+            />
+
+            <v-btn color="primary" outlined text @click="ajouterTableau">
+              Ajouter un tableau
+            </v-btn>
+          </div>
           <transition-group
+            v-else
             name="fade"
             mode="out-in"
             class="d-flex flex-wrap justify-center"
@@ -231,7 +289,8 @@
               v-for="t in tableaux"
               :key="t"
               :id="t"
-              @click="$router.push(`/bd/visualiser/${idBD}/tableau/${t}`)"
+              :idBD="idBD"
+              @click="$router.push(`/bd/visualiser/${encodeURIComponent(idBD)}/tableau/${encodeURIComponent(t)}`)"
             />
           </transition-group>
         </v-list>
@@ -244,6 +303,7 @@
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 import { licences } from "@/ipa/licences";
 
+import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import itemTableau from "@/components/BD/itemTableau";
 import lienOrbite from "@/components/commun/lienOrbite";
 import lienTélécharger from "@/components/commun/lienTélécharger";
@@ -260,19 +320,20 @@ export default {
     lienOrbite,
     lienTélécharger,
     jetonVariable,
-    carteQualité
+    carteQualité,
+    boîteNoms
   },
   mixins: [mixinImage, mixinLangues, mixinIPA],
   data: function() {
     return {
       dialogue: false,
       licence: null,
-      détailsBD: {},
+      descriptionsBD: {},
       nomsBD: {},
       permissionÉcrire: false,
-
+      tableaux: null,
       logo: null,
-      tableaux: undefined,
+
       variables: [],
       géog: [],
       motsClefs: [],
@@ -289,8 +350,8 @@ export default {
         ? traduireNom(this.nomsBD, this.langues)
         : this.idBD;
     },
-    détails: function() {
-      return traduireNom(this.détailsBD, this.langues);
+    descriptions: function() {
+      return traduireNom(this.descriptionsBD, this.langues);
     },
     idBD: function() {
       return decodeURIComponent(this.$route.params.id);
@@ -312,6 +373,9 @@ export default {
     couper,
     couleurScore,
     ouvrirLien,
+    ajouterTableau: async function() {
+      await this.$ipa.bds.ajouterTableauBD(this.idBD)
+    },
     initialiserSuivi: async function() {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBD);
 
@@ -324,17 +388,41 @@ export default {
       const oublierNoms = await this.$ipa.bds.suivreNomsBD(this.idBD, noms => {
         this.nomsBD = noms;
       });
-      const oublierDétails = await this.$ipa.bds.suivreDescrBD(
+      const oublierDescriptions = await this.$ipa.bds.suivreDescrBD(
         this.idBD,
-        détails => {
-          this.détailsBD = détails;
+        descriptions => {
+          this.descriptionsBD = descriptions;
         }
       );
-      this.suivre([oublierLicence, oublierNoms, oublierDétails]);
+      const oublierTableaux = await this.$ipa.bds.suivreTableauxBD(
+        this.idBD,
+        tableaux => this.tableaux = tableaux
+      )
+      this.suivre([oublierLicence, oublierNoms, oublierDescriptions, oublierTableaux]);
     },
     effacerBD: async function() {
       await this.$ipa.bds.effacerBD(this.idBD);
       this.$router.push("/bd");
+    },
+    sauvegarderNom({ langue, nom }) {
+      this.$ipa.bds.sauvegarderNomBD(this.idBD, langue, nom);
+    },
+    changerLangueNom({ langueOriginale, langue, nom }) {
+      this.$ipa.compte.effacerNomBD(this.idBD, langueOriginale);
+      this.$ipa.compte.sauvegarderNomBD(this.idBD, langue, nom);
+    },
+    effacerNom({ langue }) {
+      this.$ipa.compte.effacerNomBD(this.idBD, langue);
+    },
+    sauvegarderDescr({ langue, nom }) {
+      this.$ipa.bds.sauvegarderDescrBD(this.idBD, langue, nom);
+    },
+    changerLangueDescr({ langueOriginale, langue, nom }) {
+      this.$ipa.compte.effacerDescrBD(langueOriginale);
+      this.$ipa.compte.sauvegarderDescrBD(langue, nom);
+    },
+    effacerDescr({ langue }) {
+      this.$ipa.compte.effacerDescrBD(langue);
     }
   }
 };

@@ -12712,10 +12712,10 @@ nth-check@^1.0.2:
   dependencies:
     boolbase "~1.0.0"
 
-nuchabal@1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/nuchabal/-/nuchabal-1.0.5.tgz#45903c3b9ace2e608657fda8bf25ea8688812b67"
-  integrity sha512-/UOJJbdTys9K9UFFnQxHsxK0XOptKCQj+XDNMUr50FRFUKTxJbwW5c8kBa4fes4Cj2b2um4vRtuwv3fFmdOw9w==
+nuchabal@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/nuchabal/-/nuchabal-1.0.6.tgz#eb4e58fd0b3b1b47aeb8d7a30cc5e9af289eada7"
+  integrity sha512-Qq2+uLUajuzZHzHXYdtX5VBVdNhzRpNzL10BH1RsvGuSkI9xgKlFpoGI6fbAxiJnZZ8tQGGVkIWlTf+0+BFcig==
 
 nugget@^2.0.0:
   version "2.0.1"

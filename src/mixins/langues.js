@@ -1,9 +1,9 @@
 import {
-  rutzib_chabäl as écriture,
-  rubi_chabäl as nomDeLangue,
-  rucholanem_tzibanem as orientationÉcriture,
-  retamabäl_chabäl as infoLangues,
-  runuk_chabäl as codeLangue
+  rutzibChabäl as écriture,
+  rubiChabäl as nomDeLangue,
+  rucholanemTzibanem as orientationÉcriture,
+  retamabälChabäl as infoLangues,
+  runukChabäl as codeLangue
 } from "nuchabal";
 import { உரைக்கு } from "ennikkai";
 import { mapGetters } from "vuex";

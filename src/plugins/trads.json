@@ -9,6 +9,12 @@
       "texte": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
       "bouton": "Lire les conditions"
     },
+    "boîteNoms": {
+      "titre": "Ajoutez des noms",
+      "sousTitre": "Spécifiez autant que langues que vous voudrez.",
+      "étiquetteLangue": "Langue",
+      "étiquetteNom": "Nom"
+    },
     "nav": {
       "compte": "Compte",
       "projets": "Mes projets",
@@ -37,6 +43,8 @@
           "infoPublique": "Ces informations sont publiques",
           "nom": "Votre nom",
           "aucunNom": "Aucun nom",
+          "titreBoîteNoms": "Internationalisez votre nom !",
+          "sousTitreBoîteNoms": "Le plus de langues vous ajouterez, le plus de chances que les autres membres de Constellation sauront comment vous appeler.",
           "courriel": "Votre courriel",
           "image": "Votre image de profil",
           "dispositifs": "Dispositifs"
@@ -75,6 +83,14 @@
         "entêteCarte": "Nouvelle BD",
         "détailsCarte": "Créer une nouvelle base de données",
         "petitPousset": "Nouvelle BD"
+      },
+      "vis": {
+        "boîteNoms": {
+          "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données."
+        },
+        "boîteDescr": {
+          "titre": "Ajoutez des descriptions."
+        }
       }
     },
     "recherche": {

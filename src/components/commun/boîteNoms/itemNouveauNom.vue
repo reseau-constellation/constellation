@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     ajouter(langue, nom) {
-      this.$emit("sauvegarder", langue, nom);
+      this.$emit("sauvegarder", { langue, nom });
       this.langueNouveauNom = this.nouveauNom = "";
     }
   }

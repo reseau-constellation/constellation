@@ -91,8 +91,8 @@
 import opLangue from "@/components/commun/OpLangue";
 import mixinLangues from "@/mixins/langues";
 import {
-  rubi_chabäl as codeÀNomLangue,
-  rajilanïk_chabäl as numLangue
+  rubiChabäl as codeÀNomLangue,
+  rajilanïkChabäl as numLangue
 } from "nuchabal";
 import { முறைமைகள் as systèmesNum, உரைக்கு as chifreÀTexte } from "ennikkai";
 

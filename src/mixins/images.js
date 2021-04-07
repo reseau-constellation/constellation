@@ -37,6 +37,10 @@ const imagesThème = {
   },
   logoBD: {
     unDraw: require("@/assets/undraw/undraw_Projections_re_1mrh.svg")
+  },
+  vide: {
+    unDraw: require("@/assets/undraw/undraw_adventure_map_hnin.svg"),
+    வவவ: require("@/assets/வவவ/கிணறு.svg")
   }
 };
 

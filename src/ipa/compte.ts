@@ -37,7 +37,7 @@ export default class Compte {
   }
 
   async sauvegarderNom(langue: string, nom: string): Promise<void> {
-    const idBDNoms = await this.client.créerBD("noms", this.idBD, "kvstore");
+    const idBDNoms = await this.client.obtIdBd("noms", this.idBD, "kvstore");
     const bd = await this.client.ouvrirBD(idBDNoms);
     await bd.set(langue, nom);
   }

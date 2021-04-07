@@ -57,13 +57,13 @@ export default class ClientConstellation extends EventEmitter {
 
     this._bdRacine = await this.orbite.kvstore("racine"); //, this._opsAutoBD);
     await this._bdRacine.load();
-    const idBdCompte = await this.créerBD("compte", this._bdRacine, "kvstore");
+    const idBdCompte = await this.obtIdBd("compte", this._bdRacine, "kvstore");
     this.compte = new Compte(this, idBdCompte);
 
-    const idBdBDs = await this.créerBD("bds", this._bdRacine, "feed");
+    const idBdBDs = await this.obtIdBd("bds", this._bdRacine, "feed");
     this.bds = new BDs(this, idBdBDs);
 
-    this.tableaux = new Tableaux(this)
+    this.tableaux = new Tableaux(this);
 
     this.pret = true;
     this.emit("pret");
@@ -92,7 +92,7 @@ export default class ClientConstellation extends EventEmitter {
     clef: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdDic = await this.obtIdBd(clef, id);
+    const idBdDic = await this.obtIdBd(clef, id, "kvstore");
     return await this.suivreBD(idBdDic, async bd => {
       let valeurs = bd.all;
       valeurs = Object.fromEntries(
@@ -117,11 +117,6 @@ export default class ClientConstellation extends EventEmitter {
     return;
   }
 
-  async obtIdBd(nom: string, idRacine: string) {
-    const bdRacine = await this.ouvrirBD(idRacine);
-    return await bdRacine.get(nom);
-  }
-
   async ouvrirBD(id: string) {
     const existante = this._bds[id];
     if (existante) {
@@ -133,7 +128,7 @@ export default class ClientConstellation extends EventEmitter {
     return bd;
   }
 
-  async créerBD(nom: string, racine: any, type: string): Promise<string> {
+  async obtIdBd(nom: string, racine: any, type?: string): Promise<string> {
     if (typeof racine === "string") {
       racine = await this.ouvrirBD(racine);
     }
@@ -141,7 +136,7 @@ export default class ClientConstellation extends EventEmitter {
     let bd;
 
     // Nous devons confirmer que la base de données spécifiée était du bon genre
-    if (idBd) {
+    if (idBd && type) {
       try {
         bd = await this.orbite[type](idBd);
         return idBd;
@@ -149,7 +144,7 @@ export default class ClientConstellation extends EventEmitter {
         idBd = null;
       }
     }
-    if (!idBd) {
+    if (!idBd && this.permissionÉcrire(racine) && type) {
       bd = await this.orbite[type](uuidv4());
       idBd = bd.id;
       await racine.set(nom, idBd);

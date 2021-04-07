@@ -34,7 +34,7 @@
 <script>
 import { obtNomsVariable } from "@/ipa/variables";
 import { traduireNom } from "@/utils";
-import { rubi_chabäl as codeÀNomLangue } from "nuchabal";
+import { rubiChabäl as codeÀNomLangue } from "nuchabal";
 import lienOrbite from "@/components/commun/lienOrbite";
 
 export default {
