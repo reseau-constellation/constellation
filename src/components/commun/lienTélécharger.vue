@@ -64,9 +64,13 @@
               :items="['Python', 'JavaScript']"
               :label="$t('lienTélécharger.langageInformatique')"
             ></v-select>
-            <div class="pa-2" style="background: #EEEEEE">
-              {{ codeTélécharger }}
-            </div>
+            <v-textarea
+              outlined
+              :value="codeTélécharger"
+              :readonly="true"
+              hide-details
+              background-color="grey lighten-4"
+            />
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -106,7 +110,7 @@ export default {
         case "python":
           return `import constellation as cst\n\ncst.obtenir_données("${this.lien}")`;
         case "javascript":
-          return `import { obtenirDonnées } from "constellation-ipa"\n\nconst obtDonnées = async function() {\n    return await obtenirDonnées("${this.lien}")\n}`;
+          return `import { obtenirDonnées } from "constellation-ipa"\n\nconst obtDonnées = await obtenirDonnées("${this.lien}")\n`;
         default:
           return "";
       }
