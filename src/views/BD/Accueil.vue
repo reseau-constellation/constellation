@@ -1,7 +1,6 @@
 <template>
   <v-container class="text-center">
     <titre :entête="$t('bd.entête')" />
-    {{ idsBds }}
     <v-row>
       <v-col cols="12">
         <v-text-field
@@ -66,7 +65,7 @@ export default {
   methods: {
     initialiserSuivi: async function() {
       const oublierListeBDs = await this.$ipa.bds.suivreBDs(bds => {
-        this.idsBds = bds
+        this.idsBds = bds;
       });
       this.suivre(oublierListeBDs);
     }

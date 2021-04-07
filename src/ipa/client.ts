@@ -7,6 +7,7 @@ import initOrbite from "./orbitdb";
 import initSFIP from "./ipfs";
 import Compte from "./compte";
 import BDs from "./bds";
+import Tableaux from "./tableaux";
 
 type FileContent =
   | string
@@ -34,6 +35,7 @@ export default class ClientConstellation extends EventEmitter {
   sfip: any;
   compte?: Compte;
   bds?: BDs;
+  tableaux?: Tableaux;
   pret: boolean;
 
   constructor(dir = "./sfip-cnstl") {
@@ -61,6 +63,8 @@ export default class ClientConstellation extends EventEmitter {
     const idBdBDs = await this.créerBD("bds", this._bdRacine, "feed");
     this.bds = new BDs(this, idBdBDs);
 
+    this.tableaux = new Tableaux(this)
+
     this.pret = true;
     this.emit("pret");
   }
@@ -81,6 +85,23 @@ export default class ClientConstellation extends EventEmitter {
       });
     };
     return oublier;
+  }
+
+  async suivreBdDic(
+    id: string,
+    clef: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    const idBdDic = await this.obtIdBd(clef, id);
+    return await this.suivreBD(idBdDic, async bd => {
+      let valeurs = bd.all;
+      valeurs = Object.fromEntries(
+        Object.keys(valeurs).map(x => {
+          return [x, valeurs[x]];
+        })
+      );
+      f(valeurs);
+    });
   }
 
   async obtFichierSFIP(id: string, max?: number) {
@@ -117,15 +138,15 @@ export default class ClientConstellation extends EventEmitter {
       racine = await this.ouvrirBD(racine);
     }
     let idBd = await racine.get(nom);
-    let bd
+    let bd;
 
     // Nous devons confirmer que la base de données spécifiée était du bon genre
     if (idBd) {
       try {
-        bd = await this.orbite[type](idBd)
-        return idBd
+        bd = await this.orbite[type](idBd);
+        return idBd;
       } catch {
-        idBd = null
+        idBd = null;
       }
     }
     if (!idBd) {
@@ -141,10 +162,16 @@ export default class ClientConstellation extends EventEmitter {
     return bd.id;
   }
 
+  async effacerBD(id: string): Promise<void> {
+    const bd = await this.orbite.open(id);
+    await bd.drop();
+    delete this._bds[id];
+  }
+
   async permissionÉcrire(id: string) {
-    const bd = await this.ouvrirBD(id)
-    const accès = bd.access
-    return accès.write.includes(this.orbite.identity._id)
+    const bd = await this.ouvrirBD(id);
+    const accès = bd.access;
+    return accès.write.includes(this.orbite.identity._id);
   }
 
   static async créer() {

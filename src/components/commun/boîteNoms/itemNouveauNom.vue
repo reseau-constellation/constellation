@@ -50,7 +50,7 @@ export default {
     return {
       langueNouveauNom: null,
       nouveauNom: null
-    }
+    };
   },
   computed: {
     itemsLangues: function() {
@@ -70,11 +70,9 @@ export default {
     ajouter(langue, nom) {
       this.$emit("sauvegarder", langue, nom);
       this.langueNouveauNom = this.nouveauNom = "";
-    },
+    }
   }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

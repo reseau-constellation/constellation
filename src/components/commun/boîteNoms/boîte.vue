@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     itemsLangues: function() {
-      console.log(this.langues)
+      console.log(this.langues);
       return this.langues
         .filter(lng => {
           return !Object.keys(this.noms).includes(lng);

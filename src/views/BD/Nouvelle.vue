@@ -80,16 +80,16 @@
                 @changerLangue="changerLangueDescr"
               />
             </v-list>
-
           </v-card-text>
         </v-window-item>
 
         <v-window-item :value="3">
           <v-card-text>
             <p class="grey--text text--darken-1 mb-3">
-              Ça vaut la peine de prendre son temps. Vous pouvez changer d'avis plus tard, mais vous
-              ne pouvez pas révoquer les droits déjà octroyés aux autres
-              utilisateurs et utilisatrices pour les données déjà publiées.
+              Ça vaut la peine de prendre son temps. Vous pouvez changer d'avis
+              plus tard, mais vous ne pouvez pas révoquer les droits déjà
+              octroyés aux autres utilisateurs et utilisatrices pour les données
+              déjà publiées.
             </p>
             <v-select
               v-model="licence"
@@ -116,10 +116,16 @@
               :src="image('logoBD')"
             ></v-img>
             <h3 class="title font-weight-light mb-2">
-              Veuillez confirmer la création de la
-              base de données afin de pouvoir commencer à y ajouter des données.
+              Veuillez confirmer la création de la base de données afin de
+              pouvoir commencer à y ajouter des données.
             </h3>
-            <v-btn tiled outlined color="primary" @click="e=>créerBD(e)">
+            <v-btn
+              :loading="enCréation"
+              tiled
+              outlined
+              color="primary"
+              @click="e => créerBD(e)"
+            >
               C'est parti !
             </v-btn>
           </div>
@@ -165,6 +171,7 @@ export default {
       licence: null,
       noms: {},
       descriptions: {},
+      enCréation: false
     };
   },
   computed: {
@@ -189,24 +196,28 @@ export default {
   },
   methods: {
     sauvegarderNom: function(langue, nom) {
-      this.noms = {...this.noms, [langue]: nom};
+      this.noms = { ...this.noms, [langue]: nom };
     },
     effacerNom: function(langue) {
       this.noms = Object.fromEntries(
-        Object.keys(this.noms).filter(x => x !== langue).map(x=>[x, this.noms[x]])
-      )
+        Object.keys(this.noms)
+          .filter(x => x !== langue)
+          .map(x => [x, this.noms[x]])
+      );
     },
     changerLangueNom: function(langue, nouvelleLangue, nom) {
       this.effacerNom(langue);
       this.sauvegarderNom(nouvelleLangue, nom);
     },
     sauvegarderDescr: function(langue, descr) {
-      this.descriptions = {...this.descriptions, [langue]: descr};
+      this.descriptions = { ...this.descriptions, [langue]: descr };
     },
     effacerDescr: function(langue) {
       this.descriptions = Object.fromEntries(
-        Object.keys(this.descriptions).filter(x => x !== langue).map(x=>[x, this.descriptions[x]])
-      )
+        Object.keys(this.descriptions)
+          .filter(x => x !== langue)
+          .map(x => [x, this.descriptions[x]])
+      );
     },
     changerLangueDescr: function(langue, nouvelleLangue, descr) {
       this.effacerDescr(langue);
@@ -218,14 +229,15 @@ export default {
       }
     },
     créerBD: async function() {
-      const id = await this.$ipa.bds.créerBD(this.licence)
+      this.enCréation = true;
+      const id = await this.$ipa.bds.créerBD(this.licence);
       if (Object.keys(this.noms).length) {
-        await this.$ipa.bds.ajouterNomsBD(id, this.noms)
+        await this.$ipa.bds.ajouterNomsBD(id, this.noms);
       }
       if (Object.keys(this.descriptions).length) {
-        await this.$ipa.bds.ajouterDescriptionsBD(id, this.descriptions)
+        await this.$ipa.bds.ajouterDescriptionsBD(id, this.descriptions);
       }
-      this.$router.push(`bd/visualiser/${encodeURIComponent(id)}`)
+      this.$router.push(`/bd/visualiser/${encodeURIComponent(id)}`);
     }
   }
 };

@@ -16,7 +16,6 @@
 
 <script>
 import { traduireNom, couper } from "@/utils";
-import { obtTableau, obtVarsTableau } from "@/ipa/tableaux";
 import jetonVariable from "@/components/commun/jetonVariable";
 
 export default {
@@ -35,13 +34,7 @@ export default {
       return traduireNom(this.tableau.nom, lngs);
     }
   },
-  methods: { couper },
-  mounted: function() {
-    obtTableau(this.id).then(t => {
-      this.tableau = t;
-    });
-    obtVarsTableau(this.id).then(vrs => (this.variables = vrs));
-  }
+  methods: { couper }
 };
 </script>
 

@@ -91,7 +91,9 @@ export default {
       return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
     },
     nom: function() {
-      return Object.keys(this.nomsBD).length ? traduireNom(this.nomsBD, this.langues) : this.idBD;
+      return Object.keys(this.nomsBD).length
+        ? traduireNom(this.nomsBD, this.langues)
+        : this.idBD;
     },
     détails: function() {
       return traduireNom(this.détailsBD, this.langues);
@@ -110,16 +112,15 @@ export default {
           this.licence = licence;
         }
       );
-      const oublierNoms = await this.$ipa.bds.suivreNomsBD(
-        this.idBD,
-        noms => {
-          this.nomsBD = noms;
-        });
+      const oublierNoms = await this.$ipa.bds.suivreNomsBD(this.idBD, noms => {
+        this.nomsBD = noms;
+      });
       const oublierDétails = await this.$ipa.bds.suivreDescrBD(
         this.idBD,
         détails => {
           this.détailsBD = détails;
-        });
+        }
+      );
       this.suivre([oublierLicence, oublierNoms, oublierDétails]);
     }
   }

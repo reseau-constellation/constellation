@@ -1,35 +1,54 @@
 import { v4 as uuidv4 } from "uuid";
-import { tempsAléatoire } from "./utils";
+import { isValidAddress } from "orbit-db";
+import ClientConstellation, {
+  schémaFonctionSuivi,
+  schémaFonctionOublier
+} from "./client";
 
-export async function obtTableau(id: string) {
-  await new Promise(resolve => setTimeout(resolve, tempsAléatoire()));
-  return {
-    nom: {
-      fr: "Tableau test ".concat(id),
-      en: "Test table ".concat(id)
-    },
-    bdOrbite: uuidv4()
-  };
-}
-export async function obtVarsTableau(id: string): Promise<string[]> {
-  const bd = await obtTableau(id);
-  return ["xxxdate", "xxxpréc", "xxxtmax", "xxxtmin"];
-  /*[
-    { text: "Date", value: "date" },
-    { text: "Précipitation", value: "préc" },
-    { text: "Température max", value: "tmax" },
-    { text: "Température min", value: "tmin" }
-  ]*/
-}
+export default class Tableaux {
+  client: ClientConstellation;
 
-export async function obtDonnéesTableau(id: string) {
-  const bd = await obtTableau(id);
-  return [
-    { date: "2000-01-01", préc: "2", tmax: "24", tmin: "18" },
-    { date: "2000-01-02", préc: "0", tmax: "22", tmin: "13" },
-    { date: "2000-01-03", préc: "2", tmax: "24", tmin: "18" },
-    { date: "2000-01-04", préc: "0", tmax: "22", tmin: "13" },
-    { date: "2000-01-05", préc: "2", tmax: "24", tmin: "18" },
-    { date: "2000-01-06", préc: "0", tmax: "22", tmin: "13" }
-  ];
+  constructor(client: ClientConstellation) {
+    this.client = client;
+  }
+
+  async suivreTableauxBD(id: string, f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
+    return await this.client.suivreBD(id, async bd => {
+      const listeTableaux = await bd
+        .iterator({ limit: -1 })
+        .collect()
+        .map((e: { [key: string]: any }) => e.payload.value);
+      f(listeTableaux);
+    });
+  }
+
+  async créerTableau(): Promise<string> {
+    const idBdTableau = await this.client.créerBDIndépendante("kvstore");
+    return idBdTableau;
+  }
+
+  async ajouterNomsTableau(id: string, noms: { [key: string]: string }) {
+    const idBdNoms = await this.client.obtIdBd("noms", id);
+    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    for (const lng in noms) {
+      await bdNoms.set(lng, noms[lng]);
+    }
+  }
+
+  async suivreNomsTableau(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    return await this.client.suivreBdDic(id, "noms", f);
+  }
+
+  async effacerTableau(id: string) {
+    // Effacer toutes les composantes du tableau
+    for (const clef in ["noms"]) {
+      const idBd = await this.client.obtIdBd(clef, id);
+      if (idBd) await this.client.effacerBD(idBd);
+    }
+    // Effacer le tableau lui-même
+    await this.client.effacerBD(id);
+  }
 }
