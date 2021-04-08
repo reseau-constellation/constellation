@@ -42,7 +42,7 @@ export default {
     nomDeLangue,
     droiteÀGauche: function(langue) {
       const orientation = orientationÉcriture(écriture(langue));
-      return orientation && orientation.includes("←");
+      return Boolean(orientation && orientation.includes("←"));
     },
     changerLangue(lng) {
       this.$i18n.fallbackLocale = [this.$i18n.locale, "fr"];
