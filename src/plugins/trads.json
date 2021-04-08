@@ -266,6 +266,172 @@
       "retour": "Return to home"
     }
   },
+    "De": {
+    "communs": {
+      "auto": "Automatisch",
+      "messageInstaller": "Die Browser-Version von Konstellation wird beschränkt von dem Speicherplatz der von Ihrem Browser zu verfügung gestellt wird. Es ist zu empfehlen das Programm zu installieren um die volle Kapazität nützen zu können.",
+      "btnInstaller": "Konstellation installieren"
+    },
+    "alerteConditions": {
+      "texte": "Sie müssen den Nutzunsbestimmungen zustimmen bevor Sie die Software benutzen können.",
+      "bouton": "Nutzunsbestimmungen lesen"
+    },
+    "boîteNoms": {
+      "titre": "Namen hinzufügen",
+      "sousTitre": "Wählen Sie so viele Sprachen wie Sie möchten.",
+      "étiquetteLangue": "Sprache",
+      "étiquetteNom": "Name"
+    },
+    "nav": {
+      "compte": "Account",
+      "projets": "Meine Projekte",
+      "bd": "Meine Datenbanken",
+      "recherche": "Entdecken",
+      "favoris": "Meine Favoriten",
+      "automation": "Automatisierung",
+      "signalements": "Problem melden"
+    },
+    "acceuil": {
+      "entête": "Willkommen bei Konstellation",
+      "soustitre": "Das dezentralisierte und freie System für den Austausch Wissenschaftlicher Daten.",
+      "orientation": "Haben Sie sich verirrt?",
+      "liens": {
+        "docs": "Dokumentation Lesen",
+        "recherche": "Daten finden",
+        "projet": "Neues Projekt anfangen"
+      }
+    },
+    "compte": {
+      "entête": "Account Einstellungen",
+      "onglets": {
+        "compte": {
+          "entête": "Mein Account",
+          "info": "Generelle Informationen",
+          "infoPublique": "Diese Informationen sind öffentlich",
+          "nom": "Ihr Name",
+          "aucunNom": "Kein Name",
+          "titreBoîteNoms": "Internationalisieren Sie ihren Namen!",
+          "sousTitreBoîteNoms": "Um so mehr sprachen sie hinzufügen, desto größere Chancen haben Sie das andere Mitglieder von Konstellation Sie bei Ihrem Namen nennen können.",
+          "courriel": "Ihre E-mail Adresse",
+          "image": "Ihr Profilbild",
+          "dispositifs": "Werkzeuge"
+        },
+        "thème": {
+          "entête": "Ambiente und Sprachen",
+          "couleurs": "Farben",
+          "langue": "Sprache",
+          "culture": "Kultur"
+        },
+        "réseau": {
+          "entête": "Forschung",
+          "équipes": "Teams",
+          "connexions": "Verbindungen"
+        }
+      },
+      "options": {
+        "thèmeNuit": "Hell/Dunkel",
+        "thèmeImages": "Hintergrund Bilder",
+        "langue": "Sprache",
+        "numération": "Zahlensystem"
+      }
+    },
+    "projets": {
+      "entête": "Meine Projekte",
+      "filtrer": "Filter",
+      "nouveau": {
+        "entête": "Neues Projekt",
+        "détails": "Ein neues Projekt anfangen"
+      }
+    },
+    "bd": {
+      "entête": "Meine Datenbanken",
+      "filtrer": "Filter",
+      "nouvelle": {
+        "entêteCarte": "Neue DB",
+        "détailsCarte": "Eine neue Datenbank erstellen",
+        "petitPousset": "Neue DB"
+      },
+      "vis": {
+        "boîteNoms": {
+          "sousTitre": "Um so mehr Sprachen desto besser! Versuchen sie Sprachen zu priorisieren die in den Regionen gesprochen werden von denen Ihre Daten stammen."
+        },
+        "boîteDescr": {
+          "titre": "Fügen sie eine beschreibung hinzu."
+        }
+      }
+    },
+    "recherche": {
+      "entête": "Erkunden Sie die Daten",
+      "soustitre": "Suchen Sie nach Schlüsselwörtern, geografischer Region, einer Variable ..."
+    },
+    "favoris": {
+      "entête": "Meine Favorieten"
+    },
+    "automation": {
+      "entête": "Automatisierung",
+      "soustitre": "Automatisieren Sie die Aktualisierung Ihrer Datenbanken"
+    },
+    "signalements": {
+      "entête": "Haben Sie Schwierigkeiten?",
+      "soustitre": "Geben Sie uns Bescheid und wir helfen Ihnen.",
+      "bouton": "Mit GitHub berichten",
+      "boutonCourriel": "Per E-mail"
+    },
+    "tableau": {
+      "vide": "Keine Daten"
+    },
+    "conditions": {
+      "entête": "Nutzunsbedinungen",
+      "jaccepte": "Ich akzeptiere die Nutzungsbedinungen",
+      "retour": "Zur Hauptseite zurückkehren",
+      "p0_1": "Ihre Verwendung dieser Software unterliegt den folgenden Bedingungen.",
+      "p0_2": "Diese Bedinungen wurden von Wissenschaftlern und nicht von Anwälten verfasst. Das bedeutet auch, dass Sie keinen Anwalt brauchen, um sie zu verstehen. Verwenden Sie im Gegenzug den gesunden Menschenverstand und versuchen Sie nicht, mit der Bedeutung von Wörtern zu spielen, um Lücken zu finden.",
+      "p0_3": "Diese Bedingungen wurden in französischer Sprache verfasst. Übersetzungen in andere Sprachen sind dank freiwilliger Helfer aus der Constellation-Community möglich. Zögern Sie nicht, uns zu kontaktieren, wenn Sie irgendwelche Zweifel haben !",
+      "t1": "Allgemeines",
+      "p1_1": "Diese Software (Konstellation) wird als Open Source-Software unter der [AGPL-3.0-Lizenz] (https://www.gnu.org/licenses/agpl-3.0.fr.html) vertrieben. Ihre Nutzung dieser Software unterliegt den Bestimmungen dieser Lizenz. Bitte beachten Sie unter anderem, dass es sich um freie Software handelt, die mit ** absolut keinen Garantien ** geliefert wird. *Einem geschenkten Gaul schaut man nicht ins Maul*",
+      "p1_2": "Darüber hinaus unterliegt jede Interaktion zwischen Benutzern [unseren Community-Regeln] (https://www.contributor-covenant.org/fr/version/2/0/code_of_conduct/).",
+      "t2": "Verwendung von Daten",
+      "p2_1": "Die über Konstellation verfügbaren Daten wurden von anderen Mitgliedern der Community bereitgestellt. Jede Person muss beim Teilen ihrer Daten eine Open-Access-Lizenz angeben. Jene ist in jeder Datenbank angegeben. Beachten Sie immer die Lizenzen, die zu den von Ihnen verwendeten Daten gehören.",
+      "p2_2": "Geben Sie nur Daten weiter, die Ihnen gehören oder von denen Sie im Namen der Person, der sie gehören, eine schriftliche Erlaubnis haben, diese unter der von Ihnen angegebenen Lizenz weiterzugeben. Es versteht sich von selbst, aber teilen Sie auch nichts Illegales.",
+      "p2_3": "Wenn jemand anderes Daten, die Ihnen gehören, auf eine Weise freigegeben hat, die nicht den Bedingungen der Lizenz entspricht, die Sie dafür gewählt haben, werden wir (unser möglichstes tun um) das Problem (zu) beheben.",
+      "t3": "Privatsphäre und Sicherheit",
+      "p3_1": "Bitte beachten Sie, dass Constellation ein dezentralisiertes, freies und öffentliches Netzwerk ist. Alles, was Sie dort teilen (Datenbanken, Ihr Name, Kontaktinformationen), wird für das gesamte Netzwerk zugänglich.",
+      "p3_2": "Was für ein Computersystem gilt, gilt umso mehr für ein dezentralisiertes Netzwerk: Sobald Informationen mit anderen Personen geteilt wurden können Sie sie jederzeit selbst löschen. Es ist jedoch unmöglich, Personen, die sie bereits erhalten haben, zum Löschen zu zwingen (obwohl man sie immer nett fragen kann). ** Teilen Sie also nur Daten, die Sie mit dem gesamten Planeten Erde teilen möchten. Geben Sie niemals vertrauliche Daten mit Konstellation weiter. **",
+      "p3_3": "Es gibt jedoch keinen zentralen Server und Sie teilen nur das, was Sie beitragen möchten. Ihre Online-Aktivitäten und persönlichen Daten werden also nicht weiter verfolgt! Ihre Nutzungsaktivitäten, Aktivitäten und Interessen verbleiben auf Ihrem Computer (auch wenn Sie die Internetversion dieser Software verwenden).",
+      "t4": "Credits",
+      "p4_1": "Diese Software wurde von Dr. Julien Malard entwickelt.",
+      "p4_2": "Bilder und Kunstwerke stammen von [unDraw] (https://undraw.co/) und [வள்ளுவர் வள்ளலார் வட்டம்] (https://commons.wikimedia.org/wiki/User:Valluvar_Vallalar_Vattam?uselang=ta). Diese sind unter der Lizenz [CC BY-SA 4.0] verfügbar (https://creativecommons.org/licenses/by-sa/4.0/deed.fr)."
+    },
+    "licences": {
+      "CC-BY-SA-4_0": {
+        "nom": "CC BY SA 4.0",
+        "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr"
+      },
+      "CC-BY-4_0": {
+        "nom": "CC BY 4.0",
+        "lien": "https://creativecommons.org/licenses/by/4.0/deed.fr"
+      },
+      "CC-0-1_0": {
+        "nom": "CC 0 1.0",
+        "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.fr"
+      },
+      "ODbl-1_0": {
+        "nom": "ODbl 1.0",
+        "lien": "https://opendatacommons.org/licenses/odbl/summary/"
+      },
+      "ODC-BY-1_0": {
+        "nom": "ODC BY 1.0",
+        "lien": "https://opendatacommons.org/licenses/by/summary"
+      },
+      "PDDL": {
+        "nom": "PDDL",
+        "lien": "https://opendatacommons.org/licenses/pddl/summary"
+      },
+      "introuvable": {
+        "nom": "Lizenz nicht gefunden"
+      }
+    }
+  },
   "Ch'orti'": {
      "acceuil": {
        "entête": "Inb'utz iyo'pa'r tama Ek'"
