@@ -110,13 +110,13 @@
 
       <v-divider />
       <v-card-text>
-        <div class="d-flex flex-wrap">
-          <v-card flat width="250" class="mx-3 mb-3">
-            <p class="mb-0 text-overline">Information</p>
-            <v-list>
+        <v-card flat class="mx-3 mb-3">
+          <p class="mb-0 text-overline">Information Générale</p>
+          <div class="d-flex flex-wrap">
+            <v-card flat width="200" class="mb-3">
               <v-menu
                 offset-x
-                :disabled="!score"
+                :disabled="score === null"
                 :close-on-content-click="false"
               >
                 <template v-slot:activator="{ on, attrs }">
@@ -125,7 +125,7 @@
                       <v-progress-circular
                         :rotate="score ? 270 : undefined"
                         :width="5"
-                        :value="score ? score.total : undefined"
+                        :value="score && score.total ? score.total : 0"
                         :indeterminate="!score"
                         :color="
                           score ? couleurScore(score.total).couleur : 'primary'
@@ -152,6 +152,8 @@
                   :permissionÉcrire="permissionÉcrire"
                 />
               </v-menu>
+            </v-card>
+            <v-card flat width="200" class="mb-3">
               <v-menu offset-x :disabled="!score">
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
@@ -186,6 +188,8 @@
                   </v-list-item>
                 </v-list>
               </v-menu>
+            </v-card>
+            <v-card flat width="200" class="mb-3">
               <v-list-item
                 v-if="licence !== null"
                 @click="
@@ -213,56 +217,61 @@
                   <v-icon>mdi-open-in-new</v-icon>
                 </v-list-item-action>
               </v-list-item>
-            </v-list>
-          </v-card>
-          <v-card flat width="250" class="mx-3 mb-3">
-            <p class="mb-0 text-overline">Variables</p>
-            <jeton-variable v-for="id in variables" :key="id" :id="id" />
-          </v-card>
-          <v-card flat width="250" class="mx-3 mb-3">
-            <p class="mb-0 text-overline">Mots-clefs</p>
-            <v-chip
-              v-for="m in motsClefs"
-              :key="m"
-              :close="permissionÉcrire"
-              outlined
-              small
-              label
-              class="mx-1 my-1"
-              close-icon="mdi-close"
-              >{{ m }}</v-chip
-            >
-            <v-chip
-              v-if="permissionÉcrire"
-              small
-              outlined
-              label
-              class="mx-1 my-1"
-            >
-              <v-icon>
-                mdi-plus
-              </v-icon>
-            </v-chip>
-          </v-card>
-          <v-card flat width="250" class="mx-3 mb-3">
-            <p class="mb-0 text-overline">Géographie</p>
-            <v-chip
-              v-for="m in géog"
-              :key="m"
-              outlined
-              small
-              label
-              class="mx-1 my-1"
-              >{{ m }}</v-chip
-            >
-          </v-card>
-        </div>
-
+            </v-card>
+          </div>
+        </v-card>
+        <v-card flat class="mx-3 mb-3">
+          <div class="d-flex flex-wrap">
+            <v-card flat width="200" class="mb-3">
+              <p class="mb-0 text-overline">Variables</p>
+              <p v-if="!variables.length" class="text--disabled">Aucune variable</p>
+              <jeton-variable v-for="id in variables" :key="id" :id="id" />
+            </v-card>
+            <v-card flat width="200" class="mb-3">
+              <p class="mb-0 text-overline">Mots-clefs
+                <v-btn
+                  v-if="permissionÉcrire"
+                  small
+                  icon
+                >
+                  <v-icon small>
+                    mdi-plus
+                  </v-icon>
+                </v-btn>
+              </p>
+              <p v-if="!motsClefs.length" class="text--disabled">Aucun mot clef</p>
+              <v-chip
+                v-for="m in motsClefs"
+                :key="m"
+                :close="permissionÉcrire"
+                outlined
+                small
+                label
+                class="mx-1 my-1"
+                close-icon="mdi-close"
+                >{{ m }}</v-chip
+              >
+            </v-card>
+            <v-card flat width="200" class="mb-3">
+              <p class="mb-0 text-overline">Géographie</p>
+              <p v-if="!géog.length" class="text--disabled">Aucune région détectée</p>
+              <v-chip
+                v-for="m in géog"
+                :key="m"
+                outlined
+                small
+                label
+                class="mx-1 my-1"
+                >{{ m }}</v-chip
+              >
+            </v-card>
+          </div>
+        </v-card>
         <v-list>
           <p class="mb-0 text-overline">
             Tableaux
             <v-btn icon small @click="ajouterTableau">
-              <v-icon>mdi-plus</v-icon>
+              <v-icon small>mdi-plus</v-icon>
             </v-btn>
           </p>
           <v-divider />
@@ -335,12 +344,12 @@ export default {
       permissionÉcrire: false,
       tableaux: null,
       logo: null,
+      score: null,
 
       variables: [],
       géog: [],
       motsClefs: [],
-      auteurs: null,
-      score: null
+      auteurs: null
     };
   },
   computed: {
@@ -387,8 +396,10 @@ export default {
           this.licence = licence;
         }
       );
-      const oublierNoms = await this.$ipa.bds.suivreNomsBD(this.idBD, noms => {
-        this.nomsBD = noms;
+      const oublierNoms = await this.$ipa.bds.suivreNomsBD(
+        this.idBD,
+        noms => {
+          this.nomsBD = noms;
       });
       const oublierDescriptions = await this.$ipa.bds.suivreDescrBD(
         this.idBD,
@@ -400,11 +411,16 @@ export default {
         this.idBD,
         tableaux => (this.tableaux = tableaux)
       );
+      const oublierScore = await this.$ipa.bds.suivreScoreBD(
+        this.idBD,
+        score => (this.score = score)
+      );
       this.suivre([
         oublierLicence,
         oublierNoms,
         oublierDescriptions,
-        oublierTableaux
+        oublierTableaux,
+        oublierScore
       ]);
     },
     effacerBD: async function() {

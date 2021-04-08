@@ -29,7 +29,7 @@ export default class Tableaux {
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     const idBdDonnées = await this.client.obtIdBd("données", id, "feed");
-    return await this.client.suivreBdListe(idBdListe, f);
+    return await this.client.suivreBdListe(idBdDonnées, f);
   }
 
   async ajouterNomsTableau(id: string, noms: { [key: string]: string }) {

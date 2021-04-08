@@ -132,6 +132,22 @@ export default class BDs {
     return await this.client.suivreBdListe(idBdTableaux, f);
   }
 
+  async suivreScoreBD(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    return await this.client.suivreBD(
+      id,
+      ()=> {
+        f({
+          total: null,
+          accès: null,
+          couverture: null,
+          passe: null
+        })
+    })
+  }
+
   async effacerBD(id: string) {
     // Dabord effacer l'entrée dans notre liste de BDs
     const bdRacine = await this.client.ouvrirBD(this.idBD);

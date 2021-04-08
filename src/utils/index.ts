@@ -49,6 +49,7 @@ export function compilerMarkdown(texte: string) {
 }
 
 export function couleurScore(score: number) {
+  if (score === null) return { couleur: "#666666", note: "?" };
   if (score >= 95) {
     return { couleur: "#1e7145", note: "A" };
   } else if (score >= 90) {

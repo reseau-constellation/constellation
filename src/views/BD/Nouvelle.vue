@@ -195,33 +195,33 @@ export default {
     }
   },
   methods: {
-    sauvegarderNom: function(langue, nom) {
+    sauvegarderNom: function({ langue, nom }) {
       this.noms = { ...this.noms, [langue]: nom };
     },
-    effacerNom: function(langue) {
+    effacerNom: function({ langue }) {
       this.noms = Object.fromEntries(
         Object.keys(this.noms)
           .filter(x => x !== langue)
           .map(x => [x, this.noms[x]])
       );
     },
-    changerLangueNom: function(langue, nouvelleLangue, nom) {
-      this.effacerNom(langue);
-      this.sauvegarderNom(nouvelleLangue, nom);
+    changerLangueNom: function({ langueOriginale, langue, nom }) {
+      this.effacerNom(langueOriginale);
+      this.sauvegarderNom(langue, nom);
     },
-    sauvegarderDescr: function(langue, descr) {
-      this.descriptions = { ...this.descriptions, [langue]: descr };
+    sauvegarderDescr: function({ langue, nom }) {
+      this.descriptions = { ...this.descriptions, [langue]: nom };
     },
-    effacerDescr: function(langue) {
+    effacerDescr: function({ langue }) {
       this.descriptions = Object.fromEntries(
         Object.keys(this.descriptions)
           .filter(x => x !== langue)
           .map(x => [x, this.descriptions[x]])
       );
     },
-    changerLangueDescr: function(langue, nouvelleLangue, descr) {
-      this.effacerDescr(langue);
-      this.sauvegarderDescr(nouvelleLangue, descr);
+    changerLangueDescr: function({ langueOriginale, langue, nom }) {
+      this.effacerDescr(langueOriginale);
+      this.sauvegarderDescr(langue, nom);
     },
     ouvrirLienLicence: function() {
       if (this.licence) {

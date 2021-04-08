@@ -9,12 +9,14 @@ export default class Variables {
   client: ClientConstellation;
   idBD: string;
 
-  constructor(client: ClientConstellation) {
+  constructor(client: ClientConstellation, id: string) {
     this.client = client;
     this.idBD = id;
   }
 
-  async suivreVariables(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
+  async suivreVariables(
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdListe(this.idBD, f);
   }
 

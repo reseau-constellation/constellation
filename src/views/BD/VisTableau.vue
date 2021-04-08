@@ -87,7 +87,12 @@
             transition="slide-y-transition"
           >
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-on="on" v-bind="attrs" :disabled="colonnes && !colonnes.length">
+              <v-btn
+                icon
+                v-on="on"
+                v-bind="attrs"
+                :disabled="colonnes && !colonnes.length"
+              >
                 <v-icon small>mdi-table-row-plus-after</v-icon>
               </v-btn>
             </template>
