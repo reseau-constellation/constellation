@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-import { l } from "./bds";
 
 const p = [
   {
@@ -7,14 +6,14 @@ const p = [
     nom: {
       fr: "Météorologie"
     },
-    bds: l.map(b => b.id)
+    bds: []
   },
   {
     id: uuidv4(),
     nom: {
       fr: "Un autre exemple"
     },
-    bds: l.map(b => b.id)
+    bds: []
   }
 ];
 

@@ -1,4 +1,3 @@
-import { isValidAddress } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier
@@ -14,13 +13,7 @@ export default class BDs {
   }
 
   async suivreBDs(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBD(this.idBD, async bd => {
-      const listeBDs = bd
-        .iterator({ limit: -1 })
-        .collect()
-        .map((e: { [key: string]: any }) => e.payload.value);
-      f(listeBDs);
-    });
+    return await this.client.suivreBdListe(this.idBD, f);
   }
 
   async créerBD(licence: string): Promise<string> {
@@ -57,13 +50,13 @@ export default class BDs {
   async sauvegarderNomBD(id: string, langue: string, nom: string) {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     const bdNoms = await this.client.ouvrirBD(idBdNoms);
-    await bdNoms.set(langue, nom)
+    await bdNoms.set(langue, nom);
   }
 
   async effacerNomBD(id: string, langue: string) {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     const bdNoms = await this.client.ouvrirBD(idBdNoms);
-    await bdNoms.del(langue)
+    await bdNoms.del(langue);
   }
 
   async ajouterDescriptionsBD(
@@ -80,13 +73,13 @@ export default class BDs {
   async sauvegarderDescrBD(id: string, langue: string, nom: string) {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     const bdDescr = await this.client.ouvrirBD(idBdDescr);
-    await bdDescr.set(langue, nom)
+    await bdDescr.set(langue, nom);
   }
 
   async effacerbdDescrBD(id: string, langue: string) {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     const bdDescr = await this.client.ouvrirBD(idBdDescr);
-    await bdDescr.del(langue)
+    await bdDescr.del(langue);
   }
 
   async ajouterTableauBD(id: string): Promise<string> {
@@ -136,13 +129,7 @@ export default class BDs {
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     const idBdTableaux = await this.client.obtIdBd("tableaux", id, "feed");
-    return await this.client.suivreBD(idBdTableaux, async bd => {
-      const listeTableaux = bd
-        .iterator({ limit: -1 })
-        .collect()
-        .map((e: { [key: string]: any }) => e.payload.value);
-      f(listeTableaux);
-    });
+    return await this.client.suivreBdListe(idBdTableaux, f);
   }
 
   async effacerBD(id: string) {

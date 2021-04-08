@@ -32,9 +32,8 @@
             transition="slide-y-transition"
           >
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-on="on"
-                v-bind="attrs">
-                <v-icon>mdi-pencil</v-icon>
+              <v-btn icon small v-on="on" v-bind="attrs">
+                <v-icon small>mdi-pencil</v-icon>
               </v-btn>
             </template>
             <boîteNoms
@@ -54,9 +53,65 @@
       <v-divider />
 
       <v-card-text>
-        <p class="mb-0 text-overline">Données</p>
+        <p class="mb-0 text-overline">
+          Données
+          <v-menu
+            offset-x
+            :close-on-content-click="false"
+            transition="slide-y-transition"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-on="on" v-bind="attrs">
+                <v-icon small>mdi-table-column-plus-after</v-icon>
+              </v-btn>
+            </template>
+            <v-card width="300px">
+              <v-card-title>Ajoutez une colonne</v-card-title>
+              <v-divider />
+              <v-card-text>
+                <v-combobox outlined dense label="Variable" />
+                <v-text-field outlined dense label="Unités" />
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer />
+                <v-btn text outlined color="primary">
+                  Confirmer
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-menu>
+          <v-menu
+            offset-x
+            :close-on-content-click="false"
+            transition="slide-y-transition"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-on="on" v-bind="attrs" :disabled="colonnes && !colonnes.length">
+                <v-icon small>mdi-table-row-plus-after</v-icon>
+              </v-btn>
+            </template>
+            <v-card width="300px">
+              <v-card-title>Ajoutez une colonne</v-card-title>
+              <v-divider />
+              <v-card-text>
+                <v-combobox outlined dense label="Variable" />
+                <v-text-field outlined dense label="Unités" />
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer />
+                <v-btn text outlined color="primary">
+                  Confirmer
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-menu>
+        </p>
+
         <v-divider />
-        <v-data-table v-if="entête" :headers="entête" :items="données" dense>
+        <v-skeleton-loader v-if="colonnes === null" type="image" />
+        <v-data-table v-else :headers="entête" :items="données" dense>
           <template v-slot:no-data>
             {{ $t("tableau.vide") }}
           </template>
@@ -78,7 +133,6 @@
             </span>
           </template>
         </v-data-table>
-        <v-skeleton-loader v-else type="image" />
       </v-card-text>
     </v-card>
   </v-container>
@@ -101,11 +155,14 @@ export default {
   mixins: [mixinLangues, mixinIPA],
   data: function() {
     return {
+      permissionÉcrire: false,
       nomsTableau: {},
       nomsBD: {},
       logo: null,
+      colonnes: null,
+
       données: [],
-      entête: null
+      entête: []
     };
   },
   computed: {
@@ -170,7 +227,16 @@ export default {
           this.nomsBD = noms;
         }
       );
-      this.suivre([oublierNoms, oublierNomsBD]);
+
+      const oublierColonnes = await this.$ipa.tableaux.suivreColonnes(
+        this.idTableau,
+        cols => {
+          console.log({ cols });
+          this.colonnes = cols;
+        }
+      );
+
+      this.suivre([oublierNoms, oublierNomsBD, oublierColonnes]);
     }
   }
 };

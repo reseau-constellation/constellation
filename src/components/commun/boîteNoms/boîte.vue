@@ -63,7 +63,7 @@ export default {
     };
   },
   mounted: function() {
-    console.log(Object.keys(this.noms)[-1])
+    console.log(Object.keys(this.noms)[-1]);
   },
   computed: {
     itemsLangues: function() {

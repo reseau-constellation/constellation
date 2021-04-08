@@ -20,9 +20,9 @@
           </v-card-title>
 
           <v-card-text>
-            Ceci enlevera le tableau de votre dispositif. Elle
-            n'effacera pas des copies que d'autres utilisatrices et
-            utilisateurs de Constellation pourraient avoir créées.
+            Ceci enlevera le tableau de votre dispositif. Elle n'effacera pas
+            des copies que d'autres utilisatrices et utilisateurs de
+            Constellation pourraient avoir créées.
           </v-card-text>
 
           <v-divider></v-divider>
@@ -77,7 +77,7 @@ export default {
   methods: {
     couper,
     effacerTableau: async function() {
-      await this.$ipa.bds.effacerTableauBD(this.idBD, this.idTableau)
+      await this.$ipa.bds.effacerTableauBD(this.idBD, this.idTableau);
     },
     initialiserSuivi: async function() {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);

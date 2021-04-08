@@ -29,9 +29,8 @@
             transition="slide-y-transition"
           >
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-on="on"
-                v-bind="attrs">
-                <v-icon>mdi-pencil</v-icon>
+              <v-btn icon small v-on="on" v-bind="attrs">
+                <v-icon small>mdi-pencil</v-icon>
               </v-btn>
             </template>
             <boîteNoms
@@ -43,8 +42,8 @@
             />
           </v-menu>
 
-          <v-btn icon>
-            <v-icon>mdi-camera-outline</v-icon>
+          <v-btn icon small>
+            <v-icon small>mdi-camera-outline</v-icon>
           </v-btn>
         </span>
         <span>
@@ -95,9 +94,8 @@
           transition="slide-y-transition"
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-on="on" x-small
-              v-bind="attrs">
-              <v-icon>mdi-pencil</v-icon>
+            <v-btn icon small v-on="on" v-bind="attrs">
+              <v-icon small>mdi-pencil</v-icon>
             </v-btn>
           </template>
           <boîteNoms
@@ -261,19 +259,17 @@
         </div>
 
         <v-list>
-          <p class="mb-0 text-overline">Tableaux
+          <p class="mb-0 text-overline">
+            Tableaux
             <v-btn icon small @click="ajouterTableau">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </p>
           <v-divider />
-          <v-skeleton-loader v-if="tableaux === null" type="paragraph"/>
+          <v-skeleton-loader v-if="tableaux === null" type="paragraph" />
           <div v-else-if="!tableaux.length" class="text-center">
             <p class="text-h5 mt-5">Il n'y a aucun tableau pour l'instant</p>
-            <v-img
-              :src="image('vide')"
-              class="my-5" contain height="175px"
-            />
+            <v-img :src="image('vide')" class="my-5" contain height="175px" />
 
             <v-btn color="primary" outlined text @click="ajouterTableau">
               Ajouter un tableau
@@ -290,7 +286,13 @@
               :key="t"
               :id="t"
               :idBD="idBD"
-              @click="$router.push(`/bd/visualiser/${encodeURIComponent(idBD)}/tableau/${encodeURIComponent(t)}`)"
+              @click="
+                $router.push(
+                  `/bd/visualiser/${encodeURIComponent(
+                    idBD
+                  )}/tableau/${encodeURIComponent(t)}`
+                )
+              "
             />
           </transition-group>
         </v-list>
@@ -374,7 +376,7 @@ export default {
     couleurScore,
     ouvrirLien,
     ajouterTableau: async function() {
-      await this.$ipa.bds.ajouterTableauBD(this.idBD)
+      await this.$ipa.bds.ajouterTableauBD(this.idBD);
     },
     initialiserSuivi: async function() {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBD);
@@ -396,9 +398,14 @@ export default {
       );
       const oublierTableaux = await this.$ipa.bds.suivreTableauxBD(
         this.idBD,
-        tableaux => this.tableaux = tableaux
-      )
-      this.suivre([oublierLicence, oublierNoms, oublierDescriptions, oublierTableaux]);
+        tableaux => (this.tableaux = tableaux)
+      );
+      this.suivre([
+        oublierLicence,
+        oublierNoms,
+        oublierDescriptions,
+        oublierTableaux
+      ]);
     },
     effacerBD: async function() {
       await this.$ipa.bds.effacerBD(this.idBD);
