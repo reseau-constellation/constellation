@@ -75,13 +75,14 @@ export default class ClientConstellation extends EventEmitter {
     événements: string[] = ["write", "replicated", "ready"]
   ): Promise<schémaFonctionOublier> {
     const bd = await this.ouvrirBD(id);
+    const fFinal = () => f(bd);
     for (const é of événements) {
-      bd.events.on(é, () => f(bd));
+      bd.events.on(é, fFinal);
     }
-    f(bd);
+    fFinal();
     const oublier = () => {
       événements.forEach(é => {
-        bd.events.off(é, () => f(bd));
+        bd.events.off(é, fFinal);
       });
     };
     return oublier;
