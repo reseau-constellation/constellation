@@ -1,11 +1,10 @@
 <template>
   <v-card max-width="400">
     <v-card-title>
-      Composition du score
+      {{ $t("qualité.titre") }}
     </v-card-title>
     <v-card-subtitle v-if="permissionÉcrire">
-      Un meilleur score augmente la confiance que les autres porteront à vos
-      données et favorisera le classement de vos données dans les recherches.
+      {{ $t("qualité.sousTitre") }}
     </v-card-subtitle>
 
     <v-card-text>
@@ -26,7 +25,7 @@
             </v-progress-circular>
           </v-list-item-avatar>
           <v-list-item-content>
-            {{ c }}
+            {{ $t(`qualité.sousTitres.${c}`) }}
             <span
               :style="`color:${couleurScore(v).couleur}`"
               class="font-weight-bold"

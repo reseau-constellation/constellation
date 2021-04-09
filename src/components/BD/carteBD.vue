@@ -24,6 +24,31 @@
         label
         small
         class="me-1 my-1"
+        @click.stop
+      >
+        <v-progress-circular
+          :rotate="score ? 270 : undefined"
+          :value="score && score.total ? score.total : 0"
+          :indeterminate="!score"
+          :color="score ? couleurScore(score.total).couleur : ''"
+          :size="15"
+          :width="3"
+        />
+        <span class="ms-2">
+          Qualité :
+          <span
+            :style="`color:${couleurScore(score ? score.total : null).couleur}`"
+            class="font-weight-bold"
+          >
+            {{ score ? couleurScore(score.total).note : "?"}}
+          </span>
+        </span>
+      </v-chip>
+      <v-chip
+        outlined
+        label
+        small
+        class="me-1 my-1"
         @click.stop="
           licenceApprouvée ? ouvrirLien($t(`licences.${licence}.lien`)) : ''
         "
@@ -62,7 +87,7 @@
 </template>
 
 <script>
-import { traduireNom, couper, ouvrirLien } from "@/utils";
+import { traduireNom, couper, ouvrirLien, couleurScore } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite";
 import mixinIPA from "@/mixins/ipa";
 import { licences } from "@/ipa/licences";
@@ -77,6 +102,7 @@ export default {
       épinglée: true,
       licence: null,
       logo: null,
+      score: null,
       nomsBD: {},
       détailsBD: {},
       variables: []
@@ -104,6 +130,7 @@ export default {
   methods: {
     couper,
     ouvrirLien,
+    couleurScore,
     initialiserSuivi: async function() {
       const oublierLicence = await this.$ipa.bds.suivreLicence(
         this.idBD,
@@ -120,7 +147,11 @@ export default {
           this.détailsBD = détails;
         }
       );
-      this.suivre([oublierLicence, oublierNoms, oublierDétails]);
+      const oublierScore = await this.$ipa.bds.suivreScoreBD(
+        this.idBD,
+        score => (this.score = score)
+      );
+      this.suivre([oublierLicence, oublierNoms, oublierDétails, oublierScore]);
     }
   }
 };

@@ -137,11 +137,14 @@ export default class BDs {
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBD(id, () => {
+      const accès = Math.floor(Math.random()*100);
+      const couv = Math.floor(Math.random()*100);
+      const passe = Math.floor(Math.random()*100);
       f({
-        total: null,
-        accès: null,
-        couverture: null,
-        passe: null
+        total: Math.floor((accès + couv + passe) / 3),
+        accès: accès,
+        couverture: couv,
+        passe: passe
       });
     });
   }

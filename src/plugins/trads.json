@@ -15,6 +15,15 @@
       "étiquetteLangue": "Langue",
       "étiquetteNom": "Nom"
     },
+    "qualité": {
+      "titre": "Composition du score",
+      "sousTitre": "Un meilleur score augmente la confiance que les autres porteront à vos données et favorisera le classement de vos données dans les recherches.",
+      "sousTitres": {
+        "accès": "Accessibilité",
+        "couverture": "Couverture tests",
+        "passe": "Qualité données"
+      }
+    },
     "nav": {
       "compte": "Compte",
       "projets": "Mes projets",
