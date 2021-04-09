@@ -9,6 +9,8 @@ import Compte from "./compte";
 import BDs from "./bds";
 import Tableaux from "./tableaux";
 
+import Nuée from "./nuée";
+
 type FileContent =
   | string
   | ArrayBufferView
@@ -33,9 +35,11 @@ export default class ClientConstellation extends EventEmitter {
   _bds: { [key: string]: any };
   orbite: any;
   sfip: any;
+  idNodeSFIP?: string;
   compte?: Compte;
   bds?: BDs;
   tableaux?: Tableaux;
+  nuée?: Nuée;
   pret: boolean;
 
   constructor(dir = "./sfip-cnstl") {
@@ -47,6 +51,11 @@ export default class ClientConstellation extends EventEmitter {
 
   async initialiser() {
     this.sfip = await initSFIP(this._dir);
+    this.idNodeSFIP = await this.sfip.id()
+    this.sfip.libp2p.on('peer:connect', async ()=>{
+      console.log("connections", await this.sfip.swarm.peers())
+    })
+
     this.orbite = await initOrbite(this.sfip);
     this._opsAutoBD = {
       accessController: {
@@ -65,8 +74,19 @@ export default class ClientConstellation extends EventEmitter {
 
     this.tableaux = new Tableaux(this);
 
+    this.nuée = new Nuée(this);
+
     this.pret = true;
     this.emit("pret");
+  }
+
+  async connecterPoste(id: string, racine: string): Promise<void> {
+    const protocol = "/p2p-circuit/ipfs/";
+    try {
+      await this.sfip.swarm.connect(protocol + id)
+    } catch(e) {
+      console.error(e)
+    }
   }
 
   async suivreBD(

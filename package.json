@@ -17,11 +17,13 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "crypto-js": "^4.0.0",
     "database-js": "^3.0.10",
     "dompurify": "^2.2.7",
     "electron-store": "^7.0.2",
     "electron-webrtc": "^0.3.0",
     "ennikkai": "^1.2.7",
+    "hyperswarm-web": "^2.1.1",
     "ipfs": "^0.54.4",
     "is-electron": "^2.2.0",
     "it-to-buffer": "^2.0.0",
@@ -45,6 +47,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
+    "@types/crypto-js": "^4.0.1",
     "@types/dompurify": "^2.2.1",
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/marked": "^2.0.0",
