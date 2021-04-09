@@ -144,7 +144,6 @@
 </template>
 
 <script>
-import { obtTableau, obtDonnéesTableau, obtVarsTableau } from "@/ipa/tableaux";
 import { traduireNom } from "@/utils";
 import { couper } from "@/utils";
 

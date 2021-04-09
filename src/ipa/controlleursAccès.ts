@@ -130,8 +130,8 @@ class ControlleurConstellation extends EventEmitter {
     this._db = await this._orbitdb.keyvalue(ensureAddress(address), {
       accessController: {
         type: "controlleur-mod-constellation",
-        முதல்மதிப்பீட்டாளர்: this._options.admin || [this._orbitdb.identity.id],
-        உறுப்பினர்கள்: true
+        premierMod: this._options.admin || [this._orbitdb.identity.id],
+        membres: true
       },
       sync: true
     });

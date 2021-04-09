@@ -224,22 +224,23 @@
           <div class="d-flex flex-wrap">
             <v-card flat width="200" class="mb-3">
               <p class="mb-0 text-overline">Variables</p>
-              <p v-if="!variables.length" class="text--disabled">Aucune variable</p>
+              <p v-if="!variables.length" class="text--disabled">
+                Aucune variable
+              </p>
               <jeton-variable v-for="id in variables" :key="id" :id="id" />
             </v-card>
             <v-card flat width="200" class="mb-3">
-              <p class="mb-0 text-overline">Mots-clefs
-                <v-btn
-                  v-if="permissionÉcrire"
-                  small
-                  icon
-                >
+              <p class="mb-0 text-overline">
+                Mots-clefs
+                <v-btn v-if="permissionÉcrire" small icon>
                   <v-icon small>
                     mdi-plus
                   </v-icon>
                 </v-btn>
               </p>
-              <p v-if="!motsClefs.length" class="text--disabled">Aucun mot clef</p>
+              <p v-if="!motsClefs.length" class="text--disabled">
+                Aucun mot clef
+              </p>
               <v-chip
                 v-for="m in motsClefs"
                 :key="m"
@@ -254,7 +255,9 @@
             </v-card>
             <v-card flat width="200" class="mb-3">
               <p class="mb-0 text-overline">Géographie</p>
-              <p v-if="!géog.length" class="text--disabled">Aucune région détectée</p>
+              <p v-if="!géog.length" class="text--disabled">
+                Aucune région détectée
+              </p>
               <v-chip
                 v-for="m in géog"
                 :key="m"
@@ -396,10 +399,8 @@ export default {
           this.licence = licence;
         }
       );
-      const oublierNoms = await this.$ipa.bds.suivreNomsBD(
-        this.idBD,
-        noms => {
-          this.nomsBD = noms;
+      const oublierNoms = await this.$ipa.bds.suivreNomsBD(this.idBD, noms => {
+        this.nomsBD = noms;
       });
       const oublierDescriptions = await this.$ipa.bds.suivreDescrBD(
         this.idBD,

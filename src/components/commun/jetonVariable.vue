@@ -11,29 +11,45 @@
 
 <script>
 import { traduireNom, couper } from "@/utils";
-import { obtNomsVariable } from "@/ipa/variables";
 import carteVariable from "@/components/commun/carteVariable";
+import mixinIPA from "@/mixins/ipa";
+import mixinLangues from "@/mixins/langues";
 
 export default {
   name: "jetonVariable",
   props: ["id"],
   components: { carteVariable },
+  mixins: [mixinLangues, mixinIPA],
   data: function() {
     return {
+      permissionÉcrire: false,
       noms: null
     };
   },
-  methods: { couper },
   computed: {
     langues: function() {
       return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
     },
     nom: function() {
-      return this.noms ? traduireNom(this.noms, this.langues) : this.id;
+      return Object.keys(this.noms).length
+        ? traduireNom(this.noms, this.langues)
+        : this.id;
     }
   },
-  mounted: async function() {
-    this.noms = await obtNomsVariable(this.id);
+  methods: {
+    couper,
+    initialiserSuivi: async function() {
+      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.id);
+
+      const oublierNoms = await this.$ipa.variables.suivreNomsVariable(
+        this.id,
+        noms => {
+          this.nomd = noms;
+        }
+      );
+
+      this.suivre([oublierNoms]);
+    }
   }
 };
 </script>

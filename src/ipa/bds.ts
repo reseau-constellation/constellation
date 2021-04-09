@@ -136,16 +136,14 @@ export default class BDs {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBD(
-      id,
-      ()=> {
-        f({
-          total: null,
-          accès: null,
-          couverture: null,
-          passe: null
-        })
-    })
+    return await this.client.suivreBD(id, () => {
+      f({
+        total: null,
+        accès: null,
+        couverture: null,
+        passe: null
+      });
+    });
   }
 
   async effacerBD(id: string) {

@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import { obtNomsVariable } from "@/ipa/variables";
 import { traduireNom } from "@/utils";
 import { rubiChabäl as codeÀNomLangue } from "nuchabal";
 import lienOrbite from "@/components/commun/lienOrbite";
@@ -55,10 +54,7 @@ export default {
       return this.noms ? traduireNom(this.noms, this.langues) : this.id;
     }
   },
-  methods: { codeÀNomLangue },
-  mounted: async function() {
-    this.noms = await obtNomsVariable(this.id);
-  }
+  methods: { codeÀNomLangue }
 };
 </script>
 

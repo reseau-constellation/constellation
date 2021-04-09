@@ -19,7 +19,7 @@
             <v-progress-circular
               :rotate="270"
               :width="5"
-              :value="v ? v: 0"
+              :value="v ? v : 0"
               :color="couleurScore(v).couleur"
             >
               {{ v }}
