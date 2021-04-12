@@ -14,7 +14,7 @@ export default {
     }
   },
   mounted: function() {
-    this.crochetIPA = this.initialiserSuivi.bind(this)
+    this.crochetIPA = this.initialiserSuivi.bind(this);
     this.$ipa.on("pret", this.crochetIPA);
     if (this.$ipa.pret) {
       this.initialiserSuivi();

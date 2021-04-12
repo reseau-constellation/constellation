@@ -50,10 +50,51 @@ export default class Variables {
     await bdNoms.del(langue);
   }
 
+  async ajouterDescriptionsVariable(
+    id: string,
+    descriptions: { [key: string]: string }
+  ) {
+    const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
+    const bdDescr = await this.client.ouvrirBD(idBdDescr);
+    for (const lng in descriptions) {
+      await bdDescr.set(lng, descriptions[lng]);
+    }
+  }
+
+  async sauvegarderDescrVariable(id: string, langue: string, nom: string) {
+    const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
+    const bdDescr = await this.client.ouvrirBD(idBdDescr);
+    await bdDescr.set(langue, nom);
+  }
+
+  async effacerbdDescrVariable(id: string, langue: string) {
+    const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
+    const bdDescr = await this.client.ouvrirBD(idBdDescr);
+    await bdDescr.del(langue);
+  }
+
   async suivreNomsVariable(
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdDic(id, "noms", f);
+  }
+
+  async suivreDescrVariable(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    return await this.client.suivreBdDic(id, "descriptions", f);
+  }
+
+
+  async effacerVariable(id: string) {
+    // Effacer l'entrée dans notre liste de variables
+    const bdRacine = await this.client.ouvrirBD(this.idBD);
+    const entrée = (await bdRacine.iterator({ limit: -1 }).collect()).find(
+      (e: { [key: string]: any }) => e.payload.value === id
+    );
+    await bdRacine.remove(entrée.hash);
+
   }
 }

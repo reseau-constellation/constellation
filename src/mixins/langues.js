@@ -20,6 +20,9 @@ export default {
     langue: function() {
       return this.$i18n.locale;
     },
+    languesPréférées: function() {
+      return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
+    },
     langues: function() {
       const liste_langues = [
         ...new Set([

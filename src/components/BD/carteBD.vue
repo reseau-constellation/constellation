@@ -19,13 +19,7 @@
     <v-divider />
     <v-card-subtitle>{{ détails }}</v-card-subtitle>
     <v-card-text>
-      <v-chip
-        outlined
-        label
-        small
-        class="me-1 my-1"
-        @click.stop
-      >
+      <v-chip outlined label small class="me-1 my-1" @click.stop>
         <v-progress-circular
           :rotate="score ? 270 : undefined"
           :value="score && score.total ? score.total : 0"
@@ -40,7 +34,7 @@
             :style="`color:${couleurScore(score ? score.total : null).couleur}`"
             class="font-weight-bold"
           >
-            {{ score ? couleurScore(score.total).note : "?"}}
+            {{ score ? couleurScore(score.total).note : "?" }}
           </span>
         </span>
       </v-chip>

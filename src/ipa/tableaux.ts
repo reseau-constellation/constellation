@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier
@@ -13,14 +14,6 @@ export default class Tableaux {
   async créerTableau(): Promise<string> {
     const idBdTableau = await this.client.créerBDIndépendante("kvstore");
     return idBdTableau;
-  }
-
-  async suivreColonnes(
-    id: string,
-    f: schémaFonctionSuivi
-  ): Promise<schémaFonctionOublier> {
-    const idBdListe = await this.client.obtIdBd("colonnes", id, "feed");
-    return await this.client.suivreBdListe(idBdListe, f);
   }
 
   async suivreDonnées(
@@ -56,6 +49,27 @@ export default class Tableaux {
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdDic(id, "noms", f);
+  }
+
+  async ajouterColonneTableau(
+    idTableau: string,
+    idVariable: string
+  ){
+    const idBdColonnes = await this.client.obtIdBd("colonnes", idTableau, "feed");
+    const bdColonnes = await this.client.ouvrirBD(idBdColonnes);
+    const entrée = {
+      id: uuidv4(),
+      variable: idVariable
+    }
+    await bdColonnes.add(entrée);
+  }
+
+  async suivreColonnes(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    const idBdListe = await this.client.obtIdBd("colonnes", id, "feed");
+    return await this.client.suivreBdListe(idBdListe, f);
   }
 
   async effacerTableau(id: string) {

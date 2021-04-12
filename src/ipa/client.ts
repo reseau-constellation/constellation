@@ -8,6 +8,7 @@ import initSFIP from "./ipfs";
 import Compte from "./compte";
 import BDs from "./bds";
 import Tableaux from "./tableaux";
+import Variables from "./variables";
 
 import Nuée from "./nuée";
 
@@ -39,6 +40,7 @@ export default class ClientConstellation extends EventEmitter {
   compte?: Compte;
   bds?: BDs;
   tableaux?: Tableaux;
+  variables?: Variables;
   nuée?: Nuée;
   pret: boolean;
 
@@ -51,10 +53,10 @@ export default class ClientConstellation extends EventEmitter {
 
   async initialiser() {
     this.sfip = await initSFIP(this._dir);
-    this.idNodeSFIP = await this.sfip.id()
-    this.sfip.libp2p.on('peer:connect', async ()=>{
-      console.log("connections", await this.sfip.swarm.peers())
-    })
+    this.idNodeSFIP = await this.sfip.id();
+    this.sfip.libp2p.on("peer:connect", async () => {
+      console.log("connections", await this.sfip.swarm.peers());
+    });
 
     this.orbite = await initOrbite(this.sfip);
     this._opsAutoBD = {
@@ -74,6 +76,13 @@ export default class ClientConstellation extends EventEmitter {
 
     this.tableaux = new Tableaux(this);
 
+    const idBdVariables = await this.obtIdBd(
+      "variables",
+      this._bdRacine,
+      "feed"
+    );
+    this.variables = new Variables(this, idBdVariables);
+
     this.nuée = new Nuée(this);
 
     this.pret = true;
@@ -83,9 +92,9 @@ export default class ClientConstellation extends EventEmitter {
   async connecterPoste(id: string, racine: string): Promise<void> {
     const protocol = "/p2p-circuit/ipfs/";
     try {
-      await this.sfip.swarm.connect(protocol + id)
-    } catch(e) {
-      console.error(e)
+      await this.sfip.swarm.connect(protocol + id);
+    } catch (e) {
+      console.error(e);
     }
   }
 

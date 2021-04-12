@@ -22,7 +22,6 @@ export default {
   mixins: [mixinLangues, mixinIPA],
   data: function() {
     return {
-      permissionÉcrire: false,
       noms: null
     };
   },
@@ -39,8 +38,6 @@ export default {
   methods: {
     couper,
     initialiserSuivi: async function() {
-      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.id);
-
       const oublierNoms = await this.$ipa.variables.suivreNomsVariable(
         this.id,
         noms => {

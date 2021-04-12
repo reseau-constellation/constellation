@@ -1,4 +1,3 @@
-
 import ClientConstellation from "./client";
 import hyperswarm, { Swarm } from "hyperswarm-web";
 import crypto from "crypto";
@@ -11,34 +10,36 @@ export default class Nuée {
   nuée: Swarm;
 
   constructor(client: ClientConstellation) {
-    this.client = client
+    this.client = client;
 
-    this.sujet = crypto.createHash("sha256")
+    this.sujet = crypto
+      .createHash("sha256")
       .update("réseau-constellation")
-      .digest()
-    this.nuée = hyperswarm()
-    this.nuée.join(this.sujet, {lookup: true, announce: true})
+      .digest();
+    this.nuée = hyperswarm();
+    this.nuée.join(this.sujet, { lookup: true, announce: true });
 
-    this.nuée.on('connection', (prise: any) => {
-      prise.on('data', (données: BufferSource)=>this.gérerDonnées(données, prise))
+    this.nuée.on("connection", (prise: any) => {
+      prise.on("data", (données: BufferSource) =>
+        this.gérerDonnées(données, prise)
+      );
       const message = {
         type: "Salut !",
         contenu: {
-          id: this.client.idNodeSFIP.id,
+          id: this.client.idNodeSFIP!.id,
           racine: this.client._bdRacine.id
         }
-      }
-      prise.write(JSON.stringify(message))
-    })
+      };
+      prise.write(JSON.stringify(message));
+    });
   }
 
   gérerDonnées(données: BufferSource, prise: any) {
-    const message = JSON.parse(décodeur.decode(données))
-    console.log(message)
+    const message = JSON.parse(décodeur.decode(données));
+    console.log(message);
     switch (message.type) {
       case "Salut !":
         this.client.connecterPoste(message.contenu.id, message.contenu.racine);
     }
   }
-
 }

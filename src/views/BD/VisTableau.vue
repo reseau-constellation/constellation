@@ -65,53 +65,11 @@
                 <v-icon small>mdi-table-column-plus-after</v-icon>
               </v-btn>
             </template>
-            <v-card width="300px">
-              <v-card-title>Ajoutez une colonne</v-card-title>
-              <v-divider />
-              <v-card-text>
-                <v-combobox outlined dense label="Variable" />
-                <v-text-field outlined dense label="Unités" />
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer />
-                <v-btn text outlined color="primary">
-                  Confirmer
-                </v-btn>
-              </v-card-actions>
-            </v-card>
+            <carte-nouvelle-colonne @creerColonne="creerColonne"/>
           </v-menu>
-          <v-menu
-            offset-x
-            :close-on-content-click="false"
-            transition="slide-y-transition"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                icon
-                v-on="on"
-                v-bind="attrs"
-                :disabled="colonnes && !colonnes.length"
-              >
-                <v-icon small>mdi-table-row-plus-after</v-icon>
-              </v-btn>
-            </template>
-            <v-card width="300px">
-              <v-card-title>Ajoutez une colonne</v-card-title>
-              <v-divider />
-              <v-card-text>
-                <v-combobox outlined dense label="Variable" />
-                <v-text-field outlined dense label="Unités" />
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer />
-                <v-btn text outlined color="primary">
-                  Confirmer
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-menu>
+          <v-btn icon :disabled="colonnes && !colonnes.length">
+            <v-icon small>mdi-table-row-plus-after</v-icon>
+          </v-btn>
         </p>
 
         <v-divider />
@@ -144,9 +102,9 @@
 </template>
 
 <script>
-import { traduireNom } from "@/utils";
-import { couper } from "@/utils";
+import { traduireNom, couper } from "@/utils";
 
+import carteNouvelleColonne from "@/components/tableaux/carteNouvelleColonne";
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import lienOrbite from "@/components/commun/lienOrbite";
 import lienTélécharger from "@/components/commun/lienTélécharger";
@@ -155,7 +113,7 @@ import mixinIPA from "@/mixins/ipa";
 
 export default {
   name: "visTableau",
-  components: { lienOrbite, lienTélécharger, boîteNoms },
+  components: { lienOrbite, lienTélécharger, boîteNoms, carteNouvelleColonne },
   mixins: [mixinLangues, mixinIPA],
   data: function() {
     return {
@@ -165,22 +123,18 @@ export default {
       logo: null,
       colonnes: null,
 
-      données: [],
-      entête: []
+      données: []
     };
   },
   computed: {
-    langues: function() {
-      return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
-    },
     nom: function() {
       return Object.keys(this.nomsTableau).length
-        ? traduireNom(this.nomsTableau, this.langues)
+        ? traduireNom(this.nomsTableau, this.languesPréférées)
         : this.idTableau;
     },
     nomBD: function() {
       return Object.keys(this.nomsBD).length
-        ? traduireNom(this.nomsBD, this.langues)
+        ? traduireNom(this.nomsBD, this.languesPréférées)
         : this.idBD;
     },
     idBD: function() {
@@ -188,6 +142,15 @@ export default {
     },
     idTableau: function() {
       return decodeURIComponent(this.$route.params.idTableau);
+    },
+    entête: function() {
+      if (this.colonnes === null) return []
+      return this.colonnes.map(x=>{
+        return {
+          text: couper(x.variable, 10),
+          value: x.id
+        }
+      })
     },
     petitPousset: function() {
       return [
@@ -215,6 +178,9 @@ export default {
     effacerNom({ langue }) {
       this.$ipa.tableaux.effacerNomTableau(this.idTableau, langue);
     },
+    creerColonne: async function({ idVariable }) {
+      await this.$ipa.tableaux.ajouterColonneTableau(this.idTableau, idVariable);
+    },
     initialiserSuivi: async function() {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);
 
@@ -235,7 +201,6 @@ export default {
       const oublierColonnes = await this.$ipa.tableaux.suivreColonnes(
         this.idTableau,
         cols => {
-          console.log({ cols });
           this.colonnes = cols;
         }
       );
