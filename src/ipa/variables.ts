@@ -18,7 +18,7 @@ export default class Variables {
     return await this.client.suivreBdListe(this.idBD, f);
   }
 
-  async créerVariable(): Promise<string> {
+  async créerVariable(catégorie: string): Promise<string> {
     const bdRacine = await this.client.ouvrirBD(this.idBD);
     const idBdVariable = await this.client.créerBDIndépendante("kvstore");
     await bdRacine.add(idBdVariable);
@@ -26,6 +26,8 @@ export default class Variables {
     const bdVariable = await this.client.ouvrirBD(idBdVariable);
     const idBdNoms = await this.client.créerBDIndépendante("kvstore");
     await bdVariable.set("noms", idBdNoms);
+
+    await bdVariable.set("catégorie", catégorie);
 
     return idBdVariable;
   }
@@ -73,6 +75,13 @@ export default class Variables {
     await bdDescr.del(langue);
   }
 
+
+  async sauvegarderCatégorieVariable(id: string, catégorie: string): Promise<void> {
+    const bdVariable = await this.client.ouvrirBD(id);
+    await bdVariable.set("catégorie", catégorie)
+
+  }
+
   async suivreNomsVariable(
     id: string,
     f: schémaFonctionSuivi
@@ -87,6 +96,31 @@ export default class Variables {
     return await this.client.suivreBdDic(id, "descriptions", f);
   }
 
+  async suivreCatégorieVariable(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    return await this.client.suivreBD(
+      id,
+      async (bd)=>{
+        const catégorie = await bd.get("catégorie");
+        f(catégorie);
+      }
+    );
+  }
+
+  async suivreUnitésVariable(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    return await this.client.suivreBD(
+      id,
+      async (bd)=>{
+        const catégorie = await bd.get("unité");
+        f(catégorie);
+      }
+    );
+  }
 
   async effacerVariable(id: string) {
     // Effacer l'entrée dans notre liste de variables

@@ -2,6 +2,7 @@
   <v-menu offset-x :close-on-content-click="false">
     <template v-slot:activator="{ on, attrs }">
       <v-chip outlined label small v-bind="attrs" v-on="on" class="mx-1 my-1">
+        <v-icon v-if="catégorie" left small>{{icôneCatégorie}}</v-icon>
         {{ couper(nom, 15) }}
       </v-chip>
     </template>
@@ -10,7 +11,7 @@
 </template>
 
 <script>
-import { traduireNom, couper } from "@/utils";
+import { traduireNom, couper, icôneCatégorieVariable } from "@/utils";
 import carteVariable from "@/components/commun/carteVariable";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
@@ -22,17 +23,18 @@ export default {
   mixins: [mixinLangues, mixinIPA],
   data: function() {
     return {
-      noms: null
+      noms: {},
+      catégorie: undefined,
     };
   },
   computed: {
-    langues: function() {
-      return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
-    },
     nom: function() {
       return Object.keys(this.noms).length
-        ? traduireNom(this.noms, this.langues)
+        ? traduireNom(this.noms, this.languesPréférées)
         : this.id;
+    },
+    icôneCatégorie: function() {
+      return icôneCatégorieVariable(this.catégorie)
     }
   },
   methods: {
@@ -41,11 +43,18 @@ export default {
       const oublierNoms = await this.$ipa.variables.suivreNomsVariable(
         this.id,
         noms => {
-          this.nomd = noms;
+          this.noms = noms;
         }
       );
 
-      this.suivre([oublierNoms]);
+      const oublierCatégorie = await this.$ipa.variables.suivreCatégorieVariable(
+        this.id,
+        catégorie => {
+          this.catégorie = catégorie
+        }
+      );
+
+      this.suivre([oublierNoms, oublierCatégorie]);
     }
   }
 };

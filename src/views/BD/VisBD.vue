@@ -348,8 +348,8 @@ export default {
       tableaux: null,
       logo: null,
       score: null,
-
       variables: [],
+
       géog: [],
       motsClefs: [],
       auteurs: null
@@ -416,6 +416,10 @@ export default {
         this.idBD,
         score => (this.score = score)
       );
+      /*const oublierVariables = await this.$ipa.bds.suivreVariablesBD(
+        this.idBD,
+        variables => (this.variables = variables)
+      );*/
       this.suivre([
         oublierLicence,
         oublierNoms,

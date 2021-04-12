@@ -56,18 +56,11 @@
         />
       </v-menu>
       <v-select
-        v-model="typeVariable"
+        v-model="catégorie"
         outlined
         dense
         label="Type"
-        :items="[
-          { text: 'Numérique', icône: 'mdi-numeric' },
-          { text: 'Chaîne', icône: 'mdi-abugida-thai' },
-          { text: 'Catégorique', icône: 'mdi-view-list' },
-          { text: 'Vrai/faux', icône: 'mdi-order-bool-ascending-variant' },
-          { text: 'GEOJSON', icône: 'mdi-map-marker' },
-          { text: 'Fichier', icône: 'mdi-file' }
-        ]"
+        :items="optionsCatégories"
       >
         <template v-slot:item="{ on, item }">
           <v-list-item v-on="on">
@@ -89,7 +82,7 @@
         text
         tiled
         outlined
-        :disabled="!typeVariable"
+        :disabled="!catégorie"
         color="primary"
         @click="sauvegarder"
       >
@@ -101,7 +94,7 @@
 
 <script>
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
-import { traduireNom } from "@/utils";
+import { traduireNom, catégoriesVariable, icôneCatégorieVariable } from "@/utils";
 
 export default {
   name: "carteNouvelleVariable",
@@ -111,7 +104,7 @@ export default {
       noms: {},
       descriptions: {},
       unités: undefined,
-      typeVariable: undefined
+      catégorie: undefined
     };
   },
   computed: {
@@ -127,11 +120,18 @@ export default {
       return Object.keys(this.descriptions).length
         ? traduireNom(this.descriptions, this.langues)
         : undefined;
+    },
+    optionsCatégories: () => {
+      return catégoriesVariable.map(
+        x=> {
+          return { text: x, icône: icôneCatégorieVariable(x) }
+        }
+      )
     }
   },
   methods: {
     sauvegarder: async function() {
-      const idVariable = await this.$ipa.variables.créerVariable();
+      const idVariable = await this.$ipa.variables.créerVariable(this.catégorie);
       await this.$ipa.variables.ajouterNomsVariable(idVariable, this.noms);
       await this.$ipa.variables.ajouterDescriptionsVariable(
         idVariable,

@@ -80,12 +80,15 @@
           </template>
           <template
             v-for="c in entête"
-            v-slot:[`header.${c.value}`]="{ header }"
+            v-slot:[`header.${c.idCol}`]="{ header }"
           >
-            <span :key="c.value" @click.stop>
-              <v-icon x-small>mdi-information-outline</v-icon>
-              {{ header.text }}
-            </span>
+            {{entête}}
+            {{c}}
+            <titreEntêteTableau
+              :key="c.idColonne"
+              :idVariable="header.idVariable"
+              :idColonne="header.idColonne"
+            />
           </template>
           <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item }">
             <span v-if="c.value === 'date'" :key="c.value">
@@ -104,6 +107,7 @@
 <script>
 import { traduireNom, couper } from "@/utils";
 
+import titreEntêteTableau from "@/components/tableaux/titreEntêteTableau";
 import carteNouvelleColonne from "@/components/tableaux/carteNouvelleColonne";
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import lienOrbite from "@/components/commun/lienOrbite";
@@ -113,7 +117,7 @@ import mixinIPA from "@/mixins/ipa";
 
 export default {
   name: "visTableau",
-  components: { lienOrbite, lienTélécharger, boîteNoms, carteNouvelleColonne },
+  components: { lienOrbite, lienTélécharger, boîteNoms, carteNouvelleColonne, titreEntêteTableau },
   mixins: [mixinLangues, mixinIPA],
   data: function() {
     return {
@@ -145,12 +149,13 @@ export default {
     },
     entête: function() {
       if (this.colonnes === null) return []
-      return this.colonnes.map(x=>{
+      const entêtes = this.colonnes.map(x=>{
         return {
-          text: couper(x.variable, 10),
-          value: x.id
+          idVariable: x.variable,
+          idColonne: x.id
         }
       })
+      return entêtes
     },
     petitPousset: function() {
       return [

@@ -72,6 +72,16 @@ export default class Tableaux {
     return await this.client.suivreBdListe(idBdListe, f);
   }
 
+  async suivreVariables(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    return await this.suivreColonnes(id, async (liste) => {
+      const variables = liste.map(x=>x.variable)
+      return f(variables)
+    });
+  }
+
   async effacerTableau(id: string) {
     // Effacer toutes les composantes du tableau
     for (const clef in ["noms"]) {

@@ -87,7 +87,13 @@ export default {
           this.nomsTableau = noms;
         }
       );
-      this.suivre([oublierNoms]);
+      const oublierVariables = await this.$ipa.tableaux.suivreVariables(
+        this.idTableau,
+        variables => {
+          this.variables = variables;
+        }
+      )
+      this.suivre([oublierNoms, oublierVariables]);
     }
   }
 };

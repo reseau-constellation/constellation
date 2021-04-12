@@ -68,3 +68,24 @@ export function couleurScore(score: number) {
     return { couleur: "#b91d47", note: "F" };
   }
 }
+
+export function icôneCatégorieVariable(catégorie: string) {
+  switch(catégorie) {
+    case "numérique":
+      return "mdi-numeric";
+    case "chaîne":
+      return "mdi-text-short";
+    case "catégorique":
+      return "mdi-view-list";
+    case "booléen":
+      return "mdi-order-bool-ascending-variant";
+    case "géojson":
+      return "mdi-map-marker";
+    case "fichier":
+      return "mdi-file";
+    default:
+      return "";
+  }
+}
+
+export const catégoriesVariable = ["numérique", "chaîne", "catégorique", "booléen", "géojson", "fichier"]
