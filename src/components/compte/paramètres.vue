@@ -129,7 +129,6 @@ export default {
           if (courriel) this.courrielOrig = courriel;
         }
       );
-      await this.$ipa.compte.effacerNom("[object Object]");
 
       const oublierNoms = await this.$ipa.compte.suivreNoms(noms => {
         this.noms = noms;
