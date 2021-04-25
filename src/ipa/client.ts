@@ -9,6 +9,7 @@ import Compte from "./compte";
 import BDs from "./bds";
 import Tableaux from "./tableaux";
 import Variables from "./variables";
+import Réseau from "./réseau";
 
 import Nuée from "./nuée";
 
@@ -19,12 +20,6 @@ type FileContent =
   | Blob
   | Iterable<ArrayBuffer | ArrayBufferView>
   | AsyncIterable<ArrayBuffer | ArrayBufferView>;
-
-const schémaRacine = {
-  compte: "kvstore",
-  mesBDs: "feed",
-  mesProjets: "feed"
-};
 
 export type schémaFonctionSuivi = (x: any) => void;
 export type schémaFonctionOublier = () => void;
@@ -41,6 +36,7 @@ export default class ClientConstellation extends EventEmitter {
   bds?: BDs;
   tableaux?: Tableaux;
   variables?: Variables;
+  réseau?: Réseau;
   nuée?: Nuée;
   pret: boolean;
 
@@ -83,6 +79,13 @@ export default class ClientConstellation extends EventEmitter {
     );
     this.variables = new Variables(this, idBdVariables);
 
+    const idBdRéseau = await this.obtIdBd(
+      "réseau",
+      this._bdRacine,
+      "feed"
+    );
+    this.réseau = new Réseau(this, idBdRéseau);
+
     this.nuée = new Nuée(this);
 
     this.pret = true;
@@ -91,11 +94,28 @@ export default class ClientConstellation extends EventEmitter {
 
   async connecterPoste(id: string, racine: string): Promise<void> {
     const protocol = "/p2p-circuit/ipfs/";
+    let postes = await this.sfip.swarm.peers()
+    console.log({id, postes})
     try {
       await this.sfip.swarm.connect(protocol + id);
+      postes = await this.sfip.swarm.peers()
+      console.log("connecté", {postes})
     } catch (e) {
       console.error(e);
     }
+  }
+
+  async suivreConnexionsPostes(f: schémaFonctionSuivi, t = 3000): Promise<schémaFonctionOublier> {
+    const fFinale = async () => {
+      const connexions = await this.sfip.swarm.peers()
+      f(connexions)
+    }
+    const oublier = setInterval(
+      fFinale,
+      t
+    )
+    fFinale()
+    return () => clearInterval(oublier)
   }
 
   async suivreBD(
@@ -147,6 +167,18 @@ export default class ClientConstellation extends EventEmitter {
     });
   }
 
+  async rechercherBdListe(
+    id: string,
+    f
+  ) {
+    const bd = await this.ouvrirBD(id);
+    const élément = bd
+      .iterator({ limit: -1 })
+      .collect()
+      .find((e: { [key: string]: any }) => f(e));
+    return élément
+  }
+
   async obtFichierSFIP(id: string, max?: number) {
     return await toBuffer(this.sfip.cat(id));
   }
@@ -187,7 +219,7 @@ export default class ClientConstellation extends EventEmitter {
         idBd = null;
       }
     }
-    if (!idBd && this.permissionÉcrire(racine) && type) {
+    if (!idBd && this.permissionÉcrire(racine.id) && type) {
       bd = await this.orbite[type](uuidv4());
       idBd = bd.id;
       await racine.set(nom, idBd);

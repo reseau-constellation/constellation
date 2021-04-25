@@ -24,7 +24,7 @@ export default class Compte {
   }
 
   async suivreNoms(f: schémaFonctionSuivi) {
-    const idBDNoms = await this.client.obtIdBd("noms", this.idBD);
+    const idBDNoms = await this.client.obtIdBd("noms", this.idBD, "kvstore");
     return await this.client.suivreBD(idBDNoms, async bd => {
       let noms = bd.all;
       noms = Object.fromEntries(

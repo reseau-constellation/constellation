@@ -56,7 +56,7 @@
           </template>
         </v-select>
         <v-select
-          :value="systèmeNum"
+          :value="systèmeNumération"
           :items="[{ text: $t('communs.auto'), value: null }, ...systèmesNum]"
           :label="$t('compte.options.numération')"
           outlined

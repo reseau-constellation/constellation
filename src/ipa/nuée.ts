@@ -1,13 +1,13 @@
 import ClientConstellation from "./client";
-import hyperswarm, { Swarm } from "hyperswarm-web";
+import hyperswarm from "hyperswarm-web";
 import crypto from "crypto";
-
+import { isValidAddress } from "orbit-db";
 const décodeur = new TextDecoder("utf-8");
 
 export default class Nuée {
   client: ClientConstellation;
   sujet: Buffer;
-  nuée: Swarm;
+  nuée: any;
 
   constructor(client: ClientConstellation) {
     this.client = client;
@@ -39,7 +39,10 @@ export default class Nuée {
     console.log(message);
     switch (message.type) {
       case "Salut !":
-        this.client.connecterPoste(message.contenu.id, message.contenu.racine);
+        if (isValidAddress(message.contenu.racine)) {
+          this.client.réseau.ajouterMembre(message.contenu.racine)
+        }
+        // this.client.connecterPoste(message.contenu.id, message.contenu.racine);
     }
   }
 }
