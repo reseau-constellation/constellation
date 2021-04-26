@@ -31,7 +31,7 @@ export default class ClientConstellation extends EventEmitter {
   _bds: { [key: string]: any };
   orbite: any;
   sfip: any;
-  idNodeSFIP?: string;
+  idNodeSFIP?: { [key: string]: any };
   compte?: Compte;
   bds?: BDs;
   tableaux?: Tableaux;
@@ -169,8 +169,8 @@ export default class ClientConstellation extends EventEmitter {
 
   async rechercherBdListe(
     id: string,
-    f
-  ) {
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
     const bd = await this.ouvrirBD(id);
     const élément = bd
       .iterator({ limit: -1 })
@@ -219,7 +219,9 @@ export default class ClientConstellation extends EventEmitter {
         idBd = null;
       }
     }
-    if (!idBd && this.permissionÉcrire(racine.id) && type) {
+
+    const permission = await this.permissionÉcrire(racine.id)
+    if (!idBd && permission && type) {
       bd = await this.orbite[type](uuidv4());
       idBd = bd.id;
       await racine.set(nom, idBd);

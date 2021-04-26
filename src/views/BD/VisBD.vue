@@ -273,7 +273,7 @@
         <v-list>
           <p class="mb-0 text-overline">
             Tableaux
-            <v-btn icon small @click="ajouterTableau">
+            <v-btn v-if="permissionÉcrire" icon small @click="ajouterTableau">
               <v-icon small>mdi-plus</v-icon>
             </v-btn>
           </p>
@@ -283,7 +283,7 @@
             <p class="text-h5 mt-5">Il n'y a aucun tableau pour l'instant</p>
             <v-img :src="image('vide')" class="my-5" contain height="175px" />
 
-            <v-btn color="primary" outlined text @click="ajouterTableau">
+            <v-btn v-if="permissionÉcrire" color="primary" outlined text @click="ajouterTableau">
               Ajouter un tableau
             </v-btn>
           </div>

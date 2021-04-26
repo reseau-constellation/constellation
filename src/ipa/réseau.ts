@@ -6,6 +6,7 @@ import ClientConstellation, {
 
 export default class Réseau {
   client: ClientConstellation;
+  idBD: string;
 
   constructor(client: ClientConstellation, id: string) {
     this.client = client;
@@ -13,12 +14,13 @@ export default class Réseau {
   }
 
   async ajouterMembre(id: string): Promise<void> {
+    console.log("ajouterMembre", id)
     const existante = await this.client.rechercherBdListe(
       this.idBD,
-      e => e.payload.value.id === id
+      (e: any) => e.payload.value.id === id
     )
-    if (!id) {
-      const bdRacine = await this.client.ouvrirBD(this.idBd)
+    if (!existante) {
+      const bdRacine = await this.client.ouvrirBD(this.idBD)
       const élément = {
         id: id
       }
@@ -31,4 +33,44 @@ export default class Réseau {
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdListe(this.idBD, f);
   }
+
+  async suivreNomsMembre(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    const idBdCompte = await this.client.obtIdBd("compte", id)
+    return await this.client.compte!.suivreNoms(f, idBdCompte);
+  }
+
+  async suivreCourrielMembre(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    const idBdCompte = await this.client.obtIdBd("compte", id)
+    return await this.client.compte!.suivreCourriel(f, idBdCompte);
+  }
+
+  async suivreImageMembre(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    const idBdCompte = await this.client.obtIdBd("compte", id)
+    return await this.client.compte!.suivreImage(f, idBdCompte);
+  }
+
+  async suivreBdsMembre(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    const idBdBds = await this.client.obtIdBd("bds", id)
+    return await this.client.bds!.suivreBDs(f, idBdBds);
+  }
+
+  /*
+  async rechercherBds(
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+
+  }
+  */
 }

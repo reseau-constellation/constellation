@@ -12,7 +12,8 @@
     "déployer": "node ./scripts/gh-pages-deploy.js",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
-    "_postuninstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
   },
   "main": "background.js",
   "dependencies": {
@@ -25,6 +26,9 @@
     "ennikkai": "^1.2.7",
     "hyperswarm-web": "^2.1.1",
     "ipfs": "^0.54.4",
+    "ipfs-daemon": "^0.5.4",
+    "ipfs-http-client": "^49.0.4",
+    "ipfsd-ctl": "7.2.0",
     "is-electron": "^2.2.0",
     "it-to-buffer": "^2.0.0",
     "marked": "^2.0.1",

@@ -11,8 +11,9 @@ export default class Compte {
     this.idBD = id;
   }
 
-  async suivreCourriel(f: schémaFonctionSuivi) {
-    return await this.client.suivreBD(this.idBD, async bd => {
+  async suivreCourriel(f: schémaFonctionSuivi, idBdRacine?: string) {
+    idBdRacine = idBdRacine || this.idBD;
+    return await this.client.suivreBD(idBdRacine, async bd => {
       const courriel = await bd.get("courriel");
       f(courriel);
     });
@@ -23,17 +24,11 @@ export default class Compte {
     await bd.set("courriel", courriel);
   }
 
-  async suivreNoms(f: schémaFonctionSuivi) {
-    const idBDNoms = await this.client.obtIdBd("noms", this.idBD, "kvstore");
-    return await this.client.suivreBD(idBDNoms, async bd => {
-      let noms = bd.all;
-      noms = Object.fromEntries(
-        Object.keys(noms).map(x => {
-          return [x, noms[x]];
-        })
-      );
-      f(noms);
-    });
+  async suivreNoms(f: schémaFonctionSuivi, idBdRacine?: string) {
+    idBdRacine = idBdRacine || this.idBD;
+    const bd = await this.client.ouvrirBD(idBdRacine);
+    console.log("suivreNoms", bd.all)
+    return await this.client.suivreBdDic(idBdRacine, "noms", f);
   }
 
   async sauvegarderNom(langue: string, nom: string): Promise<void> {
@@ -62,8 +57,9 @@ export default class Compte {
     await bd.del("image");
   }
 
-  async suivreImage(f: schémaFonctionSuivi) {
-    return await this.client.suivreBD(this.idBD, async bd => {
+  async suivreImage(f: schémaFonctionSuivi, idBdRacine?: string) {
+    idBdRacine = idBdRacine || this.idBD;
+    return await this.client.suivreBD(idBdRacine, async bd => {
       const idImage = await bd.get("image");
       if (!idImage) return f(null);
       const image = await this.client.obtFichierSFIP(idImage, MAX_TAILLE_IMAGE);

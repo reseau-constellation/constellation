@@ -77,7 +77,7 @@ export default class Tableaux {
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     return await this.suivreColonnes(id, async (liste) => {
-      const variables = liste.map(x=>x.variable)
+      const variables = liste.map((x: any)=>x.variable)
       return f(variables)
     });
   }

@@ -49,7 +49,6 @@
 
 <script>
 import { traduireNom, icôneCatégorieVariable, catégoriesVariable } from "@/utils";
-import { rubiChabäl as codeÀNomLangue } from "nuchabal";
 import lienOrbite from "@/components/commun/lienOrbite";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
@@ -85,7 +84,6 @@ export default {
     }
   },
   methods: {
-    codeÀNomLangue,
     sauvegarderCategorie: async function(catégorie) {
       await this.$ipa.variables.sauvegarderCatégorieVariable(this.id, catégorie);
     },

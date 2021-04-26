@@ -40,7 +40,7 @@ export default class Nuée {
     switch (message.type) {
       case "Salut !":
         if (isValidAddress(message.contenu.racine)) {
-          this.client.réseau.ajouterMembre(message.contenu.racine)
+          this.client.réseau!.ajouterMembre(message.contenu.racine)
         }
         // this.client.connecterPoste(message.contenu.id, message.contenu.racine);
     }
