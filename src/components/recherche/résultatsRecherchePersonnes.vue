@@ -1,8 +1,10 @@
 <template>
-  <span>
-    <carte-membre v-for="{id} in membres" :key="id" :id="id">
-    </carte-membre>
-  </span>
+  <v-col cols="12">
+    <v-slide-x-transition group class="d-flex flex-wrap justify-center">
+      <carte-membre v-for="{ id } in membres" :key="id" :id="id">
+      </carte-membre>
+    </v-slide-x-transition>
+  </v-col>
 </template>
 
 <script>
@@ -15,24 +17,19 @@ export default {
   components: { carteMembre },
   data: function() {
     return {
-      membres: [],
-      catégorie: "personnes"
-    }
+      membres: []
+    };
   },
   methods: {
-    initialiserSuivi:  async function() {
-      const oublierMembres = await this.$ipa.réseau.suivreMembres(
-        membres => {
-          this.membres = membres;
-        }
-      );
+    initialiserSuivi: async function() {
+      const oublierMembres = await this.$ipa.réseau.suivreMembres(membres => {
+        this.membres = membres;
+      });
 
       this.suivre([oublierMembres]);
     }
   }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

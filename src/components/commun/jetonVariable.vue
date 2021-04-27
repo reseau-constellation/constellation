@@ -2,7 +2,7 @@
   <v-menu offset-x :close-on-content-click="false">
     <template v-slot:activator="{ on, attrs }">
       <v-chip outlined label small v-bind="attrs" v-on="on" class="mx-1 my-1">
-        <v-icon v-if="catégorie" left small>{{icôneCatégorie}}</v-icon>
+        <v-icon v-if="catégorie" left small>{{ icôneCatégorie }}</v-icon>
         {{ couper(nom, 15) }}
       </v-chip>
     </template>
@@ -24,7 +24,7 @@ export default {
   data: function() {
     return {
       noms: {},
-      catégorie: undefined,
+      catégorie: undefined
     };
   },
   computed: {
@@ -34,7 +34,7 @@ export default {
         : this.id;
     },
     icôneCatégorie: function() {
-      return icôneCatégorieVariable(this.catégorie)
+      return icôneCatégorieVariable(this.catégorie);
     }
   },
   methods: {
@@ -50,7 +50,7 @@ export default {
       const oublierCatégorie = await this.$ipa.variables.suivreCatégorieVariable(
         this.id,
         catégorie => {
-          this.catégorie = catégorie
+          this.catégorie = catégorie;
         }
       );
 

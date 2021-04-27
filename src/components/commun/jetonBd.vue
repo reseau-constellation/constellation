@@ -1,5 +1,9 @@
 <template>
-  <v-chip label outlined small
+  <v-chip
+    class="me-1 mb-1"
+    label
+    outlined
+    small
     @click="$router.push(`/bd/visualiser/${encodeURIComponent(id)}`)"
   >
     <v-icon left small>mdi-database-outline</v-icon>
@@ -19,7 +23,7 @@ export default {
   data: function() {
     return {
       noms: {},
-      catégorie: undefined,
+      catégorie: undefined
     };
   },
   computed: {
@@ -32,12 +36,9 @@ export default {
   methods: {
     couper,
     initialiserSuivi: async function() {
-      const oublierNoms = await this.$ipa.bds.suivreNomsBD(
-        this.id,
-        noms => {
-          this.noms = noms;
-        }
-      );
+      const oublierNoms = await this.$ipa.bds.suivreNomsBD(this.id, noms => {
+        this.noms = noms;
+      });
 
       this.suivre([oublierNoms]);
     }

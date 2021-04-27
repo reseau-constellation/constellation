@@ -32,7 +32,13 @@
     <v-divider />
     <v-card-actions>
       <v-spacer />
-      <v-btn text outlined color="primary" :disabled="!idVariable" @click="creerColonne">
+      <v-btn
+        text
+        outlined
+        color="primary"
+        :disabled="!idVariable"
+        @click="creerColonne"
+      >
         Confirmer
       </v-btn>
     </v-card-actions>
@@ -57,7 +63,7 @@ export default {
   },
   methods: {
     creerColonne: async function() {
-      this.$emit("creerColonne", { idVariable: this.idVariable })
+      this.$emit("creerColonne", { idVariable: this.idVariable });
     },
     initialiserSuivi: async function() {
       const oublierVariables = await this.$ipa.variables.suivreVariables(

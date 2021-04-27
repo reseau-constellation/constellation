@@ -79,11 +79,7 @@ export default class ClientConstellation extends EventEmitter {
     );
     this.variables = new Variables(this, idBdVariables);
 
-    const idBdRéseau = await this.obtIdBd(
-      "réseau",
-      this._bdRacine,
-      "feed"
-    );
+    const idBdRéseau = await this.obtIdBd("réseau", this._bdRacine, "feed");
     this.réseau = new Réseau(this, idBdRéseau);
 
     this.nuée = new Nuée(this);
@@ -94,28 +90,28 @@ export default class ClientConstellation extends EventEmitter {
 
   async connecterPoste(id: string, racine: string): Promise<void> {
     const protocol = "/p2p-circuit/ipfs/";
-    let postes = await this.sfip.swarm.peers()
-    console.log({id, postes})
+    let postes = await this.sfip.swarm.peers();
+    console.log({ id, postes });
     try {
       await this.sfip.swarm.connect(protocol + id);
-      postes = await this.sfip.swarm.peers()
-      console.log("connecté", {postes})
+      postes = await this.sfip.swarm.peers();
+      console.log("connecté", { postes });
     } catch (e) {
       console.error(e);
     }
   }
 
-  async suivreConnexionsPostes(f: schémaFonctionSuivi, t = 3000): Promise<schémaFonctionOublier> {
+  async suivreConnexionsPostes(
+    f: schémaFonctionSuivi,
+    t = 3000
+  ): Promise<schémaFonctionOublier> {
     const fFinale = async () => {
-      const connexions = await this.sfip.swarm.peers()
-      f(connexions)
-    }
-    const oublier = setInterval(
-      fFinale,
-      t
-    )
-    fFinale()
-    return () => clearInterval(oublier)
+      const connexions = await this.sfip.swarm.peers();
+      f(connexions);
+    };
+    const oublier = setInterval(fFinale, t);
+    fFinale();
+    return () => clearInterval(oublier);
   }
 
   async suivreBD(
@@ -176,7 +172,7 @@ export default class ClientConstellation extends EventEmitter {
       .iterator({ limit: -1 })
       .collect()
       .find((e: { [key: string]: any }) => f(e));
-    return élément
+    return élément;
   }
 
   async obtFichierSFIP(id: string, max?: number) {
@@ -220,7 +216,7 @@ export default class ClientConstellation extends EventEmitter {
       }
     }
 
-    const permission = await this.permissionÉcrire(racine.id)
+    const permission = await this.permissionÉcrire(racine.id);
     if (!idBd && permission && type) {
       bd = await this.orbite[type](uuidv4());
       idBd = bd.id;

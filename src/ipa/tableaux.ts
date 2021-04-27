@@ -51,16 +51,17 @@ export default class Tableaux {
     return await this.client.suivreBdDic(id, "noms", f);
   }
 
-  async ajouterColonneTableau(
-    idTableau: string,
-    idVariable: string
-  ){
-    const idBdColonnes = await this.client.obtIdBd("colonnes", idTableau, "feed");
+  async ajouterColonneTableau(idTableau: string, idVariable: string) {
+    const idBdColonnes = await this.client.obtIdBd(
+      "colonnes",
+      idTableau,
+      "feed"
+    );
     const bdColonnes = await this.client.ouvrirBD(idBdColonnes);
     const entrée = {
       id: uuidv4(),
       variable: idVariable
-    }
+    };
     await bdColonnes.add(entrée);
   }
 
@@ -76,9 +77,9 @@ export default class Tableaux {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.suivreColonnes(id, async (liste) => {
-      const variables = liste.map((x: any)=>x.variable)
-      return f(variables)
+    return await this.suivreColonnes(id, async liste => {
+      const variables = liste.map((x: any) => x.variable);
+      return f(variables);
     });
   }
 

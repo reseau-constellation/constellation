@@ -94,7 +94,11 @@
 
 <script>
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
-import { traduireNom, catégoriesVariable, icôneCatégorieVariable } from "@/utils";
+import {
+  traduireNom,
+  catégoriesVariable,
+  icôneCatégorieVariable
+} from "@/utils";
 
 export default {
   name: "carteNouvelleVariable",
@@ -122,16 +126,16 @@ export default {
         : undefined;
     },
     optionsCatégories: () => {
-      return catégoriesVariable.map(
-        x=> {
-          return { text: x, icône: icôneCatégorieVariable(x) }
-        }
-      )
+      return catégoriesVariable.map(x => {
+        return { text: x, icône: icôneCatégorieVariable(x) };
+      });
     }
   },
   methods: {
     sauvegarder: async function() {
-      const idVariable = await this.$ipa.variables.créerVariable(this.catégorie);
+      const idVariable = await this.$ipa.variables.créerVariable(
+        this.catégorie
+      );
       await this.$ipa.variables.ajouterNomsVariable(idVariable, this.noms);
       await this.$ipa.variables.ajouterDescriptionsVariable(
         idVariable,

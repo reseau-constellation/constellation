@@ -92,7 +92,7 @@ export default {
         variables => {
           this.variables = variables;
         }
-      )
+      );
       this.suivre([oublierNoms, oublierVariables]);
     }
   }

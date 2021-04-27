@@ -35,20 +35,29 @@
       </p>
       <p class="mb-0 text-overline">
         Catégorie
-        <v-chip v-if="catégorie!==undefined" label outlined small>
+        <v-chip v-if="catégorie !== undefined" label outlined small>
           <v-icon left small>{{ icôneCatégorie }}</v-icon>
           {{ catégorie }}
         </v-chip>
-        <v-select v-else outlined dense :items="catégoriesVariable" @change="sauvegarderCategorie">
+        <v-select
+          v-else
+          outlined
+          dense
+          :items="catégoriesVariable"
+          @change="sauvegarderCategorie"
+        >
         </v-select>
       </p>
-
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import { traduireNom, icôneCatégorieVariable, catégoriesVariable } from "@/utils";
+import {
+  traduireNom,
+  icôneCatégorieVariable,
+  catégoriesVariable
+} from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
@@ -77,15 +86,19 @@ export default {
     },
     description: function() {
       return Object.keys(this.descriptions).length
-        ? traduireNom(this.descriptions, this.languesPréférées) : "";
+        ? traduireNom(this.descriptions, this.languesPréférées)
+        : "";
     },
     icôneCatégorie: function() {
-      return icôneCatégorieVariable(this.catégorie)
+      return icôneCatégorieVariable(this.catégorie);
     }
   },
   methods: {
     sauvegarderCategorie: async function(catégorie) {
-      await this.$ipa.variables.sauvegarderCatégorieVariable(this.id, catégorie);
+      await this.$ipa.variables.sauvegarderCatégorieVariable(
+        this.id,
+        catégorie
+      );
     },
     initialiserSuivi: async function() {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.id);
@@ -107,7 +120,7 @@ export default {
       const oublierCatégorie = await this.$ipa.variables.suivreCatégorieVariable(
         this.id,
         catégorie => {
-          this.catégorie = catégorie
+          this.catégorie = catégorie;
         }
       );
 
@@ -118,7 +131,12 @@ export default {
         }
       );
 
-      this.suivre([oublierNoms, oublierDescriptions, oublierCatégorie, oublierUnités]);
+      this.suivre([
+        oublierNoms,
+        oublierDescriptions,
+        oublierCatégorie,
+        oublierUnités
+      ]);
     }
   }
 };

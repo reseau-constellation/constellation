@@ -12,7 +12,10 @@ export default class BDs {
     this.idBD = id;
   }
 
-  async suivreBDs(f: schémaFonctionSuivi, idBdRacine?: string): Promise<schémaFonctionOublier> {
+  async suivreBDs(
+    f: schémaFonctionSuivi,
+    idBdRacine?: string
+  ): Promise<schémaFonctionOublier> {
     idBdRacine = idBdRacine || this.idBD;
     return await this.client.suivreBdListe(idBdRacine, f);
   }

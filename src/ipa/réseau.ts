@@ -14,23 +14,20 @@ export default class Réseau {
   }
 
   async ajouterMembre(id: string): Promise<void> {
-    console.log("ajouterMembre", id)
     const existante = await this.client.rechercherBdListe(
       this.idBD,
       (e: any) => e.payload.value.id === id
-    )
+    );
     if (!existante) {
-      const bdRacine = await this.client.ouvrirBD(this.idBD)
+      const bdRacine = await this.client.ouvrirBD(this.idBD);
       const élément = {
         id: id
-      }
-      await bdRacine.add(élément)
+      };
+      await bdRacine.add(élément);
     }
   }
 
-  async suivreMembres(
-    f: schémaFonctionSuivi
-  ): Promise<schémaFonctionOublier> {
+  async suivreMembres(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdListe(this.idBD, f);
   }
 
@@ -38,7 +35,7 @@ export default class Réseau {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdCompte = await this.client.obtIdBd("compte", id)
+    const idBdCompte = await this.client.obtIdBd("compte", id);
     return await this.client.compte!.suivreNoms(f, idBdCompte);
   }
 
@@ -46,7 +43,7 @@ export default class Réseau {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdCompte = await this.client.obtIdBd("compte", id)
+    const idBdCompte = await this.client.obtIdBd("compte", id);
     return await this.client.compte!.suivreCourriel(f, idBdCompte);
   }
 
@@ -54,7 +51,7 @@ export default class Réseau {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdCompte = await this.client.obtIdBd("compte", id)
+    const idBdCompte = await this.client.obtIdBd("compte", id);
     return await this.client.compte!.suivreImage(f, idBdCompte);
   }
 
@@ -62,8 +59,55 @@ export default class Réseau {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdBds = await this.client.obtIdBd("bds", id)
+    const idBdBds = await this.client.obtIdBd("bds", id);
     return await this.client.bds!.suivreBDs(f, idBdBds);
+  }
+
+  async suivreBds(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
+    interface InterfaceBdsMembre {
+      bds: string[],
+      fOublier?: schémaFonctionOublier
+    }
+    interface InterfaceMembre {
+      id: string
+    }
+    const bds: { [key: string]: InterfaceBdsMembre } = {};
+    const fFinale = () => {
+      const listeBds = Object.values(bds)
+        .map(x => x.bds)
+        .flat();
+      f(listeBds);
+    };
+
+    const fMembres = async (membres: InterfaceMembre[]) => {
+      const existants = Object.keys(bds);
+      const idMembres = membres.map(m => m.id)
+      const nouveaux = idMembres.filter(m => !existants.includes(m));
+      const disparus = existants.filter(m => !idMembres.includes(m));
+      for (const d of disparus) {
+        const fOublier = bds[d].fOublier;
+        if (fOublier) fOublier();
+        delete bds[d];
+      }
+      for (const n of nouveaux) {
+        bds[n] = {
+          bds: [],
+        };
+        const fSuivreMembre = (bdsMembre: string[]) => {
+          bds[n].bds = bdsMembre;
+          fFinale();
+        };
+        const fOublier = await this.suivreBdsMembre(n, fSuivreMembre);
+        bds[n].fOublier = fOublier;
+      }
+    };
+    const oublierMembres = await this.suivreMembres(fMembres);
+
+    const oublier = () => {
+      oublierMembres();
+      Object.values(bds).map(x => x.fOublier ? x.fOublier() : null);
+    };
+    return oublier;
   }
 
   /*

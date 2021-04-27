@@ -27,13 +27,9 @@
                 {{ c.addr.toString() }}
               </v-list-item-subtitle>
             </v-list-item-content>
-
           </v-list-item>
         </v-list>
-        <p
-          v-else
-          class="text--disabled"
-        >
+        <p v-else class="text--disabled">
           Aucune connexion pour l'instant
         </p>
       </v-col>
@@ -50,7 +46,7 @@ export default {
   data: function() {
     return {
       connexions: []
-    }
+    };
   },
   methods: {
     initialiserSuivi: async function() {

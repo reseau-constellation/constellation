@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-x :close-on-content-click="false">
     <template v-slot:activator="{ on, attrs }">
-      <span v-bind="attrs" v-on="on" >
+      <span v-bind="attrs" v-on="on">
         <v-icon x-small>mdi-information-outline</v-icon>
         {{ couper(titre, 20) }}
       </span>
@@ -24,11 +24,13 @@ export default {
   data: function() {
     return {
       noms: {}
-    }
+    };
   },
   computed: {
     titre: function() {
-      return Object.keys(this.noms).length ? traduireNom(this.noms, this.languesPréférées) : this.idColonne
+      return Object.keys(this.noms).length
+        ? traduireNom(this.noms, this.languesPréférées)
+        : this.idColonne;
     }
   },
   methods: {
@@ -43,9 +45,7 @@ export default {
       this.suivre([oublierNoms]);
     }
   }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

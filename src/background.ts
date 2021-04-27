@@ -9,31 +9,43 @@ const Store = require("electron-store");
 Store.initRenderer();
 
 // IPFS instance
-let ipfs: any
+let ipfs: any;
 
-const startIpfs = () => {
+const startIpfs = () => {
   // Create IPFS instance
-  ipfs = new IpfsDaemon()
-  return ipfs
-}
+  ipfs = new IpfsDaemon(
+    {
+      relay: { enabled: true, hop: { enabled: true, active: true } },
+      // @ts-ignore
+      config: {
+        Addresses: {
+          Swarm: [
+            "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/"
+          ]
+          // "Bootstrap": []
+        }
+      }
+    }
+  );
+  return ipfs;
+};
 
 const stopIpfs = () => {
   if (ipfs) {
     // TODO: use promises when available from ipfs-daemon
     // ipfs.stop().then(() => ipfs = nul)
-    ipfs.stop()
-    ipfs = null
+    ipfs.stop();
+    ipfs = null;
   }
-}
+};
 
 const shutdown = () => {
-  stopIpfs()
+  stopIpfs();
   setTimeout(() => {
-    app.exit(0)
-    process.exit(0)
-  }, 1000)
-}
-
+    app.exit(0);
+    process.exit(0);
+  }, 1000);
+};
 
 /*
 ipcMain.handle("obt-url-sfip-http", async (event) => {
@@ -63,16 +75,15 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 async function createWindow() {
-
   // Handle start daemon event from the renderer process
-  ipcMain.on('ipfs-daemon-start', async (event, ipfsDaemonSettings) => {
+  ipcMain.on("ipfs-daemon-start", async (event, ipfsDaemonSettings) => {
     // Make sure we stop a running daemon if any
-    stopIpfs()
+    stopIpfs();
 
     // Create IPFS instance
-    startIpfs()
+    // startIpfs();
 
-    return ipfs.GatewayAddress || 'http://localhost:8080/'
+    return ipfs.GatewayAddress || "http://localhost:8080/";
   });
 
   // Create the browser window.
@@ -106,17 +117,17 @@ app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
-    shutdown()
+    shutdown();
     app.quit();
   }
 });
 
-app.on('will-quit', (e) => {
-  e.preventDefault()
-  shutdown()
+app.on("will-quit", e => {
+  e.preventDefault();
+  shutdown();
 });
-process.on('SIGINT', () => shutdown())
-process.on('SIGTERM', () => shutdown())
+process.on("SIGINT", () => shutdown());
+process.on("SIGTERM", () => shutdown());
 
 app.on("activate", () => {
   // On macOS it's common to re-create a window in the app when the
@@ -124,14 +135,12 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
-process.on('uncaughtException', (error) => {
+process.on("uncaughtException", error => {
   // Skip 'ctrl-c' error and shutdown gracefully
-  const match = String(error).match(/non-zero exit code 255/)
-  if(match)
-    shutdown()
-  else
-    console.error(error)
-})
+  const match = String(error).match(/non-zero exit code 255/);
+  if (match) shutdown();
+  else console.error(error);
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

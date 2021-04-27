@@ -70,7 +70,7 @@ export function couleurScore(score: number) {
 }
 
 export function icôneCatégorieVariable(catégorie: string) {
-  switch(catégorie) {
+  switch (catégorie) {
     case "numérique":
       return "mdi-numeric";
     case "chaîne":
@@ -88,4 +88,11 @@ export function icôneCatégorieVariable(catégorie: string) {
   }
 }
 
-export const catégoriesVariable = ["numérique", "chaîne", "catégorique", "booléen", "géojson", "fichier"]
+export const catégoriesVariable = [
+  "numérique",
+  "chaîne",
+  "catégorique",
+  "booléen",
+  "géojson",
+  "fichier"
+];

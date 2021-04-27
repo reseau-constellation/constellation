@@ -24,17 +24,19 @@ export default {
     return {
       noms: {},
       permissionÉcrire: false
-    }
+    };
   },
   computed: {
     nom: function() {
-      return Object.keys(this.noms).length ? traduireNom(this.noms, this.languesPréférées) : couper(this.id, 30);
+      return Object.keys(this.noms).length
+        ? traduireNom(this.noms, this.languesPréférées)
+        : couper(this.id, 30);
     }
   },
   methods: {
     couper,
     effacerVariable: async function() {
-      await this.$ipa.variables.effacerVariable(this.id)
+      await this.$ipa.variables.effacerVariable(this.id);
     },
     initialiserSuivi: async function() {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.id);
@@ -49,9 +51,7 @@ export default {
       this.suivre([oublierNoms]);
     }
   }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="300">
+  <v-card v-show="actif" min-width="300" class="ma-2">
     <v-card-title>
       <v-list-item-avatar>
         <img :src="imageProfil" />
@@ -16,7 +16,7 @@
         </p>
         <v-chip label outlined small>
           <v-icon left small>mdi-email</v-icon>
-          {{ couper(courriel, 50 ) }}
+          {{ couper(courriel, 50) }}
         </v-chip>
       </span>
       <p class="mb-0 text-overline">
@@ -34,13 +34,17 @@
       <v-chip v-if="!projets.length" label outlined small disabled>
         Aucun projet
       </v-chip>
-
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import { traduireNom, icôneCatégorieVariable, catégoriesVariable, couper } from "@/utils";
+import {
+  traduireNom,
+  icôneCatégorieVariable,
+  catégoriesVariable,
+  couper
+} from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite";
 import jetonBd from "@/components/commun/jetonBd";
 import mixinIPA from "@/mixins/ipa";
@@ -74,12 +78,18 @@ export default {
       const options = [this.image("profilFemme"), this.image("profilHomme")];
       // Dans le doute, on garde ça équitable :)
       return options[Math.floor(Math.random() * options.length)];
+    },
+    actif: function() {
+      return Object.keys(this.noms).length || this.imageCompte || this.courriel || this.bds.length || this.projets.length
     }
   },
   methods: {
     couper,
     sauvegarderCategorie: async function(catégorie) {
-      await this.$ipa.variables.sauvegarderCatégorieVariable(this.id, catégorie);
+      await this.$ipa.variables.sauvegarderCatégorieVariable(
+        this.id,
+        catégorie
+      );
     },
     initialiserSuivi: async function() {
       const oublierNoms = await this.$ipa.réseau.suivreNomsMembre(

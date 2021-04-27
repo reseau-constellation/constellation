@@ -27,7 +27,6 @@ export default class Compte {
   async suivreNoms(f: schémaFonctionSuivi, idBdRacine?: string) {
     idBdRacine = idBdRacine || this.idBD;
     const bd = await this.client.ouvrirBD(idBdRacine);
-    console.log("suivreNoms", bd.all)
     return await this.client.suivreBdDic(idBdRacine, "noms", f);
   }
 

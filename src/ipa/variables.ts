@@ -75,11 +75,12 @@ export default class Variables {
     await bdDescr.del(langue);
   }
 
-
-  async sauvegarderCatégorieVariable(id: string, catégorie: string): Promise<void> {
+  async sauvegarderCatégorieVariable(
+    id: string,
+    catégorie: string
+  ): Promise<void> {
     const bdVariable = await this.client.ouvrirBD(id);
-    await bdVariable.set("catégorie", catégorie)
-
+    await bdVariable.set("catégorie", catégorie);
   }
 
   async suivreNomsVariable(
@@ -100,26 +101,20 @@ export default class Variables {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBD(
-      id,
-      async (bd)=>{
-        const catégorie = await bd.get("catégorie");
-        f(catégorie);
-      }
-    );
+    return await this.client.suivreBD(id, async bd => {
+      const catégorie = await bd.get("catégorie");
+      f(catégorie);
+    });
   }
 
   async suivreUnitésVariable(
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBD(
-      id,
-      async (bd)=>{
-        const catégorie = await bd.get("unité");
-        f(catégorie);
-      }
-    );
+    return await this.client.suivreBD(id, async bd => {
+      const catégorie = await bd.get("unité");
+      f(catégorie);
+    });
   }
 
   async effacerVariable(id: string) {
@@ -129,6 +124,5 @@ export default class Variables {
       (e: { [key: string]: any }) => e.payload.value === id
     );
     await bdRacine.remove(entrée.hash);
-
   }
 }

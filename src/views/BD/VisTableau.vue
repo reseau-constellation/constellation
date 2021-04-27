@@ -65,7 +65,7 @@
                 <v-icon small>mdi-table-column-plus-after</v-icon>
               </v-btn>
             </template>
-            <carte-nouvelle-colonne @creerColonne="creerColonne"/>
+            <carte-nouvelle-colonne @creerColonne="creerColonne" />
           </v-menu>
           <v-btn icon :disabled="colonnes && !colonnes.length">
             <v-icon small>mdi-table-row-plus-after</v-icon>
@@ -82,8 +82,8 @@
             v-for="c in entête"
             v-slot:[`header.${c.idCol}`]="{ header }"
           >
-            {{entête}}
-            {{c}}
+            {{ entête }}
+            {{ c }}
             <titreEntêteTableau
               :key="c.idColonne"
               :idVariable="header.idVariable"
@@ -117,7 +117,13 @@ import mixinIPA from "@/mixins/ipa";
 
 export default {
   name: "visTableau",
-  components: { lienOrbite, lienTélécharger, boîteNoms, carteNouvelleColonne, titreEntêteTableau },
+  components: {
+    lienOrbite,
+    lienTélécharger,
+    boîteNoms,
+    carteNouvelleColonne,
+    titreEntêteTableau
+  },
   mixins: [mixinLangues, mixinIPA],
   data: function() {
     return {
@@ -148,14 +154,14 @@ export default {
       return decodeURIComponent(this.$route.params.idTableau);
     },
     entête: function() {
-      if (this.colonnes === null) return []
-      const entêtes = this.colonnes.map(x=>{
+      if (this.colonnes === null) return [];
+      const entêtes = this.colonnes.map(x => {
         return {
           idVariable: x.variable,
           idColonne: x.id
-        }
-      })
-      return entêtes
+        };
+      });
+      return entêtes;
     },
     petitPousset: function() {
       return [
@@ -184,7 +190,10 @@ export default {
       this.$ipa.tableaux.effacerNomTableau(this.idTableau, langue);
     },
     creerColonne: async function({ idVariable }) {
-      await this.$ipa.tableaux.ajouterColonneTableau(this.idTableau, idVariable);
+      await this.$ipa.tableaux.ajouterColonneTableau(
+        this.idTableau,
+        idVariable
+      );
     },
     initialiserSuivi: async function() {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);

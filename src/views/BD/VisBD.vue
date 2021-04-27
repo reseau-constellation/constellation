@@ -283,7 +283,13 @@
             <p class="text-h5 mt-5">Il n'y a aucun tableau pour l'instant</p>
             <v-img :src="image('vide')" class="my-5" contain height="175px" />
 
-            <v-btn v-if="permissionÉcrire" color="primary" outlined text @click="ajouterTableau">
+            <v-btn
+              v-if="permissionÉcrire"
+              color="primary"
+              outlined
+              text
+              @click="ajouterTableau"
+            >
               Ajouter un tableau
             </v-btn>
           </div>
