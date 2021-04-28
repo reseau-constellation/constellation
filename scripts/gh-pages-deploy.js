@@ -5,9 +5,11 @@ const fs = require("fs");
 (async () => {
   try {
     await execa("git", ["add", "--all", "--ignore-errors"]);
+
     try {
       await execa("git", ["commit", "-a", "-m", "Avant de déployer"]);
     } catch (e) {
+      // Nécessaire en cas qu'aucun changement n'existe
       if (!(e.message.includes("nothing to commit, working tree clean"))) {
         console.log(e.message);
         process.exit(1);
