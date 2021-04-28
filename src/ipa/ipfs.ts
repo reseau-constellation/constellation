@@ -10,9 +10,11 @@ export default async function initSFIP(dir = "./ipfs") {
     config: {
       Addresses: {
         // Touche pas à ça
-        Swarm: isElectron() ? [] : [
-          "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/"
-        ]
+        Swarm: isElectron()
+          ? []
+          : [
+              "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/"
+            ]
         // "Bootstrap": []
       }
     },

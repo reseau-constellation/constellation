@@ -80,7 +80,13 @@ export default {
       return options[Math.floor(Math.random() * options.length)];
     },
     actif: function() {
-      return Object.keys(this.noms).length || this.imageCompte || this.courriel || this.bds.length || this.projets.length
+      return (
+        Object.keys(this.noms).length ||
+        this.imageCompte ||
+        this.courriel ||
+        this.bds.length ||
+        this.projets.length
+      );
     }
   },
   methods: {

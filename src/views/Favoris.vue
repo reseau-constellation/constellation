@@ -27,7 +27,7 @@ export default {
   data: function() {
     return {
       favoris: []
-    }
+    };
   },
   methods: {
     initialiserSuivi: async function() {

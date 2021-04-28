@@ -65,11 +65,11 @@ export default class Réseau {
 
   async suivreBds(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
     interface InterfaceBdsMembre {
-      bds: string[],
-      fOublier?: schémaFonctionOublier
+      bds: string[];
+      fOublier?: schémaFonctionOublier;
     }
     interface InterfaceMembre {
-      id: string
+      id: string;
     }
     const bds: { [key: string]: InterfaceBdsMembre } = {};
     const fFinale = () => {
@@ -81,7 +81,7 @@ export default class Réseau {
 
     const fMembres = async (membres: InterfaceMembre[]) => {
       const existants = Object.keys(bds);
-      const idMembres = [...membres.map(m => m.id), this.client._bdRacine.id]
+      const idMembres = [...membres.map(m => m.id), this.client._bdRacine.id];
       const nouveaux = idMembres.filter(m => !existants.includes(m));
       const disparus = existants.filter(m => !idMembres.includes(m));
       for (const d of disparus) {
@@ -89,9 +89,9 @@ export default class Réseau {
         if (fOublier) fOublier();
         delete bds[d];
       }
-      nouveaux.map(async (n) => {
+      nouveaux.map(async n => {
         bds[n] = {
-          bds: [],
+          bds: []
         };
         const fSuivreMembre = (bdsMembre: string[]) => {
           bds[n].bds = bdsMembre;
@@ -99,13 +99,13 @@ export default class Réseau {
         };
         const fOublier = await this.suivreBdsMembre(n, fSuivreMembre);
         bds[n].fOublier = fOublier;
-      })
+      });
     };
     const oublierMembres = await this.suivreMembres(fMembres);
 
     const oublier = () => {
       oublierMembres();
-      Object.values(bds).map(x => x.fOublier ? x.fOublier() : null);
+      Object.values(bds).map(x => (x.fOublier ? x.fOublier() : null));
     };
     return oublier;
   }

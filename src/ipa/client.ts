@@ -167,10 +167,7 @@ export default class ClientConstellation extends EventEmitter {
     });
   }
 
-  async rechercherBdListe(
-    id: string,
-    f: schémaFonctionSuivi
-  ): Promise<any> {
+  async rechercherBdListe(id: string, f: schémaFonctionSuivi): Promise<any> {
     const bd = await this.ouvrirBD(id);
     const élément = bd
       .iterator({ limit: -1 })
@@ -223,7 +220,7 @@ export default class ClientConstellation extends EventEmitter {
     const permission = await this.permissionÉcrire(racine.id);
     if (!idBd && permission && type) {
       bd = await this.orbite[type](uuidv4());
-      await bd.load()
+      await bd.load();
       idBd = bd.id;
       await racine.set(nom, idBd);
     }
@@ -232,7 +229,7 @@ export default class ClientConstellation extends EventEmitter {
 
   async créerBDIndépendante(type: string): Promise<string> {
     const bd = await this.orbite[type](uuidv4());
-    await bd.load()
+    await bd.load();
     return bd.id;
   }
 

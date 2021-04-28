@@ -13,20 +13,18 @@ let ipfs: any;
 
 const startIpfs = () => {
   // Create IPFS instance
-  ipfs = new IpfsDaemon(
-    {
-      relay: { enabled: true, hop: { enabled: true, active: true } },
-      // @ts-ignore
-      config: {
-        Addresses: {
-          Swarm: [
-            "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/"
-          ]
-          // "Bootstrap": []
-        }
+  ipfs = new IpfsDaemon({
+    relay: { enabled: true, hop: { enabled: true, active: true } },
+    // @ts-ignore
+    config: {
+      Addresses: {
+        Swarm: [
+          "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/"
+        ]
+        // "Bootstrap": []
       }
     }
-  );
+  });
   return ipfs;
 };
 

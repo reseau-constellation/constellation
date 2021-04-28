@@ -74,7 +74,9 @@
             <v-icon>{{ épinglée ? "mdi-pin" : "mdi-pin-outline" }}</v-icon>
           </v-btn>
         </template>
-        <span>{{épinglée ? "Enlever de mes favoris" : "Épingler dans mes favoris"}}</span>
+        <span>{{
+          épinglée ? "Enlever de mes favoris" : "Épingler dans mes favoris"
+        }}</span>
       </v-tooltip>
     </v-card-actions>
   </v-card>
@@ -126,10 +128,10 @@ export default {
     ouvrirLien,
     couleurScore,
     épingler: async function() {
-      await this.$ipa.favoris.épinglerFavori(this.bd)
+      await this.$ipa.favoris.épinglerFavori(this.bd);
     },
     désépingler: async function() {
-      await this.$ipa.favoris.désépinglerFavori(this.bd)
+      await this.$ipa.favoris.désépinglerFavori(this.bd);
     },
     initialiserSuivi: async function() {
       const oublierLicence = await this.$ipa.bds.suivreLicence(
@@ -154,7 +156,7 @@ export default {
       const oublierFavori = await this.$ipa.favoris.suivreÉtatFavori(
         this.idBD,
         épinglée => (this.épinglée = épinglée)
-      )
+      );
       this.suivre([oublierLicence, oublierNoms, oublierDétails, oublierScore]);
     }
   }
