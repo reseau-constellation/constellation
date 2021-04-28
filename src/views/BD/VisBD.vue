@@ -89,6 +89,7 @@
       <v-card-subtitle v-if="this.descriptions">
         {{ descriptions }}
         <v-menu
+          v-if="permissionÉcrire"
           offset-x
           :close-on-content-click="false"
           transition="slide-y-transition"
