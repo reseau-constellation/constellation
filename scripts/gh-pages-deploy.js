@@ -4,16 +4,15 @@ const execa = require("execa");
 const fs = require("fs");
 (async () => {
   try {
+    await execa("git", ["add", "--all", "--ignore-errors"]);
     try {
-      await execa("git", ["add", "--all", "--ignore-errors"]);
+      await execa("git", ["commit", "-a", "-m", "Avant de déployer"]);
     } catch (e) {
       if (!(e.message.includes("nothing to commit, working tree clean"))) {
         console.log(e.message);
         process.exit(1);
       }
     }
-
-    await execa("git", ["commit", "-a", "-m", "Avant de déployer"]);
     await execa("git", ["checkout", "--orphan", "gh-pages"]);
     // eslint-disable-next-line no-console
     console.log("On construit le projet...");
