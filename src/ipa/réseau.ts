@@ -81,7 +81,7 @@ export default class Réseau {
 
     const fMembres = async (membres: InterfaceMembre[]) => {
       const existants = Object.keys(bds);
-      const idMembres = membres.map(m => m.id)
+      const idMembres = [...membres.map(m => m.id), this.client._bdRacine.id]
       const nouveaux = idMembres.filter(m => !existants.includes(m));
       const disparus = existants.filter(m => !idMembres.includes(m));
       for (const d of disparus) {
@@ -89,7 +89,7 @@ export default class Réseau {
         if (fOublier) fOublier();
         delete bds[d];
       }
-      for (const n of nouveaux) {
+      nouveaux.map(async (n) => {
         bds[n] = {
           bds: [],
         };
@@ -99,7 +99,7 @@ export default class Réseau {
         };
         const fOublier = await this.suivreBdsMembre(n, fSuivreMembre);
         bds[n].fOublier = fOublier;
-      }
+      })
     };
     const oublierMembres = await this.suivreMembres(fMembres);
 

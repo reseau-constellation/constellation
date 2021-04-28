@@ -10,6 +10,7 @@ import BDs from "./bds";
 import Tableaux from "./tableaux";
 import Variables from "./variables";
 import Réseau from "./réseau";
+import Favoris from "./favoris";
 
 import Nuée from "./nuée";
 
@@ -37,6 +38,7 @@ export default class ClientConstellation extends EventEmitter {
   tableaux?: Tableaux;
   variables?: Variables;
   réseau?: Réseau;
+  favoris?: Favoris;
   nuée?: Nuée;
   pret: boolean;
 
@@ -82,6 +84,9 @@ export default class ClientConstellation extends EventEmitter {
     const idBdRéseau = await this.obtIdBd("réseau", this._bdRacine, "feed");
     this.réseau = new Réseau(this, idBdRéseau);
 
+    const idBdFavoris = await this.obtIdBd("favoris", this._bdRacine, "feed");
+    this.favoris = new Favoris(this, idBdFavoris);
+
     this.nuée = new Nuée(this);
 
     this.pret = true;
@@ -91,7 +96,6 @@ export default class ClientConstellation extends EventEmitter {
   async connecterPoste(id: string, racine: string): Promise<void> {
     const protocol = "/p2p-circuit/ipfs/";
     let postes = await this.sfip.swarm.peers();
-    console.log({ id, postes });
     try {
       await this.sfip.swarm.connect(protocol + id);
       postes = await this.sfip.swarm.peers();
@@ -166,7 +170,7 @@ export default class ClientConstellation extends EventEmitter {
   async rechercherBdListe(
     id: string,
     f: schémaFonctionSuivi
-  ): Promise<schémaFonctionOublier> {
+  ): Promise<any> {
     const bd = await this.ouvrirBD(id);
     const élément = bd
       .iterator({ limit: -1 })
@@ -194,8 +198,8 @@ export default class ClientConstellation extends EventEmitter {
       return existante;
     }
     const bd = await this.orbite.open(id);
-    this._bds[id] = bd;
     await bd.load();
+    this._bds[id] = bd;
     return bd;
   }
 
@@ -219,6 +223,7 @@ export default class ClientConstellation extends EventEmitter {
     const permission = await this.permissionÉcrire(racine.id);
     if (!idBd && permission && type) {
       bd = await this.orbite[type](uuidv4());
+      await bd.load()
       idBd = bd.id;
       await racine.set(nom, idBd);
     }
@@ -227,6 +232,7 @@ export default class ClientConstellation extends EventEmitter {
 
   async créerBDIndépendante(type: string): Promise<string> {
     const bd = await this.orbite[type](uuidv4());
+    await bd.load()
     return bd.id;
   }
 
