@@ -44,10 +44,12 @@ export default {
         page: "compte",
         icône: "mdi-account"
       },
+      /*
       {
         page: "projets",
         icône: "mdi-folder"
       },
+      */
       {
         page: "bd",
         icône: "mdi-database"
