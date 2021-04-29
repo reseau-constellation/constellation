@@ -153,6 +153,25 @@ export default class BDs {
     });
   }
 
+  async suivreVariablesBd(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
+    const fRacine = async (fSuivi: schémaFonctionSuivi) => {
+      return await this.suivreTableauxBD(
+        id, (tableaux) => fSuivi(tableaux)
+      )
+    };
+    const fBranche = async (id: string, f) => {
+      return await this.client.tableaux.suivreVariables(id, f)
+    };
+    return await this.client.suivreBdsEmboîtées(
+      fRacine,
+      fBranche,
+      f
+    );
+  }
+
   async effacerBD(id: string) {
     // Dabord effacer l'entrée dans notre liste de BDs
     const bdRacine = await this.client.ouvrirBD(this.idBD);

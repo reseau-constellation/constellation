@@ -69,7 +69,6 @@
               :value="codeTélécharger"
               :readonly="true"
               hide-details
-              background-color="grey lighten-4"
             />
           </v-card-text>
           <v-card-actions>

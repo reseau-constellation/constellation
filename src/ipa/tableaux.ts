@@ -70,6 +70,7 @@ export default class Tableaux {
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     const idBdListe = await this.client.obtIdBd("colonnes", id, "feed");
+
     return await this.client.suivreBdListe(idBdListe, f);
   }
 

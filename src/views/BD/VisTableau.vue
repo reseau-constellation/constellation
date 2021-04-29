@@ -61,42 +61,67 @@
             transition="slide-y-transition"
           >
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-on="on" v-bind="attrs">
+              <v-btn
+                icon
+                v-on="on"
+                v-bind="attrs"
+                :disabled="!permissionÉcrire"
+              >
                 <v-icon small>mdi-table-column-plus-after</v-icon>
               </v-btn>
             </template>
             <carte-nouvelle-colonne @creerColonne="creerColonne" />
           </v-menu>
-          <v-btn icon :disabled="colonnes && !colonnes.length">
+          <v-btn
+            icon
+            :disabled="!permissionÉcrire || (colonnes && !colonnes.length)"
+            @click="nouvelleLigne = !nouvelleLigne"
+          >
             <v-icon small>mdi-table-row-plus-after</v-icon>
           </v-btn>
         </p>
 
         <v-divider />
         <v-skeleton-loader v-if="colonnes === null" type="image" />
-        <v-data-table v-else :headers="entête" :items="données" dense>
+        <v-data-table v-else :headers="entête" :items="éléments" dense>
           <template v-slot:no-data>
             {{ $t("tableau.vide") }}
           </template>
           <template
             v-for="c in entête"
-            v-slot:[`header.${c.idCol}`]="{ header }"
+            v-slot:[`header.${c.value}`]="{ header }"
           >
-            {{ entête }}
-            {{ c }}
             <titreEntêteTableau
-              :key="c.idColonne"
-              :idVariable="header.idVariable"
-              :idColonne="header.idColonne"
+              v-if="c.value !== 'actions'"
+              :key="c.value"
+              :idVariable="header.text"
+              :idColonne="header.value"
             />
           </template>
           <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item }">
-            <span v-if="c.value === 'date'" :key="c.value">
+            <span v-if="c.value === 'actions'" :key="c.value">
+              <v-btn icon small @click="éditerÉlément(item.empreinte)">
+                <v-icon small>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn icon small>
+                <v-icon small>mdi-delete</v-icon>
+              </v-btn>
+            </span>
+            <span v-else-if="c.value === 'date'" :key="c.value">
               {{ new Date(item[c.value]).toLocaleDateString($i18n.locale) }}
             </span>
-            <span v-else :key="c.value">
-              {{ formatterChiffre(item[c.value]) }}
-            </span>
+            <celluleNumérique
+              v-else-if="c.catégorie === 'numérique'"
+              :key="c.value"
+              :val="item[c.value]"
+              :editer="item.empreinte === éditer"
+            />
+            <celluleBooléenne
+              v-else
+              :key="c.value"
+              :val="item[c.value]"
+              :editer="item.empreinte === éditer"
+            />
           </template>
         </v-data-table>
       </v-card-text>
@@ -112,6 +137,9 @@ import carteNouvelleColonne from "@/components/tableaux/carteNouvelleColonne";
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import lienOrbite from "@/components/commun/lienOrbite";
 import lienTélécharger from "@/components/commun/lienTélécharger";
+import celluleBooléenne from "@/components/tableaux/celluleBooléenne";
+import celluleNumérique from "@/components/tableaux/celluleNumérique";
+
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 
@@ -122,7 +150,9 @@ export default {
     lienTélécharger,
     boîteNoms,
     carteNouvelleColonne,
-    titreEntêteTableau
+    titreEntêteTableau,
+    celluleBooléenne,
+    celluleNumérique
   },
   mixins: [mixinLangues, mixinIPA],
   data: function() {
@@ -131,9 +161,10 @@ export default {
       nomsTableau: {},
       nomsBD: {},
       logo: null,
+      nouvelleLigne: false,
       colonnes: null,
-
-      données: []
+      données: null,
+      éditer: null
     };
   },
   computed: {
@@ -154,14 +185,33 @@ export default {
       return decodeURIComponent(this.$route.params.idTableau);
     },
     entête: function() {
-      if (this.colonnes === null) return [];
-      const entêtes = this.colonnes.map(x => {
+      const cols = this.colonnes || [];
+      const entêtes = cols.map(x => {
         return {
-          idVariable: x.variable,
-          idColonne: x.id
+          text: x.variable,
+          value: x.id
         };
       });
+      if (this.permissionÉcrire) {
+        entêtes.unshift({
+          text: "",
+          value: "actions",
+          sortable: false
+        });
+      }
       return entêtes;
+    },
+    éléments: function() {
+      const données = this.données || [];
+      if (this.nouvelleLigne) {
+        const premièreLigne = Object.fromEntries(
+          this.entête.map(x => [x.value, undefined])
+        );
+        premièreLigne.premièreLigne = true;
+        return [premièreLigne, ...données];
+      } else {
+        return données;
+      }
     },
     petitPousset: function() {
       return [
@@ -194,6 +244,13 @@ export default {
         this.idTableau,
         idVariable
       );
+    },
+    éditerÉlément: function(empreinte) {
+      if (empreinte === this.éditer) {
+        this.éditer = null;
+      } else {
+        this.éditer = empreinte;
+      }
     },
     initialiserSuivi: async function() {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);

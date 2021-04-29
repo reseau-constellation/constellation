@@ -167,6 +167,53 @@ export default class ClientConstellation extends EventEmitter {
     });
   }
 
+  async suivreBdsEmboîtées(
+    fRacine,
+    fBranche,
+    f
+  ): Promise<schémaFonctionOublier> {
+    interface InterfaceBranches {
+      bds: string[];
+      fOublier?: schémaFonctionOublier;
+    }
+    const bds: { [key: string]: InterfaceBranches } = {};
+    const fFinale = () => {
+      const listeBds = Object.values(bds)
+        .map(x => x.bds)
+        .flat();
+      f(listeBds);
+    };
+
+    const fSuivreRacine = async (branches: string[]) => {
+      const existants = Object.keys(bds);
+      const nouveaux = branches.filter(m => !existants.includes(m));
+      const disparus = existants.filter(m => !branches.includes(m));
+      for (const d of disparus) {
+        const fOublier = bds[d].fOublier;
+        if (fOublier) fOublier();
+        delete bds[d];
+      }
+      nouveaux.map(async (n: string) => {
+        bds[n] = {
+          bds: []
+        };
+        const fSuivreBranche = (bdsBranche: string[]) => {
+          bds[n].bds = bdsBranche;
+          fFinale();
+        };
+        const fOublier = await fBranche(n, fSuivreBranche);
+        bds[n].fOublier = fOublier;
+      });
+    };
+    const oublierRacine = await fRacine(fSuivreRacine);
+
+    const oublier = () => {
+      oublierRacine();
+      Object.values(bds).map(x => (x.fOublier ? x.fOublier() : null));
+    };
+    return oublier;
+  }
+
   async rechercherBdListe(id: string, f: schémaFonctionSuivi): Promise<any> {
     const bd = await this.ouvrirBD(id);
     const élément = bd

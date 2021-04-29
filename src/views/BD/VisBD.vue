@@ -423,16 +423,17 @@ export default {
         this.idBD,
         score => (this.score = score)
       );
-      /*const oublierVariables = await this.$ipa.bds.suivreVariablesBD(
+      const oublierVariables = await this.$ipa.bds.suivreVariablesBd(
         this.idBD,
         variables => (this.variables = variables)
-      );*/
+      );
       this.suivre([
         oublierLicence,
         oublierNoms,
         oublierDescriptions,
         oublierTableaux,
-        oublierScore
+        oublierScore,
+        oublierVariables
       ]);
     },
     effacerBD: async function() {
