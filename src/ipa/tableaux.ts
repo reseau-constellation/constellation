@@ -70,8 +70,25 @@ export default class Tableaux {
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     const idBdListe = await this.client.obtIdBd("colonnes", id, "feed");
-
-    return await this.client.suivreBdListe(idBdListe, f);
+    // return await this.client.suivreBdListe(idBdListe, f);
+    const fRacine = async (fSuivi: schémaFonctionSuivi) => {
+      return await this.client.suivreBdListe(idBdListe, fSuivi);
+    };
+    interface InfoCol {
+      id: string,
+      variable: string
+    }
+    const fBranche = async (infoCol: InfoCol, fSuivi: schémaFonctionSuivi) => {
+      const { variable } = infoCol
+      const catégorie = await this.client.variables!.obtCatégorieVariable(variable)
+      const col = Object.assign({catégorie}, infoCol)
+      await fSuivi(col)
+    };
+    return await this.client.suivreBdsEmboîtées(
+      fRacine,
+      fBranche,
+      f
+    );
   }
 
   async suivreVariables(

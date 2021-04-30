@@ -2,7 +2,9 @@
   <span>
     <v-checkbox
       v-model="valÉditée"
+      v-if="val || editer"
       class="my-0"
+      :indeterminate="val===undefined"
       dense
       hide-details
       color="primary"

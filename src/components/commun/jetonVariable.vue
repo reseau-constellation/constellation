@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on, attrs }">
       <v-chip outlined label small v-bind="attrs" v-on="on" class="mx-1 my-1">
         <v-icon v-if="catégorie" left small>{{ icôneCatégorie }}</v-icon>
-        {{ couper(nom, 15) }}
+        {{ couper(nom, 10) }}
       </v-chip>
     </template>
     <carte-variable :id="id" />
@@ -31,7 +31,7 @@ export default {
     nom: function() {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
-        : this.id;
+        : this.id.replace(/^\/orbitdb\//, "");
     },
     icôneCatégorie: function() {
       return icôneCatégorieVariable(this.catégorie);

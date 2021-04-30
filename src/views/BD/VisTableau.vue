@@ -107,9 +107,12 @@
                 <v-icon small>mdi-delete</v-icon>
               </v-btn>
             </span>
-            <span v-else-if="c.value === 'date'" :key="c.value">
-              {{ new Date(item[c.value]).toLocaleDateString($i18n.locale) }}
-            </span>
+            <celluleDate
+              v-else-if="c.catégorie === 'date'"
+              :key="c.value"
+              :val="item[c.value]"
+              :editer="item.empreinte === éditer"
+            />
             <celluleNumérique
               v-else-if="c.catégorie === 'numérique'"
               :key="c.value"
@@ -117,7 +120,31 @@
               :editer="item.empreinte === éditer"
             />
             <celluleBooléenne
-              v-else
+              v-else-if="c.catégorie === 'booléen'"
+              :key="c.value"
+              :val="item[c.value]"
+              :editer="item.empreinte === éditer"
+            />
+            <celluleChaîne
+              v-else-if="c.catégorie === 'chaîne'"
+              :key="c.value"
+              :val="item[c.value]"
+              :editer="item.empreinte === éditer"
+            />
+            <celluleGéoJSON
+              v-else-if="c.catégorie === 'géojson'"
+              :key="c.value"
+              :val="item[c.value]"
+              :editer="item.empreinte === éditer"
+            />
+            <celluleCatégorique
+              v-else-if="c.catégorie === 'catégorique'"
+              :key="c.value"
+              :val="item[c.value]"
+              :editer="item.empreinte === éditer"
+            />
+            <celluleFichier
+              v-else-if="c.catégorie === 'fichier'"
               :key="c.value"
               :val="item[c.value]"
               :editer="item.empreinte === éditer"
@@ -139,6 +166,11 @@ import lienOrbite from "@/components/commun/lienOrbite";
 import lienTélécharger from "@/components/commun/lienTélécharger";
 import celluleBooléenne from "@/components/tableaux/celluleBooléenne";
 import celluleNumérique from "@/components/tableaux/celluleNumérique";
+import celluleChaîne from "@/components/tableaux/celluleChaîne";
+import celluleGéoJSON from "@/components/tableaux/celluleGéoJSON";
+import celluleCatégorique from "@/components/tableaux/celluleCatégorique";
+import celluleFichier from "@/components/tableaux/celluleFichier";
+import celluleDate from "@/components/tableaux/celluleDate";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
@@ -152,7 +184,12 @@ export default {
     carteNouvelleColonne,
     titreEntêteTableau,
     celluleBooléenne,
-    celluleNumérique
+    celluleNumérique,
+    celluleChaîne,
+    celluleGéoJSON,
+    celluleCatégorique,
+    celluleFichier,
+    celluleDate
   },
   mixins: [mixinLangues, mixinIPA],
   data: function() {
@@ -189,7 +226,8 @@ export default {
       const entêtes = cols.map(x => {
         return {
           text: x.variable,
-          value: x.id
+          value: x.id,
+          catégorie: x.catégorie
         };
       });
       if (this.permissionÉcrire) {

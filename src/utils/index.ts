@@ -83,6 +83,12 @@ export function icôneCatégorieVariable(catégorie: string) {
       return "mdi-map-marker";
     case "fichier":
       return "mdi-file";
+    case "date":
+      return "mdi-calendar-month-outline";
+    case "heure":
+      return "mdi-clock-time-four-outline";
+    case "dateEtHeure":
+      return "mdi-calendar-clock";
     default:
       return "";
   }
@@ -90,6 +96,9 @@ export function icôneCatégorieVariable(catégorie: string) {
 
 export const catégoriesVariable = [
   "numérique",
+  "date",
+  "heure",
+  "dateEtHeure",
   "chaîne",
   "catégorique",
   "booléen",

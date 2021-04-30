@@ -86,8 +86,13 @@
           </v-card>
         </v-dialog>
       </v-card-title>
-      <v-card-subtitle v-if="this.descriptions">
-        {{ descriptions }}
+      <v-card-subtitle>
+        <span v-if="this.descriptions">
+          {{ descriptions }}
+        </span>
+        <span v-else-if="permissionÉcrire">
+          Aucune description.
+        </span>
         <v-menu
           v-if="permissionÉcrire"
           offset-x
@@ -223,14 +228,14 @@
         </v-card>
         <v-card flat class="mx-3 mb-3">
           <div class="d-flex flex-wrap">
-            <v-card flat width="200" class="mb-3">
+            <v-card flat min-width="200" max-width="350" class="mb-3 mx-2">
               <p class="mb-0 text-overline">Variables</p>
               <p v-if="!variables.length" class="text--disabled">
                 Aucune variable
               </p>
               <jeton-variable v-for="id in variables" :key="id" :id="id" />
             </v-card>
-            <v-card flat width="200" class="mb-3">
+            <v-card flat min-width="200" max-width="350" class="mb-3">
               <p class="mb-0 text-overline">
                 Mots-clefs
                 <v-btn v-if="permissionÉcrire" small icon>
@@ -254,7 +259,7 @@
                 >{{ m }}</v-chip
               >
             </v-card>
-            <v-card flat width="200" class="mb-3">
+            <v-card flat min-width="200" max-width="350" class="mb-3">
               <p class="mb-0 text-overline">Géographie</p>
               <p v-if="!géog.length" class="text--disabled">
                 Aucune région détectée

@@ -168,9 +168,9 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async suivreBdsEmboîtées(
-    fRacine,
-    fBranche,
-    f
+    fRacine: (f: schémaFonctionSuivi) => Promise<schémaFonctionOublier>,
+    fBranche: (n: any, fSuivreBranche: schémaFonctionSuivi) => Promise<schémaFonctionOublier>,
+    f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     interface InterfaceBranches {
       bds: string[];
@@ -184,25 +184,27 @@ export default class ClientConstellation extends EventEmitter {
       f(listeBds);
     };
 
+    const code = x => typeof x === "string" ? x : JSON.stringify(x)
+
     const fSuivreRacine = async (branches: string[]) => {
       const existants = Object.keys(bds);
       const nouveaux = branches.filter(m => !existants.includes(m));
       const disparus = existants.filter(m => !branches.includes(m));
       for (const d of disparus) {
-        const fOublier = bds[d].fOublier;
+        const fOublier = bds[code(d)].fOublier;
         if (fOublier) fOublier();
-        delete bds[d];
+        delete bds[code(d)];
       }
       nouveaux.map(async (n: string) => {
-        bds[n] = {
+        bds[code(n)] = {
           bds: []
         };
         const fSuivreBranche = (bdsBranche: string[]) => {
-          bds[n].bds = bdsBranche;
+          bds[code(n)].bds = bdsBranche;
           fFinale();
         };
         const fOublier = await fBranche(n, fSuivreBranche);
-        bds[n].fOublier = fOublier;
+        bds[code(n)].fOublier = fOublier;
       });
     };
     const oublierRacine = await fRacine(fSuivreRacine);
