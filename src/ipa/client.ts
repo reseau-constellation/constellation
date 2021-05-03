@@ -156,13 +156,14 @@ export default class ClientConstellation extends EventEmitter {
 
   async suivreBdListe(
     id: string,
-    f: schémaFonctionSuivi
+    f: schémaFonctionSuivi,
+    renvoyerValeur = true
   ): Promise<schémaFonctionOublier> {
     return await this.suivreBD(id, async bd => {
       const éléments = bd
         .iterator({ limit: -1 })
         .collect()
-        .map((e: { [key: string]: any }) => e.payload.value);
+        .map((e: { [key: string]: any }) => renvoyerValeur ? e.payload.value : e);
       f(éléments);
     });
   }

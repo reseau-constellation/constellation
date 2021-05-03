@@ -83,6 +83,12 @@ export function icôneCatégorieVariable(catégorie: string) {
       return "mdi-map-marker";
     case "fichier":
       return "mdi-file";
+    case "vidéo":
+      return "mdi-play-box-outline";
+    case "audio":
+      return "mdi-waveform";
+    case "photo":
+      return "mdi-image";
     case "date":
       return "mdi-calendar-month-outline";
     case "heure":
@@ -103,5 +109,8 @@ export const catégoriesVariable = [
   "catégorique",
   "booléen",
   "géojson",
+  "vidéo",
+  "audio",
+  "photo",
   "fichier"
 ];

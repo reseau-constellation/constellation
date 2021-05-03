@@ -1,15 +1,11 @@
 <template>
   <span>
-    <v-checkbox
+    <v-simple-checkbox
       v-model="valÉditée"
-      v-if="val || editer"
-      class="my-0"
-      :indeterminate="val===undefined"
-      dense
-      hide-details
-      color="primary"
+      v-show="val !== undefined || editer"
       :disabled="!editer"
-    ></v-checkbox>
+      :ripple="false"
+    ></v-simple-checkbox>
   </span>
 </template>
 
@@ -24,7 +20,12 @@ export default {
       valÉditée: this.val
     };
   },
-  mixins: [mixinLangues]
+  mixins: [mixinLangues],
+  watch: {
+    valÉditée: function(val) {
+      this.$emit("edite", { val })
+    }
+  }
 };
 </script>
 

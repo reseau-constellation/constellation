@@ -2,7 +2,6 @@
   <v-menu offset-x :close-on-content-click="false">
     <template v-slot:activator="{ on, attrs }">
       <span v-bind="attrs" v-on="on">
-        <v-icon x-small>mdi-information-outline</v-icon>
         {{ couper(titre, 20) }}
       </span>
     </template>

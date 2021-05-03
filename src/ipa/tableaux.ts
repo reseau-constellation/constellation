@@ -17,11 +17,47 @@ export default class Tableaux {
   }
 
   async suivreDonnées(
-    id: string,
+    idTableau: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdDonnées = await this.client.obtIdBd("données", id, "feed");
-    return await this.client.suivreBdListe(idBdDonnées, f);
+    const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
+    return await this.client.suivreBdListe(idBdDonnées, f, false);
+  }
+
+  async ajouterÉlément(
+    idTableau: string,
+    vals: {[key: string]: any}
+  ): Promise<string> {
+    const idBdDonnées = await this.client.obtIdBd(
+      "données",
+      idTableau,
+      "feed"
+    );
+    const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
+    return await bdDonnées.add(vals);
+  }
+
+  async modifierÉlément(
+    idTableau: string,
+    vals: {[key: string]: any},
+    empreintePrécédente
+  ): Promise<string> {
+    console.error("À faire")
+    await this.effacerÉlément(empreintePrécédente)
+  }
+
+  async effacerÉlément(
+    idTableau: string,
+    empreinteÉlément: string
+  ): Promise<void> {
+    const idBdDonnées = await this.client.obtIdBd(
+      "données",
+      idTableau,
+      "feed"
+    );
+    const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
+    console.log({idTableau, idBdDonnées, bdDonnées, empreinteÉlément})
+    await bdDonnées.remove(empreinteÉlément)
   }
 
   async ajouterNomsTableau(id: string, noms: { [key: string]: string }) {

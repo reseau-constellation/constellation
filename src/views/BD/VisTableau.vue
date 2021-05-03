@@ -75,7 +75,7 @@
           <v-btn
             icon
             :disabled="!permissionÉcrire || (colonnes && !colonnes.length)"
-            @click="nouvelleLigne = !nouvelleLigne"
+            @click="actionNouvelleLigne"
           >
             <v-icon small>mdi-table-row-plus-after</v-icon>
           </v-btn>
@@ -97,13 +97,17 @@
               :idVariable="header.text"
               :idColonne="header.value"
             />
+            <span v-else :key="c.value"> {{ c.text }} </span>
           </template>
-          <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item }">
+          <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item, props }">
             <span v-if="c.value === 'actions'" :key="c.value">
               <v-btn icon small @click="éditerÉlément(item.empreinte)">
                 <v-icon small>mdi-pencil</v-icon>
               </v-btn>
-              <v-btn icon small>
+              <v-btn v-if="item.empreinte === éditer" color="success" icon small @click="()=>sauvegarderÉlément()">
+                <v-icon small>mdi-check</v-icon>
+              </v-btn>
+              <v-btn v-else color="error" icon small @click="()=>effacerÉlément(item.empreinte)">
                 <v-icon small>mdi-delete</v-icon>
               </v-btn>
             </span>
@@ -124,6 +128,7 @@
               :key="c.value"
               :val="item[c.value]"
               :editer="item.empreinte === éditer"
+              @edite="e=>valÉditée(item.empreinte, c.value, e.val)"
             />
             <celluleChaîne
               v-else-if="c.catégorie === 'chaîne'"
@@ -149,6 +154,24 @@
               :val="item[c.value]"
               :editer="item.empreinte === éditer"
             />
+            <v-edit-dialog
+              :key="`${c.value}:éditer`"
+              @save="save"
+              @cancel="cancel"
+              @open="open"
+              @close="close"
+            >
+              {{ props.item.name }}
+              <template v-slot:input>
+                <v-text-field
+                  v-model="props.item.name"
+                  :rules="[max25chars]"
+                  label="Edit"
+                  single-line
+                  counter
+                ></v-text-field>
+              </template>
+            </v-edit-dialog>
           </template>
         </v-data-table>
       </v-card-text>
@@ -201,7 +224,8 @@ export default {
       nouvelleLigne: false,
       colonnes: null,
       données: null,
-      éditer: null
+      éditer: null,
+      valsNouvelleLigne: {}
     };
   },
   computed: {
@@ -231,8 +255,8 @@ export default {
         };
       });
       if (this.permissionÉcrire) {
-        entêtes.unshift({
-          text: "",
+        entêtes.push({
+          text: "Actions",
           value: "actions",
           sortable: false
         });
@@ -245,7 +269,7 @@ export default {
         const premièreLigne = Object.fromEntries(
           this.entête.map(x => [x.value, undefined])
         );
-        premièreLigne.premièreLigne = true;
+        Object.assign(premièreLigne, { premièreLigne: true, empreinte: -1})
         return [premièreLigne, ...données];
       } else {
         return données;
@@ -283,11 +307,35 @@ export default {
         idVariable
       );
     },
+    actionNouvelleLigne: function() {
+      this.nouvelleLigne = !this.nouvelleLigne
+      if (this.nouvelleLigne) {
+        this.éditer=-1
+      }
+    },
     éditerÉlément: function(empreinte) {
       if (empreinte === this.éditer) {
         this.éditer = null;
       } else {
         this.éditer = empreinte;
+      }
+    },
+    sauvegarderÉlément: function() {
+      console.log(this.valsNouvelleLigne);
+      this.$ipa.tableaux.ajouterÉlément(this.idTableau, this.valsNouvelleLigne);
+      this.éditer = null;
+      this.nouvelleLigne = false;
+      this.valsNouvelleLigne = {};
+    },
+    effacerÉlément: async function(empreinte) {
+      console.log(empreinte)
+      await this.$ipa.tableaux.effacerÉlément(this.idTableau, empreinte)
+    },
+    valÉditée: function(empreinteLigne, variable, val) {
+      if (empreinteLigne === -1) {
+        this.valsNouvelleLigne[variable] = val
+      } else {
+        console.error("À faire")
       }
     },
     initialiserSuivi: async function() {
@@ -314,7 +362,14 @@ export default {
         }
       );
 
-      this.suivre([oublierNoms, oublierNomsBD, oublierColonnes]);
+      const oublierDonnées = await this.$ipa.tableaux.suivreDonnées(
+        this.idTableau,
+        données => {
+          this.données = données.map(x=>{return {...x.payload.value, empreinte: x.hash}} );
+        }
+      );
+
+      this.suivre([oublierNoms, oublierNomsBD, oublierColonnes, oublierDonnées]);
     }
   }
 };
