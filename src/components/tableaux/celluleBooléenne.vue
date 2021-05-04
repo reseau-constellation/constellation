@@ -1,17 +1,13 @@
 <template>
-  <span>
-    <v-simple-checkbox
-      v-model="valÉditée"
-      v-show="val !== undefined || editer"
-      :disabled="!editer"
-      :ripple="false"
-    ></v-simple-checkbox>
-  </span>
+  <v-simple-checkbox
+    v-model="valÉditée"
+    v-show="val !== undefined || editer"
+    :disabled="!editer"
+    :ripple="false"
+  ></v-simple-checkbox>
 </template>
 
 <script>
-import mixinLangues from "@/mixins/langues";
-
 export default {
   name: "celluleBooléenne",
   props: ["val", "editer"],
@@ -20,7 +16,6 @@ export default {
       valÉditée: this.val
     };
   },
-  mixins: [mixinLangues],
   watch: {
     valÉditée: function(val) {
       this.$emit("edite", { val })

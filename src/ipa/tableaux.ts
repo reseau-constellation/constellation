@@ -40,7 +40,7 @@ export default class Tableaux {
   async modifierÉlément(
     idTableau: string,
     vals: {[key: string]: any},
-    empreintePrécédente
+    empreintePrécédente: string
   ): Promise<string> {
     console.error("À faire")
     await this.effacerÉlément(empreintePrécédente)

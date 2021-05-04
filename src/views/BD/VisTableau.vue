@@ -99,7 +99,7 @@
             />
             <span v-else :key="c.value"> {{ c.text }} </span>
           </template>
-          <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item, props }">
+          <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item }">
             <span v-if="c.value === 'actions'" :key="c.value">
               <v-btn icon small @click="éditerÉlément(item.empreinte)">
                 <v-icon small>mdi-pencil</v-icon>
@@ -122,6 +122,7 @@
               :key="c.value"
               :val="item[c.value]"
               :editer="item.empreinte === éditer"
+              @edite="e=>valÉditée(item.empreinte, c.value, e.val)"
             />
             <celluleBooléenne
               v-else-if="c.catégorie === 'booléen'"
@@ -135,6 +136,7 @@
               :key="c.value"
               :val="item[c.value]"
               :editer="item.empreinte === éditer"
+              @edite="e=>valÉditée(item.empreinte, c.value, e.val)"
             />
             <celluleGéoJSON
               v-else-if="c.catégorie === 'géojson'"
@@ -154,24 +156,6 @@
               :val="item[c.value]"
               :editer="item.empreinte === éditer"
             />
-            <v-edit-dialog
-              :key="`${c.value}:éditer`"
-              @save="save"
-              @cancel="cancel"
-              @open="open"
-              @close="close"
-            >
-              {{ props.item.name }}
-              <template v-slot:input>
-                <v-text-field
-                  v-model="props.item.name"
-                  :rules="[max25chars]"
-                  label="Edit"
-                  single-line
-                  counter
-                ></v-text-field>
-              </template>
-            </v-edit-dialog>
           </template>
         </v-data-table>
       </v-card-text>
@@ -270,8 +254,10 @@ export default {
           this.entête.map(x => [x.value, undefined])
         );
         Object.assign(premièreLigne, { premièreLigne: true, empreinte: -1})
+        console.log([premièreLigne, ...données])
         return [premièreLigne, ...données];
       } else {
+        console.log(données)
         return données;
       }
     },
@@ -333,6 +319,7 @@ export default {
     },
     valÉditée: function(empreinteLigne, variable, val) {
       if (empreinteLigne === -1) {
+        console.log("valÉditée", {variable,  val})
         this.valsNouvelleLigne[variable] = val
       } else {
         console.error("À faire")
