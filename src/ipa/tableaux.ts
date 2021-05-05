@@ -4,6 +4,14 @@ import ClientConstellation, {
   schémaFonctionOublier
 } from "./client";
 
+export function élémentsÉgaux(élément1, élément2): boolean {
+  const clefs1 = Object.keys(élément1);
+  const clefs2 = Object.keys(élément2);
+  if (!clefs1.every(x => élément1[x] === élément2[x])) return false;
+  if (!clefs2.every(x => élément1[x] === élément2[x])) return false;
+  return true;
+}
+
 export default class Tableaux {
   client: ClientConstellation;
 
@@ -26,38 +34,58 @@ export default class Tableaux {
 
   async ajouterÉlément(
     idTableau: string,
-    vals: {[key: string]: any}
+    vals: { [key: string]: any }
   ): Promise<string> {
-    const idBdDonnées = await this.client.obtIdBd(
-      "données",
-      idTableau,
-      "feed"
-    );
+    const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
     const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
+    vals = await this.vérifierClefsÉlément(idTableau, vals)
     return await bdDonnées.add(vals);
   }
 
   async modifierÉlément(
     idTableau: string,
-    vals: {[key: string]: any},
+    vals: { [key: string]: any },
     empreintePrécédente: string
-  ): Promise<string> {
-    console.error("À faire")
-    await this.effacerÉlément(empreintePrécédente)
+  ): Promise<string|void> {
+    const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
+    const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
+
+    const précédent = bdDonnées
+      .iterator({ limit: -1 })
+      .collect()
+      .find((e: { [key: string]: any }) => e.hash === empreintePrécédente)
+      .payload.value;
+    let élément = Object.assign({}, précédent, { vals });
+    élément = await this.vérifierClefsÉlément(idTableau, élément)
+
+    if (!élémentsÉgaux(élément, précédent)) {
+      await bdDonnées.remove(empreintePrécédente);
+      return await bdDonnées.add(élément);
+    }
+    return Promise.resolve()
+  }
+
+  async vérifierClefsÉlément(
+    idTableau: string,
+    élément: {[key: string]: any}
+  ): Promise<{ [key: string]: any }> {
+    const idBdColonnes = await this.client.obtIdBd("colonnes", idTableau, "feed");
+    const bdColonnes = await this.client.ouvrirBD(idBdColonnes);
+    const clefsPermises: string[] = bdColonnes
+      .iterator({ limit: -1 })
+      .collect()
+      .map((e: { [key: string]: any }) => e.payload.value.id)
+    const clefsFinales = Object.keys(élément).filter((x: string)=>clefsPermises.includes(x))
+    return Object.fromEntries(clefsFinales.map((x:string)=>[x, élément[x]]))
   }
 
   async effacerÉlément(
     idTableau: string,
     empreinteÉlément: string
   ): Promise<void> {
-    const idBdDonnées = await this.client.obtIdBd(
-      "données",
-      idTableau,
-      "feed"
-    );
+    const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
     const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
-    console.log({idTableau, idBdDonnées, bdDonnées, empreinteÉlément})
-    await bdDonnées.remove(empreinteÉlément)
+    await bdDonnées.remove(empreinteÉlément);
   }
 
   async ajouterNomsTableau(id: string, noms: { [key: string]: string }) {
@@ -111,20 +139,18 @@ export default class Tableaux {
       return await this.client.suivreBdListe(idBdListe, fSuivi);
     };
     interface InfoCol {
-      id: string,
-      variable: string
+      id: string;
+      variable: string;
     }
     const fBranche = async (infoCol: InfoCol, fSuivi: schémaFonctionSuivi) => {
-      const { variable } = infoCol
-      const catégorie = await this.client.variables!.obtCatégorieVariable(variable)
-      const col = Object.assign({catégorie}, infoCol)
-      await fSuivi(col)
+      const { variable } = infoCol;
+      const catégorie = await this.client.variables!.obtCatégorieVariable(
+        variable
+      );
+      const col = Object.assign({ catégorie }, infoCol);
+      await fSuivi(col);
     };
-    return await this.client.suivreBdsEmboîtées(
-      fRacine,
-      fBranche,
-      f
-    );
+    return await this.client.suivreBdsEmboîtées(fRacine, fBranche, f);
   }
 
   async suivreVariables(

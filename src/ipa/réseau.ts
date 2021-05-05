@@ -65,21 +65,18 @@ export default class Réseau {
 
   async suivreBds(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
     interface infoMembre {
-      id: string
+      id: string;
     }
     const fRacine = async (fSuivi: schémaFonctionSuivi) => {
-      return await this.suivreMembres(
-        (membres) => {
-          return fSuivi([...membres.map((m: infoMembre)=>m.id), this.client._bdRacine.id])
-        }
-      )
+      return await this.suivreMembres(membres => {
+        return fSuivi([
+          ...membres.map((m: infoMembre) => m.id),
+          this.client._bdRacine.id
+        ]);
+      });
     };
     const fBranche = this.suivreBdsMembre.bind(this);
-    return await this.client.suivreBdsEmboîtées(
-      fRacine,
-      fBranche,
-      f
-    );
+    return await this.client.suivreBdsEmboîtées(fRacine, fBranche, f);
   }
 
   /*

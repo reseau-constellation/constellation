@@ -7,7 +7,7 @@
 <script>
 export default {
   name: "celluleDate",
-  props: ["val", "editer"],
+  props: ["val", "editer"]
 };
 </script>
 

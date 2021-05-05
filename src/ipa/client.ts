@@ -144,14 +144,18 @@ export default class ClientConstellation extends EventEmitter {
   ): Promise<schémaFonctionOublier> {
     const idBdDic = await this.obtIdBd(clef, id, "kvstore");
     return await this.suivreBD(idBdDic, async bd => {
-      let valeurs = bd.all;
-      valeurs = Object.fromEntries(
-        Object.keys(valeurs).map(x => {
-          return [x, valeurs[x]];
-        })
-      );
+      const valeurs = this.obtObjetdeBdDic(bd);
       f(valeurs);
     });
+  }
+
+  obtObjetdeBdDic(bd: any) {
+    const valeurs = bd.all;
+    return Object.fromEntries(
+      Object.keys(valeurs).map(x => {
+        return [x, valeurs[x]];
+      })
+    );
   }
 
   async suivreBdListe(
@@ -163,14 +167,19 @@ export default class ClientConstellation extends EventEmitter {
       const éléments = bd
         .iterator({ limit: -1 })
         .collect()
-        .map((e: { [key: string]: any }) => renvoyerValeur ? e.payload.value : e);
+        .map((e: { [key: string]: any }) =>
+          renvoyerValeur ? e.payload.value : e
+        );
       f(éléments);
     });
   }
 
   async suivreBdsEmboîtées(
     fRacine: (f: schémaFonctionSuivi) => Promise<schémaFonctionOublier>,
-    fBranche: (n: any, fSuivreBranche: schémaFonctionSuivi) => Promise<schémaFonctionOublier>,
+    fBranche: (
+      n: any,
+      fSuivreBranche: schémaFonctionSuivi
+    ) => Promise<schémaFonctionOublier>,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     interface InterfaceBranches {
@@ -185,7 +194,7 @@ export default class ClientConstellation extends EventEmitter {
       f(listeBds);
     };
 
-    const code = x => typeof x === "string" ? x : JSON.stringify(x)
+    const code = x => (typeof x === "string" ? x : JSON.stringify(x));
 
     const fSuivreRacine = async (branches: string[]) => {
       const existants = Object.keys(bds);

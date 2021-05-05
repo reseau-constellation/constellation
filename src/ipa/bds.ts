@@ -158,16 +158,12 @@ export default class BDs {
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     const fRacine = async (fSuivi: schémaFonctionSuivi) => {
-      return await this.suivreTableauxBD(id, fSuivi)
+      return await this.suivreTableauxBD(id, fSuivi);
     };
     const fBranche = async (id: string, fSuivi: schémaFonctionSuivi) => {
-      return await this.client.tableaux!.suivreVariables(id, fSuivi)
+      return await this.client.tableaux!.suivreVariables(id, fSuivi);
     };
-    return await this.client.suivreBdsEmboîtées(
-      fRacine,
-      fBranche,
-      f
-    );
+    return await this.client.suivreBdsEmboîtées(fRacine, fBranche, f);
   }
 
   async effacerBD(id: string) {

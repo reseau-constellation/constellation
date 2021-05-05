@@ -91,12 +91,6 @@ export default {
   },
   methods: {
     couper,
-    sauvegarderCategorie: async function(catégorie) {
-      await this.$ipa.variables.sauvegarderCatégorieVariable(
-        this.id,
-        catégorie
-      );
-    },
     initialiserSuivi: async function() {
       const oublierNoms = await this.$ipa.réseau.suivreNomsMembre(
         this.id,

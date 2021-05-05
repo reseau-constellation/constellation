@@ -7,7 +7,7 @@
 <script>
 export default {
   name: "celluleCatégorique",
-  props: ["val", "editer"],
+  props: ["val", "editer"]
 };
 </script>
 

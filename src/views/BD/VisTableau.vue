@@ -82,6 +82,7 @@
         </p>
 
         <v-divider />
+        {{ valsLigneActive }}
         <v-skeleton-loader v-if="colonnes === null" type="image" />
         <v-data-table v-else :headers="entête" :items="éléments" dense>
           <template v-slot:no-data>
@@ -102,12 +103,29 @@
           <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item }">
             <span v-if="c.value === 'actions'" :key="c.value">
               <v-btn icon small @click="éditerÉlément(item.empreinte)">
-                <v-icon small>mdi-pencil</v-icon>
+                <v-icon small>{{
+                  éditer === item.empreinte
+                    ? "mdi-pencil-off-outline"
+                    : "mdi-pencil"
+                }}</v-icon>
               </v-btn>
-              <v-btn v-if="item.empreinte === éditer" color="success" icon small @click="()=>sauvegarderÉlément()">
+              <v-btn
+                v-if="item.empreinte === éditer"
+                color="success"
+                icon
+                small
+                :disabled="élémentÉditéÉgale"
+                @click="() => sauvegarderÉlément()"
+              >
                 <v-icon small>mdi-check</v-icon>
               </v-btn>
-              <v-btn v-else color="error" icon small @click="()=>effacerÉlément(item.empreinte)">
+              <v-btn
+                v-else
+                color="error"
+                icon
+                small
+                @click="() => effacerÉlément(item.empreinte)"
+              >
                 <v-icon small>mdi-delete</v-icon>
               </v-btn>
             </span>
@@ -122,21 +140,22 @@
               :key="c.value"
               :val="item[c.value]"
               :editer="item.empreinte === éditer"
-              @edite="e=>valÉditée(item.empreinte, c.value, e.val)"
+              @edite="e => valÉditée(c.value, e.val)"
             />
             <celluleBooléenne
               v-else-if="c.catégorie === 'booléen'"
               :key="c.value"
               :val="item[c.value]"
               :editer="item.empreinte === éditer"
-              @edite="e=>valÉditée(item.empreinte, c.value, e.val)"
+              @edite="e => valÉditée(c.value, e.val)"
             />
             <celluleChaîne
               v-else-if="c.catégorie === 'chaîne'"
               :key="c.value"
               :val="item[c.value]"
+              :empreinte="item.empreinte"
               :editer="item.empreinte === éditer"
-              @edite="e=>valÉditée(item.empreinte, c.value, e.val)"
+              @edite="e => valÉditée(c.value, e.val)"
             />
             <celluleGéoJSON
               v-else-if="c.catégorie === 'géojson'"
@@ -165,6 +184,7 @@
 
 <script>
 import { traduireNom, couper } from "@/utils";
+import { élémentsÉgaux } from "@/ipa/tableaux";
 
 import titreEntêteTableau from "@/components/tableaux/titreEntêteTableau";
 import carteNouvelleColonne from "@/components/tableaux/carteNouvelleColonne";
@@ -209,7 +229,7 @@ export default {
       colonnes: null,
       données: null,
       éditer: null,
-      valsNouvelleLigne: {}
+      valsLigneActive: {}
     };
   },
   computed: {
@@ -250,16 +270,18 @@ export default {
     éléments: function() {
       const données = this.données || [];
       if (this.nouvelleLigne) {
-        const premièreLigne = Object.fromEntries(
-          this.entête.map(x => [x.value, undefined])
-        );
-        Object.assign(premièreLigne, { premièreLigne: true, empreinte: -1})
-        console.log([premièreLigne, ...données])
+        const premièreLigne = {};
+        Object.assign(premièreLigne, { premièreLigne: true, empreinte: -1 });
         return [premièreLigne, ...données];
       } else {
-        console.log(données)
         return données;
       }
+    },
+    élémentÉditéÉgale: function() {
+      if (!this.éditer) return false;
+
+      const avant = this.données.find(x => x.empreinte === this.éditer) || {};
+      return élémentsÉgaux(avant, this.valsLigneActive);
     },
     petitPousset: function() {
       return [
@@ -294,36 +316,41 @@ export default {
       );
     },
     actionNouvelleLigne: function() {
-      this.nouvelleLigne = !this.nouvelleLigne
-      if (this.nouvelleLigne) {
-        this.éditer=-1
-      }
+      this.nouvelleLigne = !this.nouvelleLigne;
+      this.éditerÉlément(-1);
     },
     éditerÉlément: function(empreinte) {
       if (empreinte === this.éditer) {
         this.éditer = null;
+        this.valsLigneActive = {};
       } else {
         this.éditer = empreinte;
+        const valsExistantesÉlément = this.éléments.find(
+          x => x.empreinte === empreinte
+        );
+        this.valsLigneActive = Object.assign({}, valsExistantesÉlément);
       }
     },
     sauvegarderÉlément: function() {
-      console.log(this.valsNouvelleLigne);
-      this.$ipa.tableaux.ajouterÉlément(this.idTableau, this.valsNouvelleLigne);
+      if (this.éditer === -1) {
+        this.$ipa.tableaux.ajouterÉlément(this.idTableau, this.valsLigneActive);
+      } else {
+        this.$ipa.tableaux.modifierÉlément(
+          this.idTableau,
+          this.valsLigneActive,
+          this.éditer
+        );
+      }
+
       this.éditer = null;
       this.nouvelleLigne = false;
-      this.valsNouvelleLigne = {};
+      this.valsLigneActive = {};
     },
     effacerÉlément: async function(empreinte) {
-      console.log(empreinte)
-      await this.$ipa.tableaux.effacerÉlément(this.idTableau, empreinte)
+      await this.$ipa.tableaux.effacerÉlément(this.idTableau, empreinte);
     },
-    valÉditée: function(empreinteLigne, variable, val) {
-      if (empreinteLigne === -1) {
-        console.log("valÉditée", {variable,  val})
-        this.valsNouvelleLigne[variable] = val
-      } else {
-        console.error("À faire")
-      }
+    valÉditée: function(variable, val) {
+      this.valsLigneActive[variable] = val;
     },
     initialiserSuivi: async function() {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);
@@ -352,11 +379,18 @@ export default {
       const oublierDonnées = await this.$ipa.tableaux.suivreDonnées(
         this.idTableau,
         données => {
-          this.données = données.map(x=>{return {...x.payload.value, empreinte: x.hash}} );
+          this.données = données.map(x => {
+            return { ...x.payload.value, empreinte: x.hash };
+          });
         }
       );
 
-      this.suivre([oublierNoms, oublierNomsBD, oublierColonnes, oublierDonnées]);
+      this.suivre([
+        oublierNoms,
+        oublierNomsBD,
+        oublierColonnes,
+        oublierDonnées
+      ]);
     }
   }
 };

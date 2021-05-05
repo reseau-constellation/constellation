@@ -4,7 +4,7 @@
     v-show="val !== undefined || editer"
     :disabled="!editer"
     :ripple="false"
-  ></v-simple-checkbox>
+  />
 </template>
 
 <script>
@@ -18,7 +18,7 @@ export default {
   },
   watch: {
     valÉditée: function(val) {
-      this.$emit("edite", { val })
+      this.$emit("edite", { val });
     }
   }
 };

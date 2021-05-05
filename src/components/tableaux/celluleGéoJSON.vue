@@ -7,7 +7,7 @@
 <script>
 export default {
   name: "celluleGéoJSON",
-  props: ["val", "editer"],
+  props: ["val", "editer"]
 };
 </script>
 

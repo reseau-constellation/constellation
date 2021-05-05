@@ -107,9 +107,7 @@ export default class Variables {
     });
   }
 
-  async obtCatégorieVariable(
-    id: string
-  ): Promise<string> {
+  async obtCatégorieVariable(id: string): Promise<string> {
     const bd = await this.client.ouvrirBD(id);
     return await bd.get("catégorie");
   }
