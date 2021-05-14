@@ -47,6 +47,7 @@ export default class Tableaux {
     vals: { [key: string]: any },
     empreintePrécédente: string
   ): Promise<string|void> {
+    console.log("ici")
     const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
     const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
 
@@ -57,7 +58,7 @@ export default class Tableaux {
       .payload.value;
     let élément = Object.assign({}, précédent, { vals });
     élément = await this.vérifierClefsÉlément(idTableau, élément)
-
+    console.log("là", {vals, élément, précédent}, élémentsÉgaux(élément, précédent))
     if (!élémentsÉgaux(élément, précédent)) {
       await bdDonnées.remove(empreintePrécédente);
       return await bdDonnées.add(élément);

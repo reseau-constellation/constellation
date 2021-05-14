@@ -1,9 +1,11 @@
 <template>
   <v-simple-checkbox
-    v-model="valÉditée"
     v-show="val !== undefined || editer"
+    :value="val"
     :disabled="!editer"
+    :indeterminate="val===undefined"
     :ripple="false"
+    @click="actionClic"
   />
 </template>
 
@@ -11,13 +13,9 @@
 export default {
   name: "celluleBooléenne",
   props: ["val", "editer"],
-  data: function() {
-    return {
-      valÉditée: this.val
-    };
-  },
-  watch: {
-    valÉditée: function(val) {
+  methods: {
+    actionClic: function() {
+      const val = this.val === false ? true : (this.val === true ? undefined : false)
       this.$emit("edite", { val });
     }
   }

@@ -53,130 +53,7 @@
       <v-divider />
 
       <v-card-text>
-        <p class="mb-0 text-overline">
-          Données
-          <v-menu
-            offset-x
-            :close-on-content-click="false"
-            transition="slide-y-transition"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                icon
-                v-on="on"
-                v-bind="attrs"
-                :disabled="!permissionÉcrire"
-              >
-                <v-icon small>mdi-table-column-plus-after</v-icon>
-              </v-btn>
-            </template>
-            <carte-nouvelle-colonne @creerColonne="creerColonne" />
-          </v-menu>
-          <v-btn
-            icon
-            :disabled="!permissionÉcrire || (colonnes && !colonnes.length)"
-            @click="actionNouvelleLigne"
-          >
-            <v-icon small>mdi-table-row-plus-after</v-icon>
-          </v-btn>
-        </p>
-
-        <v-divider />
-        {{ valsLigneActive }}
-        <v-skeleton-loader v-if="colonnes === null" type="image" />
-        <v-data-table v-else :headers="entête" :items="éléments" dense>
-          <template v-slot:no-data>
-            {{ $t("tableau.vide") }}
-          </template>
-          <template
-            v-for="c in entête"
-            v-slot:[`header.${c.value}`]="{ header }"
-          >
-            <titreEntêteTableau
-              v-if="c.value !== 'actions'"
-              :key="c.value"
-              :idVariable="header.text"
-              :idColonne="header.value"
-            />
-            <span v-else :key="c.value"> {{ c.text }} </span>
-          </template>
-          <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item }">
-            <span v-if="c.value === 'actions'" :key="c.value">
-              <v-btn icon small @click="éditerÉlément(item.empreinte)">
-                <v-icon small>{{
-                  éditer === item.empreinte
-                    ? "mdi-pencil-off-outline"
-                    : "mdi-pencil"
-                }}</v-icon>
-              </v-btn>
-              <v-btn
-                v-if="item.empreinte === éditer"
-                color="success"
-                icon
-                small
-                :disabled="élémentÉditéÉgale"
-                @click="() => sauvegarderÉlément()"
-              >
-                <v-icon small>mdi-check</v-icon>
-              </v-btn>
-              <v-btn
-                v-else
-                color="error"
-                icon
-                small
-                @click="() => effacerÉlément(item.empreinte)"
-              >
-                <v-icon small>mdi-delete</v-icon>
-              </v-btn>
-            </span>
-            <celluleDate
-              v-else-if="c.catégorie === 'date'"
-              :key="c.value"
-              :val="item[c.value]"
-              :editer="item.empreinte === éditer"
-            />
-            <celluleNumérique
-              v-else-if="c.catégorie === 'numérique'"
-              :key="c.value"
-              :val="item[c.value]"
-              :editer="item.empreinte === éditer"
-              @edite="e => valÉditée(c.value, e.val)"
-            />
-            <celluleBooléenne
-              v-else-if="c.catégorie === 'booléen'"
-              :key="c.value"
-              :val="item[c.value]"
-              :editer="item.empreinte === éditer"
-              @edite="e => valÉditée(c.value, e.val)"
-            />
-            <celluleChaîne
-              v-else-if="c.catégorie === 'chaîne'"
-              :key="c.value"
-              :val="item[c.value]"
-              :empreinte="item.empreinte"
-              :editer="item.empreinte === éditer"
-              @edite="e => valÉditée(c.value, e.val)"
-            />
-            <celluleGéoJSON
-              v-else-if="c.catégorie === 'géojson'"
-              :key="c.value"
-              :val="item[c.value]"
-              :editer="item.empreinte === éditer"
-            />
-            <celluleCatégorique
-              v-else-if="c.catégorie === 'catégorique'"
-              :key="c.value"
-              :val="item[c.value]"
-              :editer="item.empreinte === éditer"
-            />
-            <celluleFichier
-              v-else-if="c.catégorie === 'fichier'"
-              :key="c.value"
-              :val="item[c.value]"
-              :editer="item.empreinte === éditer"
-            />
-          </template>
-        </v-data-table>
+        <tableau />
       </v-card-text>
     </v-card>
   </v-container>
@@ -184,20 +61,12 @@
 
 <script>
 import { traduireNom, couper } from "@/utils";
-import { élémentsÉgaux } from "@/ipa/tableaux";
 
-import titreEntêteTableau from "@/components/tableaux/titreEntêteTableau";
-import carteNouvelleColonne from "@/components/tableaux/carteNouvelleColonne";
+import tableau from "@/components/tableaux/tableau";
+
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import lienOrbite from "@/components/commun/lienOrbite";
 import lienTélécharger from "@/components/commun/lienTélécharger";
-import celluleBooléenne from "@/components/tableaux/celluleBooléenne";
-import celluleNumérique from "@/components/tableaux/celluleNumérique";
-import celluleChaîne from "@/components/tableaux/celluleChaîne";
-import celluleGéoJSON from "@/components/tableaux/celluleGéoJSON";
-import celluleCatégorique from "@/components/tableaux/celluleCatégorique";
-import celluleFichier from "@/components/tableaux/celluleFichier";
-import celluleDate from "@/components/tableaux/celluleDate";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
@@ -208,15 +77,7 @@ export default {
     lienOrbite,
     lienTélécharger,
     boîteNoms,
-    carteNouvelleColonne,
-    titreEntêteTableau,
-    celluleBooléenne,
-    celluleNumérique,
-    celluleChaîne,
-    celluleGéoJSON,
-    celluleCatégorique,
-    celluleFichier,
-    celluleDate
+    tableau
   },
   mixins: [mixinLangues, mixinIPA],
   data: function() {
@@ -224,12 +85,7 @@ export default {
       permissionÉcrire: false,
       nomsTableau: {},
       nomsBD: {},
-      logo: null,
-      nouvelleLigne: false,
-      colonnes: null,
-      données: null,
-      éditer: null,
-      valsLigneActive: {}
+      logo: null
     };
   },
   computed: {
@@ -248,40 +104,6 @@ export default {
     },
     idTableau: function() {
       return decodeURIComponent(this.$route.params.idTableau);
-    },
-    entête: function() {
-      const cols = this.colonnes || [];
-      const entêtes = cols.map(x => {
-        return {
-          text: x.variable,
-          value: x.id,
-          catégorie: x.catégorie
-        };
-      });
-      if (this.permissionÉcrire) {
-        entêtes.push({
-          text: "Actions",
-          value: "actions",
-          sortable: false
-        });
-      }
-      return entêtes;
-    },
-    éléments: function() {
-      const données = this.données || [];
-      if (this.nouvelleLigne) {
-        const premièreLigne = {};
-        Object.assign(premièreLigne, { premièreLigne: true, empreinte: -1 });
-        return [premièreLigne, ...données];
-      } else {
-        return données;
-      }
-    },
-    élémentÉditéÉgale: function() {
-      if (!this.éditer) return false;
-
-      const avant = this.données.find(x => x.empreinte === this.éditer) || {};
-      return élémentsÉgaux(avant, this.valsLigneActive);
     },
     petitPousset: function() {
       return [
@@ -309,49 +131,6 @@ export default {
     effacerNom({ langue }) {
       this.$ipa.tableaux.effacerNomTableau(this.idTableau, langue);
     },
-    creerColonne: async function({ idVariable }) {
-      await this.$ipa.tableaux.ajouterColonneTableau(
-        this.idTableau,
-        idVariable
-      );
-    },
-    actionNouvelleLigne: function() {
-      this.nouvelleLigne = !this.nouvelleLigne;
-      this.éditerÉlément(-1);
-    },
-    éditerÉlément: function(empreinte) {
-      if (empreinte === this.éditer) {
-        this.éditer = null;
-        this.valsLigneActive = {};
-      } else {
-        this.éditer = empreinte;
-        const valsExistantesÉlément = this.éléments.find(
-          x => x.empreinte === empreinte
-        );
-        this.valsLigneActive = Object.assign({}, valsExistantesÉlément);
-      }
-    },
-    sauvegarderÉlément: function() {
-      if (this.éditer === -1) {
-        this.$ipa.tableaux.ajouterÉlément(this.idTableau, this.valsLigneActive);
-      } else {
-        this.$ipa.tableaux.modifierÉlément(
-          this.idTableau,
-          this.valsLigneActive,
-          this.éditer
-        );
-      }
-
-      this.éditer = null;
-      this.nouvelleLigne = false;
-      this.valsLigneActive = {};
-    },
-    effacerÉlément: async function(empreinte) {
-      await this.$ipa.tableaux.effacerÉlément(this.idTableau, empreinte);
-    },
-    valÉditée: function(variable, val) {
-      this.valsLigneActive[variable] = val;
-    },
     initialiserSuivi: async function() {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);
 
@@ -369,27 +148,9 @@ export default {
         }
       );
 
-      const oublierColonnes = await this.$ipa.tableaux.suivreColonnes(
-        this.idTableau,
-        cols => {
-          this.colonnes = cols;
-        }
-      );
-
-      const oublierDonnées = await this.$ipa.tableaux.suivreDonnées(
-        this.idTableau,
-        données => {
-          this.données = données.map(x => {
-            return { ...x.payload.value, empreinte: x.hash };
-          });
-        }
-      );
-
       this.suivre([
         oublierNoms,
-        oublierNomsBD,
-        oublierColonnes,
-        oublierDonnées
+        oublierNomsBD
       ]);
     }
   }
