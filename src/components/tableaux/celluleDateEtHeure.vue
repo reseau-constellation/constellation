@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     formatterDate: function(val) {
-      return new Date(val).toLocaleDateString(this.$i18n.locale)
+      return new Date(val).toLocaleString(this.$i18n.locale)
     },
     actionModifié: function() {
       if (this.val !== this.valÉditée) {

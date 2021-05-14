@@ -105,21 +105,27 @@
               @click:append-outer="ouvrirLienLicence"
             />
             <v-card flat class="mx-3 mb-3">
-              <p>Ce qui suit n'est qu'un résumé de la licence et n'est pas un avis légal.</p>
+              <p>
+                Ce qui suit n'est qu'un résumé de la licence et n'est pas un
+                avis légal.
+              </p>
               <div class="d-flex flex-wrap">
                 <v-card flat min-width="200" max-width="350" class="mb-3 mx-2">
                   <p class="mb-0 text-overline">Permissions</p>
                   <p v-if="!permissions.length" class="text--disabled">
                     Aucune permission
                   </p>
-                  <v-chip v-for="p in permissions" :key="p"
-                  outlined
-                  small
-                  label
-                  class="mx-1 my-1">
-                  <v-icon small left color="success">mdi-check</v-icon>
-                  {{p}}
-                </v-chip>
+                  <v-chip
+                    v-for="p in permissions"
+                    :key="p"
+                    outlined
+                    small
+                    label
+                    class="mx-1 my-1"
+                  >
+                    <v-icon small left color="success">mdi-check</v-icon>
+                    {{ p }}
+                  </v-chip>
                 </v-card>
                 <v-card flat min-width="200" max-width="350" class="mb-3">
                   <p class="mb-0 text-overline">
@@ -136,10 +142,11 @@
                     label
                     class="mx-1 my-1"
                   >
-                    <v-icon small left color="blue">mdi-information-outline</v-icon>
+                    <v-icon small left color="blue"
+                      >mdi-information-outline</v-icon
+                    >
                     {{ m }}
-                  </v-chip
-                  >
+                  </v-chip>
                 </v-card>
                 <v-card flat min-width="200" max-width="350" class="mb-3">
                   <p class="mb-0 text-overline">Limitations</p>
@@ -153,11 +160,10 @@
                     small
                     label
                     class="mx-1 my-1"
-                    >
-                      <v-icon small left color="error">mdi-close</v-icon>
-                      {{ l }}
-                    </v-chip
                   >
+                    <v-icon small left color="error">mdi-close</v-icon>
+                    {{ l }}
+                  </v-chip>
                 </v-card>
               </div>
             </v-card>
@@ -257,9 +263,9 @@ export default {
   },
   watch: {
     licence: function(val) {
-      this.permissions = infoLicences[val].droits || []
-      this.conditions = infoLicences[val].conditions || []
-      this.limitations = infoLicences[val].limitations || []
+      this.permissions = infoLicences[val].droits || [];
+      this.conditions = infoLicences[val].conditions || [];
+      this.limitations = infoLicences[val].limitations || [];
     }
   },
   methods: {

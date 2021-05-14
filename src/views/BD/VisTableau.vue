@@ -148,10 +148,7 @@ export default {
         }
       );
 
-      this.suivre([
-        oublierNoms,
-        oublierNomsBD
-      ]);
+      this.suivre([oublierNoms, oublierNomsBD]);
     }
   }
 };

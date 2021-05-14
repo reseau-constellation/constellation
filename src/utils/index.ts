@@ -48,6 +48,13 @@ export function compilerMarkdown(texte: string) {
   return DOMPurify.sanitize(marked(texte));
 }
 
+export function téléchargerURL(uri: URL, nom: string) {
+  const lien = document.createElement("a");
+  lien.download = nom;
+  lien.href = uri;
+  lien.click();
+}
+
 export function couleurScore(score: number) {
   if (score === null) return { couleur: "#666666", note: "?" };
   if (score >= 95) {

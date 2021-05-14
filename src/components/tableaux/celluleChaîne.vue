@@ -2,12 +2,12 @@
   <v-menu offset-x :close-on-content-click="false" :disabled="!editer">
     <template v-slot:activator="{ on, attrs }">
       <span v-bind="attrs" v-on="on">
-        <span v-if="val">
+        <span v-if="val" :class="{ 'primary--text': editer }">
           {{ couper(val, 20) }}
         </span>
-        <span v-else-if="editer">
-          <v-icon>mdi-plus</v-icon>
-        </span>
+        <v-btn v-else-if="editer" small icon>
+          <v-icon small color="primary">mdi-pencil-plus</v-icon>
+        </v-btn>
       </span>
     </template>
     <v-card class="pa-2">

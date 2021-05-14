@@ -43,8 +43,8 @@ export default class Compte {
   }
 
   async sauvegarderImage(image: File): Promise<void> {
-    const bits = await image.arrayBuffer();
-    const idImage = await this.client.ajouterÀSFIP(bits);
+    const octets = await image.arrayBuffer();
+    const idImage = await this.client.ajouterÀSFIP(octets);
     const bd = await this.client.ouvrirBD(this.idBD);
     await bd.set("image", idImage);
   }

@@ -1,22 +1,20 @@
-
-
 const conditions = {
   ATTR: "attribution",
   ÉGAL: "partageÉgal",
   OUVT: "ouverture"
-}
+};
 
 const droits = {
   PRTG: "partager",
   CRR: "créer",
   ADPT: "adapter"
-}
+};
 
 const types = {
   BD: "basesDeDonnées",
   ART: "artistique",
   CODE: "codeInformatique"
-}
+};
 
 export const infoLicences = {
   "ODbl-1_0": {
@@ -29,7 +27,7 @@ export const infoLicences = {
     droits: [droits.PRTG, droits.CRR, droits.ADPT],
     type: types.BD
   },
-  "PDDL": {
+  PDDL: {
     conditions: [],
     droits: [droits.PRTG, droits.CRR, droits.ADPT],
     type: types.BD
@@ -53,44 +51,44 @@ export const infoLicences = {
 
   "agpl-3_0": {
     conditions: [conditions.RESP, conditions.GRNT],
-    droits:[droits.CMRC, droits.DIST, droits.MOD, droits.BREV],
+    droits: [droits.CMRC, droits.DIST, droits.MOD, droits.BREV],
     type: types.CODE
-   },
+  },
   "gpl-3_0": {
     conditions: [],
-    droits:[],
+    droits: [],
     type: types.CODE
   },
   "GNU-LGPLv3": {
     conditions: [],
-    droits:[],
+    droits: [],
     type: types.CODE
   },
   "MPL-v2": {
     conditions: [],
-    droits:[],
+    droits: [],
     type: types.CODE
   },
   "Apache-v2": {
     conditions: [],
-    droits:[],
+    droits: [],
     type: types.CODE
   },
-  "MIT": {
+  MIT: {
     conditions: [],
-    droits:[],
+    droits: [],
     type: types.CODE
   },
   "Boost-v1": {
     conditions: [],
-    droits:[],
+    droits: [],
     type: types.CODE
   },
   "Domaine-Publique": {
     conditions: [],
-    droits:[],
+    droits: [],
     type: types.CODE
   }
-}
+};
 
-export const licences = Object.keys(infoLicences)
+export const licences = Object.keys(infoLicences);

@@ -38,16 +38,16 @@ export default class Tableaux {
   ): Promise<string> {
     const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
     const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
-    vals = await this.vérifierClefsÉlément(idTableau, vals)
-    return await bdDonnées.add(vals);
+    vals = await this.vérifierClefsÉlément(idTableau, vals);
+    const id = uuidv4();
+    return await bdDonnées.add({ ...vals, id });
   }
 
   async modifierÉlément(
     idTableau: string,
     vals: { [key: string]: any },
     empreintePrécédente: string
-  ): Promise<string|void> {
-    console.log("ici")
+  ): Promise<string | void> {
     const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
     const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
 
@@ -56,28 +56,42 @@ export default class Tableaux {
       .collect()
       .find((e: { [key: string]: any }) => e.hash === empreintePrécédente)
       .payload.value;
-    let élément = Object.assign({}, précédent, { vals });
-    élément = await this.vérifierClefsÉlément(idTableau, élément)
-    console.log("là", {vals, élément, précédent}, élémentsÉgaux(élément, précédent))
+
+    let élément = Object.assign({}, précédent, vals);
+
+    Object.keys(vals).map((c: string) => {
+      if (vals[c] === undefined) delete élément[c];
+    });
+    élément = await this.vérifierClefsÉlément(idTableau, élément);
+
     if (!élémentsÉgaux(élément, précédent)) {
-      await bdDonnées.remove(empreintePrécédente);
-      return await bdDonnées.add(élément);
+      return await Promise.all([
+        bdDonnées.remove(empreintePrécédente),
+        bdDonnées.add(élément)
+      ]);
     }
-    return Promise.resolve()
+    return Promise.resolve();
   }
 
   async vérifierClefsÉlément(
     idTableau: string,
-    élément: {[key: string]: any}
+    élément: { [key: string]: any }
   ): Promise<{ [key: string]: any }> {
-    const idBdColonnes = await this.client.obtIdBd("colonnes", idTableau, "feed");
+    const idBdColonnes = await this.client.obtIdBd(
+      "colonnes",
+      idTableau,
+      "feed"
+    );
     const bdColonnes = await this.client.ouvrirBD(idBdColonnes);
-    const clefsPermises: string[] = bdColonnes
+    const idsColonnes: string[] = bdColonnes
       .iterator({ limit: -1 })
       .collect()
-      .map((e: { [key: string]: any }) => e.payload.value.id)
-    const clefsFinales = Object.keys(élément).filter((x: string)=>clefsPermises.includes(x))
-    return Object.fromEntries(clefsFinales.map((x:string)=>[x, élément[x]]))
+      .map((e: { [key: string]: any }) => e.payload.value.id);
+    const clefsPermises = [...idsColonnes, "id"];
+    const clefsFinales = Object.keys(élément).filter((x: string) =>
+      clefsPermises.includes(x)
+    );
+    return Object.fromEntries(clefsFinales.map((x: string) => [x, élément[x]]));
   }
 
   async effacerÉlément(

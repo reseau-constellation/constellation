@@ -9,7 +9,8 @@
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
-            icon small
+            icon
+            small
             v-on="on"
             v-bind="attrs"
             :disabled="!permissionÉcrire"
@@ -20,34 +21,37 @@
         <carte-nouvelle-colonne @creerColonne="creerColonne" />
       </v-menu>
       <v-btn
-        icon small
+        icon
+        small
         :disabled="!permissionÉcrire || (colonnes && !colonnes.length)"
-        :color="nouvelleLigne ? 'primary': 'secondary'"
+        :color="nouvelleLigne ? 'primary' : 'secondary'"
         @click="nouvelleLigne = !nouvelleLigne"
       >
         <v-icon small>mdi-table-row-plus-after</v-icon>
       </v-btn>
       <v-btn
-        icon small
+        icon
+        small
         :disabled="!permissionÉcrire || (colonnes && !colonnes.length)"
-        :color="éditer ? 'primary': 'secondary'"
+        :color="éditer ? 'primary' : 'secondary'"
         @click="éditer = !éditer"
       >
         <v-icon small>{{ éditer ? "mdi-pencil" : "mdi-pencil-off" }}</v-icon>
       </v-btn>
     </p>
 
-    <v-divider />
-    {{ valsNouvelleLigne }}
     <v-skeleton-loader v-if="colonnes === null" type="image" />
-    <v-data-table v-else :headers="entête" :items="éléments" dense>
+    <v-data-table
+      v-else
+      :headers="entête"
+      :items="éléments"
+      dense
+      class="elevation-1"
+    >
       <template v-slot:no-data>
         {{ $t("tableau.vide") }}
       </template>
-      <template
-        v-for="c in entête"
-        v-slot:[`header.${c.value}`]="{ header }"
-      >
+      <template v-for="c in entête" v-slot:[`header.${c.value}`]="{ header }">
         <titreEntêteTableau
           v-if="c.value !== 'actions'"
           :key="c.value"
@@ -59,6 +63,16 @@
       <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item }">
         <span v-if="c.value === 'actions'" :key="c.value">
           <v-btn
+            v-if="item.premièreLigne"
+            color="success"
+            icon
+            small
+            @click="() => ajouterÉlément()"
+          >
+            <v-icon small>mdi-check</v-icon>
+          </v-btn>
+          <v-btn
+            v-else
             color="error"
             icon
             small
@@ -69,6 +83,20 @@
         </span>
         <celluleDate
           v-else-if="c.catégorie === 'date'"
+          :key="c.value"
+          :val="item[c.value]"
+          :editer="éditer || item.premièreLigne"
+          @edite="e => valÉditée(item.empreinte, c.value, e.val)"
+        />
+        <celluleDateEtHeure
+          v-else-if="c.catégorie === 'dateEtHeure'"
+          :key="c.value"
+          :val="item[c.value]"
+          :editer="éditer || item.premièreLigne"
+          @edite="e => valÉditée(item.empreinte, c.value, e.val)"
+        />
+        <celluleHeure
+          v-else-if="c.catégorie === 'heure'"
           :key="c.value"
           :val="item[c.value]"
           :editer="éditer || item.premièreLigne"
@@ -134,6 +162,8 @@ import celluleGéoJSON from "@/components/tableaux/celluleGéoJSON";
 import celluleCatégorique from "@/components/tableaux/celluleCatégorique";
 import celluleFichier from "@/components/tableaux/celluleFichier";
 import celluleDate from "@/components/tableaux/celluleDate";
+import celluleDateEtHeure from "@/components/tableaux/celluleDateEtHeure";
+import celluleHeure from "@/components/tableaux/celluleHeure";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
@@ -149,7 +179,9 @@ export default {
     celluleGéoJSON,
     celluleCatégorique,
     celluleFichier,
-    celluleDate
+    celluleDate,
+    celluleDateEtHeure,
+    celluleHeure
   },
   mixins: [mixinLangues, mixinIPA],
   data: function() {
@@ -185,20 +217,21 @@ export default {
       return entêtes;
     },
     éléments: function() {
-      const données = this.données || [];
+      const données = (this.données || []).sort((x, y) =>
+        x.id > y.id ? 1 : -1
+      );
+
       if (this.nouvelleLigne) {
         const premièreLigne = {};
-        Object.assign(premièreLigne, { premièreLigne: true, empreinte: -1 }, this.valsNouvelleLigne);
+        Object.assign(
+          premièreLigne,
+          { premièreLigne: true, empreinte: -1 },
+          this.valsNouvelleLigne
+        );
         return [premièreLigne, ...données];
       } else {
         return données;
       }
-    },
-    élémentÉditéÉgale: function() {
-      if (!this.éditer) return false;
-
-      const avant = this.données.find(x => x.empreinte === this.éditer) || {};
-      return élémentsÉgaux(avant, this.valsLigneActive);
     }
   },
   methods: {
@@ -210,13 +243,14 @@ export default {
     },
 
     valÉditée: function(empreinte, variable, val) {
-      console.log({empreinte, variable, val})
       if (empreinte === -1) {
-        this.valsNouvelleLigne = Object.assign({}, this.valsNouvelleLigne, {[variable]: val});
+        this.valsNouvelleLigne = Object.assign({}, this.valsNouvelleLigne, {
+          [variable]: val
+        });
       } else {
         this.$ipa.tableaux.modifierÉlément(
           this.idTableau,
-          {[variable]: val},
+          { [variable]: val },
           empreinte
         );
       }
@@ -251,15 +285,10 @@ export default {
         }
       );
 
-      this.suivre([
-        oublierColonnes,
-        oublierDonnées
-      ]);
+      this.suivre([oublierColonnes, oublierDonnées]);
     }
   }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

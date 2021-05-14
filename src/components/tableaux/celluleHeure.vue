@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on, attrs }">
       <span v-bind="attrs" v-on="on">
         <span v-if="val" :class="{ 'primary--text': editer }">
-          {{ formatterDate(val) }}
+          {{ formatterHeure(val) }}
         </span>
         <v-btn small icon v-else-if="editer">
           <v-icon small color="primary">mdi-pencil-plus</v-icon>
@@ -34,12 +34,12 @@ export default {
     }
   },
   methods: {
-    formatterDate: function(val) {
-      return new Date(val).toLocaleDateString(this.$i18n.locale)
+    formatterHeure: function(val) {
+      return new Date(val).toLocaleTimeString(this.$i18n.locale)
     },
     actionModifié: function() {
       if (this.val !== this.valÉditée) {
-        this.$emit("edite", { val: this.valÉditée });
+        this.$emit("edite", { val: this.valÉditée.trim() });
       }
     }
   }
