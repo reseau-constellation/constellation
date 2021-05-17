@@ -75,6 +75,14 @@
               />
             </video>
           </vue-plyr>
+          <vue-plyr v-else-if="formats.audio.includes(val.ext.toLowerCase())">
+            <audio controls crossorigin playsinline>
+              <source
+                  :src="url"
+                  :type="'audio/'+val.ext"
+              />
+            </audio>
+          </vue-plyr>
           <div v-else class="text-center">
             <p class="text-h6 mt-5">Ce format de fichier ne peut pas être prévisualisé pour le moment.</p>
             <v-img :src="image('vide')" class="my-5" contain height="175px" />
@@ -114,7 +122,8 @@ export default {
       vis: false,
       formats: {
         images: ["webp", "svg", "png", "jpg", "jpeg", "jfif", "pjpeg", "pjp", "gif", "avif", "apng"],
-        vidéo: ["mp4"]
+        vidéo: ["mp4"],
+        audio: ["mp3", "ogg"]
       }
     };
   },
