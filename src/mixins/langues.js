@@ -5,7 +5,7 @@ import {
   retamabälChabäl as infoLangues,
   runukChabäl as codeLangue
 } from "nuchabal";
-import { உரைக்கு } from "ennikkai";
+import { எண்ணுக்கு as texteÀChiffre, உரைக்கு as chiffreÀTexte } from "ennikkai";
 import { mapGetters } from "vuex";
 
 const ORIG = "fr";
@@ -43,6 +43,8 @@ export default {
   },
   methods: {
     nomDeLangue,
+    chiffreÀTexte,
+    texteÀChiffre,
     droiteÀGauche: function(langue) {
       const orientation = orientationÉcriture(écriture(langue));
       return Boolean(orientation && orientation.includes("←"));
@@ -79,7 +81,10 @@ export default {
       this.$store.commit("paramètres/changerNumération", { système: système });
     },
     formatterChiffre: function(n) {
-      return உரைக்கு(n, this.systèmeNumération);
-    }
+      return chiffreÀTexte(n, this.systèmeNumération);
+    },
+    formatterDate: function(val) {
+      return new Date(val).toLocaleDateString(this.$i18n.locale)
+    },
   }
 };

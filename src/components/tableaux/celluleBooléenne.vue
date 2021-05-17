@@ -4,7 +4,7 @@
     :value="val"
     :disabled="!editer"
     :indeterminate="val === undefined"
-    :color="editer ? 'primary' : 'secondary'"
+    :color="editer ? 'couleurActive' : 'secondary'"
     :ripple="false"
     @click="actionClic"
   />
@@ -13,7 +13,7 @@
 <script>
 export default {
   name: "celluleBooléenne",
-  props: ["val", "editer"],
+  props: ["val", "editer", "couleurActive"],
   methods: {
     actionClic: function() {
       if (this.editer) {

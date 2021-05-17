@@ -6,7 +6,7 @@
           {{ couper(val, 20) }}
         </span>
         <v-btn v-else-if="editer" small icon>
-          <v-icon small color="primary">mdi-pencil-plus</v-icon>
+          <v-icon small :color="couleurActive">mdi-pencil-plus</v-icon>
         </v-btn>
       </span>
     </template>
@@ -25,7 +25,7 @@ import { couper } from "@/utils";
 
 export default {
   name: "celluleChaîne",
-  props: ["val", "editer"],
+  props: ["val", "editer", "couleurActive"],
   data: function() {
     return {
       valÉditée: this.val

@@ -6,7 +6,7 @@
           {{ formatterHeure(val) }}
         </span>
         <v-btn small icon v-else-if="editer">
-          <v-icon small color="primary">mdi-pencil-plus</v-icon>
+          <v-icon small :color="couleurActive">mdi-pencil-plus</v-icon>
         </v-btn>
       </span>
     </template>
@@ -21,7 +21,7 @@ import mixinLangues from "@/mixins/langues";
 
 export default {
   name: "celluleDate",
-  props: ["val", "editer"],
+  props: ["val", "editer", "couleurActive"],
   mixins: [mixinLangues],
   data: function() {
     return {

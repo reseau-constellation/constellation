@@ -24,7 +24,7 @@
         icon
         small
         :disabled="!permissionÉcrire || (colonnes && !colonnes.length)"
-        :color="nouvelleLigne ? 'primary' : 'secondary'"
+        :color="nouvelleLigne ? 'success' : 'secondary'"
         @click="nouvelleLigne = !nouvelleLigne"
       >
         <v-icon small>mdi-table-row-plus-after</v-icon>
@@ -69,7 +69,7 @@
             small
             @click="() => ajouterÉlément()"
           >
-            <v-icon small>mdi-check</v-icon>
+            <v-icon>mdi-check</v-icon>
           </v-btn>
           <v-btn
             v-else
@@ -85,6 +85,7 @@
           v-else-if="c.catégorie === 'date'"
           :key="c.value"
           :val="item[c.value]"
+          :couleurActive="item.premièreLigne ? 'success': 'primary'"
           :editer="éditer || item.premièreLigne"
           @edite="e => valÉditée(item.empreinte, c.value, e.val)"
         />
@@ -92,6 +93,7 @@
           v-else-if="c.catégorie === 'dateEtHeure'"
           :key="c.value"
           :val="item[c.value]"
+          :couleurActive="item.premièreLigne ? 'success': 'primary'"
           :editer="éditer || item.premièreLigne"
           @edite="e => valÉditée(item.empreinte, c.value, e.val)"
         />
@@ -99,6 +101,7 @@
           v-else-if="c.catégorie === 'heure'"
           :key="c.value"
           :val="item[c.value]"
+          :couleurActive="item.premièreLigne ? 'success': 'primary'"
           :editer="éditer || item.premièreLigne"
           @edite="e => valÉditée(item.empreinte, c.value, e.val)"
         />
@@ -106,6 +109,7 @@
           v-else-if="c.catégorie === 'numérique'"
           :key="c.value"
           :val="item[c.value]"
+          :couleurActive="item.premièreLigne ? 'success': 'primary'"
           :editer="éditer || item.premièreLigne"
           @edite="e => valÉditée(item.empreinte, c.value, e.val)"
         />
@@ -113,6 +117,7 @@
           v-else-if="c.catégorie === 'booléen'"
           :key="c.value"
           :val="item[c.value]"
+          :couleurActive="item.premièreLigne ? 'success': 'primary'"
           :editer="éditer || item.premièreLigne"
           @edite="e => valÉditée(item.empreinte, c.value, e.val)"
         />
@@ -121,6 +126,7 @@
           :key="c.value"
           :val="item[c.value]"
           :empreinte="item.empreinte"
+          :couleurActive="item.premièreLigne ? 'success': 'primary'"
           :editer="éditer || item.premièreLigne"
           @edite="e => valÉditée(item.empreinte, c.value, e.val)"
         />
@@ -128,6 +134,7 @@
           v-else-if="c.catégorie === 'géojson'"
           :key="c.value"
           :val="item[c.value]"
+          :couleurActive="item.premièreLigne ? 'success': 'primary'"
           :editer="éditer || item.premièreLigne"
           @edite="e => valÉditée(item.empreinte, c.value, e.val)"
         />
@@ -135,6 +142,7 @@
           v-else-if="c.catégorie === 'catégorique'"
           :key="c.value"
           :val="item[c.value]"
+          :couleurActive="item.premièreLigne ? 'success': 'primary'"
           :editer="éditer || item.premièreLigne"
           @edite="e => valÉditée(item.empreinte, c.value, e.val)"
         />
@@ -142,6 +150,7 @@
           v-else-if="c.catégorie === 'fichier'"
           :key="c.value"
           :val="item[c.value]"
+          :couleurActive="item.premièreLigne ? 'success': 'primary'"
           :editer="éditer || item.premièreLigne"
           @edite="e => valÉditée(item.empreinte, c.value, e.val)"
         />
