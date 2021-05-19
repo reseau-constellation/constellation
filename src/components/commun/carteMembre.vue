@@ -1,5 +1,5 @@
 <template>
-  <v-card v-show="actif" min-width="300" class="ma-2">
+  <v-card v-show="actif" width="300" class="ma-2">
     <v-card-title>
       <v-list-item-avatar>
         <img :src="imageProfil" />
@@ -22,7 +22,16 @@
       <p class="mb-0 text-overline">
         Bases de données
       </p>
-      <jeton-bd v-for="bd in bds" :key="bd" :id="bd" />
+      <jeton-bd v-for="bd in bds.slice(0, N_MAX_LISTE)" :key="bd" :id="bd" />
+      <v-chip
+        v-if="bds.length>N_MAX_LISTE"
+        class="me-1 mb-1"
+        label
+        outlined
+        small
+      >
+        + {{bds.length-N_MAX_LISTE}} autre(s)
+      </v-chip>
       <v-chip v-if="!bds.length" label outlined small disabled>
         Aucune BD
       </v-chip>
@@ -62,7 +71,9 @@ export default {
       imageCompte: null,
       courriel: null,
       bds: [],
-      projets: []
+      projets: [],
+
+      N_MAX_LISTE: 4
     };
   },
   computed: {
