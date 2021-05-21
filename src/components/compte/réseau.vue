@@ -43,22 +43,22 @@ import mixinIPA from "@/mixins/ipa";
 export default {
   name: "ongletRéseau",
   mixins: [mixinIPA],
-  data: function() {
+  data: function () {
     return {
-      connexions: []
+      connexions: [],
     };
   },
   methods: {
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       const oublierConnexions = await this.$ipa.suivreConnexionsPostes(
-        connexions => {
+        (connexions) => {
           this.connexions = connexions;
         }
       );
 
       this.suivre([oublierConnexions]);
-    }
-  }
+    },
+  },
 };
 </script>
 

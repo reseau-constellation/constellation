@@ -77,47 +77,47 @@ export default {
     lienOrbite,
     lienTélécharger,
     boîteNoms,
-    tableau
+    tableau,
   },
   mixins: [mixinLangues, mixinIPA],
-  data: function() {
+  data: function () {
     return {
       permissionÉcrire: false,
       nomsTableau: {},
       nomsBD: {},
-      logo: null
+      logo: null,
     };
   },
   computed: {
-    nom: function() {
+    nom: function () {
       return Object.keys(this.nomsTableau).length
         ? traduireNom(this.nomsTableau, this.languesPréférées)
         : this.idTableau;
     },
-    nomBD: function() {
+    nomBD: function () {
       return Object.keys(this.nomsBD).length
         ? traduireNom(this.nomsBD, this.languesPréférées)
         : this.idBD;
     },
-    idBD: function() {
+    idBD: function () {
       return decodeURIComponent(this.$route.params.id);
     },
-    idTableau: function() {
+    idTableau: function () {
       return decodeURIComponent(this.$route.params.idTableau);
     },
-    petitPousset: function() {
+    petitPousset: function () {
       return [
         { text: "Données", href: "/bd" },
         {
           text: couper(this.nomBD, 15),
-          href: `/bd/visualiser/${encodeURIComponent(this.idBD)}`
+          href: `/bd/visualiser/${encodeURIComponent(this.idBD)}`,
         },
         {
           text: couper(this.nom, 15),
-          disabled: true
-        }
+          disabled: true,
+        },
       ];
-    }
+    },
   },
   methods: {
     couper,
@@ -131,26 +131,26 @@ export default {
     effacerNom({ langue }) {
       this.$ipa.tableaux.effacerNomTableau(this.idTableau, langue);
     },
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);
 
       const oublierNoms = await this.$ipa.tableaux.suivreNomsTableau(
         this.idTableau,
-        noms => {
+        (noms) => {
           this.nomsTableau = noms;
         }
       );
 
       const oublierNomsBD = await this.$ipa.bds.suivreNomsBD(
         this.idBD,
-        noms => {
+        (noms) => {
           this.nomsBD = noms;
         }
       );
 
       this.suivre([oublierNoms, oublierNomsBD]);
-    }
-  }
+    },
+  },
 };
 </script>
 

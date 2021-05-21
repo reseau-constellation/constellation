@@ -24,20 +24,22 @@ export default {
   name: "Favoris",
   components: { Titre, carteBd },
   mixins: [mixinImage, mixinIPA],
-  data: function() {
+  data: function () {
     return {
-      favoris: []
+      favoris: [],
     };
   },
   methods: {
-    initialiserSuivi: async function() {
-      const oublierFavoris = await this.$ipa.favoris.suivreFavoris(favoris => {
-        this.favoris = favoris;
-      });
+    initialiserSuivi: async function () {
+      const oublierFavoris = await this.$ipa.favoris.suivreFavoris(
+        (favoris) => {
+          this.favoris = favoris;
+        }
+      );
 
       this.suivre([oublierFavoris]);
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -95,16 +95,16 @@
 export default {
   name: "lienOrbit",
   props: ["lien"],
-  data: function() {
+  data: function () {
     return {
       copié: false,
       onglet: null,
       langueInfo: "Python",
-      formatDoc: "csv"
+      formatDoc: "csv",
     };
   },
   computed: {
-    codeTélécharger: function() {
+    codeTélécharger: function () {
       switch (this.langueInfo.toLowerCase()) {
         case "python":
           return `import constellation as cst\n\ncst.obtenir_données("${this.lien}")`;
@@ -113,15 +113,15 @@ export default {
         default:
           return "";
       }
-    }
+    },
   },
   methods: {
     async copier(texte) {
       if (!navigator.clipboard) return;
       await navigator.clipboard.writeText(texte);
       this.copié = true;
-    }
-  }
+    },
+  },
 };
 </script>
 

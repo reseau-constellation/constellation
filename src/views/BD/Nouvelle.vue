@@ -36,7 +36,7 @@
               Ne vous cassez pas la tête ; ces noms pouront être modifiés
               ensuite.
             </span>
-            <v-list style="max-height: 300px" class="overflow-y-auto">
+            <v-list style="max-height: 300px;" class="overflow-y-auto">
               <item-nouveau-nom
                 :languesExistantes="Object.keys(this.noms)"
                 etiquetteNom="Nom de la BD"
@@ -62,7 +62,7 @@
             <span class="grey--text text--darken-1">
               Quelque chose de claire, net et précis !
             </span>
-            <v-list style="max-height: 300px" class="overflow-y-auto">
+            <v-list style="max-height: 300px;" class="overflow-y-auto">
               <item-nouveau-nom
                 :languesExistantes="Object.keys(this.descriptions)"
                 etiquetteNom="Description"
@@ -94,7 +94,7 @@
             <v-select
               v-model="licence"
               :items="
-                licences.map(l => {
+                licences.map((l) => {
                   return { value: l, text: $t(`licences.${l}.nom`) };
                 })
               "
@@ -187,7 +187,7 @@
               tiled
               outlined
               color="primary"
-              @click="e => créerBD(e)"
+              @click="(e) => créerBD(e)"
             >
               C'est parti !
             </v-btn>
@@ -227,7 +227,7 @@ export default {
   name: "NouvelleBD",
   components: { itemNom, itemNouveauNom },
   mixins: [mixinLangues, mixinImages],
-  data: function() {
+  data: function () {
     return {
       étape: 1,
       licences,
@@ -238,17 +238,17 @@ export default {
 
       permissions: [],
       conditions: [],
-      limitations: []
+      limitations: [],
     };
   },
   computed: {
-    petitPousset: function() {
+    petitPousset: function () {
       return [
         { text: "Données", href: "/bd" },
-        { text: this.$t("bd.nouvelle.petitPousset"), disabled: true }
+        { text: this.$t("bd.nouvelle.petitPousset"), disabled: true },
       ];
     },
-    titrePrésent: function() {
+    titrePrésent: function () {
       switch (this.étape) {
         case 1:
           return "Choisissez un nom";
@@ -259,50 +259,50 @@ export default {
         default:
           return "";
       }
-    }
+    },
   },
   watch: {
-    licence: function(val) {
+    licence: function (val) {
       this.permissions = infoLicences[val].droits || [];
       this.conditions = infoLicences[val].conditions || [];
       this.limitations = infoLicences[val].limitations || [];
-    }
+    },
   },
   methods: {
-    sauvegarderNom: function({ langue, nom }) {
+    sauvegarderNom: function ({ langue, nom }) {
       this.noms = { ...this.noms, [langue]: nom };
     },
-    effacerNom: function({ langue }) {
+    effacerNom: function ({ langue }) {
       this.noms = Object.fromEntries(
         Object.keys(this.noms)
-          .filter(x => x !== langue)
-          .map(x => [x, this.noms[x]])
+          .filter((x) => x !== langue)
+          .map((x) => [x, this.noms[x]])
       );
     },
-    changerLangueNom: function({ langueOriginale, langue, nom }) {
+    changerLangueNom: function ({ langueOriginale, langue, nom }) {
       this.effacerNom(langueOriginale);
       this.sauvegarderNom(langue, nom);
     },
-    sauvegarderDescr: function({ langue, nom }) {
+    sauvegarderDescr: function ({ langue, nom }) {
       this.descriptions = { ...this.descriptions, [langue]: nom };
     },
-    effacerDescr: function({ langue }) {
+    effacerDescr: function ({ langue }) {
       this.descriptions = Object.fromEntries(
         Object.keys(this.descriptions)
-          .filter(x => x !== langue)
-          .map(x => [x, this.descriptions[x]])
+          .filter((x) => x !== langue)
+          .map((x) => [x, this.descriptions[x]])
       );
     },
-    changerLangueDescr: function({ langueOriginale, langue, nom }) {
+    changerLangueDescr: function ({ langueOriginale, langue, nom }) {
       this.effacerDescr(langueOriginale);
       this.sauvegarderDescr(langue, nom);
     },
-    ouvrirLienLicence: function() {
+    ouvrirLienLicence: function () {
       if (this.licence) {
         ouvrirLien(this.$t(`licences.${this.licence}.lien`));
       }
     },
-    créerBD: async function() {
+    créerBD: async function () {
       this.enCréation = true;
       const id = await this.$ipa.bds.créerBD(this.licence);
       if (Object.keys(this.noms).length) {
@@ -312,8 +312,8 @@ export default {
         await this.$ipa.bds.ajouterDescriptionsBD(id, this.descriptions);
       }
       this.$router.push(`/bd/visualiser/${encodeURIComponent(id)}`);
-    }
-  }
+    },
+  },
 };
 </script>
 

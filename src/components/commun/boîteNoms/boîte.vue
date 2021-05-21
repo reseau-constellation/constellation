@@ -11,18 +11,18 @@
       :languesExistantes="Object.keys(this.noms)"
       :etiquetteLangue="$t(etiquetteLangue)"
       :etiquetteNom="$t(etiquetteNom)"
-      @sauvegarder="e => $emit('sauvegarder', e)"
+      @sauvegarder="(e) => $emit('sauvegarder', e)"
     />
     <v-divider />
-    <v-list style="max-height: 300px" class="overflow-y-auto">
+    <v-list style="max-height: 300px;" class="overflow-y-auto">
       <item-nom
         v-for="(nom, langue) in noms"
         :key="langue"
         :nomOriginal="nom"
         :langueOriginale="langue"
-        @sauvegarder="e => $emit('sauvegarder', e)"
-        @effacer="e => $emit('effacer', e)"
-        @changerLangue="e => $emit('changerLangue', e)"
+        @sauvegarder="(e) => $emit('sauvegarder', e)"
+        @effacer="(e) => $emit('effacer', e)"
+        @changerLangue="(e) => $emit('changerLangue', e)"
       />
     </v-list>
   </v-card>
@@ -40,45 +40,45 @@ export default {
     noms: Object,
     titre: {
       type: String,
-      default: "boîteNoms.titre"
+      default: "boîteNoms.titre",
     },
     sousTitre: {
       type: String,
-      default: "boîteNoms.sousTitre"
+      default: "boîteNoms.sousTitre",
     },
     etiquetteNom: {
       type: String,
-      default: "boîteNoms.étiquetteNom"
+      default: "boîteNoms.étiquetteNom",
     },
     etiquetteLangue: {
       type: String,
-      default: "boîteNoms.étiquetteLangue"
-    }
+      default: "boîteNoms.étiquetteLangue",
+    },
   },
   mixins: [mixinLangues],
-  data: function() {
+  data: function () {
     return {
       langueNouveauNom: "",
-      nouveauNom: ""
+      nouveauNom: "",
     };
   },
-  mounted: function() {
+  mounted: function () {
     console.log(Object.keys(this.noms)[-1]);
   },
   computed: {
-    itemsLangues: function() {
+    itemsLangues: function () {
       return this.langues
-        .filter(lng => {
+        .filter((lng) => {
           return !Object.keys(this.noms).includes(lng);
         })
-        .map(code => {
+        .map((code) => {
           return {
             text: this.nomDeLangue(code) || code,
-            value: code
+            value: code,
           };
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -22,7 +22,7 @@
           :value="thèmeImages"
           :label="$t('compte.options.thèmeImages')"
           class="mt-0"
-          @change="e => changerThèmeImages(e)"
+          @change="(e) => changerThèmeImages(e)"
         >
           <v-radio value="unDraw" label="unDraw" />
           <v-radio value="வவவ" label="வள்ளுவர் வள்ளலார் வட்டம்" />
@@ -34,7 +34,7 @@
         </p>
         <v-select
           :items="
-            langues.map(l => {
+            langues.map((l) => {
               return { text: codeÀNomLangue(l) || l, value: l };
             })
           "
@@ -64,7 +64,7 @@
           hide-details
           prepend-icon="mdi-abacus"
           class="py-5"
-          @change="e => changerNumération(e)"
+          @change="(e) => changerNumération(e)"
         >
           <template v-slot:item="{ on, item }">
             <v-list-item v-on="on">
@@ -92,7 +92,7 @@ import opLangue from "@/components/commun/OpLangue";
 import mixinLangues from "@/mixins/langues";
 import {
   rubiChabäl as codeÀNomLangue,
-  rajilanïkChabäl as numLangue
+  rajilanïkChabäl as numLangue,
 } from "nuchabal";
 import { முறைமைகள் as systèmesNum, உரைக்கு as chifreÀTexte } from "ennikkai";
 
@@ -100,31 +100,31 @@ export default {
   name: "ongletThème",
   components: { opLangue },
   mixins: [mixinLangues],
-  data: function() {
+  data: function () {
     return {
       thèmeNuit: this.$store.state.paramètres.thèmeNuit,
-      systèmesNum
+      systèmesNum,
     };
   },
   watch: {
-    thèmeNuit: function(val) {
+    thèmeNuit: function (val) {
       this.$store.commit("paramètres/changerThèmeNuit", { val });
       this.$vuetify.theme.dark = val;
-    }
+    },
   },
   computed: {
-    thèmeImages: function() {
+    thèmeImages: function () {
       return this.$store.state.paramètres.thèmeImages;
-    }
+    },
   },
   methods: {
     codeÀNomLangue,
     numLangue,
     chifreÀTexte,
-    changerThèmeImages: function(thème) {
+    changerThèmeImages: function (thème) {
       this.$store.commit("paramètres/changerThèmeImage", { thème });
-    }
-  }
+    },
+  },
 };
 </script>
 

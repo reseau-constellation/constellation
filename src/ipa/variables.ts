@@ -1,25 +1,25 @@
 import ClientConstellation, {
   schémaFonctionSuivi,
-  schémaFonctionOublier
+  schémaFonctionOublier,
 } from "./client";
 
 export default class Variables {
   client: ClientConstellation;
-  idBD: string;
+  idBd: string;
 
   constructor(client: ClientConstellation, id: string) {
     this.client = client;
-    this.idBD = id;
+    this.idBd = id;
   }
 
   async suivreVariables(
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBdListe(this.idBD, f);
+    return await this.client.suivreBdListe(this.idBd, f);
   }
 
   async créerVariable(catégorie: string): Promise<string> {
-    const bdRacine = await this.client.ouvrirBD(this.idBD);
+    const bdRacine = await this.client.ouvrirBD(this.idBd);
     const idBdVariable = await this.client.créerBDIndépendante("kvstore");
     await bdRacine.add(idBdVariable);
 
@@ -34,6 +34,8 @@ export default class Variables {
 
   async ajouterNomsVariable(id: string, noms: { [key: string]: string }) {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
+    if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
+
     const bdNoms = await this.client.ouvrirBD(idBdNoms);
     for (const lng in noms) {
       await bdNoms.set(lng, noms[lng]);
@@ -42,12 +44,16 @@ export default class Variables {
 
   async sauvegarderNomVariable(id: string, langue: string, nom: string) {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
+    if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
+
     const bdNoms = await this.client.ouvrirBD(idBdNoms);
     await bdNoms.set(langue, nom);
   }
 
   async effacerNomVariable(id: string, langue: string) {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
+    if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
+
     const bdNoms = await this.client.ouvrirBD(idBdNoms);
     await bdNoms.del(langue);
   }
@@ -57,6 +63,8 @@ export default class Variables {
     descriptions: { [key: string]: string }
   ) {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
+    if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
+
     const bdDescr = await this.client.ouvrirBD(idBdDescr);
     for (const lng in descriptions) {
       await bdDescr.set(lng, descriptions[lng]);
@@ -65,12 +73,16 @@ export default class Variables {
 
   async sauvegarderDescrVariable(id: string, langue: string, nom: string) {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
+    if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
+
     const bdDescr = await this.client.ouvrirBD(idBdDescr);
     await bdDescr.set(langue, nom);
   }
 
   async effacerbdDescrVariable(id: string, langue: string) {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
+    if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
+
     const bdDescr = await this.client.ouvrirBD(idBdDescr);
     await bdDescr.del(langue);
   }
@@ -87,21 +99,21 @@ export default class Variables {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBdDic(id, "noms", f);
+    return await this.client.suivreBdDicDeClef(id, "noms", f);
   }
 
   async suivreDescrVariable(
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBdDic(id, "descriptions", f);
+    return await this.client.suivreBdDicDeClef(id, "descriptions", f);
   }
 
   async suivreCatégorieVariable(
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBD(id, async bd => {
+    return await this.client.suivreBd(id, async (bd) => {
       const catégorie = await bd.get("catégorie");
       f(catégorie);
     });
@@ -116,7 +128,7 @@ export default class Variables {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBD(id, async bd => {
+    return await this.client.suivreBd(id, async (bd) => {
       const catégorie = await bd.get("unité");
       f(catégorie);
     });
@@ -124,7 +136,7 @@ export default class Variables {
 
   async effacerVariable(id: string) {
     // Effacer l'entrée dans notre liste de variables
-    const bdRacine = await this.client.ouvrirBD(this.idBD);
+    const bdRacine = await this.client.ouvrirBD(this.idBd);
     const entrée = (await bdRacine.iterator({ limit: -1 }).collect()).find(
       (e: { [key: string]: any }) => e.payload.value === id
     );

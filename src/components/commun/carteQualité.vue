@@ -11,7 +11,9 @@
       <v-list>
         <v-divider />
         <v-list-item
-          v-for="[c, v] in Object.entries(score).filter(x => x[0] !== 'total')"
+          v-for="[c, v] in Object.entries(score).filter(
+            (x) => x[0] !== 'total'
+          )"
           :key="c"
         >
           <v-list-item-avatar>
@@ -45,7 +47,7 @@ import { couleurScore } from "@/utils";
 export default {
   name: "CarteQualité",
   props: ["score", "permissionÉcrire"],
-  methods: { couleurScore }
+  methods: { couleurScore },
 };
 </script>
 

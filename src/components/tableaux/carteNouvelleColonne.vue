@@ -26,7 +26,7 @@
             Nouvelle variable
           </v-btn>
         </template>
-        <carte-nouvelle-variable @sauvegarde="e => (idVariable = e.id)" />
+        <carte-nouvelle-variable @sauvegarde="(e) => (idVariable = e.id)" />
       </v-menu>
     </v-card-text>
     <v-divider />
@@ -55,26 +55,26 @@ export default {
   name: "carteNouvelleColonne",
   components: { carteNouvelleVariable, itemListeVariables },
   mixins: [mixinIPA, mixinLangues],
-  data: function() {
+  data: function () {
     return {
       idVariable: null,
-      variablesDisponible: []
+      variablesDisponible: [],
     };
   },
   methods: {
-    creerColonne: async function() {
+    creerColonne: async function () {
       this.$emit("creerColonne", { idVariable: this.idVariable });
     },
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       const oublierVariables = await this.$ipa.variables.suivreVariables(
-        variables => {
+        (variables) => {
           this.variablesDisponible = variables;
         }
       );
 
       this.suivre([oublierVariables]);
-    }
-  }
+    },
+  },
 };
 </script>
 

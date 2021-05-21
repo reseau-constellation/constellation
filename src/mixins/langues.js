@@ -3,7 +3,7 @@ import {
   rubiChabäl as nomDeLangue,
   rucholanemTzibanem as orientationÉcriture,
   retamabälChabäl as infoLangues,
-  runukChabäl as codeLangue
+  runukChabäl as codeLangue,
 } from "nuchabal";
 import { எண்ணுக்கு as texteÀChiffre, உரைக்கு as chiffreÀTexte } from "ennikkai";
 import { mapGetters } from "vuex";
@@ -11,24 +11,24 @@ import { mapGetters } from "vuex";
 const ORIG = "fr";
 
 export default {
-  data: function() {
+  data: function () {
     return {
-      orig: ORIG
+      orig: ORIG,
     };
   },
   computed: {
-    langue: function() {
+    langue: function () {
       return this.$i18n.locale;
     },
-    languesPréférées: function() {
+    languesPréférées: function () {
       return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
     },
-    langues: function() {
+    langues: function () {
       const liste_langues = [
         ...new Set([
           ...Object.keys(infoLangues),
-          ...Object.keys(this.$i18n.messages)
-        ])
+          ...Object.keys(this.$i18n.messages),
+        ]),
       ];
       return liste_langues.sort((a, b) => {
         return b === this.orig ? 1 : this.progrès(a) < this.progrès(b) ? 1 : -1;
@@ -38,14 +38,14 @@ export default {
       return Object.keys(infoLangues);
     },
     ...mapGetters({
-      systèmeNumération: "paramètres/systèmeNumération"
-    })
+      systèmeNumération: "paramètres/systèmeNumération",
+    }),
   },
   methods: {
     nomDeLangue,
     chiffreÀTexte,
     texteÀChiffre,
-    droiteÀGauche: function(langue) {
+    droiteÀGauche: function (langue) {
       const orientation = orientationÉcriture(écriture(langue));
       return Boolean(orientation && orientation.includes("←"));
     },
@@ -56,7 +56,7 @@ export default {
       this.$vuetify.rtl = this.droiteÀGauche(lng);
       this.$store.commit("paramètres/changerLangue", { langue: lng });
     },
-    progrès: function(lng) {
+    progrès: function (lng) {
       const messages = this.$i18n.messages;
       const extraireMessages = (d, préc) => {
         let msgs = [];
@@ -74,17 +74,17 @@ export default {
       const messagesLng = new Set(
         messages[lng] ? extraireMessages(messages[lng]) : []
       );
-      const communs = messagesOrig.filter(c => messagesLng.has(c));
+      const communs = messagesOrig.filter((c) => messagesLng.has(c));
       return communs.length / messagesOrig.length;
     },
-    changerNumération: function(système) {
+    changerNumération: function (système) {
       this.$store.commit("paramètres/changerNumération", { système: système });
     },
-    formatterChiffre: function(n) {
+    formatterChiffre: function (n) {
       return chiffreÀTexte(n, this.systèmeNumération);
     },
-    formatterDate: function(val) {
-      return new Date(val).toLocaleDateString(this.$i18n.locale)
+    formatterDate: function (val) {
+      return new Date(val).toLocaleDateString(this.$i18n.locale);
     },
-  }
+  },
 };

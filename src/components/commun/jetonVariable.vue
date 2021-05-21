@@ -21,42 +21,42 @@ export default {
   props: ["id"],
   components: { carteVariable },
   mixins: [mixinLangues, mixinIPA],
-  data: function() {
+  data: function () {
     return {
       noms: {},
-      catégorie: undefined
+      catégorie: undefined,
     };
   },
   computed: {
-    nom: function() {
+    nom: function () {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : this.id.replace(/^\/orbitdb\//, "");
     },
-    icôneCatégorie: function() {
+    icôneCatégorie: function () {
       return icôneCatégorieVariable(this.catégorie);
-    }
+    },
   },
   methods: {
     couper,
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.variables.suivreNomsVariable(
         this.id,
-        noms => {
+        (noms) => {
           this.noms = noms;
         }
       );
 
       const oublierCatégorie = await this.$ipa.variables.suivreCatégorieVariable(
         this.id,
-        catégorie => {
+        (catégorie) => {
           this.catégorie = catégorie;
         }
       );
 
       this.suivre([oublierNoms, oublierCatégorie]);
-    }
-  }
+    },
+  },
 };
 </script>
 

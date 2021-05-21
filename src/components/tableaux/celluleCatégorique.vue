@@ -26,12 +26,12 @@ import { couper } from "@/utils";
 export default {
   name: "celluleCatégorique",
   props: ["val", "editer", "couleurActive"],
-  data: function() {
+  data: function () {
     return {
-      valÉditée: this.val
+      valÉditée: this.val,
     };
   },
-  methods: { couper }
+  methods: { couper },
 };
 </script>
 

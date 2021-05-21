@@ -1,6 +1,6 @@
 import ClientConstellation, {
   schémaFonctionSuivi,
-  schémaFonctionOublier
+  schémaFonctionOublier,
 } from "./client";
 
 interface EntréeFavoris {
@@ -9,18 +9,18 @@ interface EntréeFavoris {
 
 export default class Favoris {
   client: ClientConstellation;
-  idBD: string;
+  idBd: string;
 
   constructor(client: ClientConstellation, id: string) {
     this.client = client;
-    this.idBD = id;
+    this.idBd = id;
   }
 
   async suivreFavoris(
     f: schémaFonctionSuivi,
     idBdRacine?: string
   ): Promise<schémaFonctionOublier> {
-    idBdRacine = idBdRacine || this.idBD;
+    idBdRacine = idBdRacine || this.idBd;
     const fFinale = (listeFavoris: EntréeFavoris[]) => {
       f(listeFavoris.map((x: EntréeFavoris) => x.id));
     };
@@ -29,13 +29,13 @@ export default class Favoris {
 
   async épinglerFavori(id: string): Promise<void> {
     const existante = await this.client.rechercherBdListe(
-      this.idBD,
+      this.idBd,
       (e: any) => e.payload.value.id === id
     );
     if (!existante) {
-      const bdRacine = await this.client.ouvrirBD(this.idBD);
+      const bdRacine = await this.client.ouvrirBD(this.idBd);
       const élément = {
-        id: id
+        id: id,
       };
       await bdRacine.add(élément);
     }
@@ -43,11 +43,11 @@ export default class Favoris {
 
   async désépinglerFavori(id: string): Promise<void> {
     const existante = await this.client.rechercherBdListe(
-      this.idBD,
+      this.idBd,
       (e: any) => e.payload.value.id === id
     );
     if (existante) {
-      const bdRacine = await this.client.ouvrirBD(this.idBD);
+      const bdRacine = await this.client.ouvrirBD(this.idBd);
       await bdRacine.remove(existante.hash);
     }
   }
@@ -59,6 +59,6 @@ export default class Favoris {
     const fFinale = (favoris: EntréeFavoris[]) => {
       f(favoris.map((x: EntréeFavoris) => x.id).includes(id));
     };
-    return await this.client.suivreBdListe(this.idBD, fFinale);
+    return await this.client.suivreBdListe(this.idBd, fFinale);
   }
 }

@@ -36,25 +36,25 @@ export default {
   name: "Compte",
   components: { titre, réseau, thème, paramètres },
   mixins: [mixinImage, mixinIPA],
-  data: function() {
+  data: function () {
     return {
       onglet: null,
-      imageCompte: null
+      imageCompte: null,
     };
   },
   computed: {
-    imageProfil: function() {
+    imageProfil: function () {
       if (this.imageCompte) {
         return this.imageCompte;
       }
       const options = [this.image("profilFemme"), this.image("profilHomme")];
       // Dans le doute, on garde ça équitable :)
       return options[Math.floor(Math.random() * options.length)];
-    }
+    },
   },
   methods: {
-    initialiserSuivi: async function() {
-      const oublierImage = await this.$ipa.compte.suivreImage(image => {
+    initialiserSuivi: async function () {
+      const oublierImage = await this.$ipa.compte.suivreImage((image) => {
         if (image) {
           const url = URL.createObjectURL(
             new Blob([image.buffer], { type: "image/png" })
@@ -65,8 +65,8 @@ export default {
         }
       });
       this.suivre(oublierImage);
-    }
-  }
+    },
+  },
 };
 </script>
 

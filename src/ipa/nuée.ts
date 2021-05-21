@@ -27,8 +27,8 @@ export default class Nuée {
         type: "Salut !",
         contenu: {
           id: this.client.idNodeSFIP!.id,
-          racine: this.client._bdRacine.id
-        }
+          racine: this.client._bdRacine.id,
+        },
       };
       prise.write(JSON.stringify(message));
     });
@@ -42,7 +42,6 @@ export default class Nuée {
         if (isValidAddress(message.contenu.racine)) {
           this.client.réseau!.ajouterMembre(message.contenu.racine);
         }
-      // this.client.connecterPoste(message.contenu.id, message.contenu.racine);
     }
   }
 }

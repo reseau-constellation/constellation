@@ -1,3 +1,4 @@
+import OrbitDB from "orbit-db";
 import { AccessControllers } from "orbit-db";
 import { EventEmitter } from "events";
 import path from "path";
@@ -32,10 +33,7 @@ SOFTWARE.
 
 // Make sure the given address has '/_access' as the last part
 const ensureAddress = (address: string) => {
-  const suffix = address
-    .toString()
-    .split("/")
-    .pop();
+  const suffix = address.toString().split("/").pop();
   return suffix === "_access" ? address : path.join(address, "/_access");
 };
 
@@ -103,9 +101,9 @@ class ControlleurConstellation extends EventEmitter {
         ...{
           MODÉRATEUR: new Set([
             ...(capabilities.MODÉRATEUR || []),
-            ...this._db.access._premierMod
-          ])
-        }
+            ...this._db.access._premierMod,
+          ]),
+        },
       }).forEach(toSet);
 
       return capabilities;
@@ -131,9 +129,9 @@ class ControlleurConstellation extends EventEmitter {
       accessController: {
         type: "controlleur-mod-constellation",
         premierMod: this._options.admin || [this._orbitdb.identity.id],
-        membres: true
+        membres: true,
       },
-      sync: true
+      sync: true,
     });
 
     this._db.events.on("ready", this._onUpdate.bind(this));
@@ -146,7 +144,7 @@ class ControlleurConstellation extends EventEmitter {
   async save() {
     // return the manifest data
     return {
-      address: this._db.address.toString()
+      address: this._db.address.toString(),
     };
   }
 
@@ -154,7 +152,7 @@ class ControlleurConstellation extends EventEmitter {
     // Merge current keys with the new key
     const capabilities = new Set([
       ...(this._db.get(capability) || []),
-      ...[key]
+      ...[key],
     ]);
     await this._db.put(capability, Array.from(capabilities.values()));
   }
@@ -295,7 +293,7 @@ class ControlleurModConstellation {
   }
 
   static async create(
-    orbitdb: any,
+    orbitdb: OrbitDB,
     options: OptionsControlleurModConstellation = {}
   ) {
     let premierMod, membres;
@@ -310,16 +308,16 @@ class ControlleurModConstellation {
 
     if (!premierMod) throw new Error("Premier mod nécessaire");
     return new ControlleurModConstellation(premierMod, {
-      membres
+      membres,
     });
   }
 }
 
 AccessControllers.addAccessController({
-  AccessController: ControlleurConstellation
+  AccessController: ControlleurConstellation,
 });
 AccessControllers.addAccessController({
-  AccessController: ControlleurModConstellation
+  AccessController: ControlleurModConstellation,
 });
 
 export default AccessControllers;

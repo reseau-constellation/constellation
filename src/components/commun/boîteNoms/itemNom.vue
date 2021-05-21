@@ -40,24 +40,24 @@ export default {
   name: "itemNom",
   props: ["langueOriginale", "nomOriginal"],
   mixins: [mixinLangues],
-  data: function() {
+  data: function () {
     return {
       lng: "",
-      nom: ""
+      nom: "",
     };
   },
   computed: {
-    itemsLangues: function() {
-      return this.langues.map(code => {
+    itemsLangues: function () {
+      return this.langues.map((code) => {
         return {
           text: this.nomDeLangue(code) || code,
-          value: code
+          value: code,
         };
       });
-    }
+    },
   },
   methods: {
-    sauvegarder: function() {
+    sauvegarder: function () {
       if (this.lng === this.langueOriginale && this.nom === this.nomOriginal)
         return;
       if (this.lng !== this.langueOriginale) this.effacer();
@@ -67,21 +67,21 @@ export default {
         this.$emit("sauvegarder", { langue: this.lng, nom: this.nom });
       }
     },
-    changerLangue: function() {
+    changerLangue: function () {
       this.$emit("changerLangue", {
         langueOriginale: this.langueOriginale,
         langue: this.lng,
-        nom: this.nom
+        nom: this.nom,
       });
     },
-    effacer: function() {
+    effacer: function () {
       this.$emit("effacer", { langue: this.lng });
-    }
+    },
   },
-  mounted: function() {
+  mounted: function () {
     this.lng = this.langueOriginale;
     this.nom = this.nomOriginal;
-  }
+  },
 };
 </script>
 

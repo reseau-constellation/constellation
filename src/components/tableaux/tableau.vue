@@ -85,74 +85,77 @@
           v-else-if="c.catégorie === 'date'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success': 'primary'"
+          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
           :editer="éditer || item.premièreLigne"
-          @edite="e => valÉditée(item.empreinte, c.value, e.val)"
+          @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleDateEtHeure
           v-else-if="c.catégorie === 'dateEtHeure'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success': 'primary'"
+          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
           :editer="éditer || item.premièreLigne"
-          @edite="e => valÉditée(item.empreinte, c.value, e.val)"
+          @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleHeure
           v-else-if="c.catégorie === 'heure'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success': 'primary'"
+          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
           :editer="éditer || item.premièreLigne"
-          @edite="e => valÉditée(item.empreinte, c.value, e.val)"
+          @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleNumérique
           v-else-if="c.catégorie === 'numérique'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success': 'primary'"
+          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
           :editer="éditer || item.premièreLigne"
-          @edite="e => valÉditée(item.empreinte, c.value, e.val)"
+          @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleBooléenne
           v-else-if="c.catégorie === 'booléen'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success': 'primary'"
+          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
           :editer="éditer || item.premièreLigne"
-          @edite="e => valÉditée(item.empreinte, c.value, e.val)"
+          @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleChaîne
           v-else-if="c.catégorie === 'chaîne'"
           :key="c.value"
           :val="item[c.value]"
           :empreinte="item.empreinte"
-          :couleurActive="item.premièreLigne ? 'success': 'primary'"
+          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
           :editer="éditer || item.premièreLigne"
-          @edite="e => valÉditée(item.empreinte, c.value, e.val)"
+          @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleGéoJSON
           v-else-if="c.catégorie === 'géojson'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success': 'primary'"
+          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
           :editer="éditer || item.premièreLigne"
-          @edite="e => valÉditée(item.empreinte, c.value, e.val)"
+          @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleCatégorique
           v-else-if="c.catégorie === 'catégorique'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success': 'primary'"
+          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
           :editer="éditer || item.premièreLigne"
-          @edite="e => valÉditée(item.empreinte, c.value, e.val)"
+          @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleFichier
-          v-else-if="c.catégorie === 'fichier'"
+          v-else-if="
+            ['fichier', 'vidéo', 'photo', 'audio'].includes(c.catégorie)
+          "
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success': 'primary'"
+          :type="c.catégorie"
+          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
           :editer="éditer || item.premièreLigne"
-          @edite="e => valÉditée(item.empreinte, c.value, e.val)"
+          @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
       </template>
     </v-data-table>
@@ -190,42 +193,42 @@ export default {
     celluleFichier,
     celluleDate,
     celluleDateEtHeure,
-    celluleHeure
+    celluleHeure,
   },
   mixins: [mixinLangues, mixinIPA],
-  data: function() {
+  data: function () {
     return {
       permissionÉcrire: false,
       colonnes: null,
       données: null,
       nouvelleLigne: false,
       éditer: false,
-      valsNouvelleLigne: {}
+      valsNouvelleLigne: {},
     };
   },
   computed: {
-    idTableau: function() {
+    idTableau: function () {
       return decodeURIComponent(this.$route.params.idTableau);
     },
-    entête: function() {
+    entête: function () {
       const cols = this.colonnes || [];
-      const entêtes = cols.map(x => {
+      const entêtes = cols.map((x) => {
         return {
           text: x.variable,
           value: x.id,
-          catégorie: x.catégorie
+          catégorie: x.catégorie,
         };
       });
       if (this.permissionÉcrire) {
         entêtes.push({
           text: "",
           value: "actions",
-          sortable: false
+          sortable: false,
         });
       }
       return entêtes;
     },
-    éléments: function() {
+    éléments: function () {
       const données = (this.données || []).sort((x, y) =>
         x.id > y.id ? 1 : -1
       );
@@ -241,20 +244,20 @@ export default {
       } else {
         return données;
       }
-    }
+    },
   },
   methods: {
-    creerColonne: async function({ idVariable }) {
+    creerColonne: async function ({ idVariable }) {
       await this.$ipa.tableaux.ajouterColonneTableau(
         this.idTableau,
         idVariable
       );
     },
 
-    valÉditée: function(empreinte, variable, val) {
+    valÉditée: function (empreinte, variable, val) {
       if (empreinte === -1) {
         this.valsNouvelleLigne = Object.assign({}, this.valsNouvelleLigne, {
-          [variable]: val
+          [variable]: val,
         });
       } else {
         this.$ipa.tableaux.modifierÉlément(
@@ -265,38 +268,38 @@ export default {
       }
     },
 
-    ajouterÉlément: function() {
+    ajouterÉlément: function () {
       this.$ipa.tableaux.ajouterÉlément(this.idTableau, this.valsNouvelleLigne);
       this.nouvelleLigne = false;
       this.valsLigneActive = {};
     },
 
-    effacerÉlément: async function(empreinte) {
+    effacerÉlément: async function (empreinte) {
       await this.$ipa.tableaux.effacerÉlément(this.idTableau, empreinte);
     },
 
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);
 
       const oublierColonnes = await this.$ipa.tableaux.suivreColonnes(
         this.idTableau,
-        cols => {
+        (cols) => {
           this.colonnes = cols;
         }
       );
 
       const oublierDonnées = await this.$ipa.tableaux.suivreDonnées(
         this.idTableau,
-        données => {
-          this.données = données.map(x => {
+        (données) => {
+          this.données = données.map((x) => {
             return { ...x.payload.value, empreinte: x.hash };
           });
         }
       );
 
       this.suivre([oublierColonnes, oublierDonnées]);
-    }
-  }
+    },
+  },
 };
 </script>
 

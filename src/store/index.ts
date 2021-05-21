@@ -10,5 +10,5 @@ const vuexLocal = new VuexPersistence();
 
 export default new Vuex.Store({
   modules: { conditions, paramètres },
-  plugins: [vuexLocal.plugin]
+  plugins: [vuexLocal.plugin],
 });

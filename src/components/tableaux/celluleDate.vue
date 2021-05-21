@@ -23,23 +23,23 @@ export default {
   name: "celluleDate",
   props: ["val", "editer", "couleurActive"],
   mixins: [mixinLangues],
-  data: function() {
+  data: function () {
     return {
-      valÉditée: this.val
+      valÉditée: this.val,
     };
   },
   watch: {
-    val: function(val) {
+    val: function (val) {
       this.valÉditée = val;
-    }
+    },
   },
   methods: {
-    actionModifié: function() {
+    actionModifié: function () {
       if (this.val !== this.valÉditée) {
         this.$emit("edite", { val: this.valÉditée });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

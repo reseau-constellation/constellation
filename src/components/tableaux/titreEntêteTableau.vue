@@ -20,30 +20,30 @@ export default {
   props: ["idVariable", "idColonne"],
   mixins: [mixinLangues, mixinIPA],
   components: { carteVariable },
-  data: function() {
+  data: function () {
     return {
-      noms: {}
+      noms: {},
     };
   },
   computed: {
-    titre: function() {
+    titre: function () {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : this.idColonne;
-    }
+    },
   },
   methods: {
     couper,
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.variables.suivreNomsVariable(
         this.idVariable,
-        noms => {
+        (noms) => {
           this.noms = noms;
         }
       );
       this.suivre([oublierNoms]);
-    }
-  }
+    },
+  },
 };
 </script>
 

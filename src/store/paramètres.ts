@@ -6,7 +6,7 @@ export default {
     langue: null,
     numération: null,
     thèmeImages: "unDraw",
-    thèmeNuit: false
+    thèmeNuit: false,
   },
   mutations: {
     changerNumération(state: any, payload: { système: string }) {
@@ -20,14 +20,14 @@ export default {
     },
     changerThèmeNuit(state: any, payload: { val: string }) {
       state.thèmeNuit = payload.val;
-    }
+    },
   },
   actions: {},
   getters: {
     systèmeNumération: (state: any) => {
       const num = state.numération;
       return num === null ? numLangue(state.langue) || "latin" : num;
-    }
+    },
   },
-  modules: {}
+  modules: {},
 };

@@ -27,7 +27,7 @@ import { rubiChabäl as codeÀNomLangue } from "nuchabal";
 export default {
   name: "opsLangue",
   props: ["sélectionnée", "progrès", "code"],
-  methods: { codeÀNomLangue }
+  methods: { codeÀNomLangue },
 };
 </script>
 

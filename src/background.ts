@@ -19,11 +19,11 @@ const startIpfs = () => {
     config: {
       Addresses: {
         Swarm: [
-          "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/"
-        ]
+          "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/",
+        ],
         // "Bootstrap": []
-      }
-    }
+      },
+    },
   });
   return ipfs;
 };
@@ -69,7 +69,7 @@ ipcMain.handle("obt-url-sfip-http", async (event) => {
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } }
+  { scheme: "app", privileges: { secure: true, standard: true } },
 ]);
 
 async function createWindow() {
@@ -95,8 +95,8 @@ async function createWindow() {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: (process.env
-        .ELECTRON_NODE_INTEGRATION as unknown) as boolean
-    }
+        .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
+    },
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -120,7 +120,7 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on("will-quit", e => {
+app.on("will-quit", (e) => {
   e.preventDefault();
   shutdown();
 });
@@ -133,7 +133,7 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
-process.on("uncaughtException", error => {
+process.on("uncaughtException", (error) => {
   // Skip 'ctrl-c' error and shutdown gracefully
   const match = String(error).match(/non-zero exit code 255/);
   if (match) shutdown();
@@ -158,7 +158,7 @@ app.on("ready", async () => {
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === "win32") {
-    process.on("message", data => {
+    process.on("message", (data) => {
       if (data === "graceful-exit") {
         app.quit();
       }

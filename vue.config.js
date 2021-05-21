@@ -5,7 +5,7 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       nodeIntegration: true,
-      externals: ["ipfs", "ipfs-daemon"]
-    }
-  }
+      externals: ["ipfs", "ipfs-daemon"],
+    },
+  },
 };

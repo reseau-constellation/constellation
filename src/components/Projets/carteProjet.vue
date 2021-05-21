@@ -88,11 +88,11 @@ export default {
   name: "carteProjet",
   props: ["projet"],
   computed: {
-    nom: function() {
+    nom: function () {
       const lngs = [this.$i18n.locale, ...this.$i18n.fallbackLocale];
       return traduireNom(this.projet.nom, lngs);
-    }
-  }
+    },
+  },
 };
 </script>
 

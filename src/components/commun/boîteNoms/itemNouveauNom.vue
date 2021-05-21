@@ -21,7 +21,8 @@
             outlined
             dense
             hide-details
-          ></v-text-field>
+            @keydown.enter="ajouter(langueNouveauNom, nouveauNom)"
+          />
         </v-col>
       </v-row>
     </v-list-item-content>
@@ -46,32 +47,32 @@ export default {
   name: "itemNouveauNom",
   props: ["languesExistantes", "etiquetteLangue", "etiquetteNom"],
   mixins: [mixinLangues],
-  data: function() {
+  data: function () {
     return {
       langueNouveauNom: null,
-      nouveauNom: null
+      nouveauNom: null,
     };
   },
   computed: {
-    itemsLangues: function() {
+    itemsLangues: function () {
       return this.langues
-        .filter(lng => {
+        .filter((lng) => {
           return !this.languesExistantes.includes(lng);
         })
-        .map(code => {
+        .map((code) => {
           return {
             text: this.nomDeLangue(code) || code,
-            value: code
+            value: code,
           };
         });
-    }
+    },
   },
   methods: {
     ajouter(langue, nom) {
       this.$emit("sauvegarder", { langue, nom });
       this.langueNouveauNom = this.nouveauNom = "";
-    }
-  }
+    },
+  },
 };
 </script>
 

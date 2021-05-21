@@ -31,12 +31,12 @@ import { ouvrirLien } from "@/utils";
 
 export default {
   name: "messageInstaller",
-  data: function() {
+  data: function () {
     return {
-      visible: !isElectron()
+      visible: !isElectron(),
     };
   },
-  methods: { ouvrirLien }
+  methods: { ouvrirLien },
 };
 </script>
 

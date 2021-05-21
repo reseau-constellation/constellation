@@ -4,8 +4,8 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
 import vuetify, { i18n } from "./plugins/vuetify";
-import VuePlyr from 'vue-plyr'
-import 'vue-plyr/dist/vue-plyr.css'
+import VuePlyr from "vue-plyr";
+import "vue-plyr/dist/vue-plyr.css";
 import clientIPA from "./plugins/ipa";
 
 Vue.config.productionTip = false;
@@ -17,5 +17,5 @@ new Vue({
   store,
   vuetify,
   i18n,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");

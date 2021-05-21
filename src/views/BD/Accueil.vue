@@ -57,19 +57,19 @@ export default {
   name: "BD",
   components: { carteBd, Titre },
   mixins: [mixinIPA],
-  data: function() {
+  data: function () {
     return {
-      idsBds: []
+      idsBds: [],
     };
   },
   methods: {
-    initialiserSuivi: async function() {
-      const oublierListeBDs = await this.$ipa.bds.suivreBDs(bds => {
+    initialiserSuivi: async function () {
+      const oublierListeBDs = await this.$ipa.bds.suivreBDs((bds) => {
         this.idsBds = bds;
       });
       this.suivre(oublierListeBDs);
-    }
-  }
+    },
+  },
 };
 </script>
 

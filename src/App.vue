@@ -21,7 +21,7 @@ export default Vue.extend({
 
   components: {
     Navigation,
-    opsLangue
+    opsLangue,
   },
 
   data: () => ({
@@ -30,12 +30,12 @@ export default Vue.extend({
 
   mixins: [mixinLangue],
 
-  mounted: function() {
+  mounted: function () {
     const langue = this.$store.state.paramètres.langue;
     if (langue) this.changerLangue(langue);
     const thèmeNuit = this.$store.state.paramètres.thèmeNuit;
     this.$vuetify.theme.dark = thèmeNuit;
-  }
+  },
 });
 </script>
 

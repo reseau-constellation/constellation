@@ -58,16 +58,16 @@ import carteProjet from "@/components/Projets/carteProjet";
 export default {
   name: "Projets",
   components: { Titre, carteProjet },
-  data: function() {
+  data: function () {
     return {
-      projets: []
+      projets: [],
     };
   },
-  mounted: async function() {
+  mounted: async function () {
     for await (const prj of obtProjets()) {
       this.projets = [...this.projets, prj];
     }
-  }
+  },
 };
 </script>
 

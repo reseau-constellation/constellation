@@ -20,29 +20,29 @@ export default {
   name: "jetonBd",
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
-  data: function() {
+  data: function () {
     return {
       noms: {},
-      catégorie: undefined
+      catégorie: undefined,
     };
   },
   computed: {
-    nom: function() {
+    nom: function () {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : this.id;
-    }
+    },
   },
   methods: {
     couper,
-    initialiserSuivi: async function() {
-      const oublierNoms = await this.$ipa.bds.suivreNomsBD(this.id, noms => {
+    initialiserSuivi: async function () {
+      const oublierNoms = await this.$ipa.bds.suivreNomsBD(this.id, (noms) => {
         this.noms = noms;
       });
 
       this.suivre([oublierNoms]);
-    }
-  }
+    },
+  },
 };
 </script>
 

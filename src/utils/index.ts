@@ -20,12 +20,12 @@ export function traduireNom(
     if (nom) return nom;
   }
   // Si la langue n'est pas disponible, cherchons quelque chose avec au moins le même alphabet
-  const écrituresVoulues = langues.map(l => {
+  const écrituresVoulues = langues.map((l) => {
     return { écriture: écritureLangue(l), langue: l };
   });
   for (const { langue, écriture } of écrituresVoulues) {
     const langueAlternative = Object.keys(dicNom).find(
-      x => écritureLangue(x) === écriture
+      (x) => écritureLangue(x) === écriture
     );
     if (langueAlternative) return dicNom[langueAlternative];
   }
@@ -51,6 +51,7 @@ export function compilerMarkdown(texte: string) {
 export function téléchargerURL(uri: URL, nom: string) {
   const lien = document.createElement("a");
   lien.download = nom;
+  // @ts-ignore
   lien.href = uri;
   lien.click();
 }
@@ -119,5 +120,5 @@ export const catégoriesVariable = [
   "vidéo",
   "audio",
   "photo",
-  "fichier"
+  "fichier",
 ];

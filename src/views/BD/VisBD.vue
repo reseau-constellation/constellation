@@ -347,10 +347,10 @@ export default {
     lienTélécharger,
     jetonVariable,
     carteQualité,
-    boîteNoms
+    boîteNoms,
   },
   mixins: [mixinImage, mixinLangues, mixinIPA],
-  data: function() {
+  data: function () {
     return {
       dialogue: false,
       licence: null,
@@ -364,73 +364,76 @@ export default {
 
       géog: [],
       motsClefs: [],
-      auteurs: null
+      auteurs: null,
     };
   },
   computed: {
-    langues: function() {
+    langues: function () {
       return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
     },
-    nom: function() {
+    nom: function () {
       return Object.keys(this.nomsBD).length
         ? traduireNom(this.nomsBD, this.langues)
         : this.idBD;
     },
-    descriptions: function() {
+    descriptions: function () {
       return traduireNom(this.descriptionsBD, this.langues);
     },
-    idBD: function() {
+    idBD: function () {
       return decodeURIComponent(this.$route.params.id);
     },
-    petitPousset: function() {
+    petitPousset: function () {
       return [
         { text: "Données", href: "/bd" },
-        { text: couper(this.nom, 35), disabled: true }
+        { text: couper(this.nom, 35), disabled: true },
       ];
     },
-    licenceApprouvée: function() {
+    licenceApprouvée: function () {
       return licences.includes(this.licence);
     },
-    logoBD: function() {
+    logoBD: function () {
       return this.logo || this.image("logoBD");
-    }
+    },
   },
   methods: {
     couper,
     couleurScore,
     ouvrirLien,
-    ajouterTableau: async function() {
+    ajouterTableau: async function () {
       await this.$ipa.bds.ajouterTableauBD(this.idBD);
     },
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBD);
 
       const oublierLicence = await this.$ipa.bds.suivreLicence(
         this.idBD,
-        licence => {
+        (licence) => {
           this.licence = licence;
         }
       );
-      const oublierNoms = await this.$ipa.bds.suivreNomsBD(this.idBD, noms => {
-        this.nomsBD = noms;
-      });
+      const oublierNoms = await this.$ipa.bds.suivreNomsBD(
+        this.idBD,
+        (noms) => {
+          this.nomsBD = noms;
+        }
+      );
       const oublierDescriptions = await this.$ipa.bds.suivreDescrBD(
         this.idBD,
-        descriptions => {
+        (descriptions) => {
           this.descriptionsBD = descriptions;
         }
       );
       const oublierTableaux = await this.$ipa.bds.suivreTableauxBD(
         this.idBD,
-        tableaux => (this.tableaux = tableaux)
+        (tableaux) => (this.tableaux = tableaux)
       );
       const oublierScore = await this.$ipa.bds.suivreScoreBD(
         this.idBD,
-        score => (this.score = score)
+        (score) => (this.score = score)
       );
       const oublierVariables = await this.$ipa.bds.suivreVariablesBd(
         this.idBD,
-        variables => (this.variables = variables)
+        (variables) => (this.variables = variables)
       );
       this.suivre([
         oublierLicence,
@@ -438,10 +441,10 @@ export default {
         oublierDescriptions,
         oublierTableaux,
         oublierScore,
-        oublierVariables
+        oublierVariables,
       ]);
     },
-    effacerBD: async function() {
+    effacerBD: async function () {
       await this.$ipa.bds.effacerBD(this.idBD);
       this.$router.push("/bd");
     },
@@ -464,8 +467,8 @@ export default {
     },
     effacerDescr({ langue }) {
       this.$ipa.compte.effacerDescrBD(langue);
-    }
-  }
+    },
+  },
 };
 </script>
 

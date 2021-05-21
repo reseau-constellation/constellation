@@ -27,9 +27,9 @@
 export default {
   name: "lienOrbit",
   props: ["lien"],
-  data: function() {
+  data: function () {
     return {
-      copié: false
+      copié: false,
     };
   },
   methods: {
@@ -37,8 +37,8 @@ export default {
       if (!navigator.clipboard) return;
       await navigator.clipboard.writeText(texte);
       this.copié = true;
-    }
-  }
+    },
+  },
 };
 </script>
 

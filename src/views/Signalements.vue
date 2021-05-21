@@ -44,7 +44,7 @@ export default {
   name: "Signalements",
   components: { Titre },
   mixins: [mixinImage],
-  methods: { ouvrirLien }
+  methods: { ouvrirLien },
 };
 </script>
 

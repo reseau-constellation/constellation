@@ -88,54 +88,54 @@ import { traduireNom } from "@/utils";
 
 export default {
   name: "ongletParamètresCompte",
-  data: function() {
+  data: function () {
     return {
       image: undefined,
       courrielOrig: "",
       courriel: "",
-      noms: {}
+      noms: {},
     };
   },
   mixins: [mixinIPA],
   components: { boîteNoms },
   computed: {
-    nom: function() {
+    nom: function () {
       const languesPréférées = [this.$i18n.locale];
       return traduireNom(this.noms, languesPréférées);
-    }
+    },
   },
   watch: {
-    image: function(fichier) {
+    image: function (fichier) {
       if (fichier) {
         this.$ipa.compte.sauvegarderImage(fichier);
       } else {
         this.effacerImage();
       }
     },
-    courrielOrig: function(courriel) {
+    courrielOrig: function (courriel) {
       this.courriel = courriel;
-    }
+    },
   },
   methods: {
-    sauvegarderCourriel: function() {
+    sauvegarderCourriel: function () {
       const courriel = this.courriel.trim();
       if (courriel && courriel !== this.courrielOrig) {
         this.$ipa.compte.sauvegarderCourriel(courriel);
       }
     },
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       const oublierCourriel = await this.$ipa.compte.suivreCourriel(
-        courriel => {
+        (courriel) => {
           if (courriel) this.courrielOrig = courriel;
         }
       );
 
-      const oublierNoms = await this.$ipa.compte.suivreNoms(noms => {
+      const oublierNoms = await this.$ipa.compte.suivreNoms((noms) => {
         this.noms = noms;
       });
       this.suivre([oublierCourriel, oublierNoms]);
     },
-    effacerImage: async function() {
+    effacerImage: async function () {
       await this.$ipa.compte.effacerImage();
     },
     sauvegarderNom({ langue, nom }) {
@@ -147,8 +147,8 @@ export default {
     },
     effacerNom({ langue }) {
       this.$ipa.compte.effacerNom(langue);
-    }
-  }
+    },
+  },
 };
 </script>
 

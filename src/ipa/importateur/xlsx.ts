@@ -5,9 +5,9 @@ import xlsx from "xlsx";
 // XLSX.readFile('test.xlsx')
 
 const LETTRES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const séq = (n: number) => Array.from(Array(n).keys()).map(x => x + 1);
+const séq = (n: number) => Array.from(Array(n).keys()).map((x) => x + 1);
 
-const lettreÀNombre = function(lettre: string) {
+const lettreÀNombre = function (lettre: string) {
   let n = 0;
   for (const l in [...lettre]) {
     n *= LETTRES.length;

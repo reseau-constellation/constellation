@@ -15,7 +15,7 @@ import mixinImage from "@/mixins/images";
 export default {
   name: "Compte",
   components: { Titre },
-  mixins: [mixinImage]
+  mixins: [mixinImage],
 };
 </script>
 

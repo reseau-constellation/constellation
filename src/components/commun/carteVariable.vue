@@ -56,7 +56,7 @@
 import {
   traduireNom,
   icôneCatégorieVariable,
-  catégoriesVariable
+  catégoriesVariable,
 } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite";
 import mixinIPA from "@/mixins/ipa";
@@ -68,65 +68,65 @@ export default {
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
   components: { lienOrbite, boîteNoms },
-  data: function() {
+  data: function () {
     return {
       noms: {},
       descriptions: {},
       unités: undefined,
       permissionÉcrire: false,
       catégorie: undefined,
-      catégoriesVariable
+      catégoriesVariable,
     };
   },
   computed: {
-    nom: function() {
+    nom: function () {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : this.id;
     },
-    description: function() {
+    description: function () {
       return Object.keys(this.descriptions).length
         ? traduireNom(this.descriptions, this.languesPréférées)
         : "";
     },
-    icôneCatégorie: function() {
+    icôneCatégorie: function () {
       return icôneCatégorieVariable(this.catégorie);
-    }
+    },
   },
   methods: {
-    sauvegarderCategorie: async function(catégorie) {
+    sauvegarderCategorie: async function (catégorie) {
       await this.$ipa.variables.sauvegarderCatégorieVariable(
         this.id,
         catégorie
       );
     },
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.id);
 
       const oublierNoms = await this.$ipa.variables.suivreNomsVariable(
         this.id,
-        noms => {
+        (noms) => {
           this.noms = noms;
         }
       );
 
       const oublierDescriptions = await this.$ipa.variables.suivreDescrVariable(
         this.id,
-        descrs => {
+        (descrs) => {
           this.descriptions = descrs;
         }
       );
 
       const oublierCatégorie = await this.$ipa.variables.suivreCatégorieVariable(
         this.id,
-        catégorie => {
+        (catégorie) => {
           this.catégorie = catégorie;
         }
       );
 
       const oublierUnités = await this.$ipa.variables.suivreUnitésVariable(
         this.id,
-        unités => {
+        (unités) => {
           this.unités = unités;
         }
       );
@@ -135,10 +135,10 @@ export default {
         oublierNoms,
         oublierDescriptions,
         oublierCatégorie,
-        oublierUnités
+        oublierUnités,
       ]);
-    }
-  }
+    },
+  },
 };
 </script>
 

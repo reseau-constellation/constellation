@@ -93,7 +93,7 @@ export default {
   props: ["bd"],
   components: { lienOrbite },
   mixins: [mixinIPA],
-  data: function() {
+  data: function () {
     return {
       épinglée: null,
       licence: null,
@@ -101,65 +101,68 @@ export default {
       score: null,
       nomsBD: {},
       détailsBD: {},
-      variables: []
+      variables: [],
     };
   },
   computed: {
-    idBD: function() {
+    idBD: function () {
       return decodeURIComponent(this.bd);
     },
-    langues: function() {
+    langues: function () {
       return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
     },
-    nom: function() {
+    nom: function () {
       return Object.keys(this.nomsBD).length
         ? traduireNom(this.nomsBD, this.langues)
         : this.idBD;
     },
-    détails: function() {
+    détails: function () {
       return traduireNom(this.détailsBD, this.langues);
     },
-    licenceApprouvée: function() {
+    licenceApprouvée: function () {
       return this.licence && licences.includes(this.licence);
-    }
+    },
   },
   methods: {
     couper,
     ouvrirLien,
     couleurScore,
-    épingler: async function() {
+    épingler: async function () {
       await this.$ipa.favoris.épinglerFavori(this.bd);
     },
-    désépingler: async function() {
+    désépingler: async function () {
       await this.$ipa.favoris.désépinglerFavori(this.bd);
     },
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       const oublierLicence = await this.$ipa.bds.suivreLicence(
         this.idBD,
-        licence => {
+        (licence) => {
           this.licence = licence;
         }
       );
-      const oublierNoms = await this.$ipa.bds.suivreNomsBD(this.idBD, noms => {
-        this.nomsBD = noms;
-      });
+      const oublierNoms = await this.$ipa.bds.suivreNomsBD(
+        this.idBD,
+        (noms) => {
+          this.nomsBD = noms;
+        }
+      );
       const oublierDétails = await this.$ipa.bds.suivreDescrBD(
         this.idBD,
-        détails => {
+        (détails) => {
           this.détailsBD = détails;
         }
       );
       const oublierScore = await this.$ipa.bds.suivreScoreBD(
         this.idBD,
-        score => (this.score = score)
+        (score) => (this.score = score)
       );
       const oublierFavori = await this.$ipa.favoris.suivreÉtatFavori(
         this.idBD,
-        épinglée => (this.épinglée = épinglée)
+        (épinglée) => (this.épinglée = épinglée)
       );
       this.suivre([oublierLicence, oublierNoms, oublierDétails, oublierScore]);
-    }
-  }
+    },
+  },
 };
 </script>
 

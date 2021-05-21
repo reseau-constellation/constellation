@@ -42,7 +42,7 @@ export default {
     liens: [
       {
         page: "compte",
-        icône: "mdi-account"
+        icône: "mdi-account",
       },
       /*
       {
@@ -52,26 +52,26 @@ export default {
       */
       {
         page: "bd",
-        icône: "mdi-database"
+        icône: "mdi-database",
       },
       {
         page: "recherche",
-        icône: "mdi-magnify"
+        icône: "mdi-magnify",
       },
       {
         page: "favoris",
-        icône: "mdi-pin"
+        icône: "mdi-pin",
       },
       {
         page: "automation",
-        icône: "mdi-sync"
+        icône: "mdi-sync",
       },
       {
         page: "signalements",
-        icône: "mdi-bug"
-      }
-    ]
-  })
+        icône: "mdi-bug",
+      },
+    ],
+  }),
 };
 </script>
 

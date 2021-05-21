@@ -14,7 +14,7 @@
         v-if="noms"
         dense
         class="overflow-y-auto"
-        style="max-height: 200px"
+        style="max-height: 200px;"
       >
         <v-list-item v-for="l in Object.keys(noms)" :key="l">
           <v-row>
@@ -40,21 +40,21 @@ export default {
   name: "carteVariable",
   props: ["id"],
   components: { lienOrbite },
-  data: function() {
+  data: function () {
     return {
       noms: null,
-      détails: null
+      détails: null,
     };
   },
   computed: {
-    langues: function() {
+    langues: function () {
       return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
     },
-    nom: function() {
+    nom: function () {
       return this.noms ? traduireNom(this.noms, this.langues) : this.id;
-    }
+    },
   },
-  methods: { codeÀNomLangue }
+  methods: { codeÀNomLangue },
 };
 </script>
 

@@ -1,14 +1,17 @@
 import { v4 as uuidv4 } from "uuid";
 import ClientConstellation, {
   schémaFonctionSuivi,
-  schémaFonctionOublier
+  schémaFonctionOublier,
 } from "./client";
 
-export function élémentsÉgaux(élément1, élément2): boolean {
+export function élémentsÉgaux(
+  élément1: { [key: string]: any },
+  élément2: { [key: string]: any }
+): boolean {
   const clefs1 = Object.keys(élément1);
   const clefs2 = Object.keys(élément2);
-  if (!clefs1.every(x => élément1[x] === élément2[x])) return false;
-  if (!clefs2.every(x => élément1[x] === élément2[x])) return false;
+  if (!clefs1.every((x) => élément1[x] === élément2[x])) return false;
+  if (!clefs2.every((x) => élément1[x] === élément2[x])) return false;
   return true;
 }
 
@@ -28,8 +31,12 @@ export default class Tableaux {
     idTableau: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
-    return await this.client.suivreBdListe(idBdDonnées, f, false);
+    return await this.client.suivreBdListeDeClef(
+      idTableau,
+      "données",
+      f,
+      false
+    );
   }
 
   async ajouterÉlément(
@@ -37,6 +44,9 @@ export default class Tableaux {
     vals: { [key: string]: any }
   ): Promise<string> {
     const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
+    if (!idBdDonnées)
+      throw `Permission de modification refusée pour BD ${idTableau}.`;
+
     const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
     vals = await this.vérifierClefsÉlément(idTableau, vals);
     const id = uuidv4();
@@ -49,6 +59,9 @@ export default class Tableaux {
     empreintePrécédente: string
   ): Promise<string | void> {
     const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
+    if (!idBdDonnées)
+      throw `Permission de modification refusée pour BD ${idTableau}.`;
+
     const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
 
     const précédent = bdDonnées
@@ -65,10 +78,11 @@ export default class Tableaux {
     élément = await this.vérifierClefsÉlément(idTableau, élément);
 
     if (!élémentsÉgaux(élément, précédent)) {
-      return await Promise.all([
+      const résultat = await Promise.all([
         bdDonnées.remove(empreintePrécédente),
-        bdDonnées.add(élément)
+        bdDonnées.add(élément),
       ]);
+      return résultat[1];
     }
     return Promise.resolve();
   }
@@ -82,6 +96,9 @@ export default class Tableaux {
       idTableau,
       "feed"
     );
+    if (!idBdColonnes)
+      throw `Permission de modification refusée pour BD ${idTableau}.`;
+
     const bdColonnes = await this.client.ouvrirBD(idBdColonnes);
     const idsColonnes: string[] = bdColonnes
       .iterator({ limit: -1 })
@@ -99,12 +116,17 @@ export default class Tableaux {
     empreinteÉlément: string
   ): Promise<void> {
     const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
+    if (!idBdDonnées)
+      throw `Permission de modification refusée pour BD ${idTableau}.`;
+
     const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
     await bdDonnées.remove(empreinteÉlément);
   }
 
   async ajouterNomsTableau(id: string, noms: { [key: string]: string }) {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
+    if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
+
     const bdNoms = await this.client.ouvrirBD(idBdNoms);
     for (const lng in noms) {
       await bdNoms.set(lng, noms[lng]);
@@ -113,12 +135,16 @@ export default class Tableaux {
 
   async sauvegarderNomTableau(id: string, langue: string, nom: string) {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
+    if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
+
     const bdNoms = await this.client.ouvrirBD(idBdNoms);
     await bdNoms.set(langue, nom);
   }
 
   async effacerNomTableau(id: string, langue: string) {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
+    if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
+
     const bdNoms = await this.client.ouvrirBD(idBdNoms);
     await bdNoms.del(langue);
   }
@@ -127,7 +153,7 @@ export default class Tableaux {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBdDic(id, "noms", f);
+    return await this.client.suivreBdDicDeClef(id, "noms", f);
   }
 
   async ajouterColonneTableau(idTableau: string, idVariable: string) {
@@ -136,10 +162,13 @@ export default class Tableaux {
       idTableau,
       "feed"
     );
+    if (!idBdColonnes)
+      throw `Permission de modification refusée pour BD ${idTableau}.`;
+
     const bdColonnes = await this.client.ouvrirBD(idBdColonnes);
     const entrée = {
       id: uuidv4(),
-      variable: idVariable
+      variable: idVariable,
     };
     await bdColonnes.add(entrée);
   }
@@ -172,7 +201,7 @@ export default class Tableaux {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.suivreColonnes(id, async liste => {
+    return await this.suivreColonnes(id, async (liste) => {
       const variables = liste.map((x: any) => x.variable);
       return f(variables);
     });

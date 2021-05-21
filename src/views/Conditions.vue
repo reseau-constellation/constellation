@@ -14,7 +14,7 @@
           <v-checkbox
             v-model="acceptées"
             :label="$t('conditions.jaccepte')"
-            @change="e => accepter(e)"
+            @change="(e) => accepter(e)"
           />
           <v-btn
             color="primary"
@@ -41,90 +41,90 @@ export default {
   name: "Favoris",
   components: { Titre },
   mixins: [mixinImage],
-  data: function() {
+  data: function () {
     return {
       acceptées: this.$store.state.conditions.acceptées,
       conditions: [
         {
           genre: "p",
-          texte: "p0_1"
+          texte: "p0_1",
         },
         {
           genre: "p",
-          texte: "p0_2"
+          texte: "p0_2",
         },
         {
           genre: "p",
-          texte: "p0_3"
+          texte: "p0_3",
         },
         {
-          genre: "b"
+          genre: "b",
         },
         {
           genre: "t",
-          texte: "t1"
+          texte: "t1",
         },
         {
           genre: "p",
-          texte: "p1_1"
+          texte: "p1_1",
         },
         {
           genre: "p",
-          texte: "p1_2"
+          texte: "p1_2",
         },
         {
           genre: "t",
-          texte: "t2"
+          texte: "t2",
         },
         {
           genre: "p",
-          texte: "p2_1"
+          texte: "p2_1",
         },
         {
           genre: "p",
-          texte: "p2_2"
+          texte: "p2_2",
         },
         {
           genre: "p",
-          texte: "p2_3"
+          texte: "p2_3",
         },
         {
           genre: "t",
-          texte: "t3"
+          texte: "t3",
         },
         {
           genre: "p",
-          texte: "p3_1"
+          texte: "p3_1",
         },
         {
           genre: "p",
-          texte: "p3_2"
+          texte: "p3_2",
         },
         {
           genre: "p",
-          texte: "p3_3"
+          texte: "p3_3",
         },
         {
           genre: "t",
-          texte: "t4"
+          texte: "t4",
         },
         {
           genre: "p",
-          texte: "p4_1"
+          texte: "p4_1",
         },
         {
           genre: "p",
-          texte: "p4_2"
-        }
-      ]
+          texte: "p4_2",
+        },
+      ],
     };
   },
   methods: {
     compilerMarkdown,
-    accepter: function(acceptées) {
+    accepter: function (acceptées) {
       this.$store.commit("conditions/accepterConditions", { acceptées });
-    }
-  }
+    },
+  },
 };
 </script>
 

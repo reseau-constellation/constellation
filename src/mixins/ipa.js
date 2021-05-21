@@ -1,8 +1,8 @@
 export default {
-  data: function() {
+  data: function () {
     return {
       crochets: [],
-      crochetIPA: null
+      crochetIPA: null,
     };
   },
   methods: {
@@ -11,9 +11,9 @@ export default {
         crochet = [crochet];
       }
       this.crochets = [...crochet, ...this.crochets];
-    }
+    },
   },
-  mounted: function() {
+  mounted: function () {
     this.crochetIPA = this.initialiserSuivi.bind(this);
     this.$ipa.on("pret", this.crochetIPA);
     if (this.$ipa.pret) {
@@ -22,6 +22,6 @@ export default {
   },
   destroyed() {
     this.$ipa.off("pret", this.crochetIPA);
-    this.crochets.map(c => c());
-  }
+    this.crochets.map((c) => c());
+  },
 };

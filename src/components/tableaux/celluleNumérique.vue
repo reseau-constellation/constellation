@@ -2,7 +2,7 @@
   <v-menu offset-x :close-on-content-click="false" :disabled="!editer">
     <template v-slot:activator="{ on, attrs }">
       <span v-bind="attrs" v-on="on">
-        <span v-if="val !== undefined" :class="{'primary--text': editer }">
+        <span v-if="val !== undefined" :class="{ 'primary--text': editer }">
           {{ formatterChiffre(val) }}
         </span>
         <v-btn small icon v-else-if="editer">
@@ -25,11 +25,7 @@
           >
             <v-icon>mdi-check</v-icon>
           </v-btn>
-          <v-btn
-            icon
-            :disabled="valsÉgales"
-            @click="() => réinitialiser()"
-          >
+          <v-btn icon :disabled="valsÉgales" @click="() => réinitialiser()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </template>
@@ -45,51 +41,56 @@ export default {
   name: "celluleNumérique",
   props: ["val", "editer", "couleurActive"],
   mixins: [mixinLangues],
-  data: function() {
+  data: function () {
     return {
       valÉditée: "",
       règles: {
-        numérique: () => this.valÉditéeNumérique !== undefined
-      }
+        numérique: () => this.valÉditéeNumérique !== undefined,
+      },
     };
   },
   watch: {
-    val: function(val) {
+    val: function (val) {
       this.valÉditée = val !== undefined ? this.formatterChiffre(val) : "";
     },
-    systèmeNumération: function() {
-      this.réinitialiser()
-    }
+    systèmeNumération: function () {
+      this.réinitialiser();
+    },
   },
   computed: {
-    valÉditéeNumérique: function() {
-      if (!this.valÉditée.length) return
+    valÉditéeNumérique: function () {
+      if (!this.valÉditée.length) return;
 
       // De https://stackoverflow.com/questions/175739/built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number
       if (!isNaN(this.valÉditée) && !isNaN(parseFloat(this.valÉditée))) {
-        return Number(this.valÉditée)
+        return Number(this.valÉditée);
       } else {
-        const converti = this.texteÀChiffre(this.valÉditée, this.systèmeNumération)
-        return converti || undefined
+        const converti = this.texteÀChiffre(
+          this.valÉditée,
+          this.systèmeNumération
+        );
+        return converti || undefined;
       }
     },
-    valsÉgales: function() {
-      return this.val === this.valÉditéeNumérique
-    }
+    valsÉgales: function () {
+      return this.val === this.valÉditéeNumérique;
+    },
   },
   methods: {
-    réinitialiser: function() {
-      this.valÉditée = this.val !== undefined ? this.formatterChiffre(this.val): "";
+    réinitialiser: function () {
+      this.valÉditée =
+        this.val !== undefined ? this.formatterChiffre(this.val) : "";
     },
-    actionModifié: function() {
+    actionModifié: function () {
       if (!this.valsÉgales) {
         this.$emit("edite", { val: this.valÉditéeNumérique });
       }
-    }
+    },
   },
-  mounted: function() {
-    if (this.val !== undefined) this.valÉditée = this.formatterChiffre(this.val)
-  }
+  mounted: function () {
+    if (this.val !== undefined)
+      this.valÉditée = this.formatterChiffre(this.val);
+  },
 };
 </script>
 

@@ -26,11 +26,11 @@ export default {
   name: "Recherche",
   components: { Titre, résultatsRecherchePersonnes, résultatsRechercheBds },
   mixins: [mixinImage],
-  data: function() {
+  data: function () {
     return {
-      catégorie: "bds"
+      catégorie: "bds",
     };
-  }
+  },
 };
 </script>
 

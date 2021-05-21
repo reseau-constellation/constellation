@@ -22,7 +22,7 @@
 <script>
 export default {
   name: "Titre",
-  props: ["entête", "soustitre", "image", "imageRonde"]
+  props: ["entête", "soustitre", "image", "imageRonde"],
 };
 </script>
 

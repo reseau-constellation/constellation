@@ -97,42 +97,42 @@ import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import {
   traduireNom,
   catégoriesVariable,
-  icôneCatégorieVariable
+  icôneCatégorieVariable,
 } from "@/utils";
 
 export default {
   name: "carteNouvelleVariable",
   components: { boîteNoms },
-  data: function() {
+  data: function () {
     return {
       noms: {},
       descriptions: {},
       unités: undefined,
-      catégorie: undefined
+      catégorie: undefined,
     };
   },
   computed: {
-    langues: function() {
+    langues: function () {
       return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
     },
-    nom: function() {
+    nom: function () {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.langues)
         : undefined;
     },
-    descr: function() {
+    descr: function () {
       return Object.keys(this.descriptions).length
         ? traduireNom(this.descriptions, this.langues)
         : undefined;
     },
     optionsCatégories: () => {
-      return catégoriesVariable.map(x => {
+      return catégoriesVariable.map((x) => {
         return { text: x, icône: icôneCatégorieVariable(x) };
       });
-    }
+    },
   },
   methods: {
-    sauvegarder: async function() {
+    sauvegarder: async function () {
       const idVariable = await this.$ipa.variables.créerVariable(
         this.catégorie
       );
@@ -149,35 +149,35 @@ export default {
       }
       this.$emit("sauvegarde", { id: idVariable });
     },
-    sauvegarderNom: function({ langue, nom }) {
+    sauvegarderNom: function ({ langue, nom }) {
       this.noms = { ...this.noms, [langue]: nom };
     },
-    effacerNom: function({ langue }) {
+    effacerNom: function ({ langue }) {
       this.noms = Object.fromEntries(
         Object.keys(this.noms)
-          .filter(x => x !== langue)
-          .map(x => [x, this.noms[x]])
+          .filter((x) => x !== langue)
+          .map((x) => [x, this.noms[x]])
       );
     },
-    changerLangueNom: function({ langueOriginale, langue, nom }) {
+    changerLangueNom: function ({ langueOriginale, langue, nom }) {
       this.effacerNom(langueOriginale);
       this.sauvegarderNom(langue, nom);
     },
-    sauvegarderDescr: function({ langue, nom }) {
+    sauvegarderDescr: function ({ langue, nom }) {
       this.descriptions = { ...this.descriptions, [langue]: nom };
     },
-    effacerDescr: function({ langue }) {
+    effacerDescr: function ({ langue }) {
       this.descriptions = Object.fromEntries(
         Object.keys(this.descriptions)
-          .filter(x => x !== langue)
-          .map(x => [x, this.descriptions[x]])
+          .filter((x) => x !== langue)
+          .map((x) => [x, this.descriptions[x]])
       );
     },
-    changerLangueDescr: function({ langueOriginale, langue, nom }) {
+    changerLangueDescr: function ({ langueOriginale, langue, nom }) {
       this.effacerDescr(langueOriginale);
       this.sauvegarderDescr(langue, nom);
-    }
-  }
+    },
+  },
 };
 </script>
 

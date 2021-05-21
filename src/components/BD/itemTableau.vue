@@ -53,49 +53,49 @@ export default {
   props: ["id", "idBD"],
   components: { jetonVariable },
   mixins: [mixinLangues, mixinIPA],
-  data: function() {
+  data: function () {
     return {
       permissionÉcrire: false,
       dialogue: false,
       nomsTableau: {},
-      variables: []
+      variables: [],
     };
   },
   computed: {
-    langues: function() {
+    langues: function () {
       return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
     },
-    idTableau: function() {
+    idTableau: function () {
       return decodeURIComponent(this.id);
     },
-    nom: function() {
+    nom: function () {
       return Object.keys(this.nomsTableau).length
         ? traduireNom(this.nomsTableau, this.langues)
         : this.idTableau;
-    }
+    },
   },
   methods: {
     couper,
-    effacerTableau: async function() {
+    effacerTableau: async function () {
       await this.$ipa.bds.effacerTableauBD(this.idBD, this.idTableau);
     },
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);
       const oublierNoms = await this.$ipa.tableaux.suivreNomsTableau(
         this.idTableau,
-        noms => {
+        (noms) => {
           this.nomsTableau = noms;
         }
       );
       const oublierVariables = await this.$ipa.tableaux.suivreVariables(
         this.idTableau,
-        variables => {
+        (variables) => {
           this.variables = variables;
         }
       );
       this.suivre([oublierNoms, oublierVariables]);
-    }
-  }
+    },
+  },
 };
 </script>
 

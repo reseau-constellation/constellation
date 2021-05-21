@@ -40,7 +40,7 @@ import {
   tr,
   uk,
   zhHans,
-  zhHant
+  zhHant,
 } from "vuetify/src/locale";
 
 const tradsVuetify = {
@@ -81,7 +81,7 @@ const tradsVuetify = {
   tr,
   uk,
   zhHans,
-  zhHant
+  zhHant,
 };
 
 Vue.use(Vuetify);
@@ -90,18 +90,18 @@ Vue.use(VueI18n);
 export const i18n = new VueI18n({
   locale: "fr",
   fallbackLocale: ["fr"],
-  messages: messages
+  messages: messages,
 });
 
 const ops = {
   lang: {
     locales: tradsVuetify,
-    current: "fr"
+    current: "fr",
     // t: (key: string, ...params: Array<string>) => i18n.t(key, params)
-  }
+  },
 };
 
 export default new Vuetify({
   ...ops,
-  rtl: false
+  rtl: false,
 });

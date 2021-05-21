@@ -71,7 +71,7 @@
         </v-btn>
       </v-col>
     </v-row>
-    <message-installer />
+    <message-installer v-if="false" />
   </v-container>
 </template>
 
@@ -86,34 +86,34 @@ import { ouvrirLien } from "@/utils";
 
 @Component({
   components: { alerteConditions, messageInstaller },
-  data: function() {
+  data: function () {
     return {
       liens: [
         {
           text: "acceuil.liens.docs",
           href: `https://constallation.readthedocs.org/${this.$i18n.locale}/latest`,
-          img: "docs"
+          img: "docs",
         },
         {
           text: "acceuil.liens.recherche",
           page: "/recherche",
-          img: "recherche"
+          img: "recherche",
         },
         {
           text: "acceuil.liens.projet",
           page: "/projets",
-          img: "constr"
-        }
-      ]
+          img: "constr",
+        },
+      ],
     };
   },
   mixins: [mixinImage],
   computed: {
-    conditionsAcceptées: function() {
+    conditionsAcceptées: function () {
       return this.$store.state.conditions.acceptées;
-    }
+    },
   },
-  methods: { ouvrirLien, isElectron }
+  methods: { ouvrirLien, isElectron },
 })
 export default class Home extends Vue {}
 </script>

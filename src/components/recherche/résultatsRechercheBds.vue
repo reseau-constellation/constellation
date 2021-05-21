@@ -20,20 +20,20 @@ export default {
   name: "résultatsRecherchePersonnes",
   mixins: [mixinIPA],
   components: { carteBd },
-  data: function() {
+  data: function () {
     return {
-      bds: []
+      bds: [],
     };
   },
   methods: {
-    initialiserSuivi: async function() {
-      const oublierBds = await this.$ipa.réseau.suivreBds(bds => {
+    initialiserSuivi: async function () {
+      const oublierBds = await this.$ipa.réseau.suivreBds((bds) => {
         this.bds = bds;
       });
 
       this.suivre([oublierBds]);
-    }
-  }
+    },
+  },
 };
 </script>
 

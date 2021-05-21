@@ -13,12 +13,12 @@ export default async function initSFIP(dir = "./ipfs") {
         Swarm: isElectron()
           ? []
           : [
-              "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/"
-            ]
+              "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/",
+            ],
         // "Bootstrap": []
-      }
+      },
     },
-    repo: dir
+    repo: dir,
   });
   return sfip;
   //}

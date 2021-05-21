@@ -24,13 +24,13 @@
       </p>
       <jeton-bd v-for="bd in bds.slice(0, N_MAX_LISTE)" :key="bd" :id="bd" />
       <v-chip
-        v-if="bds.length>N_MAX_LISTE"
+        v-if="bds.length > N_MAX_LISTE"
         class="me-1 mb-1"
         label
         outlined
         small
       >
-        + {{bds.length-N_MAX_LISTE}} autre(s)
+        + {{ bds.length - N_MAX_LISTE }} autre(s)
       </v-chip>
       <v-chip v-if="!bds.length" label outlined small disabled>
         Aucune BD
@@ -48,12 +48,7 @@
 </template>
 
 <script>
-import {
-  traduireNom,
-  icôneCatégorieVariable,
-  catégoriesVariable,
-  couper
-} from "@/utils";
+import { traduireNom, catégoriesVariable, couper } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite";
 import jetonBd from "@/components/commun/jetonBd";
 import mixinIPA from "@/mixins/ipa";
@@ -65,7 +60,7 @@ export default {
   props: ["id"],
   mixins: [mixinLangues, mixinIPA, mixinImage],
   components: { lienOrbite, jetonBd },
-  data: function() {
+  data: function () {
     return {
       noms: {},
       imageCompte: null,
@@ -73,16 +68,16 @@ export default {
       bds: [],
       projets: [],
 
-      N_MAX_LISTE: 4
+      N_MAX_LISTE: 4,
     };
   },
   computed: {
-    nom: function() {
+    nom: function () {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : null;
     },
-    imageProfil: function() {
+    imageProfil: function () {
       if (this.imageCompte) {
         return this.imageCompte;
       }
@@ -90,7 +85,7 @@ export default {
       // Dans le doute, on garde ça équitable :)
       return options[Math.floor(Math.random() * options.length)];
     },
-    actif: function() {
+    actif: function () {
       return (
         Object.keys(this.noms).length ||
         this.imageCompte ||
@@ -98,32 +93,32 @@ export default {
         this.bds.length ||
         this.projets.length
       );
-    }
+    },
   },
   methods: {
     couper,
-    initialiserSuivi: async function() {
+    initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.réseau.suivreNomsMembre(
         this.id,
-        noms => {
+        (noms) => {
           this.noms = noms;
         }
       );
       const oublierCourriel = await this.$ipa.réseau.suivreCourrielMembre(
         this.id,
-        courriel => {
+        (courriel) => {
           this.courriel = courriel;
         }
       );
       const oublierBds = await this.$ipa.réseau.suivreBdsMembre(
         this.id,
-        bds => {
+        (bds) => {
           this.bds = bds;
         }
       );
       const oublierImage = await this.$ipa.réseau.suivreImageMembre(
         this.id,
-        image => {
+        (image) => {
           if (image) {
             const url = URL.createObjectURL(
               new Blob([image.buffer], { type: "image/png" })
@@ -136,8 +131,8 @@ export default {
       );
 
       this.suivre([oublierNoms, oublierImage, oublierCourriel, oublierBds]);
-    }
-  }
+    },
+  },
 };
 </script>
 

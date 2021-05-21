@@ -22,13 +22,13 @@ export default {
   props: ["variables", "nMax"],
   components: { jetonVariable },
   computed: {
-    visibles: function() {
+    visibles: function () {
       return this.variables.slice(0, this.nMax);
     },
-    extras: function() {
+    extras: function () {
       return this.variables.slice(this.nMax);
-    }
-  }
+    },
+  },
 };
 </script>
 

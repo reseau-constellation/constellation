@@ -4,6 +4,6 @@ import IPFS from "ipfs";
 
 export default async function initOrbite(sfip: typeof IPFS) {
   return await OrbitDB.createInstance(sfip, {
-    AccessControllers
+    AccessControllers,
   });
 }

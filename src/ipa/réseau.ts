@@ -1,34 +1,34 @@
 import { v4 as uuidv4 } from "uuid";
 import ClientConstellation, {
   schémaFonctionSuivi,
-  schémaFonctionOublier
+  schémaFonctionOublier,
 } from "./client";
 
 export default class Réseau {
   client: ClientConstellation;
-  idBD: string;
+  idBd: string;
 
   constructor(client: ClientConstellation, id: string) {
     this.client = client;
-    this.idBD = id;
+    this.idBd = id;
   }
 
   async ajouterMembre(id: string): Promise<void> {
     const existante = await this.client.rechercherBdListe(
-      this.idBD,
+      this.idBd,
       (e: any) => e.payload.value.id === id
     );
     if (!existante) {
-      const bdRacine = await this.client.ouvrirBD(this.idBD);
+      const bdRacine = await this.client.ouvrirBD(this.idBd);
       const élément = {
-        id: id
+        id: id,
       };
       await bdRacine.add(élément);
     }
   }
 
   async suivreMembres(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBdListe(this.idBD, f);
+    return await this.client.suivreBdListe(this.idBd, f);
   }
 
   async suivreNomsMembre(
@@ -68,10 +68,10 @@ export default class Réseau {
       id: string;
     }
     const fRacine = async (fSuivi: schémaFonctionSuivi) => {
-      return await this.suivreMembres(membres => {
+      return await this.suivreMembres((membres) => {
         return fSuivi([
           ...membres.map((m: infoMembre) => m.id),
-          this.client._bdRacine.id
+          this.client._bdRacine.id,
         ]);
       });
     };
