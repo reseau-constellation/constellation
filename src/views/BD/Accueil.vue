@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import { obtBDs } from "@/ipa/bds";
 import carteBd from "@/components/BD/carteBD";
 import Titre from "@/components/commun/Titre";
 import mixinIPA from "@/mixins/ipa";
@@ -64,7 +63,7 @@ export default {
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierListeBDs = await this.$ipa.bds.suivreBDs((bds) => {
+      const oublierListeBDs = await this.$ipa.bds.suivreBds((bds) => {
         this.idsBds = bds;
       });
       this.suivre(oublierListeBDs);

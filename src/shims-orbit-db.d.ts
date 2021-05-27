@@ -16,7 +16,7 @@ declare module "orbit-db" {
     docstore(string): Promise<Store>;
   }
 
-  class Store extends EventEmitter {
+  export class Store extends EventEmitter {
     id: string;
     type: string;
     drop(): Promise<void>;

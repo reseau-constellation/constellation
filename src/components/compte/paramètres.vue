@@ -63,6 +63,14 @@
               small-chips
               dense
               :label="$t('compte.onglets.compte.image')"
+              :error="fichierTropGrand"
+              :error-messages="
+                fichierTropGrand
+                  ? [
+                      'La taille de l\'image doit être inférieure à 1,5 megaoctets.',
+                    ]
+                  : []
+              "
               @click:append="effacerImage"
             ></v-file-input>
           </v-col>
@@ -94,6 +102,7 @@ export default {
       courrielOrig: "",
       courriel: "",
       noms: {},
+      fichierTropGrand: false
     };
   },
   mixins: [mixinIPA],
@@ -107,7 +116,12 @@ export default {
   watch: {
     image: function (fichier) {
       if (fichier) {
-        this.$ipa.compte.sauvegarderImage(fichier);
+        if (fichier.size > this.$ipa.compte.MAX_TAILLE_IMAGE) {
+          this.fichierTropGrand = true;
+        } else {
+          this.fichierTropGrand = false;
+          this.$ipa.compte.sauvegarderImage(fichier);
+        }
       } else {
         this.effacerImage();
       }
@@ -136,7 +150,12 @@ export default {
       this.suivre([oublierCourriel, oublierNoms]);
     },
     effacerImage: async function () {
-      await this.$ipa.compte.effacerImage();
+      if (this.fichierTropGrand) {
+        this.image = undefined;
+        this.fichierTropGrand = false;
+      } else {
+        await this.$ipa.compte.effacerImage();
+      }
     },
     sauvegarderNom({ langue, nom }) {
       this.$ipa.compte.sauvegarderNom(langue, nom);

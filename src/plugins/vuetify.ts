@@ -81,7 +81,7 @@ const tradsVuetify = {
   tr,
   uk,
   zhHans,
-  zhHant,
+  zhHant
 };
 
 Vue.use(Vuetify);

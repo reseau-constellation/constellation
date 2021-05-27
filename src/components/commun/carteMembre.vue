@@ -4,7 +4,7 @@
       <v-list-item-avatar>
         <img :src="imageProfil" />
       </v-list-item-avatar>
-      {{ nom || "Incognito" }}
+      {{ nom ? couper(nom, 17) : "Incognito" }}
       <v-spacer />
       <lien-orbite :lien="id" />
     </v-card-title>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { traduireNom, catégoriesVariable, couper } from "@/utils";
+import { traduireNom, couper } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite";
 import jetonBd from "@/components/commun/jetonBd";
 import mixinIPA from "@/mixins/ipa";

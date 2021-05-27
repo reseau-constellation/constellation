@@ -33,7 +33,7 @@ export default class Favoris {
       (e: any) => e.payload.value.id === id
     );
     if (!existante) {
-      const bdRacine = await this.client.ouvrirBD(this.idBd);
+      const bdRacine = await this.client.ouvrirBd(this.idBd);
       const élément = {
         id: id,
       };
@@ -47,7 +47,7 @@ export default class Favoris {
       (e: any) => e.payload.value.id === id
     );
     if (existante) {
-      const bdRacine = await this.client.ouvrirBD(this.idBd);
+      const bdRacine = await this.client.ouvrirBd(this.idBd);
       await bdRacine.remove(existante.hash);
     }
   }

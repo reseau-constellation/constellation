@@ -19,11 +19,11 @@ export default class Variables {
   }
 
   async créerVariable(catégorie: string): Promise<string> {
-    const bdRacine = await this.client.ouvrirBD(this.idBd);
+    const bdRacine = await this.client.ouvrirBd(this.idBd);
     const idBdVariable = await this.client.créerBDIndépendante("kvstore");
     await bdRacine.add(idBdVariable);
 
-    const bdVariable = await this.client.ouvrirBD(idBdVariable);
+    const bdVariable = await this.client.ouvrirBd(idBdVariable);
     const idBdNoms = await this.client.créerBDIndépendante("kvstore");
     await bdVariable.set("noms", idBdNoms);
 
@@ -36,7 +36,7 @@ export default class Variables {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    const bdNoms = await this.client.ouvrirBd(idBdNoms);
     for (const lng in noms) {
       await bdNoms.set(lng, noms[lng]);
     }
@@ -46,7 +46,7 @@ export default class Variables {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    const bdNoms = await this.client.ouvrirBd(idBdNoms);
     await bdNoms.set(langue, nom);
   }
 
@@ -54,7 +54,7 @@ export default class Variables {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    const bdNoms = await this.client.ouvrirBd(idBdNoms);
     await bdNoms.del(langue);
   }
 
@@ -65,7 +65,7 @@ export default class Variables {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBD(idBdDescr);
+    const bdDescr = await this.client.ouvrirBd(idBdDescr);
     for (const lng in descriptions) {
       await bdDescr.set(lng, descriptions[lng]);
     }
@@ -75,7 +75,7 @@ export default class Variables {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBD(idBdDescr);
+    const bdDescr = await this.client.ouvrirBd(idBdDescr);
     await bdDescr.set(langue, nom);
   }
 
@@ -83,7 +83,7 @@ export default class Variables {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBD(idBdDescr);
+    const bdDescr = await this.client.ouvrirBd(idBdDescr);
     await bdDescr.del(langue);
   }
 
@@ -91,7 +91,7 @@ export default class Variables {
     id: string,
     catégorie: string
   ): Promise<void> {
-    const bdVariable = await this.client.ouvrirBD(id);
+    const bdVariable = await this.client.ouvrirBd(id);
     await bdVariable.set("catégorie", catégorie);
   }
 
@@ -119,11 +119,6 @@ export default class Variables {
     });
   }
 
-  async obtCatégorieVariable(id: string): Promise<string> {
-    const bd = await this.client.ouvrirBD(id);
-    return await bd.get("catégorie");
-  }
-
   async suivreUnitésVariable(
     id: string,
     f: schémaFonctionSuivi
@@ -136,7 +131,7 @@ export default class Variables {
 
   async effacerVariable(id: string) {
     // Effacer l'entrée dans notre liste de variables
-    const bdRacine = await this.client.ouvrirBD(this.idBd);
+    const bdRacine = await this.client.ouvrirBd(this.idBd);
     const entrée = (await bdRacine.iterator({ limit: -1 }).collect()).find(
       (e: { [key: string]: any }) => e.payload.value === id
     );

@@ -13,7 +13,6 @@
 
 <script>
 import mixinIPA from "@/mixins/ipa";
-import carteMembre from "@/components/commun/carteMembre";
 import carteBd from "@/components/BD/carteBD";
 
 export default {

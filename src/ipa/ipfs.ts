@@ -3,8 +3,10 @@ const SFIP = import("ipfs");
 
 export default async function initSFIP(dir = "./ipfs") {
   const libSFIP = await SFIP;
+
   // @ts-ignore
   const sfip = await libSFIP.create({
+    libp2p:{transportManager: {faultTolerance: 1}},
     relay: { enabled: true, hop: { enabled: true, active: true } },
     // @ts-ignore
     config: {
@@ -20,6 +22,6 @@ export default async function initSFIP(dir = "./ipfs") {
     },
     repo: dir,
   });
+
   return sfip;
-  //}
 }

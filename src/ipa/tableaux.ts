@@ -2,11 +2,17 @@ import { v4 as uuidv4 } from "uuid";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
+  élémentsBd,
 } from "./client";
 
+interface InfoCol {
+  id: string;
+  variable: string;
+}
+
 export function élémentsÉgaux(
-  élément1: { [key: string]: any },
-  élément2: { [key: string]: any }
+  élément1: { [key: string]: élémentsBd },
+  élément2: { [key: string]: élémentsBd }
 ): boolean {
   const clefs1 = Object.keys(élément1);
   const clefs2 = Object.keys(élément2);
@@ -41,13 +47,13 @@ export default class Tableaux {
 
   async ajouterÉlément(
     idTableau: string,
-    vals: { [key: string]: any }
+    vals: { [key: string]: élémentsBd }
   ): Promise<string> {
     const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
     if (!idBdDonnées)
       throw `Permission de modification refusée pour BD ${idTableau}.`;
 
-    const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
+    const bdDonnées = await this.client.ouvrirBd(idBdDonnées);
     vals = await this.vérifierClefsÉlément(idTableau, vals);
     const id = uuidv4();
     return await bdDonnées.add({ ...vals, id });
@@ -55,20 +61,19 @@ export default class Tableaux {
 
   async modifierÉlément(
     idTableau: string,
-    vals: { [key: string]: any },
+    vals: { [key: string]: élémentsBd },
     empreintePrécédente: string
   ): Promise<string | void> {
     const idBdDonnées = await this.client.obtIdBd("données", idTableau, "feed");
     if (!idBdDonnées)
       throw `Permission de modification refusée pour BD ${idTableau}.`;
 
-    const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
+    const bdDonnées = await this.client.ouvrirBd(idBdDonnées);
 
-    const précédent = bdDonnées
-      .iterator({ limit: -1 })
-      .collect()
-      .find((e: { [key: string]: any }) => e.hash === empreintePrécédente)
-      .payload.value;
+    const précédent = this.client.obtÉlémentBdListeSelonEmpreinte(
+      bdDonnées,
+      empreintePrécédente
+    );
 
     let élément = Object.assign({}, précédent, vals);
 
@@ -99,7 +104,7 @@ export default class Tableaux {
     if (!idBdColonnes)
       throw `Permission de modification refusée pour BD ${idTableau}.`;
 
-    const bdColonnes = await this.client.ouvrirBD(idBdColonnes);
+    const bdColonnes = await this.client.ouvrirBd(idBdColonnes);
     const idsColonnes: string[] = bdColonnes
       .iterator({ limit: -1 })
       .collect()
@@ -119,33 +124,40 @@ export default class Tableaux {
     if (!idBdDonnées)
       throw `Permission de modification refusée pour BD ${idTableau}.`;
 
-    const bdDonnées = await this.client.ouvrirBD(idBdDonnées);
+    const bdDonnées = await this.client.ouvrirBd(idBdDonnées);
     await bdDonnées.remove(empreinteÉlément);
   }
 
-  async ajouterNomsTableau(id: string, noms: { [key: string]: string }) {
+  async ajouterNomsTableau(
+    id: string,
+    noms: { [key: string]: string }
+  ): Promise<void> {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    const bdNoms = await this.client.ouvrirBd(idBdNoms);
     for (const lng in noms) {
       await bdNoms.set(lng, noms[lng]);
     }
   }
 
-  async sauvegarderNomTableau(id: string, langue: string, nom: string) {
+  async sauvegarderNomTableau(
+    id: string,
+    langue: string,
+    nom: string
+  ): Promise<void> {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    const bdNoms = await this.client.ouvrirBd(idBdNoms);
     await bdNoms.set(langue, nom);
   }
 
-  async effacerNomTableau(id: string, langue: string) {
+  async effacerNomTableau(id: string, langue: string): Promise<void> {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    const bdNoms = await this.client.ouvrirBd(idBdNoms);
     await bdNoms.del(langue);
   }
 
@@ -156,7 +168,10 @@ export default class Tableaux {
     return await this.client.suivreBdDicDeClef(id, "noms", f);
   }
 
-  async ajouterColonneTableau(idTableau: string, idVariable: string) {
+  async ajouterColonneTableau(
+    idTableau: string,
+    idVariable: string
+  ): Promise<void> {
     const idBdColonnes = await this.client.obtIdBd(
       "colonnes",
       idTableau,
@@ -165,10 +180,10 @@ export default class Tableaux {
     if (!idBdColonnes)
       throw `Permission de modification refusée pour BD ${idTableau}.`;
 
-    const bdColonnes = await this.client.ouvrirBD(idBdColonnes);
-    const entrée = {
+    const bdColonnes = await this.client.ouvrirBd(idBdColonnes);
+    const entrée: InfoCol = {
       id: uuidv4(),
-      variable: idVariable,
+      variable: idVariable
     };
     await bdColonnes.add(entrée);
   }
@@ -177,37 +192,45 @@ export default class Tableaux {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdListe = await this.client.obtIdBd("colonnes", id, "feed");
-    // return await this.client.suivreBdListe(idBdListe, f);
-    const fRacine = async (fSuivi: schémaFonctionSuivi) => {
-      return await this.client.suivreBdListe(idBdListe, fSuivi);
-    };
-    interface InfoCol {
-      id: string;
-      variable: string;
-    }
-    const fBranche = async (infoCol: InfoCol, fSuivi: schémaFonctionSuivi) => {
-      const { variable } = infoCol;
-      const catégorie = await this.client.variables!.obtCatégorieVariable(
-        variable
+
+    const fBranche = async (id: string, fSuivi: schémaFonctionSuivi, branche: unknown): Promise<schémaFonctionOublier> => {
+      return await this.client.variables!.suivreCatégorieVariable(
+        id, async (catégorie: string) => {
+          const col = Object.assign({ catégorie }, branche as InfoCol);
+          fSuivi(col)
+        }
       );
-      const col = Object.assign({ catégorie }, infoCol);
-      await fSuivi(col);
+
     };
-    return await this.client.suivreBdsEmboîtées(fRacine, fBranche, f);
+    const fIdBdDeBranche = (x: unknown) => (x as InfoCol).variable
+
+    const fCode = (x: InfoCol) => x.id
+    const fSuivreBdColonnes = async (id: string, f: schémaFonctionSuivi): Promise<schémaFonctionOublier>=>{
+      return await this.client.suivreBdsDeBdListe(
+        id, f, fBranche, fIdBdDeBranche, undefined, fCode
+      )
+    }
+
+    return await this.client.suivreBdDeClef(
+      id, "colonnes", f, fSuivreBdColonnes
+    )
   }
 
   async suivreVariables(
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    return await this.suivreColonnes(id, async (liste) => {
-      const variables = liste.map((x: any) => x.variable);
-      return f(variables);
-    });
+    const fSuivreBdColonnes = async (id: string, f: schémaFonctionSuivi): Promise<schémaFonctionOublier>=>{
+      return await this.client.suivreBdListe(
+        id, (cols: InfoCol[]) => f(cols.map(c=>c.variable))
+      )
+    }
+    return await this.client.suivreBdDeClef(
+      id, "colonnes", f, fSuivreBdColonnes
+    )
   }
 
-  async effacerTableau(id: string) {
+  async effacerTableau(id: string): Promise<void> {
     // Effacer toutes les composantes du tableau
     for (const clef in ["noms"]) {
       const idBd = await this.client.obtIdBd(clef, id);

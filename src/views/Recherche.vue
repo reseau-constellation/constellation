@@ -28,7 +28,7 @@ export default {
   mixins: [mixinImage],
   data: function () {
     return {
-      catégorie: "bds",
+      catégorie: "personnes",
     };
   },
 };

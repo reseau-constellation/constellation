@@ -12,7 +12,7 @@ export default class BDs {
     this.idBd = id;
   }
 
-  async suivreBDs(
+  async suivreBds(
     f: schémaFonctionSuivi,
     idBdRacine?: string
   ): Promise<schémaFonctionOublier> {
@@ -21,11 +21,11 @@ export default class BDs {
   }
 
   async créerBD(licence: string): Promise<string> {
-    const bdRacine = await this.client.ouvrirBD(this.idBd);
+    const bdRacine = await this.client.ouvrirBd(this.idBd);
     const idBdBD = await this.client.créerBDIndépendante("kvstore");
     await bdRacine.add(idBdBD);
 
-    const bdBD = await this.client.ouvrirBD(idBdBD);
+    const bdBD = await this.client.ouvrirBd(idBdBD);
     await bdBD.set("licence", licence);
 
     const idBdNoms = await this.client.créerBDIndépendante("kvstore");
@@ -43,58 +43,69 @@ export default class BDs {
     return idBdBD;
   }
 
-  async ajouterNomsBD(id: string, noms: { [key: string]: string }) {
+  async ajouterNomsBD(
+    id: string,
+    noms: { [key: string]: string }
+  ): Promise<void> {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    const bdNoms = await this.client.ouvrirBd(idBdNoms);
     for (const lng in noms) {
       await bdNoms.set(lng, noms[lng]);
     }
   }
 
-  async sauvegarderNomBD(id: string, langue: string, nom: string) {
+  async sauvegarderNomBD(
+    id: string,
+    langue: string,
+    nom: string
+  ): Promise<void> {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    const bdNoms = await this.client.ouvrirBd(idBdNoms);
     await bdNoms.set(langue, nom);
   }
 
-  async effacerNomBD(id: string, langue: string) {
+  async effacerNomBD(id: string, langue: string): Promise<void> {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBD(idBdNoms);
+    const bdNoms = await this.client.ouvrirBd(idBdNoms);
     await bdNoms.del(langue);
   }
 
   async ajouterDescriptionsBD(
     id: string,
     descriptions: { [key: string]: string }
-  ) {
+  ): Promise<void> {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBD(idBdDescr);
+    const bdDescr = await this.client.ouvrirBd(idBdDescr);
     for (const lng in descriptions) {
       await bdDescr.set(lng, descriptions[lng]);
     }
   }
 
-  async sauvegarderDescrBD(id: string, langue: string, nom: string) {
+  async sauvegarderDescrBD(
+    id: string,
+    langue: string,
+    nom: string
+  ): Promise<void> {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBD(idBdDescr);
+    const bdDescr = await this.client.ouvrirBd(idBdDescr);
     await bdDescr.set(langue, nom);
   }
 
-  async effacerbdDescrBD(id: string, langue: string) {
+  async effacerbdDescrBD(id: string, langue: string): Promise<void> {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBD(idBdDescr);
+    const bdDescr = await this.client.ouvrirBd(idBdDescr);
     await bdDescr.del(langue);
   }
 
@@ -103,7 +114,7 @@ export default class BDs {
     if (!idBdTableaux)
       throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdTableaux = await this.client.ouvrirBD(idBdTableaux);
+    const bdTableaux = await this.client.ouvrirBd(idBdTableaux);
     const idTableau = await this.client.tableaux!.créerTableau();
     await bdTableaux.add(idTableau);
     return idTableau;
@@ -115,7 +126,7 @@ export default class BDs {
     if (!idBdTableaux)
       throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdTableaux = await this.client.ouvrirBD(idBdTableaux);
+    const bdTableaux = await this.client.ouvrirBd(idBdTableaux);
     const entrée = (await bdTableaux.iterator({ limit: -1 }).collect()).find(
       (e: { [key: string]: any }) => e.payload.value === idTableau
     );
@@ -125,7 +136,10 @@ export default class BDs {
     await this.client.tableaux!.effacerTableau(idTableau);
   }
 
-  async suivreLicence(id: string, f: schémaFonctionSuivi) {
+  async suivreLicence(
+    id: string,
+    f: schémaFonctionSuivi
+  ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBd(id, async (bd) => {
       const licence = await bd.get("licence");
       f(licence);
@@ -174,18 +188,23 @@ export default class BDs {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const fRacine = async (fSuivi: schémaFonctionSuivi) => {
-      return await this.suivreTableauxBD(id, fSuivi);
-    };
-    const fBranche = async (id: string, fSuivi: schémaFonctionSuivi) => {
-      return await this.client.tableaux!.suivreVariables(id, fSuivi);
-    };
-    return await this.client.suivreBdsEmboîtées(fRacine, fBranche, f);
+
+    const fBranche = async (id: string, f: schémaFonctionSuivi): Promise<schémaFonctionOublier> => {
+      return await this.client.tableaux!.suivreVariables(id, f)
+    }
+    const fSuivreTableaux = async (id: string, f: schémaFonctionSuivi) => {
+      return await this.client.suivreBdsDeBdListe(
+        id, f, fBranche
+      )
+    }
+    return await this.client.suivreBdDeClef(
+      id, "tableaux", f, fSuivreTableaux
+    )
   }
 
-  async effacerBD(id: string) {
+  async effacerBD(id: string): Promise<void> {
     // Dabord effacer l'entrée dans notre liste de BDs
-    const bdRacine = await this.client.ouvrirBD(this.idBd);
+    const bdRacine = await this.client.ouvrirBd(this.idBd);
     const entrée = (await bdRacine.iterator({ limit: -1 }).collect()).find(
       (e: { [key: string]: any }) => e.payload.value === id
     );
@@ -198,7 +217,7 @@ export default class BDs {
     }
     const idBdTableaux = await this.client.obtIdBd("tableaux", id);
     if (idBdTableaux) {
-      const bdTableaux = await this.client.ouvrirBD(idBdTableaux);
+      const bdTableaux = await this.client.ouvrirBd(idBdTableaux);
       const tableaux = await bdTableaux
         .iterator({ limit: -1 })
         .collect()

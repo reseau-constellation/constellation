@@ -1,16 +1,23 @@
-import { v4 as uuidv4 } from "uuid";
+import { KeyValueStore, FeedStore } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
+  élémentBdListe
 } from "./client";
+
+interface infoMembre {
+  id: string
+}
 
 export default class Réseau {
   client: ClientConstellation;
   idBd: string;
+  fOublierMembres: {[key: string]: schémaFonctionOublier};
 
   constructor(client: ClientConstellation, id: string) {
     this.client = client;
     this.idBd = id;
+    this.fOublierMembres = {};
   }
 
   async ajouterMembre(id: string): Promise<void> {
@@ -19,12 +26,28 @@ export default class Réseau {
       (e: any) => e.payload.value.id === id
     );
     if (!existante) {
-      const bdRacine = await this.client.ouvrirBD(this.idBd);
-      const élément = {
+      const bdRacine = await this.client.ouvrirBd(this.idBd);
+      const élément: infoMembre = {
         id: id,
       };
       await bdRacine.add(élément);
     }
+    if (!this.fOublierMembres[id]) {
+      const f = async (membres: infoMembre[]) => {
+        membres.forEach((m: infoMembre) => this.ajouterMembre(m.id))
+      }
+      const fOublier = await this.client.suivreBdListeDeClef(id, "réseau", f);
+      this.fOublierMembres[id] = fOublier
+    }
+  }
+
+  async enleverMembre(id: string): Promise<void> {
+    this.fOublierMembres[id]()
+    const bdMembres = await this.client.ouvrirBd(this.idBd)
+    const entrée = (await bdMembres.iterator({ limit: -1 }).collect()).find(
+      (e: élémentBdListe) => e.payload.value === id
+    );
+    await bdMembres.remove(entrée.hash);
   }
 
   async suivreMembres(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
@@ -32,51 +55,53 @@ export default class Réseau {
   }
 
   async suivreNomsMembre(
-    id: string,
+    idMembre: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdCompte = await this.client.obtIdBd("compte", id);
-    return await this.client.compte!.suivreNoms(f, idBdCompte);
+    return await this.client.suivreBdDeClef(
+      idMembre, "compte", f, (id: string, f: schémaFonctionSuivi) => this.client.compte!.suivreNoms(f, id)
+    )
   }
 
   async suivreCourrielMembre(
-    id: string,
+    idMembre: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdCompte = await this.client.obtIdBd("compte", id);
-    return await this.client.compte!.suivreCourriel(f, idBdCompte);
+    const fFinale = async (bd: KeyValueStore) => {
+      return await this.client.compte!.suivreCourriel(f, bd.id)
+    };
+    return await this.client.suivreBdDeClef(idMembre, "compte", fFinale);
   }
 
   async suivreImageMembre(
-    id: string,
+    idMembre: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdCompte = await this.client.obtIdBd("compte", id);
-    return await this.client.compte!.suivreImage(f, idBdCompte);
+    const fFinale = async (bd: KeyValueStore) => {
+      return await this.client.compte!.suivreImage(f, bd.id)
+    };
+    return await this.client.suivreBdDeClef(idMembre, "compte", fFinale);
   }
 
   async suivreBdsMembre(
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const idBdBds = await this.client.obtIdBd("bds", id);
-    return await this.client.bds!.suivreBDs(f, idBdBds);
+    return await this.client.suivreBdDeClef(
+      id, "bds", f, (id: string, f: schémaFonctionSuivi) => this.client.bds!.suivreBds(f, id)
+    )
   }
 
   async suivreBds(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
-    interface infoMembre {
-      id: string;
+    const fBranche = async (id: string, f: schémaFonctionSuivi): Promise<schémaFonctionOublier> => {
+      return await this.suivreBdsMembre(
+        id,
+        (membres: infoMembre[]) => f([...membres.map((m: infoMembre) => m.id), this.client.bdRacine!.id])
+      )
     }
-    const fRacine = async (fSuivi: schémaFonctionSuivi) => {
-      return await this.suivreMembres((membres) => {
-        return fSuivi([
-          ...membres.map((m: infoMembre) => m.id),
-          this.client._bdRacine.id,
-        ]);
-      });
-    };
-    const fBranche = this.suivreBdsMembre.bind(this);
-    return await this.client.suivreBdsEmboîtées(fRacine, fBranche, f);
+    return await this.client.suivreBdsDeBdListe(
+      this.idBd, f, fBranche
+    )
   }
 
   /*

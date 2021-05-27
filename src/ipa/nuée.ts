@@ -27,16 +27,16 @@ export default class Nuée {
         type: "Salut !",
         contenu: {
           id: this.client.idNodeSFIP!.id,
-          racine: this.client._bdRacine.id,
+          racine: this.client.bdRacine!.id,
         },
       };
       prise.write(JSON.stringify(message));
     });
   }
 
-  gérerDonnées(données: BufferSource, prise: any) {
+  gérerDonnées(données: BufferSource, prise: any): void {
     const message = JSON.parse(décodeur.decode(données));
-    console.log(message);
+    console.log("reçu", message)
     switch (message.type) {
       case "Salut !":
         if (isValidAddress(message.contenu.racine)) {

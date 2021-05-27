@@ -1,17 +1,26 @@
-import ClientConstellation, { schémaFonctionSuivi } from "./client";
+import ClientConstellation, {
+  schémaFonctionSuivi,
+  schémaFonctionOublier,
+} from "./client";
 
-const MAX_TAILLE_IMAGE = 500;
+export const MAX_TAILLE_IMAGE = 500 * 1000; // 500 kilooctets
+export const MAX_TAILLE_IMAGE_VIS = 1500 * 1000; // 1,5 megaoctets
 
 export default class Compte {
   client: ClientConstellation;
   idBd: string;
+  MAX_TAILLE_IMAGE = MAX_TAILLE_IMAGE;
+  MAX_TAILLE_IMAGE_VIS = MAX_TAILLE_IMAGE_VIS;
 
   constructor(client: ClientConstellation, id: string) {
     this.client = client;
     this.idBd = id;
   }
 
-  async suivreCourriel(f: schémaFonctionSuivi, idBdRacine?: string) {
+  async suivreCourriel(
+    f: schémaFonctionSuivi,
+    idBdRacine?: string
+  ): Promise<schémaFonctionOublier> {
     idBdRacine = idBdRacine || this.idBd;
     return await this.client.suivreBd(idBdRacine, async (bd) => {
       const courriel = await bd.get("courriel");
@@ -20,11 +29,14 @@ export default class Compte {
   }
 
   async sauvegarderCourriel(courriel: string): Promise<void> {
-    const bd = await this.client.ouvrirBD(this.idBd);
+    const bd = await this.client.ouvrirBd(this.idBd);
     await bd.set("courriel", courriel);
   }
 
-  async suivreNoms(f: schémaFonctionSuivi, idBdRacine?: string) {
+  async suivreNoms(
+    f: schémaFonctionSuivi,
+    idBdRacine?: string
+  ): Promise<schémaFonctionOublier> {
     idBdRacine = idBdRacine || this.idBd;
     return await this.client.suivreBdDicDeClef(idBdRacine, "noms", f);
   }
@@ -34,7 +46,7 @@ export default class Compte {
     if (!idBdNoms)
       throw `Permission de modification refusée pour BD ${this.idBd}.`;
 
-    const bd = await this.client.ouvrirBD(idBdNoms);
+    const bd = await this.client.ouvrirBd(idBdNoms);
     await bd.set(langue, nom);
   }
 
@@ -43,28 +55,36 @@ export default class Compte {
     if (!idBdNoms)
       throw `Permission de modification refusée pour BD ${this.idBd}.`;
 
-    const bd = await this.client.ouvrirBD(idBdNoms);
+    const bd = await this.client.ouvrirBd(idBdNoms);
     await bd.del(langue);
   }
 
   async sauvegarderImage(image: File): Promise<void> {
+    if (image.size > MAX_TAILLE_IMAGE)
+      return Promise.reject("Taille maximale excédée");
     const octets = await image.arrayBuffer();
     const idImage = await this.client.ajouterÀSFIP(octets);
-    const bd = await this.client.ouvrirBD(this.idBd);
+    const bd = await this.client.ouvrirBd(this.idBd);
     await bd.set("image", idImage);
   }
 
   async effacerImage(): Promise<void> {
-    const bd = await this.client.ouvrirBD(this.idBd);
+    const bd = await this.client.ouvrirBd(this.idBd);
     await bd.del("image");
   }
 
-  async suivreImage(f: schémaFonctionSuivi, idBdRacine?: string) {
+  async suivreImage(
+    f: schémaFonctionSuivi,
+    idBdRacine?: string
+  ): Promise<schémaFonctionOublier> {
     idBdRacine = idBdRacine || this.idBd;
     return await this.client.suivreBd(idBdRacine, async (bd) => {
       const idImage = await bd.get("image");
       if (!idImage) return f(null);
-      const image = await this.client.obtFichierSFIP(idImage, MAX_TAILLE_IMAGE);
+      const image = await this.client.obtFichierSFIP(
+        idImage,
+        MAX_TAILLE_IMAGE_VIS
+      );
       f(image);
     });
   }
