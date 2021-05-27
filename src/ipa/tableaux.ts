@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { FeedStore, KeyValueStore } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -53,7 +54,7 @@ export default class Tableaux {
     if (!idBdDonnées)
       throw `Permission de modification refusée pour BD ${idTableau}.`;
 
-    const bdDonnées = await this.client.ouvrirBd(idBdDonnées);
+    const bdDonnées = (await this.client.ouvrirBd(idBdDonnées)) as FeedStore;
     vals = await this.vérifierClefsÉlément(idTableau, vals);
     const id = uuidv4();
     return await bdDonnées.add({ ...vals, id });
@@ -68,7 +69,7 @@ export default class Tableaux {
     if (!idBdDonnées)
       throw `Permission de modification refusée pour BD ${idTableau}.`;
 
-    const bdDonnées = await this.client.ouvrirBd(idBdDonnées);
+    const bdDonnées = (await this.client.ouvrirBd(idBdDonnées)) as FeedStore;
 
     const précédent = this.client.obtÉlémentBdListeSelonEmpreinte(
       bdDonnées,
@@ -104,7 +105,7 @@ export default class Tableaux {
     if (!idBdColonnes)
       throw `Permission de modification refusée pour BD ${idTableau}.`;
 
-    const bdColonnes = await this.client.ouvrirBd(idBdColonnes);
+    const bdColonnes = (await this.client.ouvrirBd(idBdColonnes)) as FeedStore;
     const idsColonnes: string[] = bdColonnes
       .iterator({ limit: -1 })
       .collect()
@@ -124,7 +125,7 @@ export default class Tableaux {
     if (!idBdDonnées)
       throw `Permission de modification refusée pour BD ${idTableau}.`;
 
-    const bdDonnées = await this.client.ouvrirBd(idBdDonnées);
+    const bdDonnées = (await this.client.ouvrirBd(idBdDonnées)) as FeedStore;
     await bdDonnées.remove(empreinteÉlément);
   }
 
@@ -135,7 +136,7 @@ export default class Tableaux {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBd(idBdNoms);
+    const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
     for (const lng in noms) {
       await bdNoms.set(lng, noms[lng]);
     }
@@ -149,7 +150,7 @@ export default class Tableaux {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBd(idBdNoms);
+    const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
     await bdNoms.set(langue, nom);
   }
 
@@ -157,7 +158,7 @@ export default class Tableaux {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBd(idBdNoms);
+    const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
     await bdNoms.del(langue);
   }
 
@@ -180,10 +181,10 @@ export default class Tableaux {
     if (!idBdColonnes)
       throw `Permission de modification refusée pour BD ${idTableau}.`;
 
-    const bdColonnes = await this.client.ouvrirBd(idBdColonnes);
+    const bdColonnes = (await this.client.ouvrirBd(idBdColonnes)) as FeedStore;
     const entrée: InfoCol = {
       id: uuidv4(),
-      variable: idVariable
+      variable: idVariable,
     };
     await bdColonnes.add(entrée);
   }
@@ -192,42 +193,62 @@ export default class Tableaux {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-
-    const fBranche = async (id: string, fSuivi: schémaFonctionSuivi, branche: unknown): Promise<schémaFonctionOublier> => {
+    const fBranche = async (
+      id: string,
+      fSuivi: schémaFonctionSuivi,
+      branche: unknown
+    ): Promise<schémaFonctionOublier> => {
       return await this.client.variables!.suivreCatégorieVariable(
-        id, async (catégorie: string) => {
+        id,
+        async (catégorie: string) => {
           const col = Object.assign({ catégorie }, branche as InfoCol);
-          fSuivi(col)
+          fSuivi(col);
         }
       );
-
     };
-    const fIdBdDeBranche = (x: unknown) => (x as InfoCol).variable
+    const fIdBdDeBranche = (x: unknown) => (x as InfoCol).variable;
 
-    const fCode = (x: InfoCol) => x.id
-    const fSuivreBdColonnes = async (id: string, f: schémaFonctionSuivi): Promise<schémaFonctionOublier>=>{
+    const fCode = (x: InfoCol) => x.id;
+    const fSuivreBdColonnes = async (
+      id: string,
+      f: schémaFonctionSuivi
+    ): Promise<schémaFonctionOublier> => {
       return await this.client.suivreBdsDeBdListe(
-        id, f, fBranche, fIdBdDeBranche, undefined, fCode
-      )
-    }
+        id,
+        f,
+        fBranche,
+        fIdBdDeBranche,
+        undefined,
+        fCode
+      );
+    };
 
     return await this.client.suivreBdDeClef(
-      id, "colonnes", f, fSuivreBdColonnes
-    )
+      id,
+      "colonnes",
+      f,
+      fSuivreBdColonnes
+    );
   }
 
   async suivreVariables(
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-    const fSuivreBdColonnes = async (id: string, f: schémaFonctionSuivi): Promise<schémaFonctionOublier>=>{
-      return await this.client.suivreBdListe(
-        id, (cols: InfoCol[]) => f(cols.map(c=>c.variable))
-      )
-    }
+    const fSuivreBdColonnes = async (
+      id: string,
+      f: schémaFonctionSuivi
+    ): Promise<schémaFonctionOublier> => {
+      return await this.client.suivreBdListe(id, (cols: InfoCol[]) =>
+        f(cols.map((c) => c.variable))
+      );
+    };
     return await this.client.suivreBdDeClef(
-      id, "colonnes", f, fSuivreBdColonnes
-    )
+      id,
+      "colonnes",
+      f,
+      fSuivreBdColonnes
+    );
   }
 
   async effacerTableau(id: string): Promise<void> {

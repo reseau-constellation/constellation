@@ -1,4 +1,6 @@
 declare module "orbit-db" {
+  import { EventEmitter } from "events";
+
   export default class OrbitDB {
     static createInstance(
       ipfs: any,
@@ -15,10 +17,18 @@ declare module "orbit-db" {
     counter(string): Promise<Store>;
     docstore(string): Promise<Store>;
   }
+  export class IPFSAccessController extends EventEmitter {
+    type: string;
+    address: string;
+    canAppend: (entry: any, identityProvider: any) => Promise<boolean>;
+    write: string[];
+  }
 
-  export class Store extends EventEmitter {
+  export class Store {
     id: string;
     type: string;
+    events: EventEmitter;
+    access: IPFSAccessController;
     drop(): Promise<void>;
     load(): Promise<void>;
     close(): Promise<void>;

@@ -1,3 +1,4 @@
+import { FeedStore, KeyValueStore } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -19,11 +20,13 @@ export default class Variables {
   }
 
   async créerVariable(catégorie: string): Promise<string> {
-    const bdRacine = await this.client.ouvrirBd(this.idBd);
+    const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
     const idBdVariable = await this.client.créerBDIndépendante("kvstore");
     await bdRacine.add(idBdVariable);
 
-    const bdVariable = await this.client.ouvrirBd(idBdVariable);
+    const bdVariable = (await this.client.ouvrirBd(
+      idBdVariable
+    )) as KeyValueStore;
     const idBdNoms = await this.client.créerBDIndépendante("kvstore");
     await bdVariable.set("noms", idBdNoms);
 
@@ -36,7 +39,7 @@ export default class Variables {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBd(idBdNoms);
+    const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
     for (const lng in noms) {
       await bdNoms.set(lng, noms[lng]);
     }
@@ -46,7 +49,7 @@ export default class Variables {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBd(idBdNoms);
+    const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
     await bdNoms.set(langue, nom);
   }
 
@@ -54,7 +57,7 @@ export default class Variables {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBd(idBdNoms);
+    const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
     await bdNoms.del(langue);
   }
 
@@ -65,7 +68,7 @@ export default class Variables {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBd(idBdDescr);
+    const bdDescr = (await this.client.ouvrirBd(idBdDescr)) as KeyValueStore;
     for (const lng in descriptions) {
       await bdDescr.set(lng, descriptions[lng]);
     }
@@ -75,7 +78,7 @@ export default class Variables {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBd(idBdDescr);
+    const bdDescr = (await this.client.ouvrirBd(idBdDescr)) as KeyValueStore;
     await bdDescr.set(langue, nom);
   }
 
@@ -83,7 +86,7 @@ export default class Variables {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBd(idBdDescr);
+    const bdDescr = (await this.client.ouvrirBd(idBdDescr)) as KeyValueStore;
     await bdDescr.del(langue);
   }
 
@@ -91,7 +94,7 @@ export default class Variables {
     id: string,
     catégorie: string
   ): Promise<void> {
-    const bdVariable = await this.client.ouvrirBd(id);
+    const bdVariable = (await this.client.ouvrirBd(id)) as KeyValueStore;
     await bdVariable.set("catégorie", catégorie);
   }
 
@@ -131,10 +134,11 @@ export default class Variables {
 
   async effacerVariable(id: string) {
     // Effacer l'entrée dans notre liste de variables
-    const bdRacine = await this.client.ouvrirBd(this.idBd);
-    const entrée = (await bdRacine.iterator({ limit: -1 }).collect()).find(
-      (e: { [key: string]: any }) => e.payload.value === id
-    );
+    const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
+    const entrée = bdRacine
+      .iterator({ limit: -1 })
+      .collect()
+      .find((e: { [key: string]: any }) => e.payload.value === id);
     await bdRacine.remove(entrée.hash);
   }
 }

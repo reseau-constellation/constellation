@@ -102,7 +102,7 @@ export default {
       courrielOrig: "",
       courriel: "",
       noms: {},
-      fichierTropGrand: false
+      fichierTropGrand: false,
     };
   },
   mixins: [mixinIPA],

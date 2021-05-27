@@ -1,3 +1,4 @@
+import { KeyValueStore } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -29,7 +30,7 @@ export default class Compte {
   }
 
   async sauvegarderCourriel(courriel: string): Promise<void> {
-    const bd = await this.client.ouvrirBd(this.idBd);
+    const bd = (await this.client.ouvrirBd(this.idBd)) as KeyValueStore;
     await bd.set("courriel", courriel);
   }
 
@@ -46,7 +47,7 @@ export default class Compte {
     if (!idBdNoms)
       throw `Permission de modification refusée pour BD ${this.idBd}.`;
 
-    const bd = await this.client.ouvrirBd(idBdNoms);
+    const bd = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
     await bd.set(langue, nom);
   }
 
@@ -55,7 +56,7 @@ export default class Compte {
     if (!idBdNoms)
       throw `Permission de modification refusée pour BD ${this.idBd}.`;
 
-    const bd = await this.client.ouvrirBd(idBdNoms);
+    const bd = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
     await bd.del(langue);
   }
 
@@ -64,12 +65,12 @@ export default class Compte {
       return Promise.reject("Taille maximale excédée");
     const octets = await image.arrayBuffer();
     const idImage = await this.client.ajouterÀSFIP(octets);
-    const bd = await this.client.ouvrirBd(this.idBd);
+    const bd = (await this.client.ouvrirBd(this.idBd)) as KeyValueStore;
     await bd.set("image", idImage);
   }
 
   async effacerImage(): Promise<void> {
-    const bd = await this.client.ouvrirBd(this.idBd);
+    const bd = (await this.client.ouvrirBd(this.idBd)) as KeyValueStore;
     await bd.del("image");
   }
 

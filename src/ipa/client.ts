@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import initOrbite from "./orbitdb";
 import initSFIP from "./ipfs";
 import OrbitDB from "orbit-db";
-import { FeedStore, KeyValueStore } from "orbit-db";
+import { Store, FeedStore, KeyValueStore } from "orbit-db";
 import Compte from "./compte";
 import BDs from "./bds";
 import Tableaux from "./tableaux";
@@ -50,7 +50,7 @@ export interface élémentBdListe {
   hash: string;
 }
 
-// De it-to-buffer, mais avec option de maximum de taille
+// Identique à it-to-buffer, mais avec option de maximum de taille
 async function toBuffer(
   stream: AsyncIterable<Uint8Array> | Iterable<Uint8Array>,
   max?: number
@@ -104,7 +104,7 @@ export default class ClientConstellation extends EventEmitter {
       },
     };
 
-    this.bdRacine = await this.orbite!.kvstore("racine") as KeyValueStore; //, this._opsAutoBD);
+    this.bdRacine = (await this.orbite!.kvstore("racine")) as KeyValueStore; //, this._opsAutoBD);
     await this.bdRacine.load();
     const idBdCompte = await this.obtIdBd("compte", this.bdRacine, "kvstore");
     this.compte = new Compte(this, idBdCompte!);
@@ -153,13 +153,13 @@ export default class ClientConstellation extends EventEmitter {
   ): Promise<schémaFonctionOublier> {
     const bd = await this.ouvrirBd(id);
     const fFinal = () => f(bd);
-    console.log("on suit", id)
+    console.log("on suit", id);
     for (const é of événements) {
       bd.events.on(é, fFinal);
     }
     fFinal();
     const oublier = () => {
-      console.log("on oublie", id)
+      console.log("on oublie", id);
       événements.forEach((é) => {
         bd.events.off(é, fFinal);
       });
@@ -171,33 +171,38 @@ export default class ClientConstellation extends EventEmitter {
     id: string,
     clef: string,
     f: schémaFonctionSuivi,
-    fSuivre?: (id: string, f: schémaFonctionSuivi) => Promise<schémaFonctionOublier>
+    fSuivre?: (
+      id: string,
+      f: schémaFonctionSuivi
+    ) => Promise<schémaFonctionOublier>
   ) {
-    console.log("suivreBdDeClef",{id, clef})
-    fSuivre = fSuivre || this.suivreBd.bind(this)
+    console.log("suivreBdDeClef", { id, clef });
+    fSuivre = fSuivre || this.suivreBd.bind(this);
 
     let oublierFSuivre: schémaFonctionOublier | undefined;
     let idBdCible: string | undefined;
 
-    const oublierBdRacine = await this.suivreBd(id, async (bd: KeyValueStore) => {
-      const nouvelIdBdCible = await bd.get(clef)
+    const oublierBdRacine = await this.suivreBd(
+      id,
+      async (bd: KeyValueStore) => {
+        const nouvelIdBdCible = await bd.get(clef);
 
-      if (nouvelIdBdCible !== idBdCible) {
-        idBdCible = nouvelIdBdCible
-        if (oublierFSuivre) oublierFSuivre()
-        if (idBdCible) {
-          oublierFSuivre = await fSuivre!(idBdCible, f);
-        } else {
-          oublierFSuivre = undefined;
+        if (nouvelIdBdCible !== idBdCible) {
+          idBdCible = nouvelIdBdCible;
+          if (oublierFSuivre) oublierFSuivre();
+          if (idBdCible) {
+            oublierFSuivre = await fSuivre!(idBdCible, f);
+          } else {
+            oublierFSuivre = undefined;
+          }
         }
       }
-    })
+    );
 
-    return ()=>{
-      oublierBdRacine()
-      if (oublierFSuivre) oublierFSuivre()
-    }
-
+    return () => {
+      oublierBdRacine();
+      if (oublierFSuivre) oublierFSuivre();
+    };
   }
 
   async suivreBdDicDeClef(
@@ -271,34 +276,48 @@ export default class ClientConstellation extends EventEmitter {
   async suivreBdsDeBdListe(
     id: string,
     f: schémaFonctionSuivi,
-    fBranche: (id: string, f: schémaFonctionSuivi, branche?: unknown) => Promise<schémaFonctionOublier|undefined>,
+    fBranche: (
+      id: string,
+      f: schémaFonctionSuivi,
+      branche?: unknown
+    ) => Promise<schémaFonctionOublier | undefined>,
     fIdBdDeBranche: (b: unknown) => string = (b) => b as string,
-    fRéduction: schémaFonctionRéduction = (branches: unknown[]) => [... new Set(branches.flat())],
-    fCode: (é: any) => string = é => é
+    fRéduction: schémaFonctionRéduction = (branches: unknown[]) => [
+      ...new Set(branches.flat()),
+    ],
+    fCode: (é: any) => string = (é) => é
   ): Promise<schémaFonctionOublier> {
     interface InterfaceBranches {
       données: any;
       fOublier?: schémaFonctionOublier;
     }
-    console.log("ici")
-    const arbre: { [key: string]: InterfaceBranches} = {};
+    console.log("suivreBdsDeBdListe", { id });
+    const arbre: { [key: string]: InterfaceBranches } = {};
 
     const fFinale = () => {
       const listeDonnées = Object.values(arbre)
-        .filter(x => x.données !== undefined)
-        .map(x => x.données)
+        .filter((x) => x.données !== undefined)
+        .map((x) => x.données);
       const réduits = fRéduction(listeDonnées);
-      console.log({réduits})
+      console.log({ réduits });
       f(réduits);
     };
 
     const fSuivreRacine = async <T>(éléments: Array<T>) => {
-      const dictÉléments = Object.fromEntries(éléments.map(é=>[fCode(é), é]))
+      console.log("fSuivreRacine", { éléments });
+      if (éléments.some((x) => typeof fCode(x) !== "string"))
+        throw "Définir fCode si les éléments ne sont pas en format texte (chaînes).";
+      const dictÉléments = Object.fromEntries(
+        éléments.map((é) => [fCode(é), é])
+      );
       const existants = Object.keys(arbre);
-      const nouveaux = Object.keys(dictÉléments).filter((é) => !existants.includes(é));
-      console.log({dictÉléments, existants, nouveaux})
-      if (nouveaux.some(x=>typeof x !== "string")) throw "Définir fCode si les éléments ne sont pas en format texte (chaînes)."
-      const disparus = existants.filter((é) => !Object.keys(dictÉléments).includes(é));
+      const nouveaux = Object.keys(dictÉléments).filter(
+        (é) => !existants.includes(é)
+      );
+      console.log({ dictÉléments, existants, nouveaux });
+      const disparus = existants.filter(
+        (é) => !Object.keys(dictÉléments).includes(é)
+      );
 
       for (const d of disparus) {
         const fOublier = arbre[d].fOublier;
@@ -306,9 +325,9 @@ export default class ClientConstellation extends EventEmitter {
         delete arbre[d];
       }
       nouveaux.map(async (n: string) => {
-        arbre[n] = {données: undefined};
-        const élément = dictÉléments[n]
-        const idBdBranche = fIdBdDeBranche(élément)
+        arbre[n] = { données: undefined };
+        const élément = dictÉléments[n];
+        const idBdBranche = fIdBdDeBranche(élément);
         const fSuivreBranche = (données: any) => {
           arbre[n].données = données;
           fFinale();
@@ -316,20 +335,19 @@ export default class ClientConstellation extends EventEmitter {
         const fOublier = await fBranche(idBdBranche, fSuivreBranche, élément);
         arbre[n].fOublier = fOublier;
       });
-    }
+    };
 
-    const oublierBdRacine = await this.suivreBdListe(id, fSuivreRacine)
+    const oublierBdRacine = await this.suivreBdListe(id, fSuivreRacine);
 
     const oublier = () => {
-      oublierBdRacine()
+      oublierBdRacine();
       Object.values(arbre).map((x) => (x.fOublier ? x.fOublier() : null));
-    }
-    return oublier
-
+    };
+    return oublier;
   }
 
   async rechercherBdListe(id: string, f: schémaFonctionSuivi): Promise<any> {
-    const bd = await this.ouvrirBd(id);
+    const bd = (await this.ouvrirBd(id)) as FeedStore;
     const élément = bd
       .iterator({ limit: -1 })
       .collect()
@@ -346,7 +364,7 @@ export default class ClientConstellation extends EventEmitter {
     return résultat.cid.toString();
   }
 
-  async ouvrirBd(id: string): Promise<any> {
+  async ouvrirBd(id: string): Promise<Store> {
     const existante = this._bds[id];
     if (existante) {
       return existante;
@@ -364,7 +382,7 @@ export default class ClientConstellation extends EventEmitter {
   ): Promise<string | undefined> {
     let bdRacine: KeyValueStore;
     if (typeof racine === "string") {
-      bdRacine = await this.ouvrirBd(racine);
+      bdRacine = (await this.ouvrirBd(racine)) as KeyValueStore;
     } else {
       bdRacine = racine;
     }

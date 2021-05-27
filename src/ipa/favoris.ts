@@ -1,3 +1,4 @@
+import { FeedStore } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -33,7 +34,7 @@ export default class Favoris {
       (e: any) => e.payload.value.id === id
     );
     if (!existante) {
-      const bdRacine = await this.client.ouvrirBd(this.idBd);
+      const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
       const élément = {
         id: id,
       };
@@ -47,7 +48,7 @@ export default class Favoris {
       (e: any) => e.payload.value.id === id
     );
     if (existante) {
-      const bdRacine = await this.client.ouvrirBd(this.idBd);
+      const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
       await bdRacine.remove(existante.hash);
     }
   }

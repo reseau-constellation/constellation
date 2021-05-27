@@ -1,3 +1,4 @@
+import { FeedStore, KeyValueStore } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -21,11 +22,11 @@ export default class BDs {
   }
 
   async créerBD(licence: string): Promise<string> {
-    const bdRacine = await this.client.ouvrirBd(this.idBd);
+    const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
     const idBdBD = await this.client.créerBDIndépendante("kvstore");
     await bdRacine.add(idBdBD);
 
-    const bdBD = await this.client.ouvrirBd(idBdBD);
+    const bdBD = (await this.client.ouvrirBd(idBdBD)) as KeyValueStore;
     await bdBD.set("licence", licence);
 
     const idBdNoms = await this.client.créerBDIndépendante("kvstore");
@@ -50,7 +51,7 @@ export default class BDs {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBd(idBdNoms);
+    const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
     for (const lng in noms) {
       await bdNoms.set(lng, noms[lng]);
     }
@@ -64,7 +65,7 @@ export default class BDs {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBd(idBdNoms);
+    const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
     await bdNoms.set(langue, nom);
   }
 
@@ -72,7 +73,7 @@ export default class BDs {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdNoms = await this.client.ouvrirBd(idBdNoms);
+    const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
     await bdNoms.del(langue);
   }
 
@@ -83,7 +84,7 @@ export default class BDs {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBd(idBdDescr);
+    const bdDescr = (await this.client.ouvrirBd(idBdDescr)) as KeyValueStore;
     for (const lng in descriptions) {
       await bdDescr.set(lng, descriptions[lng]);
     }
@@ -97,7 +98,7 @@ export default class BDs {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBd(idBdDescr);
+    const bdDescr = (await this.client.ouvrirBd(idBdDescr)) as KeyValueStore;
     await bdDescr.set(langue, nom);
   }
 
@@ -105,7 +106,7 @@ export default class BDs {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdDescr = await this.client.ouvrirBd(idBdDescr);
+    const bdDescr = (await this.client.ouvrirBd(idBdDescr)) as KeyValueStore;
     await bdDescr.del(langue);
   }
 
@@ -114,7 +115,7 @@ export default class BDs {
     if (!idBdTableaux)
       throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdTableaux = await this.client.ouvrirBd(idBdTableaux);
+    const bdTableaux = (await this.client.ouvrirBd(idBdTableaux)) as FeedStore;
     const idTableau = await this.client.tableaux!.créerTableau();
     await bdTableaux.add(idTableau);
     return idTableau;
@@ -126,10 +127,11 @@ export default class BDs {
     if (!idBdTableaux)
       throw `Permission de modification refusée pour BD ${id}.`;
 
-    const bdTableaux = await this.client.ouvrirBd(idBdTableaux);
-    const entrée = (await bdTableaux.iterator({ limit: -1 }).collect()).find(
-      (e: { [key: string]: any }) => e.payload.value === idTableau
-    );
+    const bdTableaux = (await this.client.ouvrirBd(idBdTableaux)) as FeedStore;
+    const entrée = bdTableaux
+      .iterator({ limit: -1 })
+      .collect()
+      .find((e: { [key: string]: any }) => e.payload.value === idTableau);
     await bdTableaux.remove(entrée.hash);
 
     // Enfin, effacer les données et le tableau lui-même
@@ -188,26 +190,25 @@ export default class BDs {
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
-
-    const fBranche = async (id: string, f: schémaFonctionSuivi): Promise<schémaFonctionOublier> => {
-      return await this.client.tableaux!.suivreVariables(id, f)
-    }
+    const fBranche = async (
+      id: string,
+      f: schémaFonctionSuivi
+    ): Promise<schémaFonctionOublier> => {
+      return await this.client.tableaux!.suivreVariables(id, f);
+    };
     const fSuivreTableaux = async (id: string, f: schémaFonctionSuivi) => {
-      return await this.client.suivreBdsDeBdListe(
-        id, f, fBranche
-      )
-    }
-    return await this.client.suivreBdDeClef(
-      id, "tableaux", f, fSuivreTableaux
-    )
+      return await this.client.suivreBdsDeBdListe(id, f, fBranche);
+    };
+    return await this.client.suivreBdDeClef(id, "tableaux", f, fSuivreTableaux);
   }
 
   async effacerBD(id: string): Promise<void> {
     // Dabord effacer l'entrée dans notre liste de BDs
-    const bdRacine = await this.client.ouvrirBd(this.idBd);
-    const entrée = (await bdRacine.iterator({ limit: -1 }).collect()).find(
-      (e: { [key: string]: any }) => e.payload.value === id
-    );
+    const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
+    const entrée = bdRacine
+      .iterator({ limit: -1 })
+      .collect()
+      .find((e: { [key: string]: any }) => e.payload.value === id);
     await bdRacine.remove(entrée.hash);
 
     // Et puis maintenant aussi effacer les données et la BD elle-même
@@ -217,8 +218,10 @@ export default class BDs {
     }
     const idBdTableaux = await this.client.obtIdBd("tableaux", id);
     if (idBdTableaux) {
-      const bdTableaux = await this.client.ouvrirBd(idBdTableaux);
-      const tableaux = await bdTableaux
+      const bdTableaux = (await this.client.ouvrirBd(
+        idBdTableaux
+      )) as FeedStore;
+      const tableaux = bdTableaux
         .iterator({ limit: -1 })
         .collect()
         .map((e: { [key: string]: any }) => e.payload.value);

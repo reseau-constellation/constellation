@@ -6,7 +6,7 @@ export default async function initSFIP(dir = "./ipfs") {
 
   // @ts-ignore
   const sfip = await libSFIP.create({
-    libp2p:{transportManager: {faultTolerance: 1}},
+    libp2p: { transportManager: { faultTolerance: 1 } },
     relay: { enabled: true, hop: { enabled: true, active: true } },
     // @ts-ignore
     config: {

@@ -36,7 +36,7 @@ export default class Nuée {
 
   gérerDonnées(données: BufferSource, prise: any): void {
     const message = JSON.parse(décodeur.decode(données));
-    console.log("reçu", message)
+    console.log("reçu", message);
     switch (message.type) {
       case "Salut !":
         if (isValidAddress(message.contenu.racine)) {
