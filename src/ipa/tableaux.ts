@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { FeedStore, KeyValueStore } from "orbit-db";
+import { FeedStore, KeyValueStore, élémentFeedStore } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -93,10 +93,10 @@ export default class Tableaux {
     return Promise.resolve();
   }
 
-  async vérifierClefsÉlément(
+  async vérifierClefsÉlément<T>(
     idTableau: string,
-    élément: { [key: string]: any }
-  ): Promise<{ [key: string]: any }> {
+    élément: { [key: string]: T }
+  ): Promise<{ [key: string]: T }> {
     const idBdColonnes = await this.client.obtIdBd(
       "colonnes",
       idTableau,
@@ -109,7 +109,7 @@ export default class Tableaux {
     const idsColonnes: string[] = bdColonnes
       .iterator({ limit: -1 })
       .collect()
-      .map((e: { [key: string]: any }) => e.payload.value.id);
+      .map((e: élémentFeedStore) => e.payload.value.id);
     const clefsPermises = [...idsColonnes, "id"];
     const clefsFinales = Object.keys(élément).filter((x: string) =>
       clefsPermises.includes(x)

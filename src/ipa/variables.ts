@@ -35,7 +35,10 @@ export default class Variables {
     return idBdVariable;
   }
 
-  async ajouterNomsVariable(id: string, noms: { [key: string]: string }) {
+  async ajouterNomsVariable(
+    id: string,
+    noms: { [key: string]: string }
+  ): Promise<void> {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
@@ -45,7 +48,11 @@ export default class Variables {
     }
   }
 
-  async sauvegarderNomVariable(id: string, langue: string, nom: string) {
+  async sauvegarderNomVariable(
+    id: string,
+    langue: string,
+    nom: string
+  ): Promise<void> {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
@@ -53,7 +60,7 @@ export default class Variables {
     await bdNoms.set(langue, nom);
   }
 
-  async effacerNomVariable(id: string, langue: string) {
+  async effacerNomVariable(id: string, langue: string): Promise<void> {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
@@ -64,7 +71,7 @@ export default class Variables {
   async ajouterDescriptionsVariable(
     id: string,
     descriptions: { [key: string]: string }
-  ) {
+  ): Promise<void> {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
@@ -74,7 +81,11 @@ export default class Variables {
     }
   }
 
-  async sauvegarderDescrVariable(id: string, langue: string, nom: string) {
+  async sauvegarderDescrVariable(
+    id: string,
+    langue: string,
+    nom: string
+  ): Promise<void> {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
@@ -82,7 +93,7 @@ export default class Variables {
     await bdDescr.set(langue, nom);
   }
 
-  async effacerbdDescrVariable(id: string, langue: string) {
+  async effacerbdDescrVariable(id: string, langue: string): Promise<void> {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
@@ -117,7 +128,7 @@ export default class Variables {
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBd(id, async (bd) => {
-      const catégorie = await bd.get("catégorie");
+      const catégorie = await (bd as KeyValueStore).get("catégorie");
       f(catégorie);
     });
   }
@@ -127,12 +138,12 @@ export default class Variables {
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBd(id, async (bd) => {
-      const catégorie = await bd.get("unité");
+      const catégorie = await (bd as KeyValueStore).get("unité");
       f(catégorie);
     });
   }
 
-  async effacerVariable(id: string) {
+  async effacerVariable(id: string): Promise<void> {
     // Effacer l'entrée dans notre liste de variables
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
     const entrée = bdRacine

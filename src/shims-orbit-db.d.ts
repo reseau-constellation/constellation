@@ -46,11 +46,18 @@ declare module "orbit-db" {
     collect(): any[];
   }
 
+  export interface élémentFeedStore {
+    hash: string;
+    payload: {
+      value: any;
+    };
+  }
+
   export class FeedStore extends Store {
     add(any): Promise<string>;
     get(hash: string): Promise<any>;
     remove(hash: string): Promise<string>;
-    iterator(options: FeedStoreIteratorOptions): Iterator;
+    iterator(options: FeedStoreIteratorOptions): Iterator<élémentFeedStore>;
   }
 
   export class AccessControllers {

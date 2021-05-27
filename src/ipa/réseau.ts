@@ -1,4 +1,4 @@
-import { KeyValueStore, FeedStore } from "orbit-db";
+import { KeyValueStore, FeedStore, élémentFeedStore } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -26,7 +26,7 @@ export default class Réseau {
   async ajouterMembre(id: string): Promise<void> {
     const existante = await this.client.rechercherBdListe(
       this.idBd,
-      (e: any) => e.payload.value.id === id
+      (e: élémentFeedStore) => e.payload.value.id === id
     );
     if (!existante) {
       const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;

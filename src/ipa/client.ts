@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import initOrbite from "./orbitdb";
 import initSFIP from "./ipfs";
 import OrbitDB from "orbit-db";
-import { Store, FeedStore, KeyValueStore } from "orbit-db";
+import { Store, FeedStore, KeyValueStore, élémentFeedStore } from "orbit-db";
 import Compte from "./compte";
 import BDs from "./bds";
 import Tableaux from "./tableaux";
@@ -351,7 +351,7 @@ export default class ClientConstellation extends EventEmitter {
     const élément = bd
       .iterator({ limit: -1 })
       .collect()
-      .find((e: { [key: string]: any }) => f(e));
+      .find((e: élémentFeedStore) => f(e));
     return élément;
   }
 
