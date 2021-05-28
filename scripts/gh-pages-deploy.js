@@ -11,7 +11,7 @@ const thirdLog = `${emoji.get('rocket')} ${chalk.green('Your app successfully de
     const { stdout: currentBranch } = await execa.command('git branch --show-current')
     await execa.command('git checkout --orphan gh-pages')
     console.log(firstLog)
-    await execa.command('npm run build', { stdio: 'inherit' })
+    await execa.command('yarn build', { stdio: 'inherit' })
     await execa.command('git --work-tree dist add --all')
     await execa.command('git --work-tree dist commit -m "gh-pages"')
     console.log(secondLog)
