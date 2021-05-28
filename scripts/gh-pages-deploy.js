@@ -12,6 +12,7 @@ const thirdLog = `${emoji.get('rocket')} ${chalk.green('Your app successfully de
     await execa.command('git checkout --orphan gh-pages')
     console.log(firstLog)
     await execa.command('yarn build', { stdio: 'inherit' })
+    await execa.command('cd dist && cp index.html 404.html && cd .. &&')
     await execa.command('git --work-tree dist add --all')
     await execa.command('git --work-tree dist commit -m "gh-pages"')
     console.log(secondLog)
