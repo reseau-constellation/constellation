@@ -168,7 +168,6 @@ export default {
       this.téléversementEnProgrès = true;
       const fichier = e.target.files[0];
       const extention = fichier.name.split(".").pop();
-      const lecteurFichier = new FileReader();
       const idDoc = await this.$ipa.ajouterÀSFIP(fichier);
       this.téléversementEnProgrès = false;
       this.$emit("edite", { val: { cid: idDoc, ext: extention } });
