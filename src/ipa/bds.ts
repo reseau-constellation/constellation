@@ -70,7 +70,7 @@ export default class BDs {
     await bdNoms.set(langue, nom);
   }
 
-  async effacerNomBD(id: string, langue: string): Promise<void> {
+  async effacerNomBd(id: string, langue: string): Promise<void> {
     const idBdNoms = await this.client.obtIdBd("noms", id, "kvstore");
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
@@ -78,7 +78,7 @@ export default class BDs {
     await bdNoms.del(langue);
   }
 
-  async ajouterDescriptionsBD(
+  async ajouterDescriptionsBd(
     id: string,
     descriptions: { [key: string]: string }
   ): Promise<void> {
@@ -91,7 +91,7 @@ export default class BDs {
     }
   }
 
-  async sauvegarderDescrBD(
+  async sauvegarderDescrBd(
     id: string,
     langue: string,
     nom: string
@@ -103,7 +103,7 @@ export default class BDs {
     await bdDescr.set(langue, nom);
   }
 
-  async effacerbdDescrBD(id: string, langue: string): Promise<void> {
+  async effacerbdDescrBd(id: string, langue: string): Promise<void> {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 
@@ -149,28 +149,28 @@ export default class BDs {
     });
   }
 
-  async suivreNomsBD(
+  async suivreNomsBd(
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdDicDeClef(id, "noms", f);
   }
 
-  async suivreDescrBD(
+  async suivreDescrBd(
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdDicDeClef(id, "descriptions", f);
   }
 
-  async suivreTableauxBD(
+  async suivreTableauxBd(
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdListeDeClef(id, "tableaux", f);
   }
 
-  async suivreScoreBD(
+  async suivreScoreBd(
     id: string,
     f: schémaFonctionSuivi
   ): Promise<schémaFonctionOublier> {
@@ -203,7 +203,7 @@ export default class BDs {
     return await this.client.suivreBdDeClef(id, "tableaux", f, fSuivreTableaux);
   }
 
-  async effacerBD(id: string): Promise<void> {
+  async effacerBd(id: string): Promise<void> {
     // Dabord effacer l'entrée dans notre liste de BDs
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
     const entrée = bdRacine
@@ -215,7 +215,7 @@ export default class BDs {
     // Et puis maintenant aussi effacer les données et la BD elle-même
     for (const clef in ["noms", "descriptions", "motsClefs"]) {
       const idBd = await this.client.obtIdBd(clef, id);
-      if (idBd) await this.client.effacerBD(idBd);
+      if (idBd) await this.client.effacerBd(idBd);
     }
     const idBdTableaux = await this.client.obtIdBd("tableaux", id);
     if (idBdTableaux) {
@@ -230,6 +230,6 @@ export default class BDs {
         await this.client.tableaux!.effacerTableau(t);
       }
     }
-    await this.client.effacerBD(id);
+    await this.client.effacerBd(id);
   }
 }

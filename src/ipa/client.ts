@@ -419,7 +419,7 @@ export default class ClientConstellation extends EventEmitter {
     return bd.id;
   }
 
-  async effacerBD(id: string): Promise<void> {
+  async effacerBd(id: string): Promise<void> {
     const bd = await this.orbite!.open(id);
     await bd.drop();
     delete this._bds[id];

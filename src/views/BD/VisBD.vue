@@ -79,7 +79,7 @@
               <v-btn color="error" text outlined @click="dialogue = false">
                 Non !
               </v-btn>
-              <v-btn color="error" depressed @click="effacerBD">
+              <v-btn color="error" depressed @click="effacerBd">
                 Oui, effacer
               </v-btn>
             </v-card-actions>
@@ -411,25 +411,25 @@ export default {
           this.licence = licence;
         }
       );
-      const oublierNoms = await this.$ipa.bds.suivreNomsBD(
+      const oublierNoms = await this.$ipa.bds.suivreNomsBd(
         this.idBD,
         (noms) => {
           this.nomsBD = noms;
         }
       );
-      const oublierDescriptions = await this.$ipa.bds.suivreDescrBD(
+      const oublierDescriptions = await this.$ipa.bds.suivreDescrBd(
         this.idBD,
         (descriptions) => {
           this.descriptionsBD = descriptions;
         }
       );
-      const oublierTableaux = await this.$ipa.bds.suivreTableauxBD(
+      const oublierTableaux = await this.$ipa.bds.suivreTableauxBd(
         this.idBD,
         (tableaux) => {
           this.tableaux = tableaux;
         }
       );
-      const oublierScore = await this.$ipa.bds.suivreScoreBD(
+      const oublierScore = await this.$ipa.bds.suivreScoreBd(
         this.idBD,
         (score) => (this.score = score)
       );
@@ -446,26 +446,26 @@ export default {
         oublierVariables,
       ]);
     },
-    effacerBD: async function () {
-      await this.$ipa.bds.effacerBD(this.idBD);
+    effacerBd: async function () {
+      await this.$ipa.bds.effacerBd(this.idBD);
       this.$router.push("/bd");
     },
     sauvegarderNom({ langue, nom }) {
       this.$ipa.bds.sauvegarderNomBD(this.idBD, langue, nom);
     },
     changerLangueNom({ langueOriginale, langue, nom }) {
-      this.$ipa.compte.effacerNomBD(this.idBD, langueOriginale);
+      this.$ipa.compte.effacerNomBd(this.idBD, langueOriginale);
       this.$ipa.compte.sauvegarderNomBD(this.idBD, langue, nom);
     },
     effacerNom({ langue }) {
-      this.$ipa.compte.effacerNomBD(this.idBD, langue);
+      this.$ipa.compte.effacerNomBd(this.idBD, langue);
     },
     sauvegarderDescr({ langue, nom }) {
-      this.$ipa.bds.sauvegarderDescrBD(this.idBD, langue, nom);
+      this.$ipa.bds.sauvegarderDescrBd(this.idBD, langue, nom);
     },
     changerLangueDescr({ langueOriginale, langue, nom }) {
       this.$ipa.compte.effacerDescrBD(langueOriginale);
-      this.$ipa.compte.sauvegarderDescrBD(langue, nom);
+      this.$ipa.compte.sauvegarderDescrBd(langue, nom);
     },
     effacerDescr({ langue }) {
       this.$ipa.compte.effacerDescrBD(langue);

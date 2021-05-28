@@ -140,19 +140,19 @@ export default {
           this.licence = licence;
         }
       );
-      const oublierNoms = await this.$ipa.bds.suivreNomsBD(
+      const oublierNoms = await this.$ipa.bds.suivreNomsBd(
         this.idBD,
         (noms) => {
           this.nomsBD = noms;
         }
       );
-      const oublierDétails = await this.$ipa.bds.suivreDescrBD(
+      const oublierDétails = await this.$ipa.bds.suivreDescrBd(
         this.idBD,
         (détails) => {
           this.détailsBD = détails;
         }
       );
-      const oublierScore = await this.$ipa.bds.suivreScoreBD(
+      const oublierScore = await this.$ipa.bds.suivreScoreBd(
         this.idBD,
         (score) => (this.score = score)
       );

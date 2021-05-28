@@ -36,7 +36,7 @@ export default {
   methods: {
     couper,
     initialiserSuivi: async function () {
-      const oublierNoms = await this.$ipa.bds.suivreNomsBD(this.id, (noms) => {
+      const oublierNoms = await this.$ipa.bds.suivreNomsBd(this.id, (noms) => {
         this.noms = noms;
       });
 

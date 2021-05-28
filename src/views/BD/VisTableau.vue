@@ -141,7 +141,7 @@ export default {
         }
       );
 
-      const oublierNomsBD = await this.$ipa.bds.suivreNomsBD(
+      const oublierNomsBD = await this.$ipa.bds.suivreNomsBd(
         this.idBD,
         (noms) => {
           this.nomsBD = noms;

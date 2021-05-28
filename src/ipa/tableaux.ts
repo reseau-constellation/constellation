@@ -268,9 +268,9 @@ export default class Tableaux {
     // Effacer toutes les composantes du tableau
     for (const clef in ["noms"]) {
       const idBd = await this.client.obtIdBd(clef, id);
-      if (idBd) await this.client.effacerBD(idBd);
+      if (idBd) await this.client.effacerBd(idBd);
     }
     // Effacer le tableau lui-même
-    await this.client.effacerBD(id);
+    await this.client.effacerBd(id);
   }
 }
