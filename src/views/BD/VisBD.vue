@@ -425,15 +425,17 @@ export default {
       );
       const oublierTableaux = await this.$ipa.bds.suivreTableauxBD(
         this.idBD,
-        (tableaux) => (this.tableaux = tableaux)
+        (tableaux) => {
+          this.tableaux = tableaux
+        }
       );
       const oublierScore = await this.$ipa.bds.suivreScoreBD(
         this.idBD,
-        (score) => (this.score = score)
+        (score) => this.score = score
       );
       const oublierVariables = await this.$ipa.bds.suivreVariablesBd(
         this.idBD,
-        (variables) => (this.variables = variables)
+        (variables) => this.variables = variables
       );
       this.suivre([
         oublierLicence,

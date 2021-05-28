@@ -165,7 +165,6 @@
 <script>
 import titreEntêteTableau from "@/components/tableaux/titreEntêteTableau";
 import carteNouvelleColonne from "@/components/tableaux/carteNouvelleColonne";
-import { élémentsÉgaux } from "@/ipa/tableaux";
 
 import celluleBooléenne from "@/components/tableaux/celluleBooléenne";
 import celluleNumérique from "@/components/tableaux/celluleNumérique";
@@ -284,13 +283,14 @@ export default {
       const oublierColonnes = await this.$ipa.tableaux.suivreColonnes(
         this.idTableau,
         (cols) => {
+          console.log("colonnes")
           this.colonnes = cols;
         }
       );
-
       const oublierDonnées = await this.$ipa.tableaux.suivreDonnées(
         this.idTableau,
         (données) => {
+          console.log("données")
           this.données = données.map((x) => {
             return { ...x.payload.value, empreinte: x.hash };
           });

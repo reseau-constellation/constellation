@@ -21,30 +21,30 @@ export default class BDs {
     return await this.client.suivreBdListe(idBdRacine, f);
   }
 
-  async créerBD(licence: string): Promise<string> {
+  async créerBd(licence: string): Promise<string> {
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
-    const idBdBD = await this.client.créerBDIndépendante("kvstore");
+    const idBdBD = await this.client.créerBdIndépendante("kvstore");
     await bdRacine.add(idBdBD);
 
     const bdBD = (await this.client.ouvrirBd(idBdBD)) as KeyValueStore;
     await bdBD.set("licence", licence);
 
-    const idBdNoms = await this.client.créerBDIndépendante("kvstore");
+    const idBdNoms = await this.client.créerBdIndépendante("kvstore");
     await bdBD.set("noms", idBdNoms);
 
-    const idBdDescr = await this.client.créerBDIndépendante("kvstore");
+    const idBdDescr = await this.client.créerBdIndépendante("kvstore");
     await bdBD.set("descriptions", idBdDescr);
 
-    const idBdTableaux = await this.client.créerBDIndépendante("feed");
+    const idBdTableaux = await this.client.créerBdIndépendante("feed");
     await bdBD.set("tableaux", idBdTableaux);
 
-    const idBdMotsClefs = await this.client.créerBDIndépendante("feed");
+    const idBdMotsClefs = await this.client.créerBdIndépendante("feed");
     await bdBD.set("motsClefs", idBdMotsClefs);
 
     return idBdBD;
   }
 
-  async ajouterNomsBD(
+  async ajouterNomsBd(
     id: string,
     noms: { [key: string]: string }
   ): Promise<void> {
@@ -52,6 +52,7 @@ export default class BDs {
     if (!idBdNoms) throw `Permission de modification refusée pour BD ${id}.`;
 
     const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
+
     for (const lng in noms) {
       await bdNoms.set(lng, noms[lng]);
     }

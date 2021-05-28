@@ -187,7 +187,7 @@
               tiled
               outlined
               color="primary"
-              @click="(e) => créerBD(e)"
+              @click="(e) => créerBd(e)"
             >
               C'est parti !
             </v-btn>
@@ -302,14 +302,14 @@ export default {
         ouvrirLien(this.$t(`licences.${this.licence}.lien`));
       }
     },
-    créerBD: async function () {
+    créerBd: async function () {
       this.enCréation = true;
-      const id = await this.$ipa.bds.créerBD(this.licence);
+      const id = await this.$ipa.bds.créerBd(this.licence);
       if (Object.keys(this.noms).length) {
-        await this.$ipa.bds.ajouterNomsBD(id, this.noms);
+        await this.$ipa.bds.ajouterNomsBd(id, this.noms);
       }
       if (Object.keys(this.descriptions).length) {
-        await this.$ipa.bds.ajouterDescriptionsBD(id, this.descriptions);
+        await this.$ipa.bds.ajouterDescriptionsBd(id, this.descriptions);
       }
       this.$router.push(`/bd/visualiser/${encodeURIComponent(id)}`);
     },

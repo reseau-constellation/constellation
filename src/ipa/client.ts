@@ -153,13 +153,11 @@ export default class ClientConstellation extends EventEmitter {
   ): Promise<schémaFonctionOublier> {
     const bd = await this.ouvrirBd(id);
     const fFinal = () => f(bd);
-    console.log("on suit", id);
     for (const é of événements) {
       bd.events.on(é, fFinal);
     }
     fFinal();
     const oublier = () => {
-      console.log("on oublie", id);
       événements.forEach((é) => {
         bd.events.off(é, fFinal);
       });
@@ -176,8 +174,9 @@ export default class ClientConstellation extends EventEmitter {
       f: schémaFonctionSuivi
     ) => Promise<schémaFonctionOublier>
   ) {
-    console.log("suivreBdDeClef", { id, clef });
-    fSuivre = fSuivre || this.suivreBd.bind(this);
+    if (!fSuivre) {
+      fSuivre = (id, f) => this.suivreBd(id, f);
+    }
 
     let oublierFSuivre: schémaFonctionOublier | undefined;
     let idBdCible: string | undefined;
@@ -291,7 +290,6 @@ export default class ClientConstellation extends EventEmitter {
       données: any;
       fOublier?: schémaFonctionOublier;
     }
-    console.log("suivreBdsDeBdListe", { id });
     const arbre: { [key: string]: InterfaceBranches } = {};
 
     const fFinale = () => {
@@ -299,12 +297,11 @@ export default class ClientConstellation extends EventEmitter {
         .filter((x) => x.données !== undefined)
         .map((x) => x.données);
       const réduits = fRéduction(listeDonnées);
-      console.log({ réduits });
       f(réduits);
     };
 
     const fSuivreRacine = async <T>(éléments: Array<T>) => {
-      console.log("fSuivreRacine", { éléments });
+      console.log("fSuivreRacine", {éléments})
       if (éléments.some((x) => typeof fCode(x) !== "string"))
         throw "Définir fCode si les éléments ne sont pas en format texte (chaînes).";
       const dictÉléments = Object.fromEntries(
@@ -314,15 +311,15 @@ export default class ClientConstellation extends EventEmitter {
       const nouveaux = Object.keys(dictÉléments).filter(
         (é) => !existants.includes(é)
       );
-      console.log({ dictÉléments, existants, nouveaux });
       const disparus = existants.filter(
         (é) => !Object.keys(dictÉléments).includes(é)
       );
-
+      console.log({existants, nouveaux, disparus})
       for (const d of disparus) {
         const fOublier = arbre[d].fOublier;
         if (fOublier) fOublier();
         delete arbre[d];
+        fFinale();
       }
       nouveaux.map(async (n: string) => {
         arbre[n] = { données: undefined };
@@ -409,7 +406,7 @@ export default class ClientConstellation extends EventEmitter {
     return idBd;
   }
 
-  async créerBDIndépendante(type: orbitDbStoreTypes): Promise<string> {
+  async créerBdIndépendante(type: orbitDbStoreTypes): Promise<string> {
     const bd = await this.orbite![type](uuidv4());
     await bd.load();
     return bd.id;

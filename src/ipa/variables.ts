@@ -21,13 +21,13 @@ export default class Variables {
 
   async créerVariable(catégorie: string): Promise<string> {
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
-    const idBdVariable = await this.client.créerBDIndépendante("kvstore");
+    const idBdVariable = await this.client.créerBdIndépendante("kvstore");
     await bdRacine.add(idBdVariable);
 
     const bdVariable = (await this.client.ouvrirBd(
       idBdVariable
     )) as KeyValueStore;
-    const idBdNoms = await this.client.créerBDIndépendante("kvstore");
+    const idBdNoms = await this.client.créerBdIndépendante("kvstore");
     await bdVariable.set("noms", idBdNoms);
 
     await bdVariable.set("catégorie", catégorie);

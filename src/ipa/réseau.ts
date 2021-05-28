@@ -112,7 +112,7 @@ export default class Réseau {
     };
     const fIdBdDeBranche = (x: unknown) => (x as infoMembre).id;
     const fCode = (x: unknown) => (x as infoMembre).id;
-    console.log("suivreBds", this.idBd);
+
     return await this.client.suivreBdsDeBdListe(
       this.idBd,
       f,

@@ -30,7 +30,18 @@ export default class Tableaux {
   }
 
   async créerTableau(): Promise<string> {
-    const idBdTableau = await this.client.créerBDIndépendante("kvstore");
+    const idBdTableau = await this.client.créerBdIndépendante("kvstore");
+    const bdTableaux = (await this.client.ouvrirBd(idBdTableau)) as KeyValueStore;
+
+    const idBdNoms = await this.client.créerBdIndépendante("kvstore");
+    await bdTableaux.set("noms", idBdNoms);
+
+    const idBdDonnées = await this.client.créerBdIndépendante("feed");
+    await bdTableaux.set("données", idBdDonnées);
+
+    const idBdColonnes = await this.client.créerBdIndépendante("feed");
+    await bdTableaux.set("colonnes", idBdColonnes);
+
     return idBdTableau;
   }
 
