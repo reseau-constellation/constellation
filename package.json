@@ -12,7 +12,6 @@
     "déployer": "node ./scripts/gh-pages-deploy.js",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
-    "gh-pages-deploy": "node scripts/gh-pages-deploy.js",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },

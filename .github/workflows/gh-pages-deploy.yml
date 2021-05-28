@@ -21,4 +21,4 @@ jobs:
       - name: Run deploy script
         run: |
           git config user.name "julienmalard" && git config user.email "julien.malard@mail.mcgill.ca"
-          npm run gh-pages-deploy
+          yarn déployer
