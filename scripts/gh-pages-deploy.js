@@ -1,37 +1,27 @@
-/* eslint-disable no-console */
-console.log('ici')
-const execa = require("execa");
-const fs = require("fs");
-(async () => {
-  try {
-    await execa("git", ["add", "--all", "--ignore-errors"]);
+const execa = require('execa')
+const emoji = require('node-emoji')
+const chalk = require('chalk')
 
-    try {
-      await execa("git", ["commit", "-a", "-m", "Avant de déployer"]);
-    } catch (e) {
-      // Nécessaire en cas qu'aucun changement n'existe
-      if (!(e.message.includes("nothing to commit, working tree clean"))) {
-        console.log(e.message);
-        process.exit(1);
-      }
-    }
-    await execa("git", ["checkout", "--orphan", "gh-pages"]);
-    // eslint-disable-next-line no-console
-    console.log("On construit le projet...");
-    await execa("yarn", ["build"]);
-    // Understand if it's dist or build folder
-    const folderName = fs.existsSync("dist") ? "dist" : "build";
-    await execa("git", ["--work-tree", folderName, "add", "--all"]);
-    await execa("git", ["--work-tree", folderName, "commit", "-m", "gh-pages"]);
-    console.log("On l'envoie à gh-pages...");
-    await execa("git", ["push", "origin", "HEAD:gh-pages", "--force"]);
-    await execa("rm", ["-r", folderName]);
-    await execa("git", ["checkout", "-f", "master"]);
-    await execa("git", ["branch", "-D", "gh-pages"]);
-    console.log("Déployé avec succès ; allez voir sur GitHub maintenant !");
+const firstLog = `${emoji.get('fast_forward')} ${chalk.yellow('Building...')}`
+const secondLog = `${emoji.get('fast_forward')} ${chalk.yellow('Pushing...')}`
+const thirdLog = `${emoji.get('rocket')} ${chalk.green('Your app successfully deployed')} ${emoji.get('rocket')}`
+
+;(async () => {
+  try {
+    const { stdout: currentBranch } = await execa.command('git branch --show-current')
+    await execa.command('git checkout --orphan gh-pages')
+    console.log(firstLog)
+    await execa.command('npm run build', { stdio: 'inherit' })
+    await execa.command('git --work-tree dist add --all')
+    await execa.command('git --work-tree dist commit -m "gh-pages"')
+    console.log(secondLog)
+    await execa.command('git push origin HEAD:gh-pages --force', { stdio: 'inherit' })
+    await execa.command('rm -r dist')
+    await execa.command(`git checkout -f ${currentBranch}`)
+    await execa.command('git branch -D gh-pages')
+    console.log(thirdLog)
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.log(e.message);
-    process.exit(1);
+    console.log(e.message)
+    process.exit(1)
   }
-})();
+})()
