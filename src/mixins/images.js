@@ -21,7 +21,7 @@ const imagesThème = {
   },
   automation: {
     unDraw: require("@/assets/undraw/undraw_real-time_sync_o57k.svg"),
-    வவவ: require("@/assets/வவவ/பொங்கல்_வண்டி.svg"),
+    // வவவ: require("@/assets/வவவ/பொங்கல்_வண்டி.svg"),
   },
   problème: {
     unDraw: require("@/assets/undraw/undraw_towing_6yy4.svg"),
