@@ -31,7 +31,9 @@ export default class Tableaux {
 
   async créerTableau(): Promise<string> {
     const idBdTableau = await this.client.créerBdIndépendante("kvstore");
-    const bdTableaux = (await this.client.ouvrirBd(idBdTableau)) as KeyValueStore;
+    const bdTableaux = (await this.client.ouvrirBd(
+      idBdTableau
+    )) as KeyValueStore;
 
     const idBdNoms = await this.client.créerBdIndépendante("kvstore");
     await bdTableaux.set("noms", idBdNoms);

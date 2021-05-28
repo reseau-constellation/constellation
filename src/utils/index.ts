@@ -1,6 +1,7 @@
 import isElectron from "is-electron";
 import DOMPurify from "dompurify";
 import marked from "marked";
+import streamSaver from "streamsaver";
 import { rutzibChabäl as écritureLangue } from "nuchabal";
 
 export function couper(texte: string, nChar: number) {
@@ -54,6 +55,25 @@ export function téléchargerURL(uri: URL, nom: string) {
   // @ts-ignore
   lien.href = uri;
   lien.click();
+}
+
+export function téléchargerFlux(fluxLecture: ReadableStream, nom: string) {
+  const fileStream = streamSaver.createWriteStream(nom)
+  if (window.WritableStream && fluxLecture.pipeTo) {
+          return fluxLecture.pipeTo(fileStream)
+            .then(() => console.log('done writing'))
+        }
+
+  const writer = fileStream.getWriter()
+    writer.write()
+    writer.close()
+  const reader = fluxLecture.getReader()
+  const pump = () => reader.read()
+    .then(res => res.done
+      ? writer.close()
+      : writer.write(res.value).then(pump))
+
+  pump()
 }
 
 export function couleurScore(score: number) {

@@ -41,7 +41,7 @@
           {{ couper(nomFichier, 10) }}
           <span class="text--disabled">[ {{ val.ext }} ]</span>
           <v-spacer />
-          <v-btn icon :disabled="!url" @click="() => télécharger()">
+          <v-btn icon @click="() => télécharger()">
             <v-icon>mdi-download</v-icon>
           </v-btn>
         </v-card-title>
@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { téléchargerURL, couper } from "@/utils";
+import { téléchargerFlux, couper } from "@/utils";
 import mixinImage from "@/mixins/images";
 
 export default {
@@ -181,8 +181,9 @@ export default {
     },
     async télécharger() {
       this.téléchargementEnProgrès = true;
-      await this.obtURL();
-      await téléchargerURL(this.url, this.nomFichier);
+      const { cid } = this.val;
+      const flux = await this.$ipa.obtFluxSFIP(cid);
+      téléchargerFlux(flux, this.nomFichier)
       this.téléchargementEnProgrès = false;
     },
   },

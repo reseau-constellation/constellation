@@ -16457,6 +16457,11 @@ streaming-iterables@^5.0.2, streaming-iterables@^5.0.3, streaming-iterables@^5.0
   resolved "https://registry.yarnpkg.com/streaming-iterables/-/streaming-iterables-5.0.4.tgz"
   integrity sha512-nEs6hBGIPsVz6uq6pscGGKfoPDQWrDQW0b0UHurtSDysekfKLmkPg7FQVRE2sj3Rad6yUo9E1sGTxOWyYsHQ/g==
 
+streamsaver@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/streamsaver/-/streamsaver-2.0.5.tgz#3212f0e908fcece5b3a65591094475cf87850d00"
+  integrity sha512-KIWtBvi8A6FiFZGNSyuIZRZM6C8AvnWTiCx/TYa7so420vC5sQwcBKkdqInuGWoWMfeWy/P+/cRqMtWVf4RW9w==
+
 strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz"
