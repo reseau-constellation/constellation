@@ -8,8 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        # [macos-latest, ubuntu-latest, windows-latest]
-        os: [ubuntu-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Ouvrir le projet
