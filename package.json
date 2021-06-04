@@ -1,6 +1,6 @@
 {
   "name": "constellation",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Le système distribué et ouvert pour le partage de données scientifiques.",
   "author": "Julien Jean Malard-Adam",
   "scripts": {
