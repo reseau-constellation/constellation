@@ -49,17 +49,17 @@
         <v-card-text>
           <v-skeleton-loader v-if="!url" class="ma-4" type="image" />
           <v-img
-            v-else-if="formatFichier==='image'"
+            v-else-if="formatFichier === 'image'"
             :src="url"
             class="ma-4"
             contain
           />
-          <vue-plyr v-else-if="formatFichier==='vidéo'">
+          <vue-plyr v-else-if="formatFichier === 'vidéo'">
             <video controls crossorigin playsinline data-poster="poster.jpg">
               <source :src="url" :type="'video/' + val.ext" />
             </video>
           </vue-plyr>
-          <vue-plyr v-else-if="formatFichier==='audio'">
+          <vue-plyr v-else-if="formatFichier === 'audio'">
             <audio controls crossorigin playsinline>
               <source :src="url" :type="'audio/' + val.ext" />
             </audio>
@@ -153,7 +153,7 @@ export default {
           return "mdi-waveform";
         default:
           return "mdi-eye";
-        }
+      }
     },
     fichiersAcceptés() {
       switch (this.type) {
@@ -194,14 +194,14 @@ export default {
       this.téléchargementEnProgrès = true;
       const { cid } = this.val;
       if (navigator.userAgent.includes("Mozilla")) {
-        await this.obtURL()
-        téléchargerURL(this.url, this.nomFichier)
+        await this.obtURL();
+        téléchargerURL(this.url, this.nomFichier);
       } else {
         const flux = this.$ipa.obtFluxSFIP(cid);
         téléchargerFlux(flux, this.nomFichier);
       }
       this.téléchargementEnProgrès = false;
-    }
+    },
   },
 };
 </script>
