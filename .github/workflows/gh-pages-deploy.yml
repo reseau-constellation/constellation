@@ -5,20 +5,20 @@ on:
       - master
 jobs:
   gh-pages-deploy:
-    name: Deploying to gh-pages
+    name: On déploie à gh-pages
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Node.js for use with actions
+      - name: Préparation de Node.js
         uses: actions/setup-node@v1.4.4
         with:
           version:  15.x
-      - name: Checkout branch
+      - name: Ouvrir la branche
         uses: actions/checkout@v2
 
-      - name: Clean install dependencies
+      - name: Nétoyer les dépendances d'installation
         run: yarn install --frozen-lockfile
 
-      - name: Run deploy script
+      - name: Déployer
         run: |
           git config user.name "julienmalard" && git config user.email "julien.malard@mail.mcgill.ca"
           yarn déployer
