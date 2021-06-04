@@ -12,10 +12,11 @@
 </template>
 
 <script>
+import Vue from "vue";
 import mixinIPA from "@/mixins/ipa";
 import carteBd from "@/components/BD/carteBD";
 
-export default {
+export default Vue.extend({
   name: "résultatsRecherchePersonnes",
   mixins: [mixinIPA],
   components: { carteBd },
@@ -33,7 +34,7 @@ export default {
       this.suivre([oublierBds]);
     },
   },
-};
+});
 </script>
 
 <style></style>

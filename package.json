@@ -22,7 +22,6 @@
     "database-js": "^3.0.10",
     "dompurify": "^2.2.7",
     "electron-store": "^7.0.2",
-    "electron-webrtc": "^0.3.0",
     "ennikkai": "^1.2.7",
     "hyperswarm-web": "^2.1.1",
     "ipfs": "^0.54.4",
@@ -46,6 +45,7 @@
     "vuetify": "2.4.9",
     "vuex": "^3.4.0",
     "vuex-persist": "^3.1.3",
+    "web-streams-polyfill": "^3.0.3",
     "wrtc": "^0.4.6",
     "xlsx": "^0.16.9",
     "yargs": "^16.2.0"

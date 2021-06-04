@@ -302,7 +302,6 @@ export default class ClientConstellation extends EventEmitter {
     };
 
     const fSuivreRacine = async <T>(éléments: Array<T>) => {
-      console.log("fSuivreRacine", { éléments });
       if (éléments.some((x) => typeof fCode(x) !== "string"))
         throw "Définir fCode si les éléments ne sont pas en format texte (chaînes).";
       const dictÉléments = Object.fromEntries(
@@ -315,7 +314,6 @@ export default class ClientConstellation extends EventEmitter {
       const disparus = existants.filter(
         (é) => !Object.keys(dictÉléments).includes(é)
       );
-      console.log({ existants, nouveaux, disparus });
       for (const d of disparus) {
         const fOublier = arbre[d].fOublier;
         if (fOublier) fOublier();
@@ -358,9 +356,9 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   obtFluxSFIP(id: string): ReadableStream {
-    const itér = this.sfip.cat(id)
-    const flux = itérateurÀFlux(itér)
-    return flux
+    const itér = this.sfip.cat(id);
+    const flux = itérateurÀFlux(itér);
+    return flux;
   }
 
   async ajouterÀSFIP(fichier: FileContent): Promise<string> {

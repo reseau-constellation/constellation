@@ -1,4 +1,6 @@
-const imagesThème = {
+import Vue from "vue";
+
+const imagesThème: { [key: string]: any } = {
   constr: {
     unDraw: require("@/assets/undraw/undraw_under_construction_46pa.svg"),
     வவவ: require("@/assets/வவவ/குயவர்.svg"),
@@ -44,9 +46,9 @@ const imagesThème = {
   },
 };
 
-export default {
+export default Vue.extend({
   methods: {
-    image(clef) {
+    image(clef: string): string {
       let thème = this.$store.state.paramètres.thèmeImages;
       const nuit = this.$store.state.paramètres.thèmeNuit;
       if (nuit && thème === "வவவ") {
@@ -57,4 +59,4 @@ export default {
       return img;
     },
   },
-};
+});

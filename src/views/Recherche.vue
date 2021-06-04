@@ -16,13 +16,15 @@
   </v-container>
 </template>
 
-<script>
-import Titre from "@/components/commun/Titre";
-import résultatsRecherchePersonnes from "@/components/recherche/résultatsRecherchePersonnes";
-import résultatsRechercheBds from "@/components/recherche/résultatsRechercheBds";
+<script lang="ts">
+import Vue from "vue";
+
+import Titre from "@/components/commun/Titre.vue";
+import résultatsRecherchePersonnes from "@/components/recherche/résultatsRecherchePersonnes.vue";
+import résultatsRechercheBds from "@/components/recherche/résultatsRechercheBds.vue";
 import mixinImage from "@/mixins/images";
 
-export default {
+export default Vue.extend({
   name: "Recherche",
   components: { Titre, résultatsRecherchePersonnes, résultatsRechercheBds },
   mixins: [mixinImage],
@@ -31,7 +33,7 @@ export default {
       catégorie: "bds",
     };
   },
-};
+});
 </script>
 
 <style></style>

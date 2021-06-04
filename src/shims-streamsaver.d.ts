@@ -1,1 +1,1 @@
-declare module 'streamsaver';
+declare module "streamsaver";

@@ -1,4 +1,3 @@
-import isElectron from "is-electron";
 const SFIP = import("ipfs");
 
 export default async function initSFIP(dir = "./ipfs") {
@@ -11,13 +10,9 @@ export default async function initSFIP(dir = "./ipfs") {
     // @ts-ignore
     config: {
       Addresses: {
-        // Touche pas à ça
-        Swarm: isElectron()
-          ? []
-          : [
-              "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/",
-            ],
-        // "Bootstrap": []
+        Swarm: [
+          "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/",
+        ],
       },
     },
     repo: dir,

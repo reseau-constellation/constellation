@@ -2,8 +2,11 @@ import isElectron from "is-electron";
 import DOMPurify from "dompurify";
 import marked from "marked";
 import streamSaver from "streamsaver";
+import {WritableStream} from 'web-streams-polyfill/ponyfill'
+
 import { rutzibChabäl as écritureLangue } from "nuchabal";
 
+streamSaver.WritableStream = WritableStream
 export function couper(texte: string, nChar: number) {
   if (texte.length <= nChar) {
     return texte;
@@ -57,23 +60,27 @@ export function téléchargerURL(uri: URL, nom: string) {
   lien.click();
 }
 
+
 export function téléchargerFlux(fluxLecture: ReadableStream, nom: string) {
-  const fileStream = streamSaver.createWriteStream(nom)
+  console.log({fluxLecture})
+  const fileStream = streamSaver.createWriteStream(nom);
   if (window.WritableStream && fluxLecture.pipeTo) {
-          return fluxLecture.pipeTo(fileStream)
-            .then(() => console.log('done writing'))
-        }
+    return fluxLecture
+      .pipeTo(fileStream);
+  }
 
-  const writer = fileStream.getWriter()
-    writer.write()
-    writer.close()
-  const reader = fluxLecture.getReader()
-  const pump = () => reader.read()
-    .then(res => res.done
-      ? writer.close()
-      : writer.write(res.value).then(pump))
+  const writer = fileStream.getWriter();
+  writer.write();
+  writer.close();
+  const reader = fluxLecture.getReader();
+  const pump = () =>
+    reader
+      .read()
+      .then((res) =>
+        res.done ? writer.close() : writer.write(res.value).then(pump)
+      );
 
-  pump()
+  pump();
 }
 
 export function couleurScore(score: number) {

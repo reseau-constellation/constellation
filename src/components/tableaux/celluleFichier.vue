@@ -49,17 +49,17 @@
         <v-card-text>
           <v-skeleton-loader v-if="!url" class="ma-4" type="image" />
           <v-img
-            v-else-if="formats.images.includes(val.ext.toLowerCase())"
+            v-else-if="formatFichier==='image'"
             :src="url"
             class="ma-4"
             contain
           />
-          <vue-plyr v-else-if="formats.vidéo.includes(val.ext.toLowerCase())">
+          <vue-plyr v-else-if="formatFichier==='vidéo'">
             <video controls crossorigin playsinline data-poster="poster.jpg">
               <source :src="url" :type="'video/' + val.ext" />
             </video>
           </vue-plyr>
-          <vue-plyr v-else-if="formats.audio.includes(val.ext.toLowerCase())">
+          <vue-plyr v-else-if="formatFichier==='audio'">
             <audio controls crossorigin playsinline>
               <source :src="url" :type="'audio/' + val.ext" />
             </audio>
@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { téléchargerFlux, couper } from "@/utils";
+import { téléchargerFlux, téléchargerURL, couper } from "@/utils";
 import mixinImage from "@/mixins/images";
 
 export default {
@@ -131,17 +131,29 @@ export default {
       const nomFichier = `${cid}.${ext}`;
       return nomFichier;
     },
-    icône: function () {
+    formatFichier: function () {
       const ext = this.val.ext.toLowerCase();
       if (this.formats.images.includes(ext)) {
-        return "mdi-image";
+        return "image";
       } else if (this.formats.vidéo.includes(ext)) {
-        return "mdi-play-box-outline";
+        return "vidéo";
       } else if (this.formats.audio.includes(ext)) {
-        return "mdi-waveform";
+        return "audio";
       } else {
-        return "mdi-eye";
+        return "autre";
       }
+    },
+    icône: function () {
+      switch (this.formatFichier) {
+        case "image":
+          return "mdi-image";
+        case "vidéo":
+          return "mdi-play-box-outline";
+        case "audio":
+          return "mdi-waveform";
+        default:
+          return "mdi-eye";
+        }
     },
     fichiersAcceptés() {
       switch (this.type) {
@@ -181,10 +193,15 @@ export default {
     async télécharger() {
       this.téléchargementEnProgrès = true;
       const { cid } = this.val;
-      const flux = await this.$ipa.obtFluxSFIP(cid);
-      téléchargerFlux(flux, this.nomFichier)
+      if (navigator.userAgent.includes("Mozilla")) {
+        await this.obtURL()
+        téléchargerURL(this.url, this.nomFichier)
+      } else {
+        const flux = this.$ipa.obtFluxSFIP(cid);
+        téléchargerFlux(flux, this.nomFichier);
+      }
       this.téléchargementEnProgrès = false;
-    },
+    }
   },
 };
 </script>
