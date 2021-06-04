@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         # [macos-latest, ubuntu-latest, windows-latest]
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
 
     steps:
       - name: Check out Git repository
