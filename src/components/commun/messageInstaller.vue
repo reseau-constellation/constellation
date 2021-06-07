@@ -7,9 +7,7 @@
       outlined
       small
       class="mb-5"
-      @click="
-        ouvrirLien('https://github.com/julienmalard/constellation/releases')
-      "
+      @click="$router.push(encodeURI('/téléchargements'))"
     >
       {{ $t("communs.btnInstaller") }}
       <v-icon right>

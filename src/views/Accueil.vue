@@ -62,9 +62,7 @@
           outlined
           small
           class="mx-2"
-          @click="
-            ouvrirLien('https://github.com/julienmalard/constellation/releases')
-          "
+          @click="$router.push(encodeURI('/téléchargements'))"
         >
           {{ $t("communs.btnInstaller") }}
           <v-icon right>mdi-download</v-icon>

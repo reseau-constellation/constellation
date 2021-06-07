@@ -63,6 +63,11 @@ const routes: Array<RouteConfig> = [
     component: () => import("@/views/Conditions.vue"),
   },
   { path: "*", redirect: "/" },
+  {
+    path: encodeURI("/téléchargements"),
+    name: "Téléchargements",
+    component: () => import("@/views/Téléchargements.vue"),
+  },
 ];
 
 const router = new VueRouter({

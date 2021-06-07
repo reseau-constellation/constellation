@@ -144,6 +144,9 @@
       "p4_1": "Ce logiciel fut développé par Julien Malard.",
       "p4_2": "Les images et l'art proviennent de [unDraw](https://undraw.co/) et de [வள்ளுவர் வள்ளலார் வட்டம்](https://commons.wikimedia.org/wiki/User:Valluvar_Vallalar_Vattam?uselang=ta). Ces derniers sont disponibles selon la licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr)."
     },
+    "téléchargements": {
+      "entête": "Télécharger Constellation"
+    },
     "licences": {
       "CC-BY-SA-4_0": {
         "nom": "CC BY SA 4.0",
