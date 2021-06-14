@@ -1,71 +1,13 @@
 "use strict";
 
 import { app, protocol, BrowserWindow, ipcMain } from "electron";
+import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 const isDevelopment = process.env.NODE_ENV !== "production";
-import IpfsDaemon from "ipfs-daemon";
-const Store = require("electron-store");
+import Store from "electron-store";
+
 Store.initRenderer();
-
-// IPFS instance
-let ipfs: any;
-
-const startIpfs = () => {
-  // Create IPFS instance
-  ipfs = new IpfsDaemon({
-    relay: { enabled: true, hop: { enabled: true, active: true } },
-    // @ts-ignore
-    config: {
-      Addresses: {
-        Swarm: [
-          "/dns4/arcane-springs-02799.herokuapp.com/tcp/443/wss/p2p-webrtc-star/",
-        ],
-        // "Bootstrap": []
-      },
-    },
-  });
-  return ipfs;
-};
-
-const stopIpfs = () => {
-  if (ipfs) {
-    // TODO: use promises when available from ipfs-daemon
-    // ipfs.stop().then(() => ipfs = nul)
-    ipfs.stop();
-    ipfs = null;
-  }
-};
-
-const shutdown = () => {
-  stopIpfs();
-  setTimeout(() => {
-    app.exit(0);
-    process.exit(0);
-  }, 1000);
-};
-
-/*
-ipcMain.handle("obt-url-sfip-http", async (event) => {
-  try {
-
-    const node = await SFIP.create({
-      relay: { enabled: true, hop: { enabled: true, active: true } },
-      repo: "./ipfs"
-    });
-    const id = await node.id()
-    console.log("ici", {node})
-    const addrs = await node.swarm.localAddrs()
-    return addrs.map(x=>x.toString())
-
-    const node = daemon()
-    await node.start()
-    console.log("ici", node)
-  } catch (err) {
-    console.error("erreur", {err})
-  }
-})
-*/
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -73,16 +15,6 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 async function createWindow() {
-  // Handle start daemon event from the renderer process
-  ipcMain.on("ipfs-daemon-start", async (event, ipfsDaemonSettings) => {
-    // Make sure we stop a running daemon if any
-    stopIpfs();
-
-    // Create IPFS instance
-    // startIpfs();
-
-    return ipfs.GatewayAddress || "http://localhost:8080/";
-  });
 
   // Create the browser window.
   const win = new BrowserWindow({
@@ -108,6 +40,14 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
   }
+  win.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
+  autoUpdater.on('update-available', () => {
+    win.webContents.send('update_available');
+  });autoUpdater.on('update-downloaded', () => {
+    win.webContents.send('update_downloaded');
+  });
 }
 
 // Quit when all windows are closed.
@@ -115,29 +55,14 @@ app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
-    shutdown();
     app.quit();
   }
 });
-
-app.on("will-quit", (e) => {
-  e.preventDefault();
-  shutdown();
-});
-process.on("SIGINT", () => shutdown());
-process.on("SIGTERM", () => shutdown());
 
 app.on("activate", () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
-});
-
-process.on("uncaughtException", (error) => {
-  // Skip 'ctrl-c' error and shutdown gracefully
-  const match = String(error).match(/non-zero exit code 255/);
-  if (match) shutdown();
-  else console.error(error);
 });
 
 // This method will be called when Electron has finished
@@ -169,3 +94,8 @@ if (isDevelopment) {
     });
   }
 }
+
+// https://medium.com/@johndyer24/creating-and-deploying-an-auto-updating-electron-app-for-mac-and-windows-using-electron-builder-6a3982c0cee6
+ipcMain.on('app_version', (event) => {
+  event.sender.send('app_version', { version: app.getVersion() });
+});

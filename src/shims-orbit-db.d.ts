@@ -9,6 +9,7 @@ declare module "orbit-db" {
     identity: {
       id: string;
     };
+    isValidAddress(address: string): boolean;
     open(address: string, options?: ?{ [key: string]: any }): Promise<Store>;
     kvstore(string): Promise<Store>;
     keyvalue(string): Promise<Store>;

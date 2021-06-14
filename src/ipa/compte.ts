@@ -34,12 +34,17 @@ export default class Compte {
     await bd.set("courriel", courriel);
   }
 
+  async effacerCourriel(): Promise<void> {
+    const bd = (await this.client.ouvrirBd(this.idBd)) as KeyValueStore;
+    await bd.del("courriel");
+  }
+
   async suivreNoms(
     f: schémaFonctionSuivi,
     idBdRacine?: string
   ): Promise<schémaFonctionOublier> {
     idBdRacine = idBdRacine || this.idBd;
-    return await this.client.suivreBdDicDeClef(idBdRacine, "noms", f);
+      return await this.client.suivreBdDicDeClef(idBdRacine, "noms", f);
   }
 
   async sauvegarderNom(langue: string, nom: string): Promise<void> {

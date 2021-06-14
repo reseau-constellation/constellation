@@ -417,6 +417,13 @@ export default class ClientConstellation extends EventEmitter {
     return bd.id;
   }
 
+  async _générerBd(type: orbitDbStoreTypes, nom: string): Promise<Store> {
+    if (this.orbite!.isValidAddress(nom) && this._bds[nom]) return this._bds[nom]
+    const bd = await this.orbite![type](nom)
+    this._bds[bd.id] = bd
+    return bd
+  }
+
   async effacerBd(id: string): Promise<void> {
     const bd = await this.orbite!.open(id);
     await bd.drop();
@@ -427,6 +434,11 @@ export default class ClientConstellation extends EventEmitter {
     const bd = await this.ouvrirBd(id);
     const accès = bd.access;
     return accès.write.includes(this.orbite!.identity.id);
+  }
+
+  async épinglerBd(id: string) {
+    const bd = await this.ouvrirBd(id)
+
   }
 
   static async créer() {

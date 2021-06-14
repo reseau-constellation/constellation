@@ -133,8 +133,8 @@ export default {
   methods: {
     sauvegarderCourriel: function () {
       const courriel = this.courriel.trim();
-      if (courriel && courriel !== this.courrielOrig) {
-        this.$ipa.compte.sauvegarderCourriel(courriel);
+      if (courriel !== this.courrielOrig) {
+        courriel.length ? this.$ipa.compte.sauvegarderCourriel(courriel): this.$ipa.compte.effacerCourriel()
       }
     },
     initialiserSuivi: async function () {
