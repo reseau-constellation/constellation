@@ -1,5 +1,5 @@
 import OrbitDB from "orbit-db";
-import AccessControllers from "./controlleursAccès";
+import AccessControllers from "./accès";
 import IPFS from "ipfs";
 
 export default async function initOrbite(sfip: typeof IPFS) {

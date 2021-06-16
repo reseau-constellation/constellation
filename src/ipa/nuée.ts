@@ -27,6 +27,7 @@ export default class Nuée {
         type: "Salut !",
         contenu: {
           id: this.client.idNodeSFIP!.id,
+          idOrbite: this.client.orbite!.identity.id,
           racine: this.client.bdRacine!.id,
         },
       };

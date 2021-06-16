@@ -224,11 +224,21 @@
                 </v-list-item-action>
               </v-list-item>
             </v-card>
+            <v-list-item @click="ouvrirRéplications;">
+              <v-list-item-avatar>
+                <v-icon left>
+                  mdi-plus
+                </v-icon>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                3 réplications
+              </v-list-item-content>
+            </v-list-item>
           </div>
         </v-card>
         <v-card flat class="mx-3 mb-3">
           <div class="d-flex flex-wrap">
-            <v-card flat min-width="200" max-width="350" class="mb-3 mx-2">
+            <v-card flat min-width="200" max-width="350" class="mb-3">
               <p class="mb-0 text-overline">Variables</p>
               <p v-if="!variables.length" class="text--disabled">
                 Aucune variable
@@ -278,6 +288,17 @@
         </v-card>
         <v-list>
           <p class="mb-0 text-overline">
+            Intégrations
+            <v-btn icon small @click="ajouterIntégration;">
+              <v-icon small>mdi-plus</v-icon>
+            </v-btn>
+          </p>
+          <v-divider />
+          <v-list>
+            <itemIntégration v-for="x in [0, 1, 2, 3]" :key="x" />
+          </v-list>
+
+          <p class="mb-0 text-overline">
             Tableaux
             <v-btn v-if="permissionÉcrire" icon small @click="ajouterTableau">
               <v-icon small>mdi-plus</v-icon>
@@ -292,11 +313,22 @@
             <v-btn
               v-if="permissionÉcrire"
               color="primary"
+              class="mx-2"
               outlined
               text
               @click="ajouterTableau"
             >
               Ajouter un tableau
+            </v-btn>
+            <v-btn
+              v-if="permissionÉcrire"
+              color="primary"
+              class="mx-2"
+              outlined
+              text
+              @click="importer"
+            >
+              Importer des données
             </v-btn>
           </div>
           <transition-group
@@ -331,6 +363,7 @@ import { licences } from "@/ipa/licences";
 
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import itemTableau from "@/components/BD/itemTableau";
+import itemIntégration from "@/components/BD/itemIntégration";
 import lienOrbite from "@/components/commun/lienOrbite";
 import lienTélécharger from "@/components/commun/lienTélécharger";
 import mixinImage from "@/mixins/images";
@@ -343,6 +376,7 @@ export default {
   name: "visBD",
   components: {
     itemTableau,
+    itemIntégration,
     lienOrbite,
     lienTélécharger,
     jetonVariable,

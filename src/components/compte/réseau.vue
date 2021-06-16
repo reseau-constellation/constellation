@@ -15,7 +15,7 @@
         </p>
         <v-divider v-if="connexions.length" />
         <v-list v-if="connexions.length" two-line dense>
-          <v-list-item v-for="c in connexions" :key="c.peer.toString()">
+          <v-list-item v-for="c in connexions" :key="c.addr.toString()">
             <v-list-item-avatar>
               {{ c.peer.toString()[c.peer.toString().length - 1] }}
             </v-list-item-avatar>

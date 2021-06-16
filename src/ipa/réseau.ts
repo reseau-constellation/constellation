@@ -21,20 +21,23 @@ export default class Réseau {
 
     // N'oublions pas de nous ajouter nous-mêmes la première fois
     this.ajouterMembre(this.client.bdRacine!.id);
-    this._nettoyerListeMembres()
+    this._nettoyerListeMembres();
   }
 
   async _nettoyerListeMembres() {
     const bd = await this.client.ouvrirBd(this.idBd);
-    const éléments = ClientConstellation.obtÉlémentsDeBdListe(bd as FeedStore, false)
-    const déjàVus: string[] = []
+    const éléments = ClientConstellation.obtÉlémentsDeBdListe(
+      bd as FeedStore,
+      false
+    );
+    const déjàVus: string[] = [];
     for (const é of éléments) {
-      const entrée: unknown = (é as élémentBdListe).payload.value
-      const id = (entrée as infoMembre).id
+      const entrée: unknown = (é as élémentBdListe).payload.value;
+      const id = (entrée as infoMembre).id;
       if (déjàVus.includes(id)) {
-        await (bd as FeedStore).remove((é as élémentBdListe).hash)
+        await (bd as FeedStore).remove((é as élémentBdListe).hash);
       } else {
-        déjàVus.push(id)
+        déjàVus.push(id);
       }
     }
   }
@@ -49,13 +52,13 @@ export default class Réseau {
       const élément: infoMembre = {
         id: id,
       };
-      console.log("on ajoute ", id)
+      console.log("on ajoute ", id);
       await bdRacine.add(élément);
     }
     if (!this.fOublierMembres[id]) {
       this.fOublierMembres[id] = () => {
         // Réserver l'espace en attente de générer fOublier
-      }
+      };
       const f = async (membres: infoMembre[]) => {
         membres.forEach((m: infoMembre) => this.ajouterMembre(m.id));
       };
@@ -131,7 +134,8 @@ export default class Réseau {
       id,
       "bds",
       f,
-      (id: string, f: schémaFonctionSuivi) => this.client.favoris!.suivreFavoris(f, id)
+      (id: string, f: schémaFonctionSuivi) =>
+        this.client.favoris!.suivreFavoris(f, id)
     );
   }
 
@@ -140,23 +144,26 @@ export default class Réseau {
       id: string,
       f: schémaFonctionSuivi
     ): Promise<schémaFonctionOublier> => {
-      const bds = {propres: [], favoris: []}
-      const fFinale = async function() {
-        const toutes = [...new Set([...bds.propres, ...bds.favoris])]
-        f(toutes)
-      }
-      const oublierBdsPropres = await this.suivreBdsMembre(id, (propres)=>{
-        bds.propres = propres
-        fFinale()
+      const bds = { propres: [], favoris: [] };
+      const fFinale = async function () {
+        const toutes = [...new Set([...bds.propres, ...bds.favoris])];
+        f(toutes);
+      };
+      const oublierBdsPropres = await this.suivreBdsMembre(id, (propres) => {
+        bds.propres = propres;
+        fFinale();
       });
-      const oublierBdsFavoris = await this.suivreFavorisMembre(id, (favoris) =>{
-        bds.favoris = favoris
-        fFinale()
-      });
+      const oublierBdsFavoris = await this.suivreFavorisMembre(
+        id,
+        (favoris) => {
+          bds.favoris = favoris;
+          fFinale();
+        }
+      );
       return () => {
-        oublierBdsPropres()
-        oublierBdsFavoris()
-      }
+        oublierBdsPropres();
+        oublierBdsFavoris();
+      };
     };
     const fIdBdDeBranche = (x: unknown) => (x as infoMembre).id;
     const fCode = (x: unknown) => (x as infoMembre).id;

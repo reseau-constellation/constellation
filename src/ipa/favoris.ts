@@ -23,9 +23,10 @@ export default class Favoris {
   ): Promise<schémaFonctionOublier> {
     idBdRacine = idBdRacine || this.idBd;
     const fFinale = (listeFavoris: EntréeFavoris[]) => {
-      f(listeFavoris
-        .map((x: EntréeFavoris) => typeof x === "string" ? x : x.id)
-        .filter(x => x)
+      f(
+        listeFavoris
+          .map((x: EntréeFavoris) => (typeof x === "string" ? x : x.id))
+          .filter((x) => x)
       );
     };
     return await this.client.suivreBdListe(idBdRacine, fFinale);

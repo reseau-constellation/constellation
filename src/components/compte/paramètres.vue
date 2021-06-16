@@ -54,7 +54,7 @@
         <v-row>
           <v-col cols="4">
             <v-file-input
-              v-model="image"
+              v-model="imageProfil"
               accept="image/*"
               prepend-icon="mdi-camera-outline"
               append-icon="mdi-close"
@@ -80,10 +80,36 @@
         <p class="px-0 text-overline">
           {{ $t("compte.onglets.compte.dispositifs") }}
         </p>
-        <p class="text--disabled">
-          Pour l'instant, l'ajout d'un nouveau dispositif électronique à votre
-          compte n'est pas encore pris en charge. Mais on y travaille !
-        </p>
+
+        <v-divider v-if="dispositifs && dispositifs.length" />
+        <v-skeleton-loader v-if="dispositifs === null" type="paragraph" />
+        <v-list v-if="dispositifs !== null" two-line dense>
+          <v-list-item @click="ajouterDispositif">
+            <v-list-item-avatar>
+              <v-icon>mdi-plus</v-icon>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>
+                Ajouter un dispositif
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Ajouttez un autre ordinateur, téléphone, ou navigateur à votre
+                compte pour plus de sécurité.
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item v-for="d in dispositifs" :key="d">
+            <v-list-item-avatar>
+              <v-img :src="image('dispositif')" contain />
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title> Id: {{ d }} </v-list-item-title>
+              <v-list-item-subtitle class="success--text">
+                {{ d === idDispositif ? "Dispositif présent" : "" }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
       </v-col>
     </v-row>
   </v-card>
@@ -91,6 +117,7 @@
 
 <script>
 import mixinIPA from "@/mixins/ipa";
+import mixinImages from "@/mixins/images";
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import { traduireNom } from "@/utils";
 
@@ -98,23 +125,27 @@ export default {
   name: "ongletParamètresCompte",
   data: function () {
     return {
-      image: undefined,
+      imageProfil: undefined,
       courrielOrig: "",
       courriel: "",
       noms: {},
       fichierTropGrand: false,
+      dispositifs: null,
     };
   },
-  mixins: [mixinIPA],
+  mixins: [mixinIPA, mixinImages],
   components: { boîteNoms },
   computed: {
     nom: function () {
       const languesPréférées = [this.$i18n.locale];
       return traduireNom(this.noms, languesPréférées);
     },
+    idDispositif: function () {
+      return this.$ipa.orbite.identity.id;
+    },
   },
   watch: {
-    image: function (fichier) {
+    imageProfil: function (fichier) {
       if (fichier) {
         if (fichier.size > this.$ipa.compte.MAX_TAILLE_IMAGE) {
           this.fichierTropGrand = true;
@@ -134,7 +165,9 @@ export default {
     sauvegarderCourriel: function () {
       const courriel = this.courriel.trim();
       if (courriel !== this.courrielOrig) {
-        courriel.length ? this.$ipa.compte.sauvegarderCourriel(courriel): this.$ipa.compte.effacerCourriel()
+        courriel.length
+          ? this.$ipa.compte.sauvegarderCourriel(courriel)
+          : this.$ipa.compte.effacerCourriel();
       }
     },
     initialiserSuivi: async function () {
@@ -147,11 +180,17 @@ export default {
       const oublierNoms = await this.$ipa.compte.suivreNoms((noms) => {
         this.noms = noms;
       });
-      this.suivre([oublierCourriel, oublierNoms]);
+
+      const oublierDispositifs = await this.$ipa.suivreDispositifs(
+        (dispositifs) => {
+          this.dispositifs = dispositifs;
+        }
+      );
+      this.suivre([oublierCourriel, oublierNoms, oublierDispositifs]);
     },
     effacerImage: async function () {
       if (this.fichierTropGrand) {
-        this.image = undefined;
+        this.imageProfil = undefined;
         this.fichierTropGrand = false;
       } else {
         await this.$ipa.compte.effacerImage();
@@ -166,6 +205,9 @@ export default {
     },
     effacerNom({ langue }) {
       this.$ipa.compte.effacerNom(langue);
+    },
+    ajouterDispositif() {
+      console.warn("À faire");
     },
   },
 };

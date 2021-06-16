@@ -1,7 +1,9 @@
 const SFIP = import("ipfs");
-import isElectron from "is-electron"
-import wrtc from 'wrtc'
-import WebRTCStar from 'libp2p-webrtc-star'
+import wrtc from "wrtc";
+import WebRTCStar from "libp2p-webrtc-star";
+import Websockets from "libp2p-websockets";
+import WebRTCDirect from "libp2p-webrtc-direct";
+import { NOISE } from "libp2p-noise";
 
 export default async function initSFIP(dir = "./ipfs") {
   const libSFIP = await SFIP;
@@ -10,20 +12,23 @@ export default async function initSFIP(dir = "./ipfs") {
   const sfip = await libSFIP.create({
     libp2p: {
       modules: {
-        transport: [WebRTCStar]
+        transport: [WebRTCStar, Websockets, WebRTCDirect],
       },
       config: {
         peerDiscovery: {
-          webRTCStar: { // <- note the lower-case w - see https://github.com/libp2p/js-libp2p/issues/576
-            enabled: true
-          }
+          webRTCStar: {
+            // <- note the lower-case w - see https://github.com/libp2p/js-libp2p/issues/576
+            enabled: true,
+          },
         },
         transport: {
-          WebRTCStar: { // <- note the upper-case w- see https://github.com/libp2p/js-libp2p/issues/576
-            wrtc
-          }
-        }
-      }
+          WebRTCStar: {
+            // <- note the upper-case w- see https://github.com/libp2p/js-libp2p/issues/576
+            wrtc,
+            connEncryption: [NOISE],
+          },
+        },
+      },
       // transportManager: { faultTolerance: 1 }
     },
     relay: { enabled: true, hop: { enabled: true, active: true } },

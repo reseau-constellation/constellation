@@ -105,7 +105,26 @@ export default class ClientConstellation extends EventEmitter {
       },
     };
 
-    this.bdRacine = (await this.orbite!.kvstore("racine")) as KeyValueStore; //, this._opsAutoBD);
+    const testNouveauContrôleur = await this.orbite!.kvstore(
+      "test",
+      this._opsAutoBD
+    );
+    window.testBd = testNouveauContrôleur;
+
+    this._opsAutoBD2 = {
+      accessController: {
+        type: "controlleur-constellation",
+        adresseBd: testNouveauContrôleur.access.bd.address
+      },
+    };
+    const testNouveauContrôleur2 = await this.orbite!.kvstore(
+      "test2",
+      this._opsAutoBD2
+    );
+    window.testBd2 = testNouveauContrôleur2;
+
+    this.bdRacine = (await this.orbite!.kvstore("racine")) as KeyValueStore; // , this._opsAutoBD
+    console.log(this.bdRacine);
     await this.bdRacine.load();
     const idBdCompte = await this.obtIdBd("compte", this.bdRacine, "kvstore");
     this.compte = new Compte(this, idBdCompte!);
@@ -138,13 +157,54 @@ export default class ClientConstellation extends EventEmitter {
     f: schémaFonctionSuivi,
     t = 3000
   ): Promise<schémaFonctionOublier> {
+    interface pairSFIP {
+      addr: Uint8Array;
+      peer: Uint8Array;
+    }
+    const dédoublerConnexions = (connexions: pairSFIP[]): pairSFIP[] => {
+      const adrDéjàVues: string[] = [];
+      const dédupliquées: pairSFIP[] = [];
+      for (const c of connexions) {
+        if (!adrDéjàVues.includes(c.addr.toString())) {
+          adrDéjàVues.push(c.addr.toString());
+          dédupliquées.push(c);
+        }
+      }
+      return dédupliquées;
+    };
     const fFinale = async () => {
+      // Enlever les doublons (pas trop sûr ce qu'ils font ici)
       const connexions = await this.sfip.swarm.peers();
-      f(connexions);
+      f(dédoublerConnexions(connexions));
     };
     const oublier = setInterval(fFinale, t);
     fFinale();
     return () => clearInterval(oublier);
+  }
+
+  async suivreDispositifs(
+    f: schémaFonctionSuivi,
+    idBdRacine?: string
+  ): Promise<schémaFonctionOublier> {
+    idBdRacine = idBdRacine || this.bdRacine!.id;
+    const bd = await this.ouvrirBd(idBdRacine);
+    const accès = bd.access;
+    if (accès.type === "ipfs") {
+      f(accès.write);
+      return () => {
+        // Rien à faire
+      };
+    } else if (accès.type === "controlleur-constellation") {
+      console.warn("doit être implémenté");
+
+      return () => {
+        //à faire
+      };
+    } else {
+      return () => {
+        // Rien à faire
+      };
+    }
   }
 
   async suivreBd(
@@ -418,10 +478,11 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async _générerBd(type: orbitDbStoreTypes, nom: string): Promise<Store> {
-    if (this.orbite!.isValidAddress(nom) && this._bds[nom]) return this._bds[nom]
-    const bd = await this.orbite![type](nom)
-    this._bds[bd.id] = bd
-    return bd
+    if (this.orbite!.isValidAddress(nom) && this._bds[nom])
+      return this._bds[nom];
+    const bd = await this.orbite![type](nom);
+    this._bds[bd.id] = bd;
+    return bd;
   }
 
   async effacerBd(id: string): Promise<void> {
@@ -437,8 +498,8 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async épinglerBd(id: string) {
-    const bd = await this.ouvrirBd(id)
-
+    const bd = await this.ouvrirBd(id);
+    console.error("Doit être implémenté");
   }
 
   static async créer() {

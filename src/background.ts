@@ -15,7 +15,6 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 async function createWindow() {
-
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
@@ -40,13 +39,14 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
   }
-  win.once('ready-to-show', () => {
+  win.once("ready-to-show", () => {
     autoUpdater.checkForUpdatesAndNotify();
   });
-  autoUpdater.on('update-available', () => {
-    win.webContents.send('update_available');
-  });autoUpdater.on('update-downloaded', () => {
-    win.webContents.send('update_downloaded');
+  autoUpdater.on("update-available", () => {
+    win.webContents.send("update_available");
+  });
+  autoUpdater.on("update-downloaded", () => {
+    win.webContents.send("update_downloaded");
   });
 }
 
@@ -96,6 +96,6 @@ if (isDevelopment) {
 }
 
 // https://medium.com/@johndyer24/creating-and-deploying-an-auto-updating-electron-app-for-mac-and-windows-using-electron-builder-6a3982c0cee6
-ipcMain.on('app_version', (event) => {
-  event.sender.send('app_version', { version: app.getVersion() });
+ipcMain.on("app_version", (event) => {
+  event.sender.send("app_version", { version: app.getVersion() });
 });

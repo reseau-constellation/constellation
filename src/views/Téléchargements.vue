@@ -6,13 +6,38 @@
       <v-toolbar class="mb-4">
         <v-row>
           <v-col cols="4">
-            <v-select dense hide-details label="Version" clearable v-model="version" :items="versions" outlined></v-select>
+            <v-select
+              dense
+              hide-details
+              label="Version"
+              clearable
+              v-model="version"
+              :items="versions"
+              outlined
+            ></v-select>
           </v-col>
           <v-col cols="4">
-            <v-select dense hide-details clearable label="Système opératoire" v-model="système" :items="systèmesOpératoirs.map(x=>x.nom)" outlined></v-select>
+            <v-select
+              dense
+              hide-details
+              clearable
+              label="Système opératoire"
+              v-model="système"
+              :items="systèmesOpératoirs.map((x) => x.nom)"
+              outlined
+            ></v-select>
           </v-col>
           <v-col cols="4">
-            <v-btn tile outlined color="primary" @click="ouvrirLien('https://github.com/julienmalard/constellation/releases')">
+            <v-btn
+              tile
+              outlined
+              color="primary"
+              @click="
+                ouvrirLien(
+                  'https://github.com/julienmalard/constellation/releases'
+                )
+              "
+            >
               Voir toutes les versions
               <v-icon right>mdi-open-in-new</v-icon>
             </v-btn>
@@ -21,7 +46,6 @@
       </v-toolbar>
 
       <v-slide-x-transition group class="d-flex flex-wrap justify-center">
-
         <carte-fichier-installation
           v-for="fichier in fichiersChoisis"
           :key="fichier.id"
@@ -45,64 +69,89 @@ import mixinImage from "@/mixins/images";
 import Titre from "@/components/commun/Titre";
 import carteFichierInstallation from "@/components/téléchargements/carteFichierInstallation";
 
-const obtExt = function(nomFichier) {
-  console.log(nomFichier)
-  return nomFichier.split('.').pop()
-}
+const obtExt = function (nomFichier) {
+  console.log(nomFichier);
+  return nomFichier.split(".").pop();
+};
 
 export default {
   name: "Téléchargements",
   components: { Titre, carteFichierInstallation },
   mixins: [mixinImage],
-  data: function() {
+  data: function () {
     return {
       fichiers: [],
       versions: [],
       systèmesOpératoirs: [
-        {nom: "Linux", logo: require("@/assets/logosSO/Linux.png"), exts:["AppImage"]},
-        {nom: "macOS", logo: require("@/assets/logosSO/macOS.png"), exts:["dmg"]},
-        {nom: "Windows", logo: require("@/assets/logosSO/Windows.png"), exts:["exe"]}
+        {
+          nom: "Linux",
+          logo: require("@/assets/logosSO/Linux.png"),
+          exts: ["AppImage"],
+        },
+        {
+          nom: "macOS",
+          logo: require("@/assets/logosSO/macOS.png"),
+          exts: ["dmg"],
+        },
+        {
+          nom: "Windows",
+          logo: require("@/assets/logosSO/Windows.png"),
+          exts: ["exe"],
+        },
       ],
       système: null,
       version: null,
-      électron: isElectron()
-    }
+      électron: isElectron(),
+    };
   },
   computed: {
-    fichiersChoisis: function() {
-      const extsSoChoisi = this.système ? this.systèmesOpératoirs.find(s=>s.nom === this.système).exts : []
+    fichiersChoisis: function () {
+      const extsSoChoisi = this.système
+        ? this.systèmesOpératoirs.find((s) => s.nom === this.système).exts
+        : [];
       return this.fichiers
-        .filter(f=>!this.version || f.version===this.version)
-        .filter(f=>!extsSoChoisi.length || extsSoChoisi.includes(obtExt(f.name)))
-    }
+        .filter((f) => !this.version || f.version === this.version)
+        .filter(
+          (f) => !extsSoChoisi.length || extsSoChoisi.includes(obtExt(f.name))
+        );
+    },
   },
   methods: {
     ouvrirLien,
-    soFichier: function(fichier) {
-      const ext = obtExt(fichier)
-      const so = this.systèmesOpératoirs.find(s=>s.exts.includes(ext))
-      return so
+    soFichier: function (fichier) {
+      const ext = obtExt(fichier);
+      const so = this.systèmesOpératoirs.find((s) => s.exts.includes(ext));
+      return so;
     },
-    imageFichier: function(fichier) {
-      const so = this.soFichier(fichier)
-      return so.logo || this.image("docs")
+    imageFichier: function (fichier) {
+      const so = this.soFichier(fichier);
+      return so.logo || this.image("docs");
+    },
+  },
+  mounted: async function () {
+    const json = (
+      await axios.get(
+        "https://api.github.com/repos/julienmalard/constellation/releases"
+      )
+    ).data;
+
+    const extentions = ["AppImage", "dmg", "exe"];
+
+    for (const v of json) {
+      const version = v.name;
+      this.fichiers = [
+        ...this.fichiers,
+        ...v.assets
+          .map((a) => {
+            return { ...a, version };
+          })
+          .filter((a) => extentions.includes(obtExt(a.name))),
+      ];
+      this.versions = [...this.versions, version];
+      if (this.versions.length) this.version = this.versions[0];
     }
   },
-  mounted: async function() {
-    const json = (await axios.get('https://api.github.com/repos/julienmalard/constellation/releases')).data;
-
-    const extentions = ["AppImage", "dmg", "exe"]
-
-    for (const v of json){
-      const version = v.name
-      this.fichiers=[...this.fichiers, ...v.assets.map(a=>{return {...a, version}}).filter(a=>extentions.includes(obtExt(a.name)))]
-      this.versions = [...this.versions, version]
-      if (this.versions.length) this.version = this.versions[0]
-    }
-  }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

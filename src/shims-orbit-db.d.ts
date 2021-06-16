@@ -1,5 +1,6 @@
 declare module "orbit-db" {
   import { EventEmitter } from "events";
+  import IPFS from "ipfs";
 
   export default class OrbitDB {
     static createInstance(
@@ -9,14 +10,16 @@ declare module "orbit-db" {
     identity: {
       id: string;
     };
+    _ipfs: IPFS;
+    determineAddress(name: string, type: string, options?: ?{ [key: string]: any })
     isValidAddress(address: string): boolean;
     open(address: string, options?: ?{ [key: string]: any }): Promise<Store>;
-    kvstore(string): Promise<Store>;
-    keyvalue(string): Promise<Store>;
-    feed(string): Promise<Store>;
-    eventlog(string): Promise<Store>;
-    counter(string): Promise<Store>;
-    docstore(string): Promise<Store>;
+    kvstore(string, options?: ?{ [key: string]: any }): Promise<Store>;
+    keyvalue(string, options?: ?{ [key: string]: any }): Promise<KeyValueStore>;
+    feed(string, options?: ?{ [key: string]: any }): Promise<FeedStore>;
+    eventlog(string, options?: ?{ [key: string]: any }): Promise<Store>;
+    counter(string, options?: ?{ [key: string]: any }): Promise<Store>;
+    docstore(string, options?: ?{ [key: string]: any }): Promise<Store>;
   }
   export class IPFSAccessController extends EventEmitter {
     type: string;
@@ -27,6 +30,7 @@ declare module "orbit-db" {
 
   export class Store {
     id: string;
+    address: string;
     type: string;
     events: EventEmitter;
     access: IPFSAccessController;
