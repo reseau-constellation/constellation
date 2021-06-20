@@ -2,6 +2,20 @@ declare module "orbit-db" {
   import { EventEmitter } from "events";
   import IPFS from "ipfs";
 
+  type identity = {
+    id: string;
+  };
+  export type entréeBD<T> = {
+    identity: identity;
+    payload: {
+      value: T;
+    };
+  };
+
+  export class identityProvider {
+    verifyIdentity(identity: identity): Promise<boolean>;
+  }
+
   export default class OrbitDB {
     static createInstance(
       ipfs: any,
@@ -11,7 +25,11 @@ declare module "orbit-db" {
       id: string;
     };
     _ipfs: IPFS;
-    determineAddress(name: string, type: string, options?: ?{ [key: string]: any })
+    determineAddress(
+      name: string,
+      type: string,
+      options?: ?{ [key: string]: any }
+    );
     isValidAddress(address: string): boolean;
     open(address: string, options?: ?{ [key: string]: any }): Promise<Store>;
     kvstore(string, options?: ?{ [key: string]: any }): Promise<Store>;
@@ -21,7 +39,7 @@ declare module "orbit-db" {
     counter(string, options?: ?{ [key: string]: any }): Promise<Store>;
     docstore(string, options?: ?{ [key: string]: any }): Promise<Store>;
   }
-  export class IPFSAccessController extends EventEmitter {
+  export class AccessController extends EventEmitter {
     type: string;
     address: string;
     canAppend: (entry: any, identityProvider: any) => Promise<boolean>;
@@ -33,7 +51,8 @@ declare module "orbit-db" {
     address: string;
     type: string;
     events: EventEmitter;
-    access: IPFSAccessController;
+    access: AccessController;
+    index: { [key: string]: entréeBD };
     drop(): Promise<void>;
     load(): Promise<void>;
     close(): Promise<void>;

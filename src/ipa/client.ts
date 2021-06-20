@@ -14,6 +14,9 @@ import Favoris from "./favoris";
 import uint8ArrayConcat from "uint8arrays/concat";
 import Nuée from "./nuée";
 import { itérateurÀFlux } from "./utils";
+import ContrôleurConstellation, {
+  OptionsContrôleurConstellation,
+} from "./accès/contrôleurConstellation";
 
 type FileContent =
   | string
@@ -68,7 +71,7 @@ async function toBuffer(
 
 export default class ClientConstellation extends EventEmitter {
   _dir: string;
-  _opsAutoBD: { [key: string]: any } = {};
+  optionsAccès?: { [key: string]: any };
   bdRacine?: KeyValueStore;
   _bds: { [key: string]: any };
   orbite?: OrbitDB;
@@ -98,34 +101,21 @@ export default class ClientConstellation extends EventEmitter {
     });
 
     this.orbite = await initOrbite(this.sfip);
-    this._opsAutoBD = {
-      accessController: {
-        type: "controlleur-constellation",
-        premierMod: [this.orbite!.identity.id],
-      },
-    };
 
-    const testNouveauContrôleur = await this.orbite!.kvstore(
-      "test",
-      this._opsAutoBD
+    const idBdRacine = await this.créerBdIndépendante(
+      "kvstore",
+      undefined,
+      "racine"
     );
-    window.testBd = testNouveauContrôleur;
-
-    this._opsAutoBD2 = {
-      accessController: {
-        type: "controlleur-constellation",
-        adresseBd: testNouveauContrôleur.access.bd.address
-      },
-    };
-    const testNouveauContrôleur2 = await this.orbite!.kvstore(
-      "test2",
-      this._opsAutoBD2
-    );
-    window.testBd2 = testNouveauContrôleur2;
-
-    this.bdRacine = (await this.orbite!.kvstore("racine")) as KeyValueStore; // , this._opsAutoBD
-    console.log(this.bdRacine);
+    this.bdRacine = (await this.ouvrirBd(idBdRacine)) as KeyValueStore;
     await this.bdRacine.load();
+
+    const accès = (this.bdRacine.access as unknown) as ContrôleurConstellation;
+    this.optionsAccès = {
+      type: "controlleur-constellation",
+      adresseBd: accès.bd!.address,
+    };
+
     const idBdCompte = await this.obtIdBd("compte", this.bdRacine, "kvstore");
     this.compte = new Compte(this, idBdCompte!);
 
@@ -253,6 +243,7 @@ export default class ClientConstellation extends EventEmitter {
           if (idBdCible) {
             oublierFSuivre = await fSuivre!(idBdCible, f);
           } else {
+            f(undefined);
             oublierFSuivre = undefined;
           }
         }
@@ -440,7 +431,8 @@ export default class ClientConstellation extends EventEmitter {
   async obtIdBd(
     nom: string,
     racine: string | KeyValueStore,
-    type?: orbitDbStoreTypes
+    type?: orbitDbStoreTypes,
+    optionsAccès?: OptionsContrôleurConstellation
   ): Promise<string | undefined> {
     let bdRacine: KeyValueStore;
     if (typeof racine === "string") {
@@ -449,12 +441,11 @@ export default class ClientConstellation extends EventEmitter {
       bdRacine = racine;
     }
     let idBd = await bdRacine.get(nom);
-    let bd;
 
     // Nous devons confirmer que la base de données spécifiée était du bon genre
     if (idBd && type) {
       try {
-        bd = await this.orbite![type](idBd);
+        await this.orbite![type](idBd);
         return idBd;
       } catch {
         idBd = undefined;
@@ -463,16 +454,27 @@ export default class ClientConstellation extends EventEmitter {
 
     const permission = await this.permissionÉcrire(bdRacine.id);
     if (!idBd && permission && type) {
-      bd = await this.orbite![type](uuidv4());
-      await bd.load();
-      idBd = bd.id;
+      idBd = await this.créerBdIndépendante(type, optionsAccès);
       await bdRacine.set(nom, idBd);
     }
     return idBd;
   }
 
-  async créerBdIndépendante(type: orbitDbStoreTypes): Promise<string> {
-    const bd = await this.orbite![type](uuidv4());
+  async créerBdIndépendante(
+    type: orbitDbStoreTypes,
+    optionsAccès?: OptionsContrôleurConstellation,
+    nom?: string
+  ): Promise<string> {
+    optionsAccès = optionsAccès || this.optionsAccès || {};
+    const options: any = {
+      accessController: {
+        type: "controlleur-constellation",
+        premierMod: this.orbite!.identity.id,
+      },
+    };
+    Object.assign(options.accessController, optionsAccès);
+
+    const bd = await this.orbite![type](nom || uuidv4(), options);
     await bd.load();
     return bd.id;
   }

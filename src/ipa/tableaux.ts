@@ -47,6 +47,48 @@ export default class Tableaux {
     return idBdTableau;
   }
 
+  async copierTableau(id: string): Promise<string> {
+    const bdBase = (await this.client.ouvrirBd(id)) as KeyValueStore;
+    const idNouveauTableau = await this.créerTableau();
+    const nouvelleBd = (await this.client.ouvrirBd(
+      idNouveauTableau
+    )) as KeyValueStore;
+
+    const idBdNoms = await bdBase.get("noms");
+    const noms = ((await this.client.ouvrirBd(idBdNoms)) as KeyValueStore).all;
+    await this.ajouterNomsTableau(idNouveauTableau, noms);
+
+    //Copier les données
+    const idBdDonnées = await bdBase.get("données");
+    const bdDonnées = (await this.client.ouvrirBd(idBdDonnées)) as FeedStore;
+
+    const idNouvelleBdDonnées = await nouvelleBd.get("données");
+    const nouvelleBdDonnées = (await this.client.ouvrirBd(
+      idNouvelleBdDonnées
+    )) as FeedStore;
+
+    const données = ClientConstellation.obtÉlémentsDeBdListe(bdDonnées);
+    données.forEach(async (d) => {
+      await nouvelleBdDonnées.add(d);
+    });
+
+    //Copier les colonnes
+    const idBdColonnes = await bdBase.get("colonnes");
+    const bdColonnes = (await this.client.ouvrirBd(idBdColonnes)) as FeedStore;
+
+    const idNouvelleBdColonnes = await nouvelleBd.get("colonnes");
+    const nouvelleBdColonnes = (await this.client.ouvrirBd(
+      idNouvelleBdColonnes
+    )) as FeedStore;
+
+    const colonnes = ClientConstellation.obtÉlémentsDeBdListe(bdColonnes);
+    colonnes.forEach(async (c) => {
+      await nouvelleBdColonnes.add(c);
+    });
+
+    return idNouveauTableau;
+  }
+
   async suivreDonnées(
     idTableau: string,
     f: schémaFonctionSuivi

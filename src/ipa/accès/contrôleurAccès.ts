@@ -1,18 +1,27 @@
 import { EventEmitter } from "events";
-import { MODÉRATEUR, MEMBRE, rôles } from "./consts";
-import OrbitDB from "orbit-db";
-
+import OrbitDB, { entréeBD, identityProvider } from "orbit-db";
+import { MODÉRATEUR, rôles } from "./consts";
+import { entréeBDAccès } from "./contrôleurConstellation";
 
 const type = "controlleur-accès-constellation";
 
-export default class ContrôleurAccès extends EventEmitter  {
-  _accèsÉcriture: string[]
-  _premierMod: string
+export interface OptionsContrôleurAccèsConstellation {
+  premierMod?: string;
+}
 
-  constructor(options) {
+interface OptionsInitContrôleurAccèsConstellation
+  extends OptionsContrôleurAccèsConstellation {
+  premierMod: string;
+}
+
+export default class ContrôleurAccès extends EventEmitter {
+  _accèsÉcriture: string[];
+  _premierMod: string;
+
+  constructor(options: OptionsInitContrôleurAccèsConstellation) {
     super();
-    this._accèsÉcriture = [options.premierMod]     // Allowed to add other mods or members
-    this._premierMod = options.premierMod
+    this._accèsÉcriture = [options.premierMod]; // Peut ajouter d'autres membres ou modératrices
+    this._premierMod = options.premierMod;
   }
 
   static get type() {
@@ -20,43 +29,51 @@ export default class ContrôleurAccès extends EventEmitter  {
   }
 
   estUnModérateur(id: string) {
-    return this._accèsÉcriture.includes(id)
+    return this._accèsÉcriture.includes(id);
   }
 
-  get firstModerator () {
-    return this._firstModerator
+  get premierMod() {
+    return this._premierMod;
   }
 
-  async canAppend (entry, identityProvider) {
-    const idÉlément = entry.identity.id
-    const { rôle, id: idAjout } = entry.payload.value
-    const isMod = this.estUnModérateur(idÉlément)
-    const validCapability = rôles.includes(rôle)
-    const validSig = async () => identityProvider.verifyIdentity(entry.identity)
+  async canAppend(
+    entry: entréeBD<entréeBDAccès>,
+    identityProvider: identityProvider
+  ) {
+    const idÉlément = entry.identity.id;
+    const { rôle, id: idAjout } = entry.payload.value;
+    const isMod = this.estUnModérateur(idÉlément);
+    const validCapability = rôles.includes(rôle);
+    const validSig = async () =>
+      identityProvider.verifyIdentity(entry.identity);
     if (isMod && validCapability && (await validSig())) {
       if (rôle === MODÉRATEUR) {
-        if (idAjout === this._premierMod) return true
-        this._accèsÉcriture.push(idAjout)
+        if (idAjout === this._premierMod) return true;
+        this._accèsÉcriture.push(idAjout);
       }
-      return true
+      return true;
     }
 
-    return false
+    return false;
   }
 
-  async load (address) {
+  async load() {
     // Rien à faire je crois
   }
 
-  async save () {
-    const manifest =  { premierMod: this._premierMod }
-    return manifest
+  async save() {
+    const manifest = { premierMod: this.premierMod };
+    return manifest;
   }
 
-  static async create (orbitdb: OrbitDB, options = {}) {
-    const premierMod = options.premierMod
+  static async create(
+    orbitdb: OrbitDB,
+    options: OptionsContrôleurAccèsConstellation = {}
+  ) {
+    const premierMod = options.premierMod;
 
-    if (!premierMod) throw new Error("Contrôle d'accès: premier modérateur requis")
-    return new ContrôleurAccès({ premierMod })
+    if (!premierMod)
+      throw new Error("Contrôle d'accès: premier modérateur requis");
+    return new ContrôleurAccès({ premierMod });
   }
 }

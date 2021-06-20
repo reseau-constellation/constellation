@@ -1,42 +1,54 @@
 import ensureAddress from "orbit-db-access-controllers/src/utils/ensure-ac-address";
-import OrbitDB, { FeedStore, isValidAddress } from "orbit-db";
+import OrbitDB, {
+  FeedStore,
+  isValidAddress,
+  entréeBD,
+  identityProvider,
+} from "orbit-db";
 import { EventEmitter } from "events";
 import { v4 as uuidv4 } from "uuid";
 
 import { MODÉRATEUR, MEMBRE, rôles } from "./consts";
 
-const type = "controlleur-constellation";
+export const nomType = "controlleur-constellation";
 
-interface OptionsContrôleurConstellation {
-  premierMod?: string
-  adresseBd?: string
+export interface OptionsContrôleurConstellation {
+  premierMod?: string;
+  adresseBd?: string;
+  nom?: string;
 }
 
-interface OptionsInitContrôleurConstellation extends OptionsContrôleurConstellation {
-  premierMod: string
+export type entréeBDAccès = {
+  rôle: typeof rôles[number];
+  id: string;
+};
+
+interface OptionsInitContrôleurConstellation
+  extends OptionsContrôleurConstellation {
+  premierMod: string;
+  nom: string;
 }
 
-type objRôles = {[key in typeof rôles[number]]: string[]}
+type objRôles = { [key in typeof rôles[number]]: string[] };
 
 export default class ContrôleurConstellation extends EventEmitter {
   bd?: FeedStore;
+  nom: string;
   _orbitdb: OrbitDB;
   _premierMod: string;
   _rôles?: objRôles;
-  _adresseBd?: string;
+  adresseBd?: string;
 
-  constructor(
-    orbitdb: OrbitDB,
-    options: OptionsInitContrôleurConstellation
-  ) {
+  constructor(orbitdb: OrbitDB, options: OptionsInitContrôleurConstellation) {
     super();
     this._orbitdb = orbitdb;
     this._premierMod = options.premierMod;
-    this._adresseBd = options.adresseBd
+    this.adresseBd = options.adresseBd;
+    this.nom = options.nom;
   }
 
   static get type() {
-    return type;
+    return nomType;
   }
 
   // return address of AC (in this case orbitdb address of AC)
@@ -44,7 +56,10 @@ export default class ContrôleurConstellation extends EventEmitter {
     return this.bd!.address;
   }
 
-  async canAppend(entry, identityProvider) {
+  async canAppend(
+    entry: entréeBD<entréeBDAccès>,
+    identityProvider: identityProvider
+  ) {
     const vraiSiSigValide = async () =>
       await identityProvider.verifyIdentity(entry.identity);
 
@@ -54,7 +69,7 @@ export default class ContrôleurConstellation extends EventEmitter {
     const estUnMembre = membres.includes(entry.identity.id);
 
     if (estUnMod || estUnMembre) {
-      return await vraiSiSigValide()
+      return await vraiSiSigValide();
     }
 
     return false;
@@ -66,7 +81,7 @@ export default class ContrôleurConstellation extends EventEmitter {
   }
 
   _updateCapabilites(): void {
-    const modérateurs: string[] = [this._premierMod]
+    const modérateurs: string[] = [this._premierMod];
     const membres: string[] = [];
     if (this.bd) {
       Object.entries(this.bd.index).forEach((entry) => {
@@ -96,7 +111,7 @@ export default class ContrôleurConstellation extends EventEmitter {
     }
 
     // TODO - skip manifest for mod-access
-    console.log("ici", ensureAddress(address))
+    console.log("ici", ensureAddress(address));
     this.bd = await this._orbitdb.feed(
       ensureAddress(address),
       this._createOrbitOpts(addresseValide)
@@ -119,15 +134,18 @@ export default class ContrôleurConstellation extends EventEmitter {
   }
 
   async save() {
-    const adresse = this._adresseBd || await this._orbitdb.determineAddress(
-      `${uuidv4()}/_access`,
-      "feed",
-      this._createOrbitOpts()
-    );
+    const adresse =
+      this.adresseBd ||
+      (await this._orbitdb.determineAddress(
+        `${this.nom}/_access`,
+        "feed",
+        this._createOrbitOpts()
+      ));
 
     const manifest = {
       address: adresse.toString(),
       premierMod: this._premierMod,
+      nom: this.nom,
     };
     return manifest;
   }
@@ -137,7 +155,7 @@ export default class ContrôleurConstellation extends EventEmitter {
       throw new Error(`Erreur: Le rôle ${rôle} n'existe pas.`);
     }
     if (this.rôles[rôle].includes(id)) {
-      return
+      return;
     }
     try {
       const entry = { rôle, id };
@@ -157,9 +175,12 @@ export default class ContrôleurConstellation extends EventEmitter {
   }
 
   /* Factory */
-  static async create(orbitdb: OrbitDB, options: OptionsContrôleurConstellation = {}) {
-    if (!options.premierMod)
-      options.premierMod = orbitdb.identity.id
+  static async create(
+    orbitdb: OrbitDB,
+    options: OptionsContrôleurConstellation = {}
+  ) {
+    if (!options.premierMod) options.premierMod = orbitdb.identity.id;
+    options.nom = options.nom || uuidv4();
     return new ContrôleurConstellation(
       orbitdb,
       options as OptionsInitContrôleurConstellation
