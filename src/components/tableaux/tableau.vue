@@ -283,14 +283,12 @@ export default {
       const oublierColonnes = await this.$ipa.tableaux.suivreColonnes(
         this.idTableau,
         (cols) => {
-          console.log("colonnes");
           this.colonnes = cols;
         }
       );
       const oublierDonnées = await this.$ipa.tableaux.suivreDonnées(
         this.idTableau,
         (données) => {
-          console.log("données");
           this.données = données.map((x) => {
             return { ...x.payload.value, empreinte: x.hash };
           });

@@ -10,6 +10,30 @@ import { v4 as uuidv4 } from "uuid";
 
 import { MODÉRATEUR, MEMBRE, rôles } from "./consts";
 
+/* Fortement inspirée du contrôleur Orbit-DB de 3Box
+MIT License
+
+Copyright (c) 2019 3Box Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 export const nomType = "controlleur-constellation";
 
 export interface OptionsContrôleurConstellation {
@@ -29,7 +53,7 @@ interface OptionsInitContrôleurConstellation
   nom: string;
 }
 
-type objRôles = { [key in typeof rôles[number]]: string[] };
+export type objRôles = { [key in typeof rôles[number]]: string[] };
 
 export default class ContrôleurConstellation extends EventEmitter {
   bd?: FeedStore;
@@ -54,6 +78,14 @@ export default class ContrôleurConstellation extends EventEmitter {
   // return address of AC (in this case orbitdb address of AC)
   get address() {
     return this.bd!.address;
+  }
+
+  estAutorisé(id: string): boolean {
+    const mods = this.rôles[MODÉRATEUR];
+    const membres = this.rôles[MEMBRE];
+    const estUnMod = mods.includes(id);
+    const estUnMembre = membres.includes(id);
+    return estUnMod || estUnMembre;
   }
 
   async canAppend(

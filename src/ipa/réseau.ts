@@ -5,9 +5,9 @@ import ClientConstellation, {
   élémentBdListe,
 } from "./client";
 
-interface infoMembre {
+type infoMembre = {
   id: string;
-}
+};
 
 export default class Réseau {
   client: ClientConstellation;
@@ -52,7 +52,6 @@ export default class Réseau {
       const élément: infoMembre = {
         id: id,
       };
-      console.log("on ajoute ", id);
       await bdRacine.add(élément);
     }
     if (!this.fOublierMembres[id]) {
@@ -62,7 +61,11 @@ export default class Réseau {
       const f = async (membres: infoMembre[]) => {
         membres.forEach((m: infoMembre) => this.ajouterMembre(m.id));
       };
-      const fOublier = await this.client.suivreBdListeDeClef(id, "réseau", f);
+      const fOublier = await this.client.suivreBdListeDeClef<infoMembre>(
+        id,
+        "réseau",
+        f
+      );
       this.fOublierMembres[id] = fOublier;
     }
   }
@@ -77,86 +80,97 @@ export default class Réseau {
     await bdMembres.remove(entrée.hash);
   }
 
-  async suivreMembres(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
+  async suivreMembres(
+    f: schémaFonctionSuivi<string[]>
+  ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdListe(this.idBd, f);
   }
 
   async suivreNomsMembre(
     idMembre: string,
-    f: schémaFonctionSuivi
+    f: schémaFonctionSuivi<{ [key: string]: string }>
   ): Promise<schémaFonctionOublier> {
+    const fFinale = (noms?: { [key: string]: string }) => {
+      return f(noms || {});
+    };
     return await this.client.suivreBdDeClef(
       idMembre,
       "compte",
-      f,
-      (id: string, f: schémaFonctionSuivi) =>
+      fFinale,
+      (id: string, f: schémaFonctionSuivi<{ [key: string]: string }>) =>
         this.client.compte!.suivreNoms(f, id)
     );
   }
 
   async suivreCourrielMembre(
     idMembre: string,
-    f: schémaFonctionSuivi
+    f: schémaFonctionSuivi<string>
   ): Promise<schémaFonctionOublier> {
-    const fFinale = async (bd: KeyValueStore) => {
-      return await this.client.compte!.suivreCourriel(f, bd.id);
+    const fFinale = async (bd?: KeyValueStore) => {
+      if (bd) return await this.client.compte!.suivreCourriel(f, bd.id);
     };
     return await this.client.suivreBdDeClef(idMembre, "compte", fFinale);
   }
 
   async suivreImageMembre(
     idMembre: string,
-    f: schémaFonctionSuivi
+    f: schémaFonctionSuivi<Uint8Array | null>
   ): Promise<schémaFonctionOublier> {
-    const fFinale = async (bd: KeyValueStore) => {
-      return await this.client.compte!.suivreImage(f, bd.id);
+    const fFinale = async (bd?: KeyValueStore) => {
+      if (bd) return await this.client.compte!.suivreImage(f, bd.id);
     };
     return await this.client.suivreBdDeClef(idMembre, "compte", fFinale);
   }
 
   async suivreBdsMembre(
     id: string,
-    f: schémaFonctionSuivi
+    f: schémaFonctionSuivi<string[] | undefined>
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdDeClef(
       id,
       "bds",
       f,
-      (id: string, f: schémaFonctionSuivi) => this.client.bds!.suivreBds(f, id)
+      (id: string, f: schémaFonctionSuivi<string[]>) =>
+        this.client.bds!.suivreBds(f, id)
     );
   }
 
   async suivreFavorisMembre(
     id: string,
-    f: schémaFonctionSuivi
+    f: schémaFonctionSuivi<string[] | undefined>
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdDeClef(
       id,
       "bds",
       f,
-      (id: string, f: schémaFonctionSuivi) =>
+      (id: string, f: schémaFonctionSuivi<string[]>) =>
         this.client.favoris!.suivreFavoris(f, id)
     );
   }
 
-  async suivreBds(f: schémaFonctionSuivi): Promise<schémaFonctionOublier> {
+  async suivreBds(
+    f: schémaFonctionSuivi<string[]>
+  ): Promise<schémaFonctionOublier> {
     const fBranche = async (
       id: string,
-      f: schémaFonctionSuivi
+      f: schémaFonctionSuivi<string[]>
     ): Promise<schémaFonctionOublier> => {
-      const bds = { propres: [], favoris: [] };
+      const bds: { propres: string[]; favoris: string[] } = {
+        propres: [],
+        favoris: [],
+      };
       const fFinale = async function () {
         const toutes = [...new Set([...bds.propres, ...bds.favoris])];
         f(toutes);
       };
       const oublierBdsPropres = await this.suivreBdsMembre(id, (propres) => {
-        bds.propres = propres;
+        bds.propres = propres || [];
         fFinale();
       });
       const oublierBdsFavoris = await this.suivreFavorisMembre(
         id,
         (favoris) => {
-          bds.favoris = favoris;
+          bds.favoris = favoris || [];
           fFinale();
         }
       );

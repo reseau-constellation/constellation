@@ -11,12 +11,16 @@ import Tableaux from "./tableaux";
 import Variables from "./variables";
 import Réseau from "./réseau";
 import Favoris from "./favoris";
+import Projets from "./projets";
 import uint8ArrayConcat from "uint8arrays/concat";
 import Nuée from "./nuée";
 import { itérateurÀFlux } from "./utils";
 import ContrôleurConstellation, {
   OptionsContrôleurConstellation,
+  objRôles,
+  nomType as nomTypeContrôleurConstellation,
 } from "./accès/contrôleurConstellation";
+import { MEMBRE } from "./accès/consts";
 
 type FileContent =
   | string
@@ -26,11 +30,11 @@ type FileContent =
   | Iterable<ArrayBuffer | ArrayBufferView>
   | AsyncIterable<ArrayBuffer | ArrayBufferView>;
 
-export type schémaFonctionSuivi = (x: any) => void;
+export type schémaFonctionSuivi<T> = (x: T) => void;
 
 export type schémaFonctionOublier = () => void;
 
-type schémaFonctionRéduction = (branches: unknown[]) => unknown;
+type schémaFonctionRéduction<T, U> = (branches: T) => U;
 
 type orbitDbStoreTypes =
   | "counter"
@@ -47,11 +51,16 @@ export type élémentsBd =
   | { [key: string]: élémentsBd }
   | Array<élémentsBd>;
 
-export interface élémentBdListe {
+export interface élémentBdListe<T = élémentsBd> {
   payload: {
-    value: élémentsBd;
+    value: T;
   };
   hash: string;
+}
+
+export interface pairSFIP {
+  addr: Uint8Array;
+  peer: Uint8Array;
 }
 
 // Identique à it-to-buffer, mais avec option de maximum de taille
@@ -83,6 +92,7 @@ export default class ClientConstellation extends EventEmitter {
   variables?: Variables;
   réseau?: Réseau;
   favoris?: Favoris;
+  projets?: Projets;
   nuée?: Nuée;
   pret: boolean;
 
@@ -102,9 +112,13 @@ export default class ClientConstellation extends EventEmitter {
 
     this.orbite = await initOrbite(this.sfip);
 
+    const optionsAccèsRacine = {
+      type: "controlleur-constellation",
+      premierMod: this.orbite!.identity.id,
+    };
     const idBdRacine = await this.créerBdIndépendante(
       "kvstore",
-      undefined,
+      optionsAccèsRacine,
       "racine"
     );
     this.bdRacine = (await this.ouvrirBd(idBdRacine)) as KeyValueStore;
@@ -137,20 +151,23 @@ export default class ClientConstellation extends EventEmitter {
     const idBdFavoris = await this.obtIdBd("favoris", this.bdRacine, "feed");
     this.favoris = new Favoris(this, idBdFavoris!);
 
+    const idBdProjets = await this.obtIdBd("projets", this.bdRacine, "feed");
+    this.projets = new Projets(this, idBdProjets!);
+
     this.nuée = new Nuée(this);
 
     this.pret = true;
     this.emit("pret");
+
+    //On commence par épingler notre compte (de manière récursive)
+    //afin de le rendre disponible
+    await this.épinglerBd(idBdRacine);
   }
 
   async suivreConnexionsPostes(
-    f: schémaFonctionSuivi,
+    f: schémaFonctionSuivi<pairSFIP[]>,
     t = 3000
   ): Promise<schémaFonctionOublier> {
-    interface pairSFIP {
-      addr: Uint8Array;
-      peer: Uint8Array;
-    }
     const dédoublerConnexions = (connexions: pairSFIP[]): pairSFIP[] => {
       const adrDéjàVues: string[] = [];
       const dédupliquées: pairSFIP[] = [];
@@ -173,56 +190,87 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async suivreDispositifs(
-    f: schémaFonctionSuivi,
+    f: schémaFonctionSuivi<string[]>,
     idBdRacine?: string
   ): Promise<schémaFonctionOublier> {
     idBdRacine = idBdRacine || this.bdRacine!.id;
     const bd = await this.ouvrirBd(idBdRacine);
     const accès = bd.access;
+    const faisRien = () => {
+      // Rien à faire
+    };
     if (accès.type === "ipfs") {
       f(accès.write);
-      return () => {
-        // Rien à faire
-      };
+      return faisRien;
     } else if (accès.type === "controlleur-constellation") {
       console.warn("doit être implémenté");
 
       return () => {
-        //à faire
+        // à faire
       };
     } else {
-      return () => {
-        // Rien à faire
-      };
+      return faisRien;
     }
+  }
+
+  async ajouterDispositif(identité: string) {
+    console.warn("doit être implémenté");
+  }
+
+  async enleverDispositif(identité: string) {
+    console.warn("doit être implémenté");
+  }
+
+  async donnerAccès(id: string, identité: string): Promise<void> {
+    const bd = await this.ouvrirBd(id);
+    const accès = bd.access;
+    if (accès.type === nomTypeContrôleurConstellation) {
+      ((accès as unknown) as ContrôleurConstellation).grant(MEMBRE, identité);
+    }
+  }
+
+  async suivreAccès(
+    id: string,
+    f: schémaFonctionSuivi<objRôles>
+  ): Promise<schémaFonctionOublier> {
+    const bd = await this.ouvrirBd(id);
+    const accès = (bd.access as unknown) as ContrôleurConstellation;
+    const fFinale = () => {
+      const autorisés = accès.rôles;
+      f(autorisés);
+    };
+    accès.on("updated", fFinale);
+    return () => {
+      accès.off("updated", fFinale);
+    };
   }
 
   async suivreBd(
     id: string,
-    f: schémaFonctionSuivi,
+    f: schémaFonctionSuivi<Store>,
     événements: string[] = ["write", "replicate", "replicated", "ready"]
   ): Promise<schémaFonctionOublier> {
     const bd = await this.ouvrirBd(id);
-    const fFinal = () => f(bd);
+    const fFinale = () => f(bd);
     for (const é of événements) {
-      bd.events.on(é, fFinal);
+      bd.events.on(é, fFinale);
     }
-    fFinal();
+    fFinale();
     const oublier = () => {
       événements.forEach((é) => {
-        bd.events.off(é, fFinal);
+        bd.events.off(é, fFinale);
       });
     };
     return oublier;
   }
 
-  async suivreBdDeClef(
+  async suivreBdDeClef<T>(
     id: string,
     clef: string,
-    f: schémaFonctionSuivi,
+    f: schémaFonctionSuivi<T | undefined>,
     fSuivre?: (
       id: string,
-      f: schémaFonctionSuivi
+      f: schémaFonctionSuivi<any>
     ) => Promise<schémaFonctionOublier>
   ) {
     if (!fSuivre) {
@@ -232,23 +280,20 @@ export default class ClientConstellation extends EventEmitter {
     let oublierFSuivre: schémaFonctionOublier | undefined;
     let idBdCible: string | undefined;
 
-    const oublierBdRacine = await this.suivreBd(
-      id,
-      async (bd: KeyValueStore) => {
-        const nouvelIdBdCible = await bd.get(clef);
+    const oublierBdRacine = await this.suivreBd(id, async (bd: Store) => {
+      const nouvelIdBdCible = await (bd as KeyValueStore).get(clef);
 
-        if (nouvelIdBdCible !== idBdCible) {
-          idBdCible = nouvelIdBdCible;
-          if (oublierFSuivre) oublierFSuivre();
-          if (idBdCible) {
-            oublierFSuivre = await fSuivre!(idBdCible, f);
-          } else {
-            f(undefined);
-            oublierFSuivre = undefined;
-          }
+      if (nouvelIdBdCible !== idBdCible) {
+        idBdCible = nouvelIdBdCible;
+        if (oublierFSuivre) oublierFSuivre();
+        if (idBdCible) {
+          oublierFSuivre = await fSuivre!(idBdCible, f);
+        } else {
+          f(undefined);
+          oublierFSuivre = undefined;
         }
       }
-    );
+    });
 
     return () => {
       oublierBdRacine();
@@ -256,19 +301,21 @@ export default class ClientConstellation extends EventEmitter {
     };
   }
 
-  async suivreBdDicDeClef(
+  async suivreBdDicDeClef<T extends élémentsBd>(
     id: string,
     clef: string,
-    f: schémaFonctionSuivi
+    f: schémaFonctionSuivi<{ [key: string]: T }>
   ): Promise<schémaFonctionOublier> {
-    const fFinale = async (bd: KeyValueStore) => {
-      const valeurs = ClientConstellation.obtObjetdeBdDic(bd);
+    const fFinale = async (bd?: KeyValueStore) => {
+      const valeurs = bd ? ClientConstellation.obtObjetdeBdDic<T>(bd) : {};
       f(valeurs);
     };
     return await this.suivreBdDeClef(id, clef, fFinale);
   }
 
-  static obtObjetdeBdDic(bd: KeyValueStore): { [key: string]: élémentsBd } {
+  static obtObjetdeBdDic<T extends élémentsBd>(
+    bd: KeyValueStore
+  ): { [key: string]: T } {
     const valeurs = bd.all;
     return Object.fromEntries(
       Object.keys(valeurs).map((x) => {
@@ -277,44 +324,77 @@ export default class ClientConstellation extends EventEmitter {
     );
   }
 
-  async suivreBdListeDeClef(
+  async suivreBdListeDeClef<T extends élémentsBd>(
     id: string,
     clef: string,
-    f: schémaFonctionSuivi,
+    f: schémaFonctionSuivi<T[]>,
+    renvoyerValeur?: true
+  ): Promise<schémaFonctionOublier>;
+  async suivreBdListeDeClef<T extends élémentsBd>(
+    id: string,
+    clef: string,
+    f: schémaFonctionSuivi<élémentBdListe<T>[]>,
+    renvoyerValeur: false
+  ): Promise<schémaFonctionOublier>;
+  async suivreBdListeDeClef<T extends élémentsBd>(
+    id: string,
+    clef: string,
+    f: schémaFonctionSuivi<T[] | élémentBdListe<T>[]>,
     renvoyerValeur = true
   ): Promise<schémaFonctionOublier> {
-    const fFinale = async (bd: FeedStore) => {
-      const éléments = ClientConstellation.obtÉlémentsDeBdListe(
-        bd,
-        renvoyerValeur
-      );
+    const fFinale = async (bd?: FeedStore) => {
+      const éléments = bd
+        ? ClientConstellation.obtÉlémentsDeBdListe<T>(bd, renvoyerValeur)
+        : [];
       f(éléments);
     };
     return await this.suivreBdDeClef(id, clef, fFinale);
   }
 
-  async suivreBdListe(
+  async suivreBdListe<T extends élémentsBd>(
     id: string,
-    f: schémaFonctionSuivi,
+    f: schémaFonctionSuivi<T[]>,
+    renvoyerValeur?: true
+  ): Promise<schémaFonctionOublier>;
+  async suivreBdListe<T extends élémentsBd>(
+    id: string,
+    f: schémaFonctionSuivi<élémentBdListe<T>[]>,
+    renvoyerValeur: false
+  ): Promise<schémaFonctionOublier>;
+  async suivreBdListe<T extends élémentsBd>(
+    id: string,
+    f: schémaFonctionSuivi<T[] | élémentBdListe<T>[]>,
     renvoyerValeur = true
   ): Promise<schémaFonctionOublier> {
     return await this.suivreBd(id, async (bd) => {
-      const éléments = ClientConstellation.obtÉlémentsDeBdListe(
-        bd,
+      const éléments = ClientConstellation.obtÉlémentsDeBdListe<T>(
+        bd as FeedStore,
         renvoyerValeur
       );
       f(éléments);
     });
   }
 
-  static obtÉlémentsDeBdListe(
+  static obtÉlémentsDeBdListe<T extends élémentsBd>(
+    bd: FeedStore,
+    renvoyerValeur?: true
+  ): T[];
+  static obtÉlémentsDeBdListe<T extends élémentsBd>(
+    bd: FeedStore,
+    renvoyerValeur: false
+  ): élémentBdListe<T>[];
+  static obtÉlémentsDeBdListe<T extends élémentsBd>(
+    bd: FeedStore,
+    renvoyerValeur?: boolean
+  ): T[] | élémentBdListe<T>[];
+  static obtÉlémentsDeBdListe<T extends élémentsBd>(
     bd: FeedStore,
     renvoyerValeur = true
-  ): Array<élémentBdListe | élémentsBd> {
+  ): T[] | élémentBdListe<T>[] {
     return bd
       .iterator({ limit: -1 })
       .collect()
-      .map((e: élémentBdListe) => (renvoyerValeur ? e.payload.value : e));
+      .map((e: élémentBdListe<T>) => (renvoyerValeur ? e.payload.value : e));
   }
 
   obtÉlémentBdListeSelonEmpreinte(bd: FeedStore, empreinte: string): any {
@@ -324,22 +404,22 @@ export default class ClientConstellation extends EventEmitter {
       .find((e: { [key: string]: any }) => e.hash === empreinte).payload.value;
   }
 
-  async suivreBdsDeBdListe(
+  async suivreBdsDeBdListe<T extends élémentsBd, U=T[]>(
     id: string,
-    f: schémaFonctionSuivi,
+    f: schémaFonctionSuivi<T[]>,
     fBranche: (
       id: string,
-      f: schémaFonctionSuivi,
+      f: schémaFonctionSuivi<U>,
       branche?: unknown
     ) => Promise<schémaFonctionOublier | undefined>,
     fIdBdDeBranche: (b: unknown) => string = (b) => b as string,
-    fRéduction: schémaFonctionRéduction = (branches: unknown[]) => [
+    fRéduction: schémaFonctionRéduction<T[][], T[]> = (branches: T[][]): T[] => [
       ...new Set(branches.flat()),
     ],
     fCode: (é: any) => string = (é) => é
   ): Promise<schémaFonctionOublier> {
     interface InterfaceBranches {
-      données: any;
+      données?: U;
       fOublier?: schémaFonctionOublier;
     }
     const arbre: { [key: string]: InterfaceBranches } = {};
@@ -348,11 +428,11 @@ export default class ClientConstellation extends EventEmitter {
       const listeDonnées = Object.values(arbre)
         .filter((x) => x.données !== undefined)
         .map((x) => x.données);
-      const réduits = fRéduction(listeDonnées);
+      const réduits = fRéduction(listeDonnées as unknown as T[][]);
       f(réduits);
     };
 
-    const fSuivreRacine = async <T>(éléments: Array<T>) => {
+    const fSuivreRacine = async (éléments: Array<T>) => {
       if (éléments.some((x) => typeof fCode(x) !== "string"))
         throw "Définir fCode si les éléments ne sont pas en format texte (chaînes).";
       const dictÉléments = Object.fromEntries(
@@ -375,7 +455,7 @@ export default class ClientConstellation extends EventEmitter {
         arbre[n] = { données: undefined };
         const élément = dictÉléments[n];
         const idBdBranche = fIdBdDeBranche(élément);
-        const fSuivreBranche = (données: any) => {
+        const fSuivreBranche = (données: U) => {
           arbre[n].données = données;
           fFinale();
         };
@@ -393,7 +473,10 @@ export default class ClientConstellation extends EventEmitter {
     return oublier;
   }
 
-  async rechercherBdListe(id: string, f: schémaFonctionSuivi): Promise<any> {
+  async rechercherBdListe(
+    id: string,
+    f: (e: élémentFeedStore) => boolean
+  ): Promise<any> {
     const bd = (await this.ouvrirBd(id)) as FeedStore;
     const élément = bd
       .iterator({ limit: -1 })
@@ -465,14 +548,10 @@ export default class ClientConstellation extends EventEmitter {
     optionsAccès?: OptionsContrôleurConstellation,
     nom?: string
   ): Promise<string> {
-    optionsAccès = optionsAccès || this.optionsAccès || {};
+    optionsAccès = Object.assign({}, this.optionsAccès, optionsAccès || {});
     const options: any = {
-      accessController: {
-        type: "controlleur-constellation",
-        premierMod: this.orbite!.identity.id,
-      },
+      accessController: optionsAccès,
     };
-    Object.assign(options.accessController, optionsAccès);
 
     const bd = await this.orbite![type](nom || uuidv4(), options);
     await bd.load();
@@ -493,15 +572,56 @@ export default class ClientConstellation extends EventEmitter {
     delete this._bds[id];
   }
 
+  async obtOpsAccès(idBd: string): Promise<OptionsContrôleurConstellation> {
+    const bd = await this.ouvrirBd(idBd);
+    const accès = (bd.access as unknown) as ContrôleurConstellation;
+    return {
+      adresseBd: accès.bd!.address,
+    };
+  }
+
   async permissionÉcrire(id: string): Promise<boolean> {
     const bd = await this.ouvrirBd(id);
     const accès = bd.access;
-    return accès.write.includes(this.orbite!.identity.id);
+    if (accès.type === "ipfs") {
+      return accès.write.includes(this.orbite!.identity.id);
+    } else if (accès.type === nomTypeContrôleurConstellation) {
+      return ((accès as unknown) as ContrôleurConstellation).estAutorisé(id);
+    }
+    return false;
   }
 
-  async épinglerBd(id: string) {
+  async épinglerBd(id: string, déjàVus: string[] = []) {
+    if (déjàVus.includes(id)) return;
     const bd = await this.ouvrirBd(id);
-    console.error("Doit être implémenté");
+    déjàVus.push(id);
+    const épinglerSiAdresseValide = (x: unknown) => {
+      if (typeof x === "string" && this.orbite!.isValidAddress(x))
+        this.épinglerBd(x, déjàVus);
+    };
+
+    //Cette fonction détectera les éléments d'une liste ou d'un dictionnaire
+    //(à un niveau de profondeur) qui représentent une adresse de BD Orbit.
+    const analyserItem = (x: unknown) => {
+      if (typeof x === "object") {
+        Object.values(x as { [key: string]: unknown }).forEach((y: unknown) =>
+          épinglerSiAdresseValide(y)
+        );
+      } else if (Array.isArray(x)) {
+        x.forEach((y) => épinglerSiAdresseValide(y));
+      } else {
+        épinglerSiAdresseValide(x);
+      }
+    };
+    if (bd.type === "keyvalue") {
+      const items = Object.values(
+        ClientConstellation.obtObjetdeBdDic(bd as KeyValueStore)
+      );
+      items.forEach(analyserItem);
+    } else if (bd.type === "feed") {
+      const items = ClientConstellation.obtÉlémentsDeBdListe(bd as FeedStore);
+      items.forEach(analyserItem);
+    }
   }
 
   static async créer() {
