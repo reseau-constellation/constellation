@@ -1,4 +1,5 @@
 # Constellation
+![Logo Constellation](https://raw.githubusercontent.com/julienmalard/constellation/master/src/assets/logo.png)
 
 ## Installation
 
