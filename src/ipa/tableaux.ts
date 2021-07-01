@@ -380,7 +380,9 @@ export default class Tableaux {
   async suivreRègles(
     idTableau: string,
     f: schémaFonctionSuivi<règleVariable[]>
-  ): Promise<schémaFonctionOublier> {}
+  ): Promise<schémaFonctionOublier> {
+    // à faire
+  }
 
   async suivreValidDonnées(
     idTableau: string,

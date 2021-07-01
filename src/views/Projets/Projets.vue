@@ -52,7 +52,6 @@
 
 <script>
 import Titre from "@/components/commun/Titre";
-import { obtProjets } from "@/ipa/projets";
 import carteProjet from "@/components/projets/carteProjet";
 
 export default {
@@ -62,12 +61,7 @@ export default {
     return {
       projets: [],
     };
-  },
-  mounted: async function () {
-    for await (const prj of obtProjets()) {
-      this.projets = [...this.projets, prj];
-    }
-  },
+  }
 };
 </script>
 

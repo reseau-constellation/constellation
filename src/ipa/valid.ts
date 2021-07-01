@@ -40,26 +40,32 @@ export interface erreurValidation {
   erreur: Erreur;
 }
 
-export type schémaFonctionValidation = (valeurs: unknown) => erreurValidation[];
+export type schémaFonctionValidation = (valeurs: unknown[]) => erreurValidation[];
 
 export function générerFonctionRègle(
   règle: règleVariable
 ): schémaFonctionValidation {
+  /*
   switch (règle.typeRègle) {
-    /*case "catégorie":
+    case "catégorie":
       return (vals: unknown[]) => {
         return vals
           .filter(v=>!validFichier(v))
           .map(x=>{règle: "catégorie"})
-      }*/
+      }
     case "bornes":
       const fComp = () => {};
       return (vals: unknown[]) => {
         return [];
       };
+    case "valeurCatégorique":
+      return (vals: unknown[])=>{
+        return []
+      }
     default:
-      console.error(`Catégorie ${règle.typeRègle} inconnue.`);
+      throw Error(`Catégorie ${règle.typeRègle} inconnue.`)
   }
+  */
 }
 
 export const formatsFichiers = {
