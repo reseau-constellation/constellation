@@ -245,6 +245,25 @@ export default class ClientConstellation extends EventEmitter {
     };
   }
 
+  async copierContenuBdListe(bdBase: KeyValueStore, nouvelleBd: KeyValueStore, clef: string): Promise<void> {
+    const idBdListeInit = await bdBase.get(clef);
+    if (!idBdListeInit) return
+
+    const bdListeInit = (await this.ouvrirBd(idBdListeInit)) as FeedStore;
+
+    const idNouvelleBdListe = await nouvelleBd.get(clef);
+    if (!idNouvelleBdListe) throw "La nouvelle Bd n'existait pas"
+
+    const nouvelleBdListe = (await this.ouvrirBd(
+      idNouvelleBdListe
+    )) as FeedStore;
+
+    const données = ClientConstellation.obtÉlémentsDeBdListe(bdListeInit);
+    données.forEach(async (d) => {
+      await nouvelleBdListe.add(d);
+    });
+  }
+
   async suivreBd(
     id: string,
     f: schémaFonctionSuivi<Store>,

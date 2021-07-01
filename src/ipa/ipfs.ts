@@ -11,6 +11,7 @@ export default async function initSFIP(dir = "./ipfs") {
   // @ts-ignore
   const sfip = await libSFIP.create({
     libp2p: {
+      // @ts-ignores
       modules: {
         transport: [WebRTCStar, Websockets, WebRTCDirect],
       },

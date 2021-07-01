@@ -2,14 +2,16 @@ import CID from "cids";
 import { catégorieVariables } from "./variables";
 
 export type typeRègle = "catégorie" | "bornes" | "valeurCatégorique";
+export type sourceRègle = "variable" | "tableau"
 
 export type règleVariable = {
   typeRègle: typeRègle;
   détails: unknown;
+  source?: sourceRègle;
 };
 
 export interface règleBornes extends règleVariable {
-  type: "bornes";
+  typeRègle: "bornes";
   détails: {
     val: number | string; //Peut être numérique ou bien le nom d'une autre colonne
     op: ">" | "<" | ">=" | "<=";
@@ -17,14 +19,14 @@ export interface règleBornes extends règleVariable {
 }
 
 export interface règleValeurCatégorique extends règleVariable {
-  type: "valeurCatégorique";
+  typeRègle: "valeurCatégorique";
   détails: {
-    ops: unknown[];
+    options: unknown[];
   };
 }
 
 export interface règleCatégorie extends règleVariable {
-  type: "catégorie";
+  typeRègle: "catégorie";
   détails: {
     catégorie: catégorieVariables;
   };
@@ -40,32 +42,98 @@ export interface erreurValidation {
   erreur: Erreur;
 }
 
-export type schémaFonctionValidation = (valeurs: unknown[]) => erreurValidation[];
+export type schémaFonctionValidation = (valeurs: élémentDonnées[]) => erreurValidation[];
 
+export interface élémentDonnées {
+  [key: string]: unknown;
+  empreinte: string;
+}
 export function générerFonctionRègle(
-  règle: règleVariable
+  règle: règleVariable,
+  colonne: string
 ): schémaFonctionValidation {
-  /*
+
+  let fComp: (v: élémentDonnées) => boolean
+  let fOp: (v1: number, v2: number) => boolean
+
   switch (règle.typeRègle) {
     case "catégorie":
-      return (vals: unknown[]) => {
-        return vals
-          .filter(v=>!validFichier(v))
-          .map(x=>{règle: "catégorie"})
+      return (vals: élémentDonnées[]) => {
+        const catégorie = (règle as règleCatégorie).détails.catégorie
+        const nonValides = vals.filter(v=>!ValiderCatégorieVal(v[colonne], catégorie))
+        return nonValides.map(
+          (v: élémentDonnées)=>{
+            const { empreinte } = v
+            return {
+              empreinte,
+              colonne,
+              erreur: { règle }
+            }
+          }
+        )
       }
+
     case "bornes":
-      const fComp = () => {};
-      return (vals: unknown[]) => {
-        return [];
+      const { val, op } = (règle as règleBornes).détails;
+
+      switch (op) {
+        case ">":
+          fOp = (v1: number, v2: number) => v1 > v2;
+          break;
+        case "<":
+          fOp = (v1: number, v2: number) => v1 < v2;
+          break
+        case ">=":
+          fOp = (v1: number, v2: number) => v1 >= v2;
+          break
+        case "<=":
+          fOp = (v1: number, v2: number) => v1 <= v2;
+          break
+      }
+
+      switch (typeof val) {
+        case "string":
+          fComp = (v: élémentDonnées) => fOp(v[colonne] as number, v[val] as number);
+          break;
+        case "number":
+          fComp = (v: élémentDonnées) => fOp(v[colonne] as number, val as number);
+          break
+        default:
+          throw Error(`Borne de type ${typeof val} non reconnue.`)
+      }
+
+      return (vals: élémentDonnées[]) => {
+        const nonValides = vals.filter(v=>fComp(v))
+        return nonValides.map(
+          (v: élémentDonnées) => {
+            const { empreinte } = v
+            return {
+              empreinte,
+              colonne,
+              erreur: {règle}
+            }
+          }
+        );
       };
+
     case "valeurCatégorique":
-      return (vals: unknown[])=>{
-        return []
+      const options = (règle as règleValeurCatégorique).détails.options
+      return (vals: élémentDonnées[])=>{
+        const nonValides = vals.filter((v: élémentDonnées) => options.includes(v[colonne]))
+        return nonValides.map(
+          (v: élémentDonnées) => {
+            const { empreinte } = v
+            return {
+              empreinte,
+              colonne,
+              erreur: { règle }
+            }
+          }
+        )
       }
     default:
       throw Error(`Catégorie ${règle.typeRègle} inconnue.`)
   }
-  */
 }
 
 export const formatsFichiers = {

@@ -2,11 +2,15 @@ import { FeedStore, KeyValueStore } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
+  élémentsBd
 } from "./client";
 import ContrôleurConstellation, {
   nomType as typeContrôleurAccèsConst,
 } from "./accès/contrôleurConstellation";
-import { règleVariable } from "./valid";
+import {
+  règleVariable,
+  règleCatégorie
+} from "./valid";
 
 import { STATUT } from "./bds";
 
@@ -216,6 +220,17 @@ export default class Variables {
     await bdVariable.set("catégorie", catégorie);
   }
 
+  async ajouterRègleVariable(
+    id: string,
+    règle: règleVariable
+  ): Promise<void> {
+    const idBdRègles = await this.client.obtIdBd("règles", id, "feed");
+    if (!idBdRègles) throw `Permission de modification refusée pour BD ${id}.`;
+
+    const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
+    bdRègles.add(règle)
+  }
+
   async suivreNomsVariable(
     id: string,
     f: schémaFonctionSuivi<{ [key: string]: string }>
@@ -250,14 +265,47 @@ export default class Variables {
     });
   }
 
-  async suivreRègles(
+  async suivreRèglesVariable(
     id: string,
     f: schémaFonctionSuivi<règleVariable[]>
   ): Promise<schémaFonctionOublier> {
-    const fFinale = (catégorie: catégorieVariables) => {
-      //à faire
+    const règles: {catégorie: règleVariable[], propres: règleVariable[]} = {
+      catégorie: [],
+      propres: []
+    }
+    const fFinale = () => {
+      f([...règles.catégorie, ...règles.propres])
     };
-    return this.suivreCatégorieVariable(id);
+
+    const fSuivreCatégorie = (catégorie: catégorieVariables) => {
+      const règleCat: règleCatégorie = {
+        typeRègle: "catégorie",
+        détails: { catégorie },
+        source: "variable"
+      }
+      règles.catégorie = [règleCat]
+      fFinale()
+    }
+    const fOublierCatégorie = await this.suivreCatégorieVariable(
+      id,
+      fSuivreCatégorie
+    );
+
+    const fSuivreRèglesPropres = (rgls: règleVariable[]) => {
+      règles.propres = rgls
+      fFinale()
+    }
+    const fOublierRèglesPropres = await this.client.suivreBdListeDeClef(
+      id,
+      "règles",
+      fSuivreRèglesPropres as (rgls: élémentsBd[]) => void
+    )
+
+    const fOublier = () => {
+      fOublierCatégorie()
+      fOublierRèglesPropres()
+    }
+    return fOublier
   }
 
   async établirStatut(
