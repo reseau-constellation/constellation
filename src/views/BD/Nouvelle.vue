@@ -180,10 +180,6 @@
               Veuillez confirmer la création de la base de données afin de
               pouvoir commencer à y ajouter des données.
             </h3>
-            <v-checkbox
-              v-model="jaiCompris"
-              label="Tout base de données partagée sur Constellation estentièrement publique. Ne partagez rien de personnel ou confidentiel."
-            ></v-checkbox>
             <v-btn
               :loading="enCréation"
               tiled
@@ -194,6 +190,10 @@
             >
               C'est parti !
             </v-btn>
+            <v-checkbox
+              v-model="jaiCompris"
+              label="Toute base de données partagée sur Constellation est entièrement publique. Ne partagez rien de personnel ou confidentiel."
+            ></v-checkbox>
           </div>
         </v-window-item>
       </v-window>
