@@ -35,7 +35,7 @@ export default class Projets {
 
     const bdProjet = (await this.client.ouvrirBd(idBdProjet)) as KeyValueStore;
 
-    const accès = (bdProjet.access as unknown) as ContrôleurConstellation;
+    const accès = bdProjet.access as unknown as ContrôleurConstellation;
     const optionsAccès = { adresseBd: accès.adresseBd };
 
     const idBdNoms = await this.client.créerBdIndépendante(
@@ -236,9 +236,8 @@ export default class Projets {
     idMotClef: string
   ): Promise<void> {
     const bdMotsClefs = await this._obtBdMotsClefs(idProjet);
-    const motsClefsExistants = ClientConstellation.obtÉlémentsDeBdListe(
-      bdMotsClefs
-    );
+    const motsClefsExistants =
+      ClientConstellation.obtÉlémentsDeBdListe(bdMotsClefs);
     if (!motsClefsExistants.includes(idMotClef))
       await bdMotsClefs.add(idMotClef);
   }

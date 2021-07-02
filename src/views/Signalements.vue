@@ -15,9 +15,7 @@
       append
     >
       {{ $t("signalements.bouton") }}
-      <v-icon right>
-        mdi-open-in-new
-      </v-icon>
+      <v-icon right> mdi-open-in-new </v-icon>
     </v-btn>
     <v-btn
       class="mx-2"
@@ -27,9 +25,7 @@
       append
     >
       {{ $t("signalements.boutonCourriel") }}
-      <v-icon right>
-        mdi-email
-      </v-icon>
+      <v-icon right> mdi-email </v-icon>
     </v-btn>
   </v-container>
 </template>

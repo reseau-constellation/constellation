@@ -8,9 +8,7 @@
     </v-list-item-avatar>
     <v-list-item-content>
       <v-row>
-        <v-col cols="3">
-          Monfichier.csv
-        </v-col>
+        <v-col cols="3"> Monfichier.csv </v-col>
         <v-col cols="3">
           <v-progress-circular
             class="me-2"

@@ -98,7 +98,7 @@ const ops = {
     locales: tradsVuetify,
     current: "fr",
     // t: (key: string, ...params: Array<string>) => i18n.t(key, params)
-  }
+  },
 };
 
 export default new Vuetify({

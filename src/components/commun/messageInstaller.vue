@@ -10,9 +10,7 @@
       @click="$router.push(encodeURI('/téléchargements'))"
     >
       {{ $t("communs.btnInstaller") }}
-      <v-icon right>
-        mdi-download
-      </v-icon>
+      <v-icon right> mdi-download </v-icon>
     </v-btn>
 
     <template v-slot:action="{ attrs }">

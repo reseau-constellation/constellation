@@ -124,7 +124,7 @@ export default class ClientConstellation extends EventEmitter {
     this.bdRacine = (await this.ouvrirBd(idBdRacine)) as KeyValueStore;
     await this.bdRacine.load();
 
-    const accès = (this.bdRacine.access as unknown) as ContrôleurConstellation;
+    const accès = this.bdRacine.access as unknown as ContrôleurConstellation;
     this.optionsAccès = {
       type: "controlleur-constellation",
       adresseBd: accès.bd!.address,
@@ -225,7 +225,7 @@ export default class ClientConstellation extends EventEmitter {
     const bd = await this.ouvrirBd(id);
     const accès = bd.access;
     if (accès.type === nomTypeContrôleurConstellation) {
-      ((accès as unknown) as ContrôleurConstellation).grant(MEMBRE, identité);
+      (accès as unknown as ContrôleurConstellation).grant(MEMBRE, identité);
     }
   }
 
@@ -234,7 +234,7 @@ export default class ClientConstellation extends EventEmitter {
     f: schémaFonctionSuivi<objRôles>
   ): Promise<schémaFonctionOublier> {
     const bd = await this.ouvrirBd(id);
-    const accès = (bd.access as unknown) as ContrôleurConstellation;
+    const accès = bd.access as unknown as ContrôleurConstellation;
     const fFinale = () => {
       const autorisés = accès.rôles;
       f(autorisés);
@@ -245,14 +245,18 @@ export default class ClientConstellation extends EventEmitter {
     };
   }
 
-  async copierContenuBdListe(bdBase: KeyValueStore, nouvelleBd: KeyValueStore, clef: string): Promise<void> {
+  async copierContenuBdListe(
+    bdBase: KeyValueStore,
+    nouvelleBd: KeyValueStore,
+    clef: string
+  ): Promise<void> {
     const idBdListeInit = await bdBase.get(clef);
-    if (!idBdListeInit) return
+    if (!idBdListeInit) return;
 
     const bdListeInit = (await this.ouvrirBd(idBdListeInit)) as FeedStore;
 
     const idNouvelleBdListe = await nouvelleBd.get(clef);
-    if (!idNouvelleBdListe) throw "La nouvelle Bd n'existait pas"
+    if (!idNouvelleBdListe) throw "La nouvelle Bd n'existait pas";
 
     const nouvelleBdListe = (await this.ouvrirBd(
       idNouvelleBdListe
@@ -423,7 +427,7 @@ export default class ClientConstellation extends EventEmitter {
       .find((e: { [key: string]: any }) => e.hash === empreinte).payload.value;
   }
 
-  async suivreBdsDeBdListe<T extends élémentsBd, U=T[]>(
+  async suivreBdsDeBdListe<T extends élémentsBd, U = T[]>(
     id: string,
     f: schémaFonctionSuivi<T[]>,
     fBranche: (
@@ -432,9 +436,9 @@ export default class ClientConstellation extends EventEmitter {
       branche?: unknown
     ) => Promise<schémaFonctionOublier | undefined>,
     fIdBdDeBranche: (b: unknown) => string = (b) => b as string,
-    fRéduction: schémaFonctionRéduction<T[][], T[]> = (branches: T[][]): T[] => [
-      ...new Set(branches.flat()),
-    ],
+    fRéduction: schémaFonctionRéduction<T[][], T[]> = (
+      branches: T[][]
+    ): T[] => [...new Set(branches.flat())],
     fCode: (é: any) => string = (é) => é
   ): Promise<schémaFonctionOublier> {
     interface InterfaceBranches {
@@ -593,7 +597,7 @@ export default class ClientConstellation extends EventEmitter {
 
   async obtOpsAccès(idBd: string): Promise<OptionsContrôleurConstellation> {
     const bd = await this.ouvrirBd(idBd);
-    const accès = (bd.access as unknown) as ContrôleurConstellation;
+    const accès = bd.access as unknown as ContrôleurConstellation;
     return {
       adresseBd: accès.bd!.address,
     };
@@ -605,7 +609,7 @@ export default class ClientConstellation extends EventEmitter {
     if (accès.type === "ipfs") {
       return accès.write.includes(this.orbite!.identity.id);
     } else if (accès.type === nomTypeContrôleurConstellation) {
-      return ((accès as unknown) as ContrôleurConstellation).estAutorisé(id);
+      return (accès as unknown as ContrôleurConstellation).estAutorisé(id);
     }
     return false;
   }

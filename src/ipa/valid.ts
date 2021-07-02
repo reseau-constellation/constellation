@@ -2,7 +2,7 @@ import CID from "cids";
 import { catégorieVariables } from "./variables";
 
 export type typeRègle = "catégorie" | "bornes" | "valeurCatégorique";
-export type sourceRègle = "variable" | "tableau"
+export type sourceRègle = "variable" | "tableau";
 
 export type règleVariable = {
   typeRègle: typeRègle;
@@ -42,7 +42,9 @@ export interface erreurValidation {
   erreur: Erreur;
 }
 
-export type schémaFonctionValidation = (valeurs: élémentDonnées[]) => erreurValidation[];
+export type schémaFonctionValidation = (
+  valeurs: élémentDonnées[]
+) => erreurValidation[];
 
 export interface élémentDonnées {
   [key: string]: unknown;
@@ -52,28 +54,28 @@ export function générerFonctionRègle(
   règle: règleVariable,
   colonne: string
 ): schémaFonctionValidation {
-
-  let fComp: (v: élémentDonnées) => boolean
-  let fOp: (v1: number, v2: number) => boolean
-
   switch (règle.typeRègle) {
-    case "catégorie":
+    case "catégorie": {
       return (vals: élémentDonnées[]) => {
-        const catégorie = (règle as règleCatégorie).détails.catégorie
-        const nonValides = vals.filter(v=>!ValiderCatégorieVal(v[colonne], catégorie))
-        return nonValides.map(
-          (v: élémentDonnées)=>{
-            const { empreinte } = v
-            return {
-              empreinte,
-              colonne,
-              erreur: { règle }
-            }
-          }
-        )
-      }
+        const catégorie = (règle as règleCatégorie).détails.catégorie;
+        const nonValides = vals.filter(
+          (v) => !ValiderCatégorieVal(v[colonne], catégorie)
+        );
+        return nonValides.map((v: élémentDonnées) => {
+          const { empreinte } = v;
+          return {
+            empreinte,
+            colonne,
+            erreur: { règle },
+          };
+        });
+      };
+    }
 
-    case "bornes":
+    case "bornes": {
+      let fComp: (v: élémentDonnées) => boolean;
+      let fOp: (v1: number, v2: number) => boolean;
+
       const { val, op } = (règle as règleBornes).détails;
 
       switch (op) {
@@ -82,57 +84,59 @@ export function générerFonctionRègle(
           break;
         case "<":
           fOp = (v1: number, v2: number) => v1 < v2;
-          break
+          break;
         case ">=":
           fOp = (v1: number, v2: number) => v1 >= v2;
-          break
+          break;
         case "<=":
           fOp = (v1: number, v2: number) => v1 <= v2;
-          break
+          break;
       }
 
       switch (typeof val) {
         case "string":
-          fComp = (v: élémentDonnées) => fOp(v[colonne] as number, v[val] as number);
+          fComp = (v: élémentDonnées) =>
+            fOp(v[colonne] as number, v[val] as number);
           break;
         case "number":
-          fComp = (v: élémentDonnées) => fOp(v[colonne] as number, val as number);
-          break
+          fComp = (v: élémentDonnées) =>
+            fOp(v[colonne] as number, val as number);
+          break;
         default:
-          throw Error(`Borne de type ${typeof val} non reconnue.`)
+          throw Error(`Borne de type ${typeof val} non reconnue.`);
       }
 
       return (vals: élémentDonnées[]) => {
-        const nonValides = vals.filter(v=>fComp(v))
-        return nonValides.map(
-          (v: élémentDonnées) => {
-            const { empreinte } = v
-            return {
-              empreinte,
-              colonne,
-              erreur: {règle}
-            }
-          }
-        );
+        const nonValides = vals.filter((v) => fComp(v));
+        return nonValides.map((v: élémentDonnées) => {
+          const { empreinte } = v;
+          return {
+            empreinte,
+            colonne,
+            erreur: { règle },
+          };
+        });
       };
+    }
 
-    case "valeurCatégorique":
-      const options = (règle as règleValeurCatégorique).détails.options
-      return (vals: élémentDonnées[])=>{
-        const nonValides = vals.filter((v: élémentDonnées) => options.includes(v[colonne]))
-        return nonValides.map(
-          (v: élémentDonnées) => {
-            const { empreinte } = v
-            return {
-              empreinte,
-              colonne,
-              erreur: { règle }
-            }
-          }
-        )
-      }
+    case "valeurCatégorique": {
+      const options = (règle as règleValeurCatégorique).détails.options;
+      return (vals: élémentDonnées[]) => {
+        const nonValides = vals.filter((v: élémentDonnées) =>
+          options.includes(v[colonne])
+        );
+        return nonValides.map((v: élémentDonnées) => {
+          const { empreinte } = v;
+          return {
+            empreinte,
+            colonne,
+            erreur: { règle },
+          };
+        });
+      };
+    }
     default:
-      throw Error(`Catégorie ${règle.typeRègle} inconnue.`)
+      throw Error(`Catégorie ${règle.typeRègle} inconnue.`);
   }
 }
 

@@ -3,7 +3,7 @@
     <input
       type="file"
       ref="fileInput"
-      style="display: none;"
+      style="display: none"
       :accept="fichiersAcceptés"
       @change="fichierChoisi"
     />
@@ -78,9 +78,7 @@
               @click="() => télécharger()"
             >
               Télécharger
-              <v-icon right>
-                mdi-download
-              </v-icon>
+              <v-icon right> mdi-download </v-icon>
             </v-btn>
           </div>
         </v-card-text>

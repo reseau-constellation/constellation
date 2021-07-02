@@ -12,7 +12,7 @@ import {
   règleVariable,
   générerFonctionRègle,
   schémaFonctionValidation,
-  sourceRègle
+  sourceRègle,
 } from "./valid";
 
 type InfoCol = {
@@ -46,7 +46,7 @@ export default class Tableaux {
       idBdTableau
     )) as KeyValueStore;
 
-    const accès = (bdTableaux.access as unknown) as ContrôleurConstellation;
+    const accès = bdTableaux.access as unknown as ContrôleurConstellation;
     const optionsAccès = { adresseBd: accès.adresseBd };
 
     const idBdNoms = await this.client.créerBdIndépendante(
@@ -88,13 +88,13 @@ export default class Tableaux {
     await this.ajouterNomsTableau(idNouveauTableau, noms);
 
     //Copier les données
-    await this.client.copierContenuBdListe(bdBase, nouvelleBd, "données")
+    await this.client.copierContenuBdListe(bdBase, nouvelleBd, "données");
 
     //Copier les colonnes
-    await this.client.copierContenuBdListe(bdBase, nouvelleBd, "colonnes")
+    await this.client.copierContenuBdListe(bdBase, nouvelleBd, "colonnes");
 
     //Copier les règles
-    await this.client.copierContenuBdListe(bdBase, nouvelleBd, "règles")
+    await this.client.copierContenuBdListe(bdBase, nouvelleBd, "règles");
 
     return idNouveauTableau;
   }
@@ -369,40 +369,45 @@ export default class Tableaux {
     idTableau: string,
     f: schémaFonctionSuivi<règleVariable[]>
   ): Promise<schémaFonctionOublier> {
-    const règles: {tableau: règleVariable[], variable: règleVariable[]} = {
+    const règles: { tableau: règleVariable[]; variable: règleVariable[] } = {
       tableau: [],
-      variable: []
-    }
-    const fFinale = () => f([...règles.tableau, ...règles.variable])
+      variable: [],
+    };
+    const fFinale = () => f([...règles.tableau, ...règles.variable]);
 
     const fSuivreRègles = (rgls: unknown[], source: sourceRègle) => {
       const règlesTableau = rgls.map((r: unknown): règleVariable => {
-        (r as règleVariable).source = source
-        return r as règleVariable
-      })
-      règles[source] = règlesTableau
-      fFinale()
-    }
+        (r as règleVariable).source = source;
+        return r as règleVariable;
+      });
+      règles[source] = règlesTableau;
+      fFinale();
+    };
 
     const oublierRèglesTableau = await this.client.suivreBdListeDeClef(
-      idTableau, "règles", (rgls: unknown[]) => fSuivreRègles(rgls, "tableau")
-    )
+      idTableau,
+      "règles",
+      (rgls: unknown[]) => fSuivreRègles(rgls, "tableau")
+    );
 
-    console.error("À faire")
+    console.error("À faire");
 
     const fSuivreColonnes = await this.client.suivreBdDeClef<InfoCol>(
-      idTableau, "colonnes", f
-    )
+      idTableau,
+      "colonnes",
+      f
+    );
 
     const oublierRèglesVariable = await this.suivreColonnes(
-      idTableau, fSuivreColonnes
-    )
+      idTableau,
+      fSuivreColonnes
+    );
 
     const fOublier = () => {
-      oublierRèglesTableau()
-      oublierRèglesVariable()
-    }
-    return fOublier
+      oublierRèglesTableau();
+      oublierRèglesVariable();
+    };
+    return fOublier;
   }
 
   async suivreValidDonnées(

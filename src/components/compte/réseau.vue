@@ -29,9 +29,7 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
-        <p v-else class="text--disabled">
-          Aucune connexion pour l'instant
-        </p>
+        <p v-else class="text--disabled">Aucune connexion pour l'instant</p>
       </v-col>
     </v-row>
   </v-card>

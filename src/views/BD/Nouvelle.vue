@@ -36,7 +36,7 @@
               Ne vous cassez pas la tête ; ces noms pouront être modifiés
               ensuite.
             </span>
-            <v-list style="max-height: 300px;" class="overflow-y-auto">
+            <v-list style="max-height: 300px" class="overflow-y-auto">
               <item-nouveau-nom
                 :languesExistantes="Object.keys(this.noms)"
                 etiquetteNom="Nom de la BD"
@@ -62,7 +62,7 @@
             <span class="grey--text text--darken-1">
               Quelque chose de claire, net et précis !
             </span>
-            <v-list style="max-height: 300px;" class="overflow-y-auto">
+            <v-list style="max-height: 300px" class="overflow-y-auto">
               <item-nouveau-nom
                 :languesExistantes="Object.keys(this.descriptions)"
                 etiquetteNom="Description"
@@ -128,9 +128,7 @@
                   </v-chip>
                 </v-card>
                 <v-card flat min-width="200" max-width="350" class="mb-3">
-                  <p class="mb-0 text-overline">
-                    Conditions
-                  </p>
+                  <p class="mb-0 text-overline">Conditions</p>
                   <p v-if="!conditions.length" class="text--disabled">
                     Aucune condition
                   </p>
@@ -182,11 +180,16 @@
               Veuillez confirmer la création de la base de données afin de
               pouvoir commencer à y ajouter des données.
             </h3>
+            <v-checkbox
+              v-model="jaiCompris"
+              label="Tout base de données partagée sur Constellation estentièrement publique. Ne partagez rien de personnel ou confidentiel."
+            ></v-checkbox>
             <v-btn
               :loading="enCréation"
               tiled
               outlined
               color="primary"
+              :disabled="!jaiCompris"
               @click="(e) => créerBd(e)"
             >
               C'est parti !
@@ -198,9 +201,7 @@
       <v-divider></v-divider>
 
       <v-card-actions>
-        <v-btn :disabled="étape === 1" text @click="étape--">
-          Retour
-        </v-btn>
+        <v-btn :disabled="étape === 1" text @click="étape--"> Retour </v-btn>
         <v-spacer></v-spacer>
         <v-btn
           :disabled="(étape === 3 && !licence) || étape === 4"
@@ -235,6 +236,7 @@ export default {
       noms: {},
       descriptions: {},
       enCréation: false,
+      jaiCompris: false,
 
       permissions: [],
       conditions: [],

@@ -11,17 +11,13 @@
     <v-divider />
     <v-card-text class="text-left">
       <span v-if="courriel">
-        <p class="mb-0 text-overline">
-          Contact
-        </p>
+        <p class="mb-0 text-overline">Contact</p>
         <v-chip label outlined small>
           <v-icon left small>mdi-email</v-icon>
           {{ couper(courriel, 50) }}
         </v-chip>
       </span>
-      <p class="mb-0 text-overline">
-        Bases de données
-      </p>
+      <p class="mb-0 text-overline">Bases de données</p>
       <jeton-bd v-for="bd in bds.slice(0, N_MAX_LISTE)" :key="bd" :id="bd" />
       <v-chip
         v-if="bds.length > N_MAX_LISTE"
@@ -36,9 +32,7 @@
         Aucune BD
       </v-chip>
 
-      <p class="mb-0 text-overline">
-        Projets
-      </p>
+      <p class="mb-0 text-overline">Projets</p>
       <jeton-bd v-for="projet in projets" :key="projet" :id="projet" />
       <v-chip v-if="!projets.length" label outlined small disabled>
         Aucun projet

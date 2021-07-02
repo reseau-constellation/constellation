@@ -89,9 +89,7 @@
               <v-icon>mdi-plus</v-icon>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title>
-                Ajouter un dispositif
-              </v-list-item-title>
+              <v-list-item-title> Ajouter un dispositif </v-list-item-title>
               <v-list-item-subtitle>
                 Ajouttez un autre ordinateur, téléphone, ou navigateur à votre
                 compte pour plus de sécurité.

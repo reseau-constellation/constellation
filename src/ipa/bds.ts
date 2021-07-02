@@ -41,7 +41,7 @@ export default class BDs {
     const bdBD = (await this.client.ouvrirBd(idBdBD)) as KeyValueStore;
     await bdBD.set("licence", licence);
 
-    const accès = (bdBD.access as unknown) as ContrôleurConstellation;
+    const accès = bdBD.access as unknown as ContrôleurConstellation;
     const optionsAccès = { adresseBd: accès.adresseBd };
 
     const idBdNoms = await this.client.créerBdIndépendante(
@@ -114,9 +114,8 @@ export default class BDs {
     ) as string[];
 
     tableaux.forEach(async (idT: string) => {
-      const idNouveauTableau: string = await this.client.tableaux!.copierTableau(
-        idT
-      );
+      const idNouveauTableau: string =
+        await this.client.tableaux!.copierTableau(idT);
       await nouvelleBdTableaux.add(idNouveauTableau);
     });
 
@@ -270,9 +269,8 @@ export default class BDs {
     const bdMotsClefs = (await this.client.ouvrirBd(
       idBdMotsClefs
     )) as FeedStore;
-    const motsClefsExistants = ClientConstellation.obtÉlémentsDeBdListe<string>(
-      bdMotsClefs
-    );
+    const motsClefsExistants =
+      ClientConstellation.obtÉlémentsDeBdListe<string>(bdMotsClefs);
     if (!motsClefsExistants.includes(idMotClef))
       await bdMotsClefs.add(idMotClef);
   }

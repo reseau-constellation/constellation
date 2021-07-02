@@ -61,7 +61,7 @@ export default {
     return {
       projets: [],
     };
-  }
+  },
 };
 </script>
 

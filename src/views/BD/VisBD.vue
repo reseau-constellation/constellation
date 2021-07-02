@@ -90,9 +90,7 @@
         <span v-if="this.descriptions">
           {{ descriptions }}
         </span>
-        <span v-else-if="permissionÉcrire">
-          Aucune description.
-        </span>
+        <span v-else-if="permissionÉcrire"> Aucune description. </span>
         <v-menu
           v-if="permissionÉcrire"
           offset-x
@@ -166,9 +164,7 @@
                     <v-list-item-avatar>
                       <v-icon>mdi-account-multiple</v-icon>
                     </v-list-item-avatar>
-                    <v-list-item-content>
-                      Auteurs
-                    </v-list-item-content>
+                    <v-list-item-content> Auteurs </v-list-item-content>
                   </v-list-item>
                 </template>
                 <v-list v-if="auteurs">
@@ -226,13 +222,9 @@
             </v-card>
             <v-list-item @click="ouvrirRéplications;">
               <v-list-item-avatar>
-                <v-icon left>
-                  mdi-plus
-                </v-icon>
+                <v-icon left> mdi-plus </v-icon>
               </v-list-item-avatar>
-              <v-list-item-content>
-                3 réplications
-              </v-list-item-content>
+              <v-list-item-content> 3 réplications </v-list-item-content>
             </v-list-item>
           </div>
         </v-card>
@@ -249,9 +241,7 @@
               <p class="mb-0 text-overline">
                 Mots-clefs
                 <v-btn v-if="permissionÉcrire" small icon>
-                  <v-icon small>
-                    mdi-plus
-                  </v-icon>
+                  <v-icon small> mdi-plus </v-icon>
                 </v-btn>
               </p>
               <p v-if="!motsClefs.length" class="text--disabled">

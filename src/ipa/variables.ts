@@ -2,15 +2,12 @@ import { FeedStore, KeyValueStore } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
-  élémentsBd
+  élémentsBd,
 } from "./client";
 import ContrôleurConstellation, {
   nomType as typeContrôleurAccèsConst,
 } from "./accès/contrôleurConstellation";
-import {
-  règleVariable,
-  règleCatégorie
-} from "./valid";
+import { règleVariable, règleCatégorie } from "./valid";
 
 import { STATUT } from "./bds";
 
@@ -54,7 +51,7 @@ export default class Variables {
       idBdVariable
     )) as KeyValueStore;
 
-    const accès = (bdVariable.access as unknown) as ContrôleurConstellation;
+    const accès = bdVariable.access as unknown as ContrôleurConstellation;
     const optionsAccès = { adresseBd: accès.adresseBd };
 
     const idBdNoms = await this.client.créerBdIndépendante(
@@ -220,15 +217,12 @@ export default class Variables {
     await bdVariable.set("catégorie", catégorie);
   }
 
-  async ajouterRègleVariable(
-    id: string,
-    règle: règleVariable
-  ): Promise<void> {
+  async ajouterRègleVariable(id: string, règle: règleVariable): Promise<void> {
     const idBdRègles = await this.client.obtIdBd("règles", id, "feed");
     if (!idBdRègles) throw `Permission de modification refusée pour BD ${id}.`;
 
     const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
-    bdRègles.add(règle)
+    bdRègles.add(règle);
   }
 
   async suivreNomsVariable(
@@ -269,43 +263,43 @@ export default class Variables {
     id: string,
     f: schémaFonctionSuivi<règleVariable[]>
   ): Promise<schémaFonctionOublier> {
-    const règles: {catégorie: règleVariable[], propres: règleVariable[]} = {
+    const règles: { catégorie: règleVariable[]; propres: règleVariable[] } = {
       catégorie: [],
-      propres: []
-    }
+      propres: [],
+    };
     const fFinale = () => {
-      f([...règles.catégorie, ...règles.propres])
+      f([...règles.catégorie, ...règles.propres]);
     };
 
     const fSuivreCatégorie = (catégorie: catégorieVariables) => {
       const règleCat: règleCatégorie = {
         typeRègle: "catégorie",
         détails: { catégorie },
-        source: "variable"
-      }
-      règles.catégorie = [règleCat]
-      fFinale()
-    }
+        source: "variable",
+      };
+      règles.catégorie = [règleCat];
+      fFinale();
+    };
     const fOublierCatégorie = await this.suivreCatégorieVariable(
       id,
       fSuivreCatégorie
     );
 
     const fSuivreRèglesPropres = (rgls: règleVariable[]) => {
-      règles.propres = rgls
-      fFinale()
-    }
+      règles.propres = rgls;
+      fFinale();
+    };
     const fOublierRèglesPropres = await this.client.suivreBdListeDeClef(
       id,
       "règles",
       fSuivreRèglesPropres as (rgls: élémentsBd[]) => void
-    )
+    );
 
     const fOublier = () => {
-      fOublierCatégorie()
-      fOublierRèglesPropres()
-    }
-    return fOublier
+      fOublierCatégorie();
+      fOublierRèglesPropres();
+    };
+    return fOublier;
   }
 
   async établirStatut(

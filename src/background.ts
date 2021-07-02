@@ -6,9 +6,9 @@ import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 const isDevelopment = process.env.NODE_ENV !== "production";
 import Store from "electron-store";
-import Ctl from 'ipfsd-ctl';
+import Ctl from "ipfsd-ctl";
 
-let ipfsd: typeof Ctl
+let ipfsd: typeof Ctl;
 async function initSFIP() {
   /* if (!ipfsd) {
     const port = 9090
@@ -35,13 +35,12 @@ async function initSFIP() {
 }
 
 async function fermerSFIP() {
-  if (ipfsd)
-    await ipfsd.stop()
+  if (ipfsd) await ipfsd.stop();
 }
 
 async function fermerConstellation() {
-  await fermerSFIP()
-  app.quit()
+  await fermerSFIP();
+  app.quit();
 }
 Store.initRenderer();
 
@@ -61,8 +60,8 @@ async function createWindow() {
 
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: (process.env
-        .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
+      nodeIntegration: process.env
+        .ELECTRON_NODE_INTEGRATION as unknown as boolean,
       contextIsolation: !(process.env
         .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
     },
@@ -107,7 +106,7 @@ app.on("activate", () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
-  initSFIP()
+  initSFIP();
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {

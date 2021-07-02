@@ -14,7 +14,7 @@
         v-if="noms"
         dense
         class="overflow-y-auto"
-        style="max-height: 200px;"
+        style="max-height: 200px"
       >
         <v-list-item v-for="l in Object.keys(noms)" :key="l">
           <v-row>

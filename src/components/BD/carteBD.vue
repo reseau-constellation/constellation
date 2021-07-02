@@ -55,9 +55,7 @@
             ? licence
             : $t(`licences.${licence || "introuvable"}.nom`)
         }}
-        <v-icon v-if="licenceApprouvée" right small>
-          mdi-open-in-new
-        </v-icon>
+        <v-icon v-if="licenceApprouvée" right small> mdi-open-in-new </v-icon>
       </v-chip>
     </v-card-text>
     <v-card-actions>

@@ -13,15 +13,11 @@
 
     <v-tabs v-model="onglet">
       <v-tab>
-        <v-icon left>
-          mdi-file
-        </v-icon>
+        <v-icon left> mdi-file </v-icon>
         Fichier
       </v-tab>
       <v-tab>
-        <v-icon left>
-          mdi-xml
-        </v-icon>
+        <v-icon left> mdi-xml </v-icon>
         Programmatique
       </v-tab>
     </v-tabs>
