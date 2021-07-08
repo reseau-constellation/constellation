@@ -42,9 +42,7 @@
       <v-card-text>
         <p class="mt-3 mb-0">
           <v-icon small>mdi-alert-circle-outline</v-icon>
-          L'information ci-dessous n'est qu'un résumé de la licence,
-          pourrait contenir des erreurs et n'est pas un avis légal. Nous
-          vous recommandons de lire la licence en entier.
+          {{ $t('licences.avertissement') }}
         </p>
         <div class="text-center">
           <v-btn
@@ -56,15 +54,18 @@
           >
             <v-icon left>mdi-scale-balance</v-icon>
             <div v-if="lienLicenceValid">
-              Lire la licence
+              {{ $t('licences.lire') }}
               <v-icon right>mdi-open-in-new</v-icon>
             </div>
-            <div v-else>Aucun lien disponible</div>
+            <div v-else>{{ $t('licences.aucunLien') }}</div>
           </v-btn>
         </div>
         <v-divider />
 
-        <p class="mb-0 text-overline">Droits</p>
+        <p class="mb-0 text-overline">{{ $t('licences.droits.sousTitre') }}</p>
+        <p v-if="!droits.length" class="text--disabled">
+          {{ $t('licences.droits.aucune') }}
+        </p>
         <jeton-droit
           v-for="d in droits"
           :key="d"
@@ -74,7 +75,10 @@
           label
           class="ma-1 my-1"
         />
-        <p class="mb-0 text-overline">Conditions</p>
+        <p class="mb-0 text-overline">{{ $t('licences.conditions.sousTitre') }}</p>
+        <p v-if="!conditions.length" class="text--disabled">
+          {{ $t('licences.conditions.aucune') }}
+        </p>
         <jeton-condition
           v-for="c in conditions"
           :key="c"
@@ -84,7 +88,10 @@
           label
           class="ma-1 my-1"
         />
-        <p class="mb-0 text-overline">Limitations</p>
+        <p class="mb-0 text-overline">{{ $t('licences.limitations.sousTitre') }}</p>
+        <p v-if="!limitations.length" class="text--disabled">
+          {{ $t('licences.limitations.aucune') }}
+        </p>
         <jeton-limitation
           v-for="l in limitations"
           :key="l"
@@ -100,7 +107,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="secondary" text outlined @click="dialogue = false">
-          Fermer
+          {{ $t("communs.fermer") }}
         </v-btn>
 
       </v-card-actions>

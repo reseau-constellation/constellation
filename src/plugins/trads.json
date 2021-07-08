@@ -3,7 +3,8 @@
     "communs": {
       "auto": "Automatique",
       "messageInstaller": "La version navigateur de Constellation est limitée par la mémoire disponible dans votre navigateur. Il est préférable d'installer le logiciel pour toute analyse importante.",
-      "btnInstaller": "Installer Constellation"
+      "btnInstaller": "Installer Constellation",
+      "fermer": "Fermer"
     },
     "alerteConditions": {
       "texte": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
@@ -149,6 +150,8 @@
     },
     "licences": {
       "droits": {
+        "sousTitre": "Droits",
+        "aucune": "Aucun droit",
         "partager": "Partager",
         "adapter": "Adapter",
         "usageComercial": "Utilisation commercial",
@@ -156,6 +159,8 @@
         "usageBrevets": "Brevets"
       },
       "conditions": {
+        "sousTitre": "Conditions",
+        "aucune": "Aucune condition",
         "attribution": "Attribution",
         "partageÉgal": "Même licence",
         "inclureDroitDauteur": "Droit d'auteur",
@@ -165,6 +170,8 @@
         "aucune": "Aucune condition"
       },
       "limitations": {
+        "sousTitre": "Limitations",
+        "aucune": "Aucune limitation",
         "aucuneResponsabilité": "Aucune resposabilité",
         "aucuneGarantie": "Aucune garantie",
         "marqueCommerce": "Marques de commerce",
@@ -172,33 +179,43 @@
         "sousLicence": "Sous-licence",
         "aucune": "Aucune limitation"
       },
+      "avertissement": "L'information ci-dessous n'est qu'un résumé de la licence, pourrait contenir des erreurs et n'est pas un avis légal. Nous vous recommandons de lire la licence en entier.",
+      "lire": "Lire la licence",
+      "aucunLien": "Aucun lien disponible",
       "info": {
         "CC-BY-SA-4_0": {
           "nom": "CC BY SA 4,0",
+          "abr": "CC BY SA 4,0",
           "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr"
         },
         "CC-BY-4_0": {
           "nom": "CC BY 4,0",
+          "abr": "CC BY 4,0",
           "lien": "https://creativecommons.org/licenses/by/4.0/deed.fr"
         },
         "CC-0-1_0": {
           "nom": "CC 0 1,0",
+          "abr": "CC 0 1,0",
           "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.fr"
         },
         "ODbl-1_0": {
           "nom": "Licence ouverte ODC 1,0",
+          "abr": "ODbl 1,0",
           "lien": "https://opendatacommons.org/licenses/odbl/summary/"
         },
         "ODC-BY-1_0": {
           "nom": "Licence attribution ODC 1,0",
+          "abr": "ODC BY 1,0",
           "lien": "https://opendatacommons.org/licenses/by/summary"
         },
         "PDDL": {
           "nom": "Domaine publique ODC",
+          "abr": "PDDL",
           "lien": "https://opendatacommons.org/licenses/pddl/summary"
         },
         "rvca-open": {
           "nom": "Licence de données ouvertes RCVA",
+          "abr": "RVCA",
           "lien": "https://rvcagis.github.io/jkan/datasets/rvca-open-licence/"
         },
         "0bsd": {
@@ -350,7 +367,8 @@
           "lien": "https://choosealicense.com/licenses/ofl-1.1/"
         },
         "introuvable": {
-          "nom": "Licence introuvable"
+          "nom": "Licence introuvable",
+          "abr": "Introuvable"
         }
       }
     }

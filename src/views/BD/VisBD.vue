@@ -198,7 +198,7 @@
                 @changerLicence="changerLicence"
               >
                 <template v-slot:activator="{ on, attrs }">
-                  <v-list-item v-bind="attrs" v-on="on" v-show="true || licence !== null">
+                  <v-list-item v-bind="attrs" v-on="on" v-show="licence !== null">
                     <v-list-item-avatar>
                       <v-icon
                         left
@@ -209,25 +209,26 @@
                     </v-list-item-avatar>
                     <v-list-item-content>
                       {{
-                        licence && !licenceApprouvée
-                          ? licence
-                          : $t(`licences.info.${licence || "introuvable"}.nom`)
+                        couper(
+                          licence && !licenceApprouvée
+                            ? licence
+                            : $t(`licences.info.${licence || "introuvable"}.abr`),
+                            10
+                          )
                       }}
                     </v-list-item-content>
-                    <v-list-item-action>
-                      <v-icon>mdi-open-in-new</v-icon>
-                    </v-list-item-action>
                   </v-list-item>
                 </template>
-
               </dialogue-licence>
             </v-card>
-            <v-list-item @click="ouvrirRéplications;">
-              <v-list-item-avatar>
-                <v-icon left> mdi-plus </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content> 3 réplications </v-list-item-content>
-            </v-list-item>
+            <v-card flat width="200" class="mb-3">
+              <v-list-item @click="ouvrirRéplications;">
+                <v-list-item-avatar>
+                  <v-icon left> mdi-plus </v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content> 3 réplications </v-list-item-content>
+              </v-list-item>
+            </v-card>
           </div>
         </v-card>
         <v-card flat class="mx-3 mb-3">

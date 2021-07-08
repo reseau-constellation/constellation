@@ -86,10 +86,7 @@
         <v-window-item :value="3">
           <v-card-text>
             <p class="grey--text text--darken-1 mb-3">
-              Ça vaut la peine de prendre son temps. Vous pouvez changer d'avis
-              plus tard, mais vous ne pouvez pas révoquer les droits déjà
-              octroyés aux autres utilisateurs et utilisatrices pour les données
-              déjà publiées.
+              {{ $t("licences.avertissement") }}
             </p>
             <v-select
               v-model="licence"
@@ -107,15 +104,13 @@
             <v-card v-if="licence" flat class="mx-3 mb-3">
               <p>
                 <v-icon small>mdi-alert-circle-outline</v-icon>
-                L'information ci-dessous n'est qu'un résumé de la licence,
-                pourrait contenir des erreurs et n'est pas un avis légal. Nous
-                vous recommandons de lire la licence en entier.
+                {{ $t('licences.avertissement') }}
               </p>
               <div class="d-flex flex-wrap">
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
                   <p class="mb-0 text-overline">Permissions</p>
                   <p v-if="!droits.length" class="text--disabled">
-                    Aucune permission
+                    {{ $t("licences.droits.aucune") }}
                   </p>
                   <jeton-droit
                     v-for="p in droits"
@@ -156,10 +151,10 @@
                 >
                   <v-icon left>mdi-scale-balance</v-icon>
                   <div v-if="lienLicenceValid">
-                    Lire la licence
+                    {{ $t("licences.lire") }}
                     <v-icon right>mdi-open-in-new</v-icon>
                   </div>
-                  <div v-else>Aucun lien disponible</div>
+                  <div v-else>{{ $t("licences.aucunLien") }}</div>
                 </v-btn>
               </div>
             </v-card>
@@ -232,8 +227,8 @@ import mixinLicences from "@/mixins/licences";
 import itemNom from "@/components/commun/boîteNoms/itemNom";
 import itemNouveauNom from "@/components/commun/boîteNoms/itemNouveauNom";
 import jetonDroit from "@/components/commun/licences/jetonDroit";
-import jetonCondition from "@/components/commun/licences/jetonLimitation";
-import jetonLimitation from "@/components/commun/licences/jetonCondition";
+import jetonLimitation from "@/components/commun/licences/jetonLimitation";
+import jetonCondition from "@/components/commun/licences/jetonCondition";
 
 export default {
   name: "NouvelleBD",
