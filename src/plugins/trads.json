@@ -148,32 +148,210 @@
       "entête": "Télécharger Constellation"
     },
     "licences": {
-      "CC-BY-SA-4_0": {
-        "nom": "CC BY SA 4.0",
-        "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr"
+      "droits": {
+        "partager": "Partager",
+        "adapter": "Adapter",
+        "usageComercial": "Utilisation commercial",
+        "usagePrivé": "Utilisation privée",
+        "usageBrevets": "Brevets"
       },
-      "CC-BY-4_0": {
-        "nom": "CC BY 4.0",
-        "lien": "https://creativecommons.org/licenses/by/4.0/deed.fr"
+      "conditions": {
+        "attribution": "Attribution",
+        "partageÉgal": "Même licence",
+        "inclureDroitDauteur": "Droit d'auteur",
+        "indiquerChangements": "Indiquer modifications",
+        "partagerCodeSource": "Code source",
+        "usageRéseau": "Usage réseau compris",
+        "aucune": "Aucune condition"
       },
-      "CC-0-1_0": {
-        "nom": "CC 0 1.0",
-        "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.fr"
+      "limitations": {
+        "aucuneResponsabilité": "Aucune resposabilité",
+        "aucuneGarantie": "Aucune garantie",
+        "marqueCommerce": "Marques de commerce",
+        "brevetExclu": "Brevets",
+        "sousLicence": "Sous-licence",
+        "aucune": "Aucune limitation"
       },
-      "ODbl-1_0": {
-        "nom": "ODbl 1.0",
-        "lien": "https://opendatacommons.org/licenses/odbl/summary/"
-      },
-      "ODC-BY-1_0": {
-        "nom": "ODC BY 1.0",
-        "lien": "https://opendatacommons.org/licenses/by/summary"
-      },
-      "PDDL": {
-        "nom": "PDDL",
-        "lien": "https://opendatacommons.org/licenses/pddl/summary"
-      },
-      "introuvable": {
-        "nom": "Licence introuvable"
+      "info": {
+        "CC-BY-SA-4_0": {
+          "nom": "CC BY SA 4,0",
+          "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr"
+        },
+        "CC-BY-4_0": {
+          "nom": "CC BY 4,0",
+          "lien": "https://creativecommons.org/licenses/by/4.0/deed.fr"
+        },
+        "CC-0-1_0": {
+          "nom": "CC 0 1,0",
+          "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.fr"
+        },
+        "ODbl-1_0": {
+          "nom": "Licence ouverte ODC 1,0",
+          "lien": "https://opendatacommons.org/licenses/odbl/summary/"
+        },
+        "ODC-BY-1_0": {
+          "nom": "Licence attribution ODC 1,0",
+          "lien": "https://opendatacommons.org/licenses/by/summary"
+        },
+        "PDDL": {
+          "nom": "Domaine publique ODC",
+          "lien": "https://opendatacommons.org/licenses/pddl/summary"
+        },
+        "rvca-open": {
+          "nom": "Licence de données ouvertes RCVA",
+          "lien": "https://rvcagis.github.io/jkan/datasets/rvca-open-licence/"
+        },
+        "0bsd": {
+          "nom": "BSD Zéro Clause",
+          "lien": "https://choosealicense.com/licenses/0bsd/"
+        },
+        "afl-3_0": {
+          "nom": "Licence libre académique",
+          "lien": "https://choosealicense.com/licenses/afl-3.0/"
+        },
+        "agpl-3_0": {
+          "nom": "Licence Publique Générale GNU Affero 3,0",
+          "lien": "https://choosealicense.com/licenses/agpl-3.0/"
+        },
+        "apache-2_0": {
+          "nom": "Licence Apache 2.0",
+          "lien": "https://choosealicense.com/licenses/apache-2.0/"
+        },
+        "artistic-2_0": {
+          "nom": "Licence Artistique 2.0",
+          "lien": "https://choosealicense.com/licenses/artistic-2.0/"
+        },
+        "bsd-2-clause": {
+          "nom": "Licence BSD 2-Clause simplifiée",
+          "lien": "https://choosealicense.com/licenses/bsd-2-clause/"
+        },
+        "bsd-3-clause-clear": {
+          "nom": "Licence BSD 3-Clause claire",
+          "lien": "https://choosealicense.com/licenses/bsd-3-clause-clear/"
+        },
+        "bsd-3-clause": {
+          "nom": "Licence BSD 3-Nouvelle clause",
+          "lien": "https://choosealicense.com/licenses/bsd-3-clause/"
+        },
+        "bsd-4-clause": {
+          "nom": "Licence BSD 4-Clause originale",
+          "lien": "https://choosealicense.com/licenses/bsd-4-clause/"
+        },
+        "bsl-1_0": {
+          "nom": "Licence de logiciel Boost 1.0",
+          "lien": "https://choosealicense.com/licenses/bsl-1.0/"
+        },
+        "cecill-2_1": {
+          "nom": "Licence de logiciel libre CeCILL v2,1",
+          "lien": "https://choosealicense.com/licenses/cecill-2.1/"
+        },
+        "ecl-2_0": {
+          "nom": "Licence communauté éducationnelle 2,0",
+          "lien": "https://choosealicense.com/licenses/ecl-2.0/"
+        },
+        "epl-1_0": {
+          "nom": "Licence publique Eclipse 1,0",
+          "lien": "https://choosealicense.com/licenses/epl-1.0/"
+        },
+        "epl-2_0": {
+          "nom": "Licence publique Eclipse 2,0",
+          "lien": "https://choosealicense.com/licenses/epl-2.0/"
+        },
+        "eupl-1_0": {
+          "nom": "Licence publique de l'Union européenne 1,1",
+          "lien": "https://choosealicense.com/licenses/eupl-1.1/"
+        },
+        "eupl-1_2": {
+          "nom": "Licence publique de l'Union européenne 1,2",
+          "lien": "https://choosealicense.com/licenses/eupl-1.2/"
+        },
+        "gpl-2_0": {
+          "nom": "Licence générale publique GNU v2,0",
+          "lien": "https://choosealicense.com/licenses/gpl-2.0/"
+        },
+        "gpl-3_0": {
+          "nom": "Licence générale publique GNU v3,0",
+          "lien": "https://choosealicense.com/licenses/gpl-3.0/"
+        },
+        "isc": {
+          "nom": "Licence ISC",
+          "lien": "https://choosealicense.com/licenses/isc/"
+        },
+        "lgpl-2_1": {
+          "nom": "Licence Générale Publique moindre GNU v2,1",
+          "lien": "https://choosealicense.com/licenses/lgpl-2.1/"
+        },
+        "lgpl-3_0": {
+          "nom": "Licence Générale Publique moindre GNU v3,1",
+          "lien": "https://choosealicense.com/licenses/lgpl-3.0/"
+        },
+        "lppl-1_3c": {
+          "nom": "Licence publique du projet LaTeX v1,3c",
+          "lien": "https://choosealicense.com/licenses/lppl-1.3c/"
+        },
+        "mit-0": {
+          "nom": "MIT sans attribution",
+          "lien": "https://choosealicense.com/licenses/mit-0/"
+        },
+        "mit": {
+          "nom": "MIT",
+          "lien": "https://choosealicense.com/licenses/mit/"
+        },
+        "mpl-2_0": {
+          "nom": "Licence publique Mozilla 2,0",
+          "lien": "https://choosealicense.com/licenses/mpl-2.0/"
+        },
+        "ms-pl": {
+          "nom": "Licence publique Microsoft",
+          "lien": "https://choosealicense.com/licenses/ms-pl/"
+        },
+        "ms-rl": {
+          "nom": "Licence réciproque Microsoft",
+          "lien": "https://choosealicense.com/licenses/ms-rl/"
+        },
+        "mulanpsl-2_0": {
+          "nom": "Licence logiciel permissive Mulan, version 2",
+          "lien": "https://choosealicense.com/licenses/mulanpsl-2.0/"
+        },
+        "ncsa": {
+          "nom": "Licence source ouverte NCSA/Université d'Illinois",
+          "lien": "https://choosealicense.com/licenses/ncsa/"
+        },
+        "osl-3_0": {
+          "nom": "Licence logiciel ouverte 3,0",
+          "lien": "https://choosealicense.com/licenses/osl-3.0/"
+        },
+        "postgresql": {
+          "nom": "Licence PostgreSQL",
+          "lien": "https://choosealicense.com/licenses/postgresql/"
+        },
+        "unlicence": {
+          "nom": "Domaine publique",
+          "lien": "https://choosealicense.com/licenses/unlicense/"
+        },
+        "upl-1_0": {
+          "nom": "Licence permissive universelle 1,0",
+          "lien": "https://choosealicense.com/licenses/upl-1.0/"
+        },
+        "vim": {
+          "nom": "Licence VIM",
+          "lien": "https://choosealicense.com/licenses/vim/"
+        },
+        "wtfpl": {
+          "nom": "Licence publique WTF",
+          "lien": "https://choosealicense.com/licenses/wtfpl/"
+        },
+        "zlib": {
+          "nom": "Licence zlib",
+          "lien": "https://choosealicense.com/licenses/zlib/"
+        },
+        "ofl-1_1": {
+          "nom": "Licence de police source ouverte SIL 1,1",
+          "lien": "https://choosealicense.com/licenses/ofl-1.1/"
+        },
+        "introuvable": {
+          "nom": "Licence introuvable"
+        }
       }
     }
   },

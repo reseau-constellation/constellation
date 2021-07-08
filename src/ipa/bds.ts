@@ -34,7 +34,7 @@ export default class BDs {
   async créerBd(licence: string): Promise<string> {
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
     const idBdBD = await this.client.créerBdIndépendante("kvstore", {
-      adresseBd: undefined,
+      adresseBd: undefined
     });
     await bdRacine.add(idBdBD);
 
@@ -253,6 +253,11 @@ export default class BDs {
 
     const bdDescr = (await this.client.ouvrirBd(idBdDescr)) as KeyValueStore;
     await bdDescr.del(langue);
+  }
+
+  async changerLicenceBd(idBd: string, licence: string): Promise<void> {
+    const bdBd = await this.client.ouvrirBd(idBd) as KeyValueStore;
+    await bdBd.set("licence", licence)
   }
 
   async ajouterMotClefBd(idBd: string, idMotClef: string): Promise<void> {

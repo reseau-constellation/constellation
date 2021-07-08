@@ -44,7 +44,7 @@
         small
         class="me-1 my-1"
         @click.stop="
-          licenceApprouvée ? ouvrirLien($t(`licences.${licence}.lien`)) : ''
+          licenceApprouvée ? ouvrirLien($t(`licences.info.${licence}.lien`)) : ''
         "
       >
         <v-icon left small :color="licenceApprouvée ? 'secondary' : 'error'">
@@ -53,7 +53,7 @@
         {{
           licence && !licenceApprouvée
             ? licence
-            : $t(`licences.${licence || "introuvable"}.nom`)
+            : $t(`licences.info.${licence || "introuvable"}.nom`)
         }}
         <v-icon v-if="licenceApprouvée" right small> mdi-open-in-new </v-icon>
       </v-chip>

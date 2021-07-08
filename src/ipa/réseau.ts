@@ -43,6 +43,7 @@ export default class Réseau {
   }
 
   async ajouterMembre(id: string): Promise<void> {
+    // console.log({id, "idBd": this.idBd})
     const existante = await this.client.rechercherBdListe(
       this.idBd,
       (e: élémentFeedStore) => e.payload.value.id === id

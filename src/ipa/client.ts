@@ -1,10 +1,9 @@
-import { EventEmitter } from "events";
+import { EventEmitter, once } from "events";
 import { v4 as uuidv4 } from "uuid";
-
+import Semaphore from '@chriscdn/promise-semaphore';
 import initOrbite from "./orbitdb";
 import initSFIP from "./ipfs";
-import OrbitDB from "orbit-db";
-import { Store, FeedStore, KeyValueStore, élémentFeedStore } from "orbit-db";
+import OrbitDB, { Store, FeedStore, KeyValueStore, isValidAddress, élémentFeedStore } from "orbit-db";
 import Compte from "./compte";
 import BDs from "./bds";
 import Tableaux from "./tableaux";
@@ -20,7 +19,7 @@ import ContrôleurConstellation, {
   objRôles,
   nomType as nomTypeContrôleurConstellation,
 } from "./accès/contrôleurConstellation";
-import { MEMBRE } from "./accès/consts";
+import { MEMBRE, MODÉRATEUR } from "./accès/consts";
 
 type FileContent =
   | string
@@ -78,6 +77,8 @@ async function toBuffer(
   return buffer;
 }
 
+const verrouOuvertureBd = new Semaphore()
+
 export default class ClientConstellation extends EventEmitter {
   _dir: string;
   optionsAccès?: { [key: string]: any };
@@ -115,6 +116,7 @@ export default class ClientConstellation extends EventEmitter {
     const optionsAccèsRacine = {
       type: "controlleur-constellation",
       premierMod: this.orbite!.identity.id,
+      nom: "racine"
     };
     const idBdRacine = await this.créerBdIndépendante(
       "kvstore",
@@ -123,6 +125,7 @@ export default class ClientConstellation extends EventEmitter {
     );
     this.bdRacine = (await this.ouvrirBd(idBdRacine)) as KeyValueStore;
     await this.bdRacine.load();
+    console.log("idRacine", this.bdRacine.id)
 
     const accès = this.bdRacine.access as unknown as ContrôleurConstellation;
     this.optionsAccès = {
@@ -193,6 +196,7 @@ export default class ClientConstellation extends EventEmitter {
     f: schémaFonctionSuivi<string[]>,
     idBdRacine?: string
   ): Promise<schémaFonctionOublier> {
+    if (!this.bdRacine) await once(this, "pret")
     idBdRacine = idBdRacine || this.bdRacine!.id;
     const bd = await this.ouvrirBd(idBdRacine);
     const accès = bd.access;
@@ -203,10 +207,14 @@ export default class ClientConstellation extends EventEmitter {
       f(accès.write);
       return faisRien;
     } else if (accès.type === "controlleur-constellation") {
-      console.warn("doit être implémenté");
-
+      const fFinale = ()=>{
+        const mods = (accès as unknown as ContrôleurConstellation).rôles[MODÉRATEUR]
+        f(mods)
+      }
+      accès.on("updated", fFinale)
+      fFinale()
       return () => {
-        // à faire
+        accès.off("updated", fFinale)
       };
     } else {
       return faisRien;
@@ -214,11 +222,19 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async ajouterDispositif(identité: string) {
-    console.warn("doit être implémenté");
+    if (!this.bdRacine) await once(this, "pret")
+    const accès = this.bdRacine!.access as unknown as ContrôleurConstellation;
+    accès.grant(MODÉRATEUR, identité)
   }
 
   async enleverDispositif(identité: string) {
-    console.warn("doit être implémenté");
+    if (!this.bdRacine) await once(this, "pret")
+    const accès = this.bdRacine!.access as unknown as ContrôleurConstellation;
+    await accès.revoke(MODÉRATEUR, identité)
+  }
+
+  async rejoindreCompte() {
+    console.error("Non implémenté")
   }
 
   async donnerAccès(id: string, identité: string): Promise<void> {
@@ -524,13 +540,19 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async ouvrirBd(id: string): Promise<Store> {
+    //Nous avons besoin d'un verrou afin d'éviter la concurrence
+    await verrouOuvertureBd.acquire(id);
     const existante = this._bds[id];
     if (existante) {
+      verrouOuvertureBd.release(id)
       return existante;
     }
     const bd = await this.orbite!.open(id);
     await bd.load();
     this._bds[id] = bd;
+
+    //Maintenant que la BD a été créée, on peut relâcher le verrou
+    verrouOuvertureBd.release(id)
     return bd;
   }
 
@@ -575,14 +597,14 @@ export default class ClientConstellation extends EventEmitter {
     const options: any = {
       accessController: optionsAccès,
     };
-
+    console.log({type, optionsAccès, nom})
     const bd = await this.orbite![type](nom || uuidv4(), options);
     await bd.load();
     return bd.id;
   }
 
   async _générerBd(type: orbitDbStoreTypes, nom: string): Promise<Store> {
-    if (this.orbite!.isValidAddress(nom) && this._bds[nom])
+    if (isValidAddress(nom) && this._bds[nom])
       return this._bds[nom];
     const bd = await this.orbite![type](nom);
     this._bds[bd.id] = bd;
@@ -604,12 +626,14 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async permissionÉcrire(id: string): Promise<boolean> {
+    const moi = this.orbite!.identity.id
     const bd = await this.ouvrirBd(id);
     const accès = bd.access;
+
     if (accès.type === "ipfs") {
-      return accès.write.includes(this.orbite!.identity.id);
+      return accès.write.includes(moi);
     } else if (accès.type === nomTypeContrôleurConstellation) {
-      return (accès as unknown as ContrôleurConstellation).estAutorisé(id);
+      return (accès as unknown as ContrôleurConstellation).estAutorisé(moi);
     }
     return false;
   }
@@ -619,7 +643,7 @@ export default class ClientConstellation extends EventEmitter {
     const bd = await this.ouvrirBd(id);
     déjàVus.push(id);
     const épinglerSiAdresseValide = (x: unknown) => {
-      if (typeof x === "string" && this.orbite!.isValidAddress(x))
+      if (typeof x === "string" && isValidAddress(x))
         this.épinglerBd(x, déjàVus);
     };
 

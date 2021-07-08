@@ -93,76 +93,74 @@
             </p>
             <v-select
               v-model="licence"
-              :items="
-                licences.map((l) => {
-                  return { value: l, text: $t(`licences.${l}.nom`) };
-                })
-              "
+              :items="itemsLicences"
               label="Licence"
               outlined
               dense
-              :append-outer-icon="licence ? 'mdi-information' : ''"
-              @click:append-outer="ouvrirLienLicence"
+              hide-details
             />
-            <v-card flat class="mx-3 mb-3">
+            <v-checkbox
+              v-model="licencesSpécilisées"
+              label="Inclure les licences spécialisées"
+            />
+
+            <v-card v-if="licence" flat class="mx-3 mb-3">
               <p>
-                Ce qui suit n'est qu'un résumé de la licence et n'est pas un
-                avis légal.
+                <v-icon small>mdi-alert-circle-outline</v-icon>
+                L'information ci-dessous n'est qu'un résumé de la licence,
+                pourrait contenir des erreurs et n'est pas un avis légal. Nous
+                vous recommandons de lire la licence en entier.
               </p>
               <div class="d-flex flex-wrap">
-                <v-card flat min-width="200" max-width="350" class="mb-3 mx-2">
+                <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
                   <p class="mb-0 text-overline">Permissions</p>
-                  <p v-if="!permissions.length" class="text--disabled">
+                  <p v-if="!droits.length" class="text--disabled">
                     Aucune permission
                   </p>
-                  <v-chip
-                    v-for="p in permissions"
+                  <jeton-droit
+                    v-for="p in droits"
                     :key="p"
-                    outlined
-                    small
-                    label
-                    class="mx-1 my-1"
-                  >
-                    <v-icon small left color="success">mdi-check</v-icon>
-                    {{ p }}
-                  </v-chip>
+                    :droit="p"
+                  />
                 </v-card>
-                <v-card flat min-width="200" max-width="350" class="mb-3">
+                <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
                   <p class="mb-0 text-overline">Conditions</p>
                   <p v-if="!conditions.length" class="text--disabled">
-                    Aucune condition
+                    {{ $t("licences.conditions.aucune") }}
                   </p>
-                  <v-chip
-                    v-for="m in conditions"
-                    :key="m"
-                    outlined
-                    small
-                    label
-                    class="mx-1 my-1"
-                  >
-                    <v-icon small left color="blue"
-                      >mdi-information-outline</v-icon
-                    >
-                    {{ m }}
-                  </v-chip>
+                  <jeton-condition
+                    v-for="c in conditions"
+                    :key="c"
+                    :condition="c"
+                  />
                 </v-card>
-                <v-card flat min-width="200" max-width="350" class="mb-3">
+                <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
                   <p class="mb-0 text-overline">Limitations</p>
                   <p v-if="!limitations.length" class="text--disabled">
-                    Aucune limitation
+                    {{ $t("licences.limitations.aucune") }}
                   </p>
-                  <v-chip
+                  <jeton-limitation
                     v-for="l in limitations"
                     :key="l"
-                    outlined
-                    small
-                    label
-                    class="mx-1 my-1"
-                  >
-                    <v-icon small left color="error">mdi-close</v-icon>
-                    {{ l }}
-                  </v-chip>
+                    :limitation="l"
+                  />
                 </v-card>
+              </div>
+              <div class="text-center">
+                <v-btn
+                  class="mx-auto mt-3"
+                  outlined
+                  small
+                  :disabled="!lienLicenceValid"
+                  @click="ouvrirLienLicence"
+                >
+                  <v-icon left>mdi-scale-balance</v-icon>
+                  <div v-if="lienLicenceValid">
+                    Lire la licence
+                    <v-icon right>mdi-open-in-new</v-icon>
+                  </div>
+                  <div v-else>Aucun lien disponible</div>
+                </v-btn>
               </div>
             </v-card>
           </v-card-text>
@@ -180,6 +178,20 @@
               Veuillez confirmer la création de la base de données afin de
               pouvoir commencer à y ajouter des données.
             </h3>
+            <p class="text--disabled text-left">
+              <v-icon>mdi-alert-circle-outline</v-icon>
+              Toute base de données partagée sur Constellation devient
+              immédiatement et irrévocablement disponible sur le réseau
+              publique. Ne partagez rien de personnel ou confidentiel.
+            </p>
+            <div class="mx-auto">
+              <v-checkbox
+                v-model="jaiCompris"
+                class="mx-auto"
+                label="J'ai compris"
+              />
+            </div>
+
             <v-btn
               :loading="enCréation"
               tiled
@@ -190,10 +202,6 @@
             >
               C'est parti !
             </v-btn>
-            <v-checkbox
-              v-model="jaiCompris"
-              label="Toute base de données partagée sur Constellation est entièrement publique. Ne partagez rien de personnel ou confidentiel."
-            ></v-checkbox>
           </div>
         </v-window-item>
       </v-window>
@@ -217,17 +225,20 @@
 </template>
 
 <script>
-import { licences, infoLicences } from "@/ipa/licences";
-import { ouvrirLien } from "@/utils";
+import { licences, infoLicences, catégories } from "@/ipa/licences";
 import mixinLangues from "@/mixins/langues";
 import mixinImages from "@/mixins/images";
+import mixinLicences from "@/mixins/licences";
 import itemNom from "@/components/commun/boîteNoms/itemNom";
 import itemNouveauNom from "@/components/commun/boîteNoms/itemNouveauNom";
+import jetonDroit from "@/components/commun/licences/jetonDroit";
+import jetonCondition from "@/components/commun/licences/jetonLimitation";
+import jetonLimitation from "@/components/commun/licences/jetonCondition";
 
 export default {
   name: "NouvelleBD",
-  components: { itemNom, itemNouveauNom },
-  mixins: [mixinLangues, mixinImages],
+  components: { itemNom, itemNouveauNom, jetonDroit, jetonCondition, jetonLimitation },
+  mixins: [mixinLangues, mixinImages, mixinLicences],
   data: function () {
     return {
       étape: 1,
@@ -237,10 +248,7 @@ export default {
       descriptions: {},
       enCréation: false,
       jaiCompris: false,
-
-      permissions: [],
-      conditions: [],
-      limitations: [],
+      licencesSpécilisées: false
     };
   },
   computed: {
@@ -262,12 +270,56 @@ export default {
           return "";
       }
     },
-  },
-  watch: {
-    licence: function (val) {
-      this.permissions = infoLicences[val].droits || [];
-      this.conditions = infoLicences[val].conditions || [];
-      this.limitations = infoLicences[val].limitations || [];
+
+    itemsLicences: function () {
+      const licencesFinales = [
+        { header: "Licences pour BDs (recommendées)" },
+        { divider: true }
+      ]
+      const licences = this.licences.filter(
+        (l)=>this.licencesSpécilisées ? true : !infoLicences[l].spécialisée
+      );
+
+      const générerÉléments = (liste) => {
+        return liste.map((l) => {
+          return { value: l, text: this.$t(`licences.info.${l}.nom`) || l };
+        });
+      };
+
+      const licencesBD = licences.filter(
+        (l) => infoLicences[l].catégorie === catégories.BD
+      );
+
+      licencesFinales.push(...générerÉléments(licencesBD));
+
+      const licencesCode = licences.filter(
+        (l) => infoLicences[l].catégorie === catégories.CODE
+      );
+      if (licencesCode.length) {
+        licencesFinales.push({ header: "Licences pour logiciels (non recommendées)" })
+        licencesFinales.push({ divider: true });
+        licencesFinales.push(...générerÉléments(licencesCode))
+      }
+
+      const licencesArtistiques = licences.filter(
+        (l) => infoLicences[l].catégorie === catégories.ART
+      );
+      if (licencesArtistiques.length) {
+        licencesFinales.push({ header: "Licences artistiques (non recommendées)" })
+        licencesFinales.push({ divider: true });
+        licencesFinales.push(...générerÉléments(licencesArtistiques))
+      }
+
+      const licencesAutres = licences.filter(
+        (l) => infoLicences[l].catégorie === catégories.AUTRE
+      );
+      if (licencesAutres.length) {
+        licencesFinales.push({ header: "Autres licences (non recommendées)" })
+        licencesFinales.push({ divider: true });
+        licencesFinales.push(...générerÉléments(licencesAutres))
+      }
+
+      return licencesFinales;
     },
   },
   methods: {
@@ -298,11 +350,6 @@ export default {
     changerLangueDescr: function ({ langueOriginale, langue, nom }) {
       this.effacerDescr(langueOriginale);
       this.sauvegarderDescr(langue, nom);
-    },
-    ouvrirLienLicence: function () {
-      if (this.licence) {
-        ouvrirLien(this.$t(`licences.${this.licence}.lien`));
-      }
     },
     créerBd: async function () {
       this.enCréation = true;

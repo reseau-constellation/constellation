@@ -62,6 +62,7 @@ export default class ContrôleurConstellation extends EventEmitter {
   _premierMod: string;
   _rôles?: objRôles;
   adresseBd?: string;
+  type: string;
 
   constructor(orbitdb: OrbitDB, options: OptionsInitContrôleurConstellation) {
     super();
@@ -69,6 +70,7 @@ export default class ContrôleurConstellation extends EventEmitter {
     this._premierMod = options.premierMod;
     this.adresseBd = options.adresseBd;
     this.nom = options.nom;
+    this.type = nomType;
   }
 
   static get type() {
@@ -179,6 +181,7 @@ export default class ContrôleurConstellation extends EventEmitter {
       premierMod: this._premierMod,
       nom: this.nom,
     };
+    console.log({manifest})
     return manifest;
   }
 
@@ -195,10 +198,19 @@ export default class ContrôleurConstellation extends EventEmitter {
     } catch (e) {
       if (e.toString().includes("not append entry"))
         throw new Error(
-          `Erreur : Le rôle ${rôle} ne peut pas être octroyé à ${id}`
+          `Erreur : Le rôle ${rôle} ne peut pas être octroyé à ${id}.`
         );
       throw e;
     }
+  }
+
+  async revoke(rôle: typeof rôles[number], id: string) {
+    const élément = this.bd!.iterator({ limit: -1 })
+      .collect()
+      .find((e: { [key: string]: any }) => e.payload.value.rôle === rôle && e.payload.value.id === id);
+    if (!élément) throw new Error(`Erreur : Le rôle ${rôle} n'existait pas pour ${id}.`)
+    const empreint = élément.hash
+    await this.bd!.remove(empreint)
   }
 
   _onUpdate() {
@@ -209,7 +221,7 @@ export default class ContrôleurConstellation extends EventEmitter {
   /* Factory */
   static async create(
     orbitdb: OrbitDB,
-    options: OptionsContrôleurConstellation = {}
+    options: OptionsContrôleurConstellation
   ) {
     if (!options.premierMod) options.premierMod = orbitdb.identity.id;
     options.nom = options.nom || uuidv4();

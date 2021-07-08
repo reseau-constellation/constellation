@@ -47,14 +47,14 @@
           </v-btn>
         </span>
         <span>
-          <lien-orbite :lien="idBD" />
+          <lien-orbite :lien="idBd" />
         </span>
         <v-spacer />
         <span>
-          <lienTélécharger :lien="idBD" />
+          <lienTélécharger :lien="idBd" />
         </span>
 
-        <v-dialog v-if="permissionÉcrire" v-model="dialogue" width="500">
+        <v-dialog v-if="permissionÉcrire" v-model="dialogueEffacerBd" width="500">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" icon color="error">
               <v-icon>mdi-delete</v-icon>
@@ -76,7 +76,7 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="error" text outlined @click="dialogue = false">
+              <v-btn color="error" text outlined @click="dialogueEffacerBd = false">
                 Non !
               </v-btn>
               <v-btn color="error" depressed @click="effacerBd">
@@ -158,7 +158,7 @@
               </v-menu>
             </v-card>
             <v-card flat width="200" class="mb-3">
-              <v-menu offset-x :disabled="!score">
+              <v-menu offset-x :disabled="!score" >
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>
@@ -192,33 +192,35 @@
               </v-menu>
             </v-card>
             <v-card flat width="200" class="mb-3">
-              <v-list-item
-                v-if="licence !== null"
-                @click="
-                  licenceApprouvée
-                    ? ouvrirLien($t(`licences.${licence}.lien`))
-                    : ''
-                "
+              <dialogue-licence
+                :licence="licence"
+                :permissionModifier="permissionÉcrire"
+                @changerLicence="changerLicence"
               >
-                <v-list-item-avatar>
-                  <v-icon
-                    left
-                    :color="licenceApprouvée ? 'secondary' : 'error'"
-                  >
-                    {{ licence ? "mdi-scale-balance" : "mdi-alert-outline" }}
-                  </v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  {{
-                    licence && !licenceApprouvée
-                      ? licence
-                      : $t(`licences.${licence || "introuvable"}.nom`)
-                  }}
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-icon>mdi-open-in-new</v-icon>
-                </v-list-item-action>
-              </v-list-item>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-list-item v-bind="attrs" v-on="on" v-show="true || licence !== null">
+                    <v-list-item-avatar>
+                      <v-icon
+                        left
+                        :color="licenceApprouvée ? 'secondary' : 'error'"
+                      >
+                        {{ licence ? "mdi-scale-balance" : "mdi-alert-outline" }}
+                      </v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      {{
+                        licence && !licenceApprouvée
+                          ? licence
+                          : $t(`licences.info.${licence || "introuvable"}.nom`)
+                      }}
+                    </v-list-item-content>
+                    <v-list-item-action>
+                      <v-icon>mdi-open-in-new</v-icon>
+                    </v-list-item-action>
+                  </v-list-item>
+                </template>
+
+              </dialogue-licence>
             </v-card>
             <v-list-item @click="ouvrirRéplications;">
               <v-list-item-avatar>
@@ -278,17 +280,6 @@
         </v-card>
         <v-list>
           <p class="mb-0 text-overline">
-            Intégrations
-            <v-btn icon small @click="ajouterIntégration;">
-              <v-icon small>mdi-plus</v-icon>
-            </v-btn>
-          </p>
-          <v-divider />
-          <v-list>
-            <itemIntégration v-for="x in [0, 1, 2, 3]" :key="x" />
-          </v-list>
-
-          <p class="mb-0 text-overline">
             Tableaux
             <v-btn v-if="permissionÉcrire" icon small @click="ajouterTableau">
               <v-icon small>mdi-plus</v-icon>
@@ -331,11 +322,11 @@
               v-for="t in tableaux"
               :key="t"
               :id="t"
-              :idBD="idBD"
+              :idBD="idBd"
               @click="
                 $router.push(
                   `/bd/visualiser/${encodeURIComponent(
-                    idBD
+                    idBd
                   )}/tableau/${encodeURIComponent(t)}`
                 )
               "
@@ -349,16 +340,16 @@
 
 <script>
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
-import { licences } from "@/ipa/licences";
 
+import dialogueLicence from "@/components/commun/licences/dialogueLicence";
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import itemTableau from "@/components/BD/itemTableau";
-import itemIntégration from "@/components/BD/itemIntégration";
 import lienOrbite from "@/components/commun/lienOrbite";
 import lienTélécharger from "@/components/commun/lienTélécharger";
 import mixinImage from "@/mixins/images";
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
+import mixinLicences from "@/mixins/licences";
 import jetonVariable from "@/components/commun/jetonVariable";
 import carteQualité from "@/components/commun/carteQualité";
 
@@ -366,17 +357,17 @@ export default {
   name: "visBD",
   components: {
     itemTableau,
-    itemIntégration,
     lienOrbite,
     lienTélécharger,
     jetonVariable,
     carteQualité,
+    dialogueLicence,
     boîteNoms,
   },
-  mixins: [mixinImage, mixinLangues, mixinIPA],
+  mixins: [mixinImage, mixinLangues, mixinIPA, mixinLicences],
   data: function () {
     return {
-      dialogue: false,
+      dialogueEffacerBd: false,
       licence: null,
       descriptionsBD: {},
       nomsBD: {},
@@ -398,12 +389,12 @@ export default {
     nom: function () {
       return Object.keys(this.nomsBD).length
         ? traduireNom(this.nomsBD, this.langues)
-        : this.idBD;
+        : this.idBd;
     },
     descriptions: function () {
       return traduireNom(this.descriptionsBD, this.langues);
     },
-    idBD: function () {
+    idBd: function () {
       return decodeURIComponent(this.$route.params.id);
     },
     petitPousset: function () {
@@ -411,9 +402,6 @@ export default {
         { text: "Données", href: "/bd" },
         { text: couper(this.nom, 35), disabled: true },
       ];
-    },
-    licenceApprouvée: function () {
-      return licences.includes(this.licence);
     },
     logoBD: function () {
       return this.logo || this.image("logoBD");
@@ -424,41 +412,41 @@ export default {
     couleurScore,
     ouvrirLien,
     ajouterTableau: async function () {
-      await this.$ipa.bds.ajouterTableauBD(this.idBD);
+      await this.$ipa.bds.ajouterTableauBD(this.idBd);
     },
     initialiserSuivi: async function () {
-      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBD);
+      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBd);
 
       const oublierLicence = await this.$ipa.bds.suivreLicence(
-        this.idBD,
+        this.idBd,
         (licence) => {
           this.licence = licence;
         }
       );
       const oublierNoms = await this.$ipa.bds.suivreNomsBd(
-        this.idBD,
+        this.idBd,
         (noms) => {
           this.nomsBD = noms;
         }
       );
       const oublierDescriptions = await this.$ipa.bds.suivreDescrBd(
-        this.idBD,
+        this.idBd,
         (descriptions) => {
           this.descriptionsBD = descriptions;
         }
       );
       const oublierTableaux = await this.$ipa.bds.suivreTableauxBd(
-        this.idBD,
+        this.idBd,
         (tableaux) => {
           this.tableaux = tableaux;
         }
       );
       const oublierScore = await this.$ipa.bds.suivreScoreBd(
-        this.idBD,
+        this.idBd,
         (score) => (this.score = score)
       );
       const oublierVariables = await this.$ipa.bds.suivreVariablesBd(
-        this.idBD,
+        this.idBd,
         (variables) => (this.variables = variables)
       );
       this.suivre([
@@ -471,29 +459,32 @@ export default {
       ]);
     },
     effacerBd: async function () {
-      await this.$ipa.bds.effacerBd(this.idBD);
+      await this.$ipa.bds.effacerBd(this.idBd);
       this.$router.push("/bd");
     },
     sauvegarderNom({ langue, nom }) {
-      this.$ipa.bds.sauvegarderNomBD(this.idBD, langue, nom);
+      this.$ipa.bds.sauvegarderNomBd(this.idBd, langue, nom);
     },
     changerLangueNom({ langueOriginale, langue, nom }) {
-      this.$ipa.compte.effacerNomBd(this.idBD, langueOriginale);
-      this.$ipa.compte.sauvegarderNomBD(this.idBD, langue, nom);
+      this.$ipa.bds.effacerNomBd(this.idBd, langueOriginale);
+      this.$ipa.bds.sauvegarderNomBd(this.idBd, langue, nom);
     },
     effacerNom({ langue }) {
-      this.$ipa.compte.effacerNomBd(this.idBD, langue);
+      this.$ipa.bds.effacerNomBd(this.idBd, langue);
     },
     sauvegarderDescr({ langue, nom }) {
-      this.$ipa.bds.sauvegarderDescrBd(this.idBD, langue, nom);
+      this.$ipa.bds.sauvegarderDescrBd(this.idBd, langue, nom);
     },
     changerLangueDescr({ langueOriginale, langue, nom }) {
-      this.$ipa.compte.effacerDescrBD(langueOriginale);
-      this.$ipa.compte.sauvegarderDescrBd(langue, nom);
+      this.$ipa.bds.effacerDescrBd(this.idBd, langueOriginale);
+      this.$ipa.bds.sauvegarderDescrBd(this.idBd, langue, nom);
     },
     effacerDescr({ langue }) {
-      this.$ipa.compte.effacerDescrBD(langue);
+      this.$ipa.bds.effacerDescrBd(this.idBd, langue);
     },
+    changerLicence({ licence }) {
+      this.$ipa.bds.changerLicenceBd(this.idBd, licence)
+    }
   },
 };
 </script>

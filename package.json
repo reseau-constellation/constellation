@@ -17,6 +17,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@chriscdn/promise-semaphore": "^1.0.6",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "crypto-js": "^4.0.0",

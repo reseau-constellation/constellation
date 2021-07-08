@@ -77,7 +77,7 @@
         </v-row>
       </v-col>
       <v-col cols="12">
-        <p class="px-0 text-overline">
+        <p class="px-0 my-0 text-overline">
           {{ $t("compte.onglets.compte.dispositifs") }}
         </p>
 
