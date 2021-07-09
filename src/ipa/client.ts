@@ -502,7 +502,7 @@ export default class ClientConstellation extends EventEmitter {
         arbre[n].fOublier = fOublier;
       });
     };
-
+    fFinale();
     const oublierBdRacine = await this.suivreBdListe(id, fSuivreRacine);
 
     const oublier = () => {
