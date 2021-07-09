@@ -10,7 +10,7 @@
       outlined
       class="mx-2"
       @click="
-        ouvrirLien('https://github.com/julienmalard/constellation/issues')
+        ouvrirLien('https://github.com/julienmalard/constellation/issues/new/choose')
       "
       append
     >
