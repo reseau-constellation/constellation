@@ -8,6 +8,9 @@
       <v-spacer />
       <lien-orbite :lien="id" />
     </v-card-title>
+    <v-card-subtitle v-if="moiMême">
+      (Moi)
+    </v-card-subtitle>
     <v-divider />
     <v-card-text class="text-left">
       <span v-if="courriel">
@@ -70,6 +73,9 @@ export default {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : null;
+    },
+    moi: function() {
+      return this.id === this.$ipa.bdRacine.id
     },
     imageProfil: function () {
       if (this.imageCompte) {
