@@ -37,9 +37,9 @@
             tile
             @click="lien.page ? $router.push(lien.page) : ouvrirLien(lien.href)"
           >
+            <v-img :src="image(lien.img)" class="mx-4 mt-4" contain />
             <v-card-text>
-              <v-img :src="image(lien.img)" class="mx-4 mt-4" contain />
-              <p class="mt-auto">{{ $t(lien.text) }}</p>
+              <p class="text-h6">{{ $t(lien.text) }}</p>
             </v-card-text>
           </v-card>
         </v-row>
@@ -54,6 +54,17 @@
           @click="$router.push('/conditions')"
         >
           {{ $t("conditions.entête") }}
+        </v-btn>
+        <v-btn
+          color="primary"
+          tiled
+          outlined
+          small
+          class="mx-2"
+          @click="ouvrirLien('https://github.com/julienmalard/constellation')"
+        >
+          {{ $t("acceuil.contribuerCode") }}
+          <v-icon right>mdi-git</v-icon>
         </v-btn>
         <v-btn
           v-if="!isElectron()"
