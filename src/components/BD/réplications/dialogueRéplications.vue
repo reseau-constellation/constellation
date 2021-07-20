@@ -9,7 +9,6 @@
       <v-card-subtitle>
         Chaque réplication de la base de données contribue à sa disponibilité au
         sein du réseau Constellation.
-        {{replications}}
       </v-card-subtitle>
       <v-divider />
 
@@ -24,11 +23,11 @@
               </v-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  Membres
-                  <v-icon right>mdi-account</v-icon>
+                  Dispositifs
+                  <v-icon right>mdi-monitor-cellphone</v-icon>
                 </v-list-item-title>
                 <v-list-item-subtitle class="success--text"
-                  >Dont {{ nMembresEnLigne }} en
+                  >Dont {{ réplicationsDispositifs().length }} en
                   ligne</v-list-item-subtitle
                 >
               </v-list-item-content>
@@ -37,14 +36,15 @@
             <p class="mb-0 text-overline">Représentant</p>
             <v-list-item two-line>
               <v-avatar class="me-3 text-h3">
-                {{ nDispositifsEnLigne }}
+                {{ réplicationsMembres(false).length }}
               </v-avatar>
               <v-list-item-content>
-                <v-list-item-title>
-                  Dispositifs en ligne
-                </v-list-item-title>
+                <v-list-item-title
+                  >Membres<v-icon right>mdi-account</v-icon></v-list-item-title
+                >
                 <v-list-item-subtitle class="success--text"
-                  ><v-icon>mdi-monitor-cellphone</v-icon></v-list-item-subtitle
+                  >Dont {{ réplicationsMembres().length }} en
+                  ligne</v-list-item-subtitle
                 >
               </v-list-item-content>
             </v-list-item>
@@ -74,15 +74,10 @@ export default {
       dialogue: false,
     };
   },
-  computed: {
-    nMembresEnLigne: function () {
-      return this.replications.filter(r => r.nDispositifsEnLigne > 0).length
-    },
-    nDispositifsEnLigne: function () {
-      return this.replications.map(r => r.nDispositifsEnLigne).reduce((a, b) => a + b, 0)
-    }
-  },
   methods: {
+    réplicationsDispositifs: function (enLigne = true) {
+      return this.replications.filter((r) => (enLigne ? r.enLigne : true));
+    },
     réplicationsMembres: function (enLigne = true) {
       const répsMembresUniques = [];
       const déjàVues = [];

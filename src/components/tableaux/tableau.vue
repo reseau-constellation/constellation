@@ -2,24 +2,22 @@
   <span>
     <p class="mb-0 text-overline">
       Données
-      <v-menu
-        offset-x
-        :close-on-content-click="false"
-        transition="slide-y-transition"
+      <dialogue-nouvelle-colonne
+        :permissionModifier="permissionÉcrire"
+        @sauvegarder="creerColonne"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
-            icon
-            small
             v-on="on"
             v-bind="attrs"
+            icon
+            small
             :disabled="!permissionÉcrire"
           >
             <v-icon small>mdi-table-column-plus-after</v-icon>
           </v-btn>
         </template>
-        <carte-nouvelle-colonne @creerColonne="creerColonne" />
-      </v-menu>
+      </dialogue-nouvelle-colonne>
       <v-btn
         icon
         small
@@ -53,23 +51,31 @@
         <div class="text-center my-3">
           <p class="text-h5 mt-5">{{ $t("tableau.vide") }}</p>
           <div v-if="permissionÉcrire">
-            <v-btn
-              color="primary"
-              class="mx-2"
-              outlined
-              text
-              @click="ajouterTableau"
+            <dialogue-nouvelle-colonne
+              :permissionModifier="permissionÉcrire"
+              @sauvegarder="creerColonne"
             >
-              <v-icon left>mdi-table-column-plus-after</v-icon>
-              Ajouter une colonne
-            </v-btn>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-on="on"
+                  v-bind="attrs"
+                  color="primary"
+                  class="mx-2"
+                  outlined
+                  text
+                >
+                  <v-icon left>mdi-table-column-plus-after</v-icon>
+                  Ajouter une colonne
+                </v-btn>
+              </template>
+            </dialogue-nouvelle-colonne>
             <v-btn
               v-if="colonnes.length"
               color="primary"
               class="mx-2"
               outlined
               text
-              @click="importer"
+              @click="nouvelleLigne === true"
             >
               <v-icon left>mdi-table-row-plus-after</v-icon>
               Ajouter une rangée
@@ -190,7 +196,7 @@
 
 <script>
 import titreEntêteTableau from "@/components/tableaux/titreEntêteTableau";
-import carteNouvelleColonne from "@/components/tableaux/carteNouvelleColonne";
+import dialogueNouvelleColonne from "@/components/tableaux/colonnes/dialogueNouvelleColonne";
 
 import celluleBooléenne from "@/components/tableaux/celluleBooléenne";
 import celluleNumérique from "@/components/tableaux/celluleNumérique";
@@ -209,7 +215,7 @@ export default {
   name: "tableau",
   props: ["idTableau"],
   components: {
-    carteNouvelleColonne,
+    dialogueNouvelleColonne,
     titreEntêteTableau,
     celluleBooléenne,
     celluleNumérique,
@@ -270,11 +276,18 @@ export default {
     },
   },
   methods: {
-    creerColonne: async function ({ idVariable }) {
-      await this.$ipa.tableaux.ajouterColonneTableau(
+    creerColonne: async function ({ idVariable, règles }) {
+      const idColonne = await this.$ipa.tableaux.ajouterColonneTableau(
         this.idTableau,
         idVariable
       );
+      if (règles.length) {
+        await this.$ipa.tableaux.ajouterRèglesColonne(
+          this.idTableau,
+          idColonne,
+          règles
+        )
+      }
     },
 
     valÉditée: function (empreinte, variable, val) {

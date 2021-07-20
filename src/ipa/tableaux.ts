@@ -278,7 +278,7 @@ export default class Tableaux {
   async ajouterColonneTableau(
     idTableau: string,
     idVariable: string
-  ): Promise<void> {
+  ): Promise<string> {
     const optionsAccès = await this.client.obtOpsAccès(idTableau);
     const idBdColonnes = await this.client.obtIdBd(
       "colonnes",
@@ -295,6 +295,7 @@ export default class Tableaux {
       variable: idVariable,
     };
     await bdColonnes.add(entrée);
+    return entrée.id
   }
 
   async suivreColonnes(

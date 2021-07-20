@@ -126,6 +126,21 @@
     "tableau": {
       "vide": "Aucune donnée"
     },
+    "variables": {
+      "catégories": {
+        "numérique": "Numérique",
+        "date": "Date",
+        "heure": "Heure",
+        "dateEtHeure": "Date et heure",
+        "chaîne": "Chaîne (text)",
+        "catégorique": "Catégorique",
+        "géojson": "GéoJSON",
+        "vidéo": "Vidéo",
+        "audio": "Audio",
+        "photo": "Photo",
+        "fichier": "Fichier"
+      }
+    },
     "conditions": {
       "entête": "Conditions d'utilisation",
       "jaccepte": "J'accepte les conditions",

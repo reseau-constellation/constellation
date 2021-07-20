@@ -26,7 +26,7 @@ export type infoMembreEnLigne = infoMembre & {
 
 type infoRéplication = {
   idBdRacineMembre: string;
-  nDispositifsEnLigne: number;
+  idOrbite: string;
 };
 
 const verrouAjouterMembre = new Semaphore();
@@ -302,6 +302,7 @@ export default class Réseau {
     interface infoRéplMembre {
       idBd: string;
       idBdRacineMembre: string;
+      idOrbite: string
     }
     const infos: { répls: infoRéplMembre[]; dispositifsEnLigne: infoMembre[] } = {
       répls: [],
@@ -316,7 +317,10 @@ export default class Réseau {
             d=>d.idBdRacine === r.idBdRacineMembre
           )
           const nDispositifsEnLigne = dispositifs.length
-          return Object.assign({}, r, {nDispositifsEnLigne});
+          return {
+            idBdRacineMembre: r.idBdRacineMembre,
+            idOrbite: r.idOrbite
+          };
         });
       console.log("fFinale", { infos, répls});
       f(répls);
@@ -347,7 +351,8 @@ export default class Réseau {
         const réplsMembre = (favoris || []).map(fav => {
           return {
             idBd: fav,
-            idBdRacineMembre: id
+            idBdRacineMembre: id,
+            //idOrbite: 
           }
         })
         console.log("favoris", réplsMembre)
