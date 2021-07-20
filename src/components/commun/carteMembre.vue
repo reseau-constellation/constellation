@@ -1,16 +1,25 @@
 <template>
-  <v-card v-show="actif" width="300" class="ma-2">
+  <v-card v-if="actif" width="300" class="ma-2 text-start">
     <v-card-title>
-      <v-list-item-avatar>
-        <img :src="imageProfil" />
-      </v-list-item-avatar>
+      <v-badge
+        :value="vuIlyA !== undefined"
+        bottom
+        dot
+        overlap
+        :color="
+          vuIlyA ? (vuIlyA <= 1000 * 60 * 3 ? 'success' : 'warning') : 'error'
+        "
+        offset-x="25"
+        offset-y="17"
+      >
+        <v-list-item-avatar class="ms-0">
+          <img :src="imageProfil" />
+        </v-list-item-avatar>
+      </v-badge>
       {{ nom ? couper(nom, 17) : "Incognito" }}
       <v-spacer />
       <lien-orbite :lien="id" />
     </v-card-title>
-    <v-card-subtitle v-if="moiMême">
-      (Moi)
-    </v-card-subtitle>
     <v-divider />
     <v-card-text class="text-left">
       <span v-if="courriel">
@@ -54,7 +63,7 @@ import mixinImage from "@/mixins/images";
 
 export default {
   name: "carteMembre",
-  props: ["id"],
+  props: ["id", "vuIlyA"],
   mixins: [mixinLangues, mixinIPA, mixinImage],
   components: { lienOrbite, jetonBd },
   data: function () {
@@ -74,8 +83,8 @@ export default {
         ? traduireNom(this.noms, this.languesPréférées)
         : null;
     },
-    moi: function() {
-      return this.id === this.$ipa.bdRacine.id
+    moiMême: function () {
+      return this.id === this.$ipa.bdRacine.id;
     },
     imageProfil: function () {
       if (this.imageCompte) {
@@ -116,6 +125,12 @@ export default {
           this.bds = bds;
         }
       );
+      const oublierProjets = await this.$ipa.réseau.suivreProjetsMembre(
+        this.id,
+        (projets) => {
+          this.projets = projets;
+        }
+      );
       const oublierImage = await this.$ipa.réseau.suivreImageMembre(
         this.id,
         (image) => {
@@ -130,7 +145,13 @@ export default {
         }
       );
 
-      this.suivre([oublierNoms, oublierImage, oublierCourriel, oublierBds]);
+      this.suivre([
+        oublierNoms,
+        oublierImage,
+        oublierCourriel,
+        oublierBds,
+        oublierProjets,
+      ]);
     },
   },
 };

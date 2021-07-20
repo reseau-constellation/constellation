@@ -45,15 +45,15 @@
             />
           </v-menu>
         </span>
-        <lien-orbite :lien="idBD" />
+        <lien-orbite :lien="idBd" />
 
         <v-spacer />
-        <lienTélécharger :lien="idBD" />
+        <lienTélécharger :lien="idBd" />
       </v-card-title>
       <v-divider />
 
       <v-card-text>
-        <tableau />
+        <tableau :idTableau="idTableau" />
       </v-card-text>
     </v-card>
   </v-container>
@@ -97,9 +97,9 @@ export default {
     nomBD: function () {
       return Object.keys(this.nomsBD).length
         ? traduireNom(this.nomsBD, this.languesPréférées)
-        : this.idBD;
+        : this.idBd;
     },
-    idBD: function () {
+    idBd: function () {
       return decodeURIComponent(this.$route.params.id);
     },
     idTableau: function () {
@@ -110,7 +110,7 @@ export default {
         { text: "Données", href: "/bd" },
         {
           text: couper(this.nomBD, 15),
-          href: `/bd/visualiser/${encodeURIComponent(this.idBD)}`,
+          href: `/bd/visualiser/${encodeURIComponent(this.idBd)}`,
         },
         {
           text: couper(this.nom, 15),
@@ -142,7 +142,7 @@ export default {
       );
 
       const oublierNomsBD = await this.$ipa.bds.suivreNomsBd(
-        this.idBD,
+        this.idBd,
         (noms) => {
           this.nomsBD = noms;
         }

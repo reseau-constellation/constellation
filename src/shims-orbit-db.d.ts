@@ -4,6 +4,15 @@ declare module "orbit-db" {
 
   type identity = {
     id: string;
+    publicKey: string;
+    signatures: {
+      id: string;
+      publicKey: string;
+    };
+    provider: {
+      verify(signature: string, publicKey: string, message: string);
+      sign(id: identity, message: string);
+    };
   };
   export type entréeBD<T> = {
     identity: identity;
@@ -21,9 +30,7 @@ declare module "orbit-db" {
       ipfs: any,
       options: { [key: string]: any }
     ): Promise<OrbitDB>;
-    identity: {
-      id: string;
-    };
+    identity: identity;
     _ipfs: IPFS;
     determineAddress(
       name: string,
@@ -70,10 +77,10 @@ declare module "orbit-db" {
     collect(): any[];
   }
 
-  export interface élémentFeedStore {
+  export interface élémentFeedStore<T> {
     hash: string;
     payload: {
-      value: any;
+      value: T;
     };
   }
 

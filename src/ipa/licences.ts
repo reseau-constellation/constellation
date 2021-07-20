@@ -35,7 +35,7 @@ export interface InfoLicence {
   droits: droits[];
   limitations: limitations[];
   catégorie: catégories;
-  spécialisée?: boolean
+  spécialisée?: boolean;
 }
 
 export const infoLicences: { [key: string]: InfoLicence } = {
@@ -78,7 +78,7 @@ export const infoLicences: { [key: string]: InfoLicence } = {
     conditions: [conditions.INCL, conditions.ATTR],
     limitations: [limitations.SOUS, limitations.RSP],
     catégorie: catégories.BD,
-    spécialisée: true
+    spécialisée: true,
   },
 
   //Licences créatives

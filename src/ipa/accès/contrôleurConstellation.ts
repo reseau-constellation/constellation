@@ -181,7 +181,7 @@ export default class ContrôleurConstellation extends EventEmitter {
       premierMod: this._premierMod,
       nom: this.nom,
     };
-    console.log({manifest})
+    console.log({ manifest });
     return manifest;
   }
 
@@ -207,10 +207,14 @@ export default class ContrôleurConstellation extends EventEmitter {
   async revoke(rôle: typeof rôles[number], id: string) {
     const élément = this.bd!.iterator({ limit: -1 })
       .collect()
-      .find((e: { [key: string]: any }) => e.payload.value.rôle === rôle && e.payload.value.id === id);
-    if (!élément) throw new Error(`Erreur : Le rôle ${rôle} n'existait pas pour ${id}.`)
-    const empreint = élément.hash
-    await this.bd!.remove(empreint)
+      .find(
+        (e: { [key: string]: any }) =>
+          e.payload.value.rôle === rôle && e.payload.value.id === id
+      );
+    if (!élément)
+      throw new Error(`Erreur : Le rôle ${rôle} n'existait pas pour ${id}.`);
+    const empreint = élément.hash;
+    await this.bd!.remove(empreint);
   }
 
   _onUpdate() {

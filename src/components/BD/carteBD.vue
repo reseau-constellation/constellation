@@ -45,13 +45,18 @@
       >
         <template v-slot:activator="{ on, attrs }">
           <v-chip
-            v-bind="attrs" v-on="on"
+            v-bind="attrs"
+            v-on="on"
             outlined
             label
             small
             class="me-1 my-1"
           >
-            <v-icon left small :color="licenceApprouvée ? 'secondary' : 'error'">
+            <v-icon
+              left
+              small
+              :color="licenceApprouvée ? 'secondary' : 'error'"
+            >
               {{ licence ? "mdi-scale-balance" : "mdi-alert-outline" }}
             </v-icon>
             {{
@@ -61,7 +66,6 @@
             }}
           </v-chip>
         </template>
-
       </dialogue-licence>
     </v-card-text>
 
@@ -125,7 +129,7 @@ export default {
     },
     détails: function () {
       return traduireNom(this.détailsBD, this.langues);
-    }
+    },
   },
   methods: {
     couper,
@@ -137,7 +141,7 @@ export default {
       await this.$ipa.favoris.désépinglerFavori(this.bd);
     },
     changerLicence({ licence }) {
-      this.$ipa.bds.changerLicenceBd(this.idBd, licence)
+      this.$ipa.bds.changerLicenceBd(this.idBd, licence);
     },
     initialiserSuivi: async function () {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBd);
@@ -168,8 +172,14 @@ export default {
         this.idBd,
         (épinglée) => (this.épinglée = épinglée)
       );
-      this.suivre([oublierLicence, oublierNoms, oublierDétails, oublierScore, oublierFavori]);
-    }
+      this.suivre([
+        oublierLicence,
+        oublierNoms,
+        oublierDétails,
+        oublierScore,
+        oublierFavori,
+      ]);
+    },
   },
 };
 </script>

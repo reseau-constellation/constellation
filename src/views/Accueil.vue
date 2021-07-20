@@ -61,7 +61,7 @@
           outlined
           small
           class="mx-2"
-          @click="ouvrirLien('https://github.com/julienmalard/constellation')"
+          @click="ouvrirLien(URL_GIT)"
         >
           {{ $t("acceuil.contribuerCode") }}
           <v-icon right>mdi-git</v-icon>
@@ -92,15 +92,17 @@ import messageInstaller from "@/components/commun/messageInstaller";
 import alerteConditions from "@/components/commun/alerteConditions";
 import mixinImage from "@/mixins/images";
 import { ouvrirLien } from "@/utils";
+import { URL_GIT, RACINE_URL_DOCS } from "@/utils/config";
 
 @Component({
   components: { alerteConditions, messageInstaller },
   data: function () {
     return {
+      URL_GIT,
       liens: [
         {
           text: "acceuil.liens.docs",
-          href: `https://constallation.readthedocs.org/${this.$i18n.locale}/latest`,
+          href: `${RACINE_URL_DOCS}/${this.$i18n.locale}/latest`,
           img: "docs",
         },
         {

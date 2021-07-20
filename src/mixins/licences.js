@@ -3,14 +3,14 @@ import { ouvrirLien } from "@/utils";
 import { licences, infoLicences } from "@/ipa/licences";
 
 export default Vue.extend({
-  data: function() {
+  data: function () {
     return {
       licences,
       infoLicences,
       droits: this.licence ? infoLicences[this.licence].droits : [],
       conditions: this.licence ? infoLicences[this.licence].conditions : [],
-      limitations: this.licence ? infoLicences[this.licence].limitations : []
-    }
+      limitations: this.licence ? infoLicences[this.licence].limitations : [],
+    };
   },
   computed: {
     licenceApprouvée: function () {
@@ -22,11 +22,11 @@ export default Vue.extend({
         this.$t(`licences.info.${this.licence}.lien`).slice(0, 4) === "http"
       );
     },
-    nomLicence: function() {
+    nomLicence: function () {
       return this.licence && !this.licenceApprouvée
-          ? this.licence
-          : this.obtNomLicence(this.licence)
-    }
+        ? this.licence
+        : this.obtNomLicence(this.licence);
+    },
   },
   watch: {
     licence: function (val) {
@@ -42,7 +42,7 @@ export default Vue.extend({
       }
     },
     obtNomLicence(licence) {
-      return this.$t(`licences.info.${licence || "introuvable"}.nom`)
-    }
-  }
+      return this.$t(`licences.info.${licence || "introuvable"}.nom`);
+    },
+  },
 });

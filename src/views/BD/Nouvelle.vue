@@ -104,7 +104,7 @@
             <v-card v-if="licence" flat class="mx-3 mb-3">
               <p>
                 <v-icon small>mdi-alert-circle-outline</v-icon>
-                {{ $t('licences.avertissement') }}
+                {{ $t("licences.avertissement") }}
               </p>
               <div class="d-flex flex-wrap">
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
@@ -112,11 +112,7 @@
                   <p v-if="!droits.length" class="text--disabled">
                     {{ $t("licences.droits.aucune") }}
                   </p>
-                  <jeton-droit
-                    v-for="p in droits"
-                    :key="p"
-                    :droit="p"
-                  />
+                  <jeton-droit v-for="p in droits" :key="p" :droit="p" />
                 </v-card>
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
                   <p class="mb-0 text-overline">Conditions</p>
@@ -232,7 +228,13 @@ import jetonCondition from "@/components/commun/licences/jetonCondition";
 
 export default {
   name: "NouvelleBD",
-  components: { itemNom, itemNouveauNom, jetonDroit, jetonCondition, jetonLimitation },
+  components: {
+    itemNom,
+    itemNouveauNom,
+    jetonDroit,
+    jetonCondition,
+    jetonLimitation,
+  },
   mixins: [mixinLangues, mixinImages, mixinLicences],
   data: function () {
     return {
@@ -243,7 +245,7 @@ export default {
       descriptions: {},
       enCréation: false,
       jaiCompris: false,
-      licencesSpécilisées: false
+      licencesSpécilisées: false,
     };
   },
   computed: {
@@ -269,10 +271,10 @@ export default {
     itemsLicences: function () {
       const licencesFinales = [
         { header: "Licences pour BDs (recommendées)" },
-        { divider: true }
-      ]
-      const licences = this.licences.filter(
-        (l)=>this.licencesSpécilisées ? true : !infoLicences[l].spécialisée
+        { divider: true },
+      ];
+      const licences = this.licences.filter((l) =>
+        this.licencesSpécilisées ? true : !infoLicences[l].spécialisée
       );
 
       const générerÉléments = (liste) => {
@@ -291,27 +293,31 @@ export default {
         (l) => infoLicences[l].catégorie === catégories.CODE
       );
       if (licencesCode.length) {
-        licencesFinales.push({ header: "Licences pour logiciels (non recommendées)" })
+        licencesFinales.push({
+          header: "Licences pour logiciels (non recommendées)",
+        });
         licencesFinales.push({ divider: true });
-        licencesFinales.push(...générerÉléments(licencesCode))
+        licencesFinales.push(...générerÉléments(licencesCode));
       }
 
       const licencesArtistiques = licences.filter(
         (l) => infoLicences[l].catégorie === catégories.ART
       );
       if (licencesArtistiques.length) {
-        licencesFinales.push({ header: "Licences artistiques (non recommendées)" })
+        licencesFinales.push({
+          header: "Licences artistiques (non recommendées)",
+        });
         licencesFinales.push({ divider: true });
-        licencesFinales.push(...générerÉléments(licencesArtistiques))
+        licencesFinales.push(...générerÉléments(licencesArtistiques));
       }
 
       const licencesAutres = licences.filter(
         (l) => infoLicences[l].catégorie === catégories.AUTRE
       );
       if (licencesAutres.length) {
-        licencesFinales.push({ header: "Autres licences (non recommendées)" })
+        licencesFinales.push({ header: "Autres licences (non recommendées)" });
         licencesFinales.push({ divider: true });
-        licencesFinales.push(...générerÉléments(licencesAutres))
+        licencesFinales.push(...générerÉléments(licencesAutres));
       }
 
       return licencesFinales;

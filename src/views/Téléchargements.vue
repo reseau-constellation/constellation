@@ -29,13 +29,11 @@
           </v-col>
           <v-col cols="4">
             <v-btn
-              tile
+              tiled
               outlined
               color="primary"
               @click="
-                ouvrirLien(
-                  'https://github.com/julienmalard/constellation/releases'
-                )
+                ouvrirLien(URL_TÉLÉCHARGEMENTS)
               "
             >
               Voir toutes les versions
@@ -64,6 +62,7 @@ import axios from "axios";
 import isElectron from "is-electron";
 
 import { ouvrirLien } from "@/utils";
+import { URL_TÉLÉCHARGEMENTS, IPA_TÉLÉCHARGEMENTS } from "@/utils/config";
 import mixinImage from "@/mixins/images";
 
 import Titre from "@/components/commun/Titre";
@@ -80,6 +79,8 @@ export default {
   mixins: [mixinImage],
   data: function () {
     return {
+      URL_TÉLÉCHARGEMENTS,
+      IPA_TÉLÉCHARGEMENTS,
       fichiers: [],
       versions: [],
       systèmesOpératoirs: [
@@ -130,9 +131,7 @@ export default {
   },
   mounted: async function () {
     const json = (
-      await axios.get(
-        "https://api.github.com/repos/julienmalard/constellation/releases"
-      )
+      await axios.get(IPA_TÉLÉCHARGEMENTS)
     ).data;
 
     const extentions = ["AppImage", "dmg", "exe"];

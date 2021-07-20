@@ -1,1 +1,1 @@
-declare module '@chriscdn/promise-semaphore';
+declare module "@chriscdn/promise-semaphore";

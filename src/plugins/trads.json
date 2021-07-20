@@ -4,7 +4,9 @@
       "auto": "Automatique",
       "messageInstaller": "La version navigateur de Constellation est limitée par la mémoire disponible dans votre navigateur. Il est préférable d'installer le logiciel pour toute analyse importante.",
       "btnInstaller": "Installer Constellation",
-      "fermer": "Fermer"
+      "fermer": "Fermer",
+      "annuler": "Annuler",
+      "sauvegarder": "Sauvegarder"
     },
     "alerteConditions": {
       "texte": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
@@ -42,7 +44,8 @@
         "docs": "Lire la documentation",
         "recherche": "Trouver des données",
         "projet": "Démarrer un projet"
-      }
+      },
+      "contribuerCode": "Contribuer au code"
     },
     "compte": {
       "entête": "Paramètres de compte",

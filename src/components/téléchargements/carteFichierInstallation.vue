@@ -6,16 +6,28 @@
       <v-spacer />
       <v-btn icon><v-icon>mdi-download</v-icon></v-btn>
     </v-card-title>
-    <v-card-text>Constellation version {{ version }}</v-card-text>
+    <v-card-text
+      >Constellation version
+      {{
+        version
+          .split(".")
+          .map((x) => formatterChiffre(x))
+          .join(".")
+          .replace(/\.\./g, ".")
+          .replace(/\.$/, "")
+      }}</v-card-text
+    >
   </v-card>
 </template>
 
 <script>
 import { ouvrirLien } from "@/utils";
+import mixinLangues from "@/mixins/langues";
 
 export default {
   name: "carteFichierInstallation",
   props: ["url", "SO", "img", "version"],
+  mixins: [mixinLangues],
   methods: { ouvrirLien },
 };
 </script>

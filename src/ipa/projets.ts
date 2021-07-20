@@ -18,7 +18,7 @@ export default class Projets {
     this.migrerProjets();
   }
 
-  async suivreProjets(
+  async suivreProjetsMembre(
     f: schémaFonctionSuivi<string[]>,
     idBdRacine?: string
   ): Promise<schémaFonctionOublier> {

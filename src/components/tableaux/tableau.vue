@@ -23,7 +23,7 @@
       <v-btn
         icon
         small
-        :disabled="!permissionÉcrire || (colonnes && !colonnes.length)"
+        :disabled="!permissionÉcrire || !colonnes || !colonnes.length"
         :color="nouvelleLigne ? 'success' : 'secondary'"
         @click="nouvelleLigne = !nouvelleLigne"
       >
@@ -32,7 +32,7 @@
       <v-btn
         icon
         small
-        :disabled="!permissionÉcrire || (colonnes && !colonnes.length)"
+        :disabled="!permissionÉcrire || !colonnes || !colonnes.length"
         :color="éditer ? 'primary' : 'secondary'"
         @click="éditer = !éditer"
       >
@@ -41,6 +41,7 @@
     </p>
 
     <v-skeleton-loader v-if="colonnes === null" type="image" />
+
     <v-data-table
       v-else
       :headers="entête"
@@ -49,7 +50,32 @@
       class="elevation-1"
     >
       <template v-slot:no-data>
-        {{ $t("tableau.vide") }}
+        <div class="text-center my-3">
+          <p class="text-h5 mt-5">{{ $t("tableau.vide") }}</p>
+          <div v-if="permissionÉcrire">
+            <v-btn
+              color="primary"
+              class="mx-2"
+              outlined
+              text
+              @click="ajouterTableau"
+            >
+              <v-icon left>mdi-table-column-plus-after</v-icon>
+              Ajouter une colonne
+            </v-btn>
+            <v-btn
+              v-if="colonnes.length"
+              color="primary"
+              class="mx-2"
+              outlined
+              text
+              @click="importer"
+            >
+              <v-icon left>mdi-table-row-plus-after</v-icon>
+              Ajouter une rangée
+            </v-btn>
+          </div>
+        </div>
       </template>
       <template v-for="c in entête" v-slot:[`header.${c.value}`]="{ header }">
         <titreEntêteTableau
@@ -181,6 +207,7 @@ import mixinLangues from "@/mixins/langues";
 
 export default {
   name: "tableau",
+  props: ["idTableau"],
   components: {
     carteNouvelleColonne,
     titreEntêteTableau,
@@ -206,9 +233,6 @@ export default {
     };
   },
   computed: {
-    idTableau: function () {
-      return decodeURIComponent(this.$route.params.idTableau);
-    },
     entête: function () {
       const cols = this.colonnes || [];
       const entêtes = cols.map((x) => {

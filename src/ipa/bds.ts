@@ -34,7 +34,7 @@ export default class BDs {
   async créerBd(licence: string): Promise<string> {
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
     const idBdBD = await this.client.créerBdIndépendante("kvstore", {
-      adresseBd: undefined
+      adresseBd: undefined,
     });
     await bdRacine.add(idBdBD);
 
@@ -102,9 +102,7 @@ export default class BDs {
     const motsClefs = ClientConstellation.obtÉlémentsDeBdListe(
       bdMotsClefs
     ) as string[];
-    motsClefs.forEach(async (m: string) => {
-      await this.ajouterMotClefBd(idNouvelleBd, m);
-    });
+    await this.ajouterMotsClefsBd(idNouvelleBd, motsClefs);
 
     const idBdTableaux = await bdBase.get("tableaux");
     const nouvelleBdTableaux = (await nouvelleBd.get("tableaux")) as FeedStore;
@@ -256,11 +254,15 @@ export default class BDs {
   }
 
   async changerLicenceBd(idBd: string, licence: string): Promise<void> {
-    const bdBd = await this.client.ouvrirBd(idBd) as KeyValueStore;
-    await bdBd.set("licence", licence)
+    const bdBd = (await this.client.ouvrirBd(idBd)) as KeyValueStore;
+    await bdBd.set("licence", licence);
   }
 
-  async ajouterMotClefBd(idBd: string, idMotClef: string): Promise<void> {
+  async ajouterMotsClefsBd(
+    idBd: string,
+    idsMotsClefs: string | string[]
+  ): Promise<void> {
+    if (!Array.isArray(idsMotsClefs)) idsMotsClefs = [idsMotsClefs];
     const optionsAccès = await this.client.obtOpsAccès(idBd);
     const idBdMotsClefs = await this.client.obtIdBd(
       "motsClefs",
@@ -274,10 +276,36 @@ export default class BDs {
     const bdMotsClefs = (await this.client.ouvrirBd(
       idBdMotsClefs
     )) as FeedStore;
-    const motsClefsExistants =
-      ClientConstellation.obtÉlémentsDeBdListe<string>(bdMotsClefs);
-    if (!motsClefsExistants.includes(idMotClef))
-      await bdMotsClefs.add(idMotClef);
+    idsMotsClefs.forEach(async (id: string) => {
+      const motsClefsExistants =
+        ClientConstellation.obtÉlémentsDeBdListe<string>(bdMotsClefs);
+      if (!motsClefsExistants.includes(id)) await bdMotsClefs.add(id);
+    });
+  }
+
+  async effacerMotClefBd(idBd: string, idMotClef: string): Promise<void> {
+    const optionsAccès = await this.client.obtOpsAccès(idBd);
+    const idBdMotsClefs = await this.client.obtIdBd(
+      "motsClefs",
+      idBd,
+      "feed",
+      optionsAccès
+    );
+    if (!idBdMotsClefs)
+      throw `Permission de modification refusée pour BD ${idBd}.`;
+
+    const bdMotsClefs = (await this.client.ouvrirBd(
+      idBdMotsClefs
+    )) as FeedStore;
+
+    const entrées = ClientConstellation.obtÉlémentsDeBdListe(
+      bdMotsClefs,
+      false
+    );
+    const entrée = entrées.find(
+      (e: élémentBdListe) => e.payload.value === idMotClef
+    );
+    if (entrée) await bdMotsClefs.remove(entrée.hash);
   }
 
   async ajouterTableauBD(id: string): Promise<string> {
@@ -347,6 +375,13 @@ export default class BDs {
     f: schémaFonctionSuivi<{ [key: string]: string }>
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdDicDeClef(id, "descriptions", f);
+  }
+
+  async suivreMotsClefsBd(
+    id: string,
+    f: schémaFonctionSuivi<string[]>
+  ): Promise<schémaFonctionOublier> {
+    return await this.client.suivreBdListeDeClef(id, "motsClefs", f);
   }
 
   async suivreTableauxBd(

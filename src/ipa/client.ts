@@ -1,9 +1,18 @@
 import { EventEmitter, once } from "events";
 import { v4 as uuidv4 } from "uuid";
-import Semaphore from '@chriscdn/promise-semaphore';
+import Semaphore from "@chriscdn/promise-semaphore";
 import initOrbite from "./orbitdb";
 import initSFIP from "./ipfs";
-import OrbitDB, { Store, FeedStore, KeyValueStore, isValidAddress, élémentFeedStore } from "orbit-db";
+import { Signature } from "./nuée";
+import OrbitDB, {
+  Store,
+  FeedStore,
+  KeyValueStore,
+  isValidAddress,
+  élémentFeedStore,
+} from "orbit-db";
+import uint8ArrayConcat from "uint8arrays/concat";
+
 import Compte from "./compte";
 import BDs from "./bds";
 import Tableaux from "./tableaux";
@@ -11,8 +20,9 @@ import Variables from "./variables";
 import Réseau from "./réseau";
 import Favoris from "./favoris";
 import Projets from "./projets";
-import uint8ArrayConcat from "uint8arrays/concat";
+import MotsClefs from "./motsClefs";
 import Nuée from "./nuée";
+
 import { itérateurÀFlux } from "./utils";
 import ContrôleurConstellation, {
   OptionsContrôleurConstellation,
@@ -77,7 +87,7 @@ async function toBuffer(
   return buffer;
 }
 
-const verrouOuvertureBd = new Semaphore()
+const verrouOuvertureBd = new Semaphore();
 
 export default class ClientConstellation extends EventEmitter {
   _dir: string;
@@ -95,6 +105,7 @@ export default class ClientConstellation extends EventEmitter {
   favoris?: Favoris;
   projets?: Projets;
   nuée?: Nuée;
+  motsClefs?: MotsClefs;
   pret: boolean;
 
   constructor(dir = "./sfip-cnstl") {
@@ -107,8 +118,8 @@ export default class ClientConstellation extends EventEmitter {
   async initialiser() {
     this.sfip = await initSFIP(this._dir);
     this.idNodeSFIP = await this.sfip.id();
-    this.sfip.libp2p.on("peer:connect", async () => {
-      console.log("connections", await this.sfip.swarm.peers());
+    this.sfip.libp2p.connectionManager.on("peer:connect", async () => {
+      // console.log("connections", await this.sfip.swarm.peers());
     });
 
     this.orbite = await initOrbite(this.sfip);
@@ -116,7 +127,7 @@ export default class ClientConstellation extends EventEmitter {
     const optionsAccèsRacine = {
       type: "controlleur-constellation",
       premierMod: this.orbite!.identity.id,
-      nom: "racine"
+      nom: "racine",
     };
     const idBdRacine = await this.créerBdIndépendante(
       "kvstore",
@@ -125,7 +136,7 @@ export default class ClientConstellation extends EventEmitter {
     );
     this.bdRacine = (await this.ouvrirBd(idBdRacine)) as KeyValueStore;
     await this.bdRacine.load();
-    console.log("idRacine", this.bdRacine.id)
+    console.log("idRacine", this.bdRacine.id);
 
     const accès = this.bdRacine.access as unknown as ContrôleurConstellation;
     this.optionsAccès = {
@@ -157,6 +168,13 @@ export default class ClientConstellation extends EventEmitter {
     const idBdProjets = await this.obtIdBd("projets", this.bdRacine, "feed");
     this.projets = new Projets(this, idBdProjets!);
 
+    const idBdMotsClefs = await this.obtIdBd(
+      "motsClefs",
+      this.bdRacine,
+      "feed"
+    );
+    this.motsClefs = new MotsClefs(this, idBdMotsClefs!);
+
     this.nuée = new Nuée(this);
 
     this.pret = true;
@@ -165,6 +183,24 @@ export default class ClientConstellation extends EventEmitter {
     //On commence par épingler notre compte (de manière récursive)
     //afin de le rendre disponible
     await this.épinglerBd(idBdRacine);
+  }
+
+  async signer(message: string): Promise<Signature> {
+    const id = this.orbite!.identity;
+    const signature = await this.orbite!.identity.provider.sign(id, message);
+    const clefPublique = this.orbite!.identity.publicKey;
+    return { signature, clefPublique };
+  }
+
+  async vérifierSignature(
+    signature: Signature,
+    message: string
+  ): Promise<boolean> {
+    return await this.orbite!.identity.provider.verify(
+      signature.signature,
+      signature.clefPublique,
+      message
+    );
   }
 
   async suivreConnexionsPostes(
@@ -196,7 +232,7 @@ export default class ClientConstellation extends EventEmitter {
     f: schémaFonctionSuivi<string[]>,
     idBdRacine?: string
   ): Promise<schémaFonctionOublier> {
-    if (!this.bdRacine) await once(this, "pret")
+    if (!this.bdRacine) await once(this, "pret");
     idBdRacine = idBdRacine || this.bdRacine!.id;
     const bd = await this.ouvrirBd(idBdRacine);
     const accès = bd.access;
@@ -207,14 +243,16 @@ export default class ClientConstellation extends EventEmitter {
       f(accès.write);
       return faisRien;
     } else if (accès.type === "controlleur-constellation") {
-      const fFinale = ()=>{
-        const mods = (accès as unknown as ContrôleurConstellation).rôles[MODÉRATEUR]
-        f(mods)
-      }
-      accès.on("updated", fFinale)
-      fFinale()
+      const fFinale = () => {
+        const mods = (accès as unknown as ContrôleurConstellation).rôles[
+          MODÉRATEUR
+        ];
+        f(mods);
+      };
+      accès.on("updated", fFinale);
+      fFinale();
       return () => {
-        accès.off("updated", fFinale)
+        accès.off("updated", fFinale);
       };
     } else {
       return faisRien;
@@ -222,19 +260,19 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async ajouterDispositif(identité: string) {
-    if (!this.bdRacine) await once(this, "pret")
+    if (!this.bdRacine) await once(this, "pret");
     const accès = this.bdRacine!.access as unknown as ContrôleurConstellation;
-    accès.grant(MODÉRATEUR, identité)
+    accès.grant(MODÉRATEUR, identité);
   }
 
   async enleverDispositif(identité: string) {
-    if (!this.bdRacine) await once(this, "pret")
+    if (!this.bdRacine) await once(this, "pret");
     const accès = this.bdRacine!.access as unknown as ContrôleurConstellation;
-    await accès.revoke(MODÉRATEUR, identité)
+    await accès.revoke(MODÉRATEUR, identité);
   }
 
   async rejoindreCompte() {
-    console.error("Non implémenté")
+    console.error("Non implémenté");
   }
 
   async donnerAccès(id: string, identité: string): Promise<void> {
@@ -443,7 +481,7 @@ export default class ClientConstellation extends EventEmitter {
       .find((e: { [key: string]: any }) => e.hash === empreinte).payload.value;
   }
 
-  async suivreBdsDeBdListe<T extends élémentsBd, U = T[]>(
+  async suivreBdsDeBdListe<T extends élémentsBd, U = T[], V=string>(
     id: string,
     f: schémaFonctionSuivi<T[]>,
     fBranche: (
@@ -451,7 +489,7 @@ export default class ClientConstellation extends EventEmitter {
       f: schémaFonctionSuivi<U>,
       branche?: unknown
     ) => Promise<schémaFonctionOublier | undefined>,
-    fIdBdDeBranche: (b: unknown) => string = (b) => b as string,
+    fIdBdDeBranche: (b: V) => string = (b) => b as unknown as string,
     fRéduction: schémaFonctionRéduction<T[][], T[]> = (
       branches: T[][]
     ): T[] => [...new Set(branches.flat())],
@@ -512,15 +550,15 @@ export default class ClientConstellation extends EventEmitter {
     return oublier;
   }
 
-  async rechercherBdListe(
+  async rechercherBdListe<T>(
     id: string,
-    f: (e: élémentFeedStore) => boolean
+    f: (e: élémentFeedStore<T>) => boolean
   ): Promise<any> {
     const bd = (await this.ouvrirBd(id)) as FeedStore;
     const élément = bd
       .iterator({ limit: -1 })
       .collect()
-      .find((e: élémentFeedStore) => f(e));
+      .find((e: élémentFeedStore<T>) => f(e));
     return élément;
   }
 
@@ -540,11 +578,14 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async ouvrirBd(id: string): Promise<Store> {
+
+    if (!isValidAddress(id)) throw new Error(`Adresse ${id} non valide.`)
+
     //Nous avons besoin d'un verrou afin d'éviter la concurrence
     await verrouOuvertureBd.acquire(id);
     const existante = this._bds[id];
     if (existante) {
-      verrouOuvertureBd.release(id)
+      verrouOuvertureBd.release(id);
       return existante;
     }
     const bd = await this.orbite!.open(id);
@@ -552,7 +593,7 @@ export default class ClientConstellation extends EventEmitter {
     this._bds[id] = bd;
 
     //Maintenant que la BD a été créée, on peut relâcher le verrou
-    verrouOuvertureBd.release(id)
+    verrouOuvertureBd.release(id);
     return bd;
   }
 
@@ -597,15 +638,14 @@ export default class ClientConstellation extends EventEmitter {
     const options: any = {
       accessController: optionsAccès,
     };
-    console.log({type, optionsAccès, nom})
+    console.log({ type, optionsAccès, nom });
     const bd = await this.orbite![type](nom || uuidv4(), options);
     await bd.load();
     return bd.id;
   }
 
   async _générerBd(type: orbitDbStoreTypes, nom: string): Promise<Store> {
-    if (isValidAddress(nom) && this._bds[nom])
-      return this._bds[nom];
+    if (isValidAddress(nom) && this._bds[nom]) return this._bds[nom];
     const bd = await this.orbite![type](nom);
     this._bds[bd.id] = bd;
     return bd;
@@ -626,7 +666,7 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async permissionÉcrire(id: string): Promise<boolean> {
-    const moi = this.orbite!.identity.id
+    const moi = this.orbite!.identity.id;
     const bd = await this.ouvrirBd(id);
     const accès = bd.access;
 

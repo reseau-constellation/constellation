@@ -10,7 +10,7 @@
       outlined
       class="mx-2"
       @click="
-        ouvrirLien('https://github.com/julienmalard/constellation/issues/new/choose')
+        ouvrirLien(URL_RAPPORTS)
       "
       append
     >
@@ -32,7 +32,7 @@
 
 <script>
 import { ouvrirLien } from "@/utils";
-
+import { URL_RAPPORTS } from "@/utils/config";
 import Titre from "@/components/commun/Titre.vue";
 import mixinImage from "@/mixins/images";
 
@@ -40,6 +40,11 @@ export default {
   name: "Signalements",
   components: { Titre },
   mixins: [mixinImage],
+  data: function() {
+    return {
+      URL_RAPPORTS
+    }
+  },
   methods: { ouvrirLien },
 };
 </script>

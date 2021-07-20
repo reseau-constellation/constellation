@@ -6,7 +6,7 @@
 
     <v-card>
       <v-card-title class="headline">
-        {{ nomLicence }}
+        {{ nom }}
         <v-menu
           v-if="permissionModifier"
           transition="slide-y-transition"
@@ -36,6 +36,9 @@
           </v-list>
         </v-menu>
       </v-card-title>
+      <v-card-subtitle>
+        {{ idColonne }}
+      </v-card-subtitle>
       <v-divider />
 
       <v-card-text>
@@ -110,7 +113,10 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="secondary" text outlined @click="dialogue = false">
-          {{ $t("communs.fermer") }}
+          {{ $t("communs.annuler") }}
+        </v-btn>
+        <v-btn color="primary" text outlined @click="sauvegarder">
+          {{ $t("communs.sauvegarder") }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -118,23 +124,18 @@
 </template>
 
 <script>
-import mixinLicences from "@/mixins/licences";
-import jetonDroit from "@/components/commun/licences/jetonDroit";
-import jetonLimitation from "@/components/commun/licences/jetonLimitation";
-import jetonCondition from "@/components/commun/licences/jetonCondition";
-
 export default {
-  name: "dialogueLicence",
-  props: {
-    licence: { type: String },
-    permissionModifier: { default: false, type: Boolean },
-  },
-  components: { jetonDroit, jetonCondition, jetonLimitation },
-  mixins: [mixinLicences],
+  name: "dialogueNouvelleColonne",
   data: function () {
     return {
       dialogue: false,
     };
+  },
+  methods: {
+    sauvegarder: function () {
+      this.$emit("sauvegarder", {});
+      this.dialogue = false;
+    },
   },
 };
 </script>

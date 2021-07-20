@@ -54,7 +54,11 @@
           <lienTélécharger :lien="idBd" />
         </span>
 
-        <v-dialog v-if="permissionÉcrire" v-model="dialogueEffacerBd" width="500">
+        <v-dialog
+          v-if="permissionÉcrire"
+          v-model="dialogueEffacerBd"
+          width="500"
+        >
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" icon color="error">
               <v-icon>mdi-delete</v-icon>
@@ -76,7 +80,12 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="error" text outlined @click="dialogueEffacerBd = false">
+              <v-btn
+                color="error"
+                text
+                outlined
+                @click="dialogueEffacerBd = false"
+              >
                 Non !
               </v-btn>
               <v-btn color="error" depressed @click="effacerBd">
@@ -87,10 +96,9 @@
         </v-dialog>
       </v-card-title>
       <v-card-subtitle>
-        <span v-if="this.descriptions">
-          {{ descriptions }}
+        <span v-if="descriptionsBD">
+          {{ description ? description : "Aucune description." }}
         </span>
-        <span v-else-if="permissionÉcrire"> Aucune description. </span>
         <v-menu
           v-if="permissionÉcrire"
           offset-x
@@ -126,11 +134,12 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>
+                      <v-skeleton-loader v-if="!score" type="avatar" />
                       <v-progress-circular
-                        :rotate="score ? 270 : undefined"
+                        v-else
+                        :rotate="270"
                         :width="5"
-                        :value="score && score.total ? score.total : 0"
-                        :indeterminate="!score"
+                        :value="score.total ? score.total : 0"
                         :color="
                           score ? couleurScore(score.total).couleur : 'primary'
                         "
@@ -158,7 +167,7 @@
               </v-menu>
             </v-card>
             <v-card flat width="200" class="mb-3">
-              <v-menu offset-x :disabled="!score" >
+              <v-menu offset-x :disabled="!score">
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>
@@ -198,36 +207,63 @@
                 @changerLicence="changerLicence"
               >
                 <template v-slot:activator="{ on, attrs }">
-                  <v-list-item v-bind="attrs" v-on="on" v-show="licence !== null">
+                  <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>
                       <v-icon
                         left
-                        :color="licenceApprouvée ? 'secondary' : 'error'"
+                        :color="
+                          licence && !licenceApprouvée ? 'error' : 'secondary'
+                        "
                       >
-                        {{ licence ? "mdi-scale-balance" : "mdi-alert-outline" }}
+                        mdi-scale-balance
                       </v-icon>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      {{
-                        couper(
-                          licence && !licenceApprouvée
-                            ? licence
-                            : $t(`licences.info.${licence || "introuvable"}.abr`),
-                            10
+                      <v-skeleton-loader v-if="licence === null" type="chip" />
+                      <span v-else>
+                        {{
+                          couper(
+                            licence && !licenceApprouvée
+                              ? licence
+                              : $t(
+                                  `licences.info.${
+                                    licence || "introuvable"
+                                  }.abr`
+                                ),
+                            20
                           )
-                      }}
+                        }}
+                      </span>
                     </v-list-item-content>
                   </v-list-item>
                 </template>
               </dialogue-licence>
             </v-card>
             <v-card flat width="200" class="mb-3">
-              <v-list-item @click="ouvrirRéplications;">
-                <v-list-item-avatar>
-                  <v-icon left> mdi-plus </v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content> 3 réplications </v-list-item-content>
-              </v-list-item>
+              <dialogueRéplications :replications="réplications">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-list-item v-bind="attrs" v-on="on">
+                    <v-list-item-avatar>
+                      <v-icon left> mdi-database-sync </v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-skeleton-loader
+                        v-if="réplications === null"
+                        type="chip"
+                      />
+                      <span v-else>
+                        {{
+                          `${
+                            réplications
+                              ? formatterChiffre(réplications.length)
+                              : ""
+                          } Réplications`
+                        }}
+                      </span>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+              </dialogueRéplications>
             </v-card>
           </div>
         </v-card>
@@ -243,24 +279,34 @@
             <v-card flat min-width="200" max-width="350" class="mb-3">
               <p class="mb-0 text-overline">
                 Mots-clefs
-                <v-btn v-if="permissionÉcrire" small icon>
-                  <v-icon small> mdi-plus </v-icon>
-                </v-btn>
+                <dialogue-mots-clefs
+                  v-if="permissionÉcrire"
+                  :selectionnes="motsClefs"
+                  @ajouterMotClef="ajouterMotClef"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      v-if="permissionÉcrire"
+                      small
+                      icon
+                    >
+                      <v-icon small> mdi-plus </v-icon>
+                    </v-btn>
+                  </template>
+                </dialogue-mots-clefs>
               </p>
               <p v-if="!motsClefs.length" class="text--disabled">
                 Aucun mot clef
               </p>
-              <v-chip
+              <jeton-mot-clef
                 v-for="m in motsClefs"
                 :key="m"
-                :close="permissionÉcrire"
-                outlined
-                small
-                label
-                class="mx-1 my-1"
-                close-icon="mdi-close"
-                >{{ m }}</v-chip
-              >
+                :id="m"
+                :permissionModifier="permissionÉcrire"
+                @effacer="effacerMotClef"
+              />
             </v-card>
             <v-card flat min-width="200" max-width="350" class="mb-3">
               <p class="mb-0 text-overline">Géographie</p>
@@ -343,6 +389,8 @@
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 
 import dialogueLicence from "@/components/commun/licences/dialogueLicence";
+import dialogueMotsClefs from "@/components/commun/motsClefs/dialogueMotsClefs";
+import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications";
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import itemTableau from "@/components/BD/itemTableau";
 import lienOrbite from "@/components/commun/lienOrbite";
@@ -352,6 +400,7 @@ import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 import mixinLicences from "@/mixins/licences";
 import jetonVariable from "@/components/commun/jetonVariable";
+import jetonMotClef from "@/components/commun/motsClefs/jetonMotClef";
 import carteQualité from "@/components/commun/carteQualité";
 
 export default {
@@ -361,8 +410,11 @@ export default {
     lienOrbite,
     lienTélécharger,
     jetonVariable,
+    jetonMotClef,
     carteQualité,
     dialogueLicence,
+    dialogueMotsClefs,
+    dialogueRéplications,
     boîteNoms,
   },
   mixins: [mixinImage, mixinLangues, mixinIPA, mixinLicences],
@@ -370,13 +422,14 @@ export default {
     return {
       dialogueEffacerBd: false,
       licence: null,
-      descriptionsBD: {},
+      descriptionsBD: null,
       nomsBD: {},
       permissionÉcrire: false,
       tableaux: null,
       logo: null,
       score: null,
       variables: [],
+      réplications: null,
 
       géog: [],
       motsClefs: [],
@@ -392,7 +445,8 @@ export default {
         ? traduireNom(this.nomsBD, this.langues)
         : this.idBd;
     },
-    descriptions: function () {
+    description: function () {
+      if (this.descriptionsBD === null) return "";
       return traduireNom(this.descriptionsBD, this.langues);
     },
     idBd: function () {
@@ -414,6 +468,9 @@ export default {
     ouvrirLien,
     ajouterTableau: async function () {
       await this.$ipa.bds.ajouterTableauBD(this.idBd);
+    },
+    ajouterMotClef: async function (idMotClef) {
+      await this.$ipa.bds.ajouterMotsClefsBd(this.idBd, idMotClef);
     },
     initialiserSuivi: async function () {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBd);
@@ -450,6 +507,15 @@ export default {
         this.idBd,
         (variables) => (this.variables = variables)
       );
+      const oublierMotsClefs = await this.$ipa.bds.suivreMotsClefsBd(
+        this.idBd,
+        (motsClefs) => (this.motsClefs = motsClefs)
+      );
+      const oublierRéplications = await this.$ipa.réseau.suivreRéplications(
+        this.idBd,
+        (réplications) => (this.réplications = réplications)
+      );
+
       this.suivre([
         oublierLicence,
         oublierNoms,
@@ -457,6 +523,8 @@ export default {
         oublierTableaux,
         oublierScore,
         oublierVariables,
+        oublierMotsClefs,
+        oublierRéplications,
       ]);
     },
     effacerBd: async function () {
@@ -483,9 +551,12 @@ export default {
     effacerDescr({ langue }) {
       this.$ipa.bds.effacerDescrBd(this.idBd, langue);
     },
+    effacerMotClef({ id }) {
+      this.$ipa.bds.effacerMotClefBd(this.idBd, id);
+    },
     changerLicence({ licence }) {
-      this.$ipa.bds.changerLicenceBd(this.idBd, licence)
-    }
+      this.$ipa.bds.changerLicenceBd(this.idBd, licence);
+    },
   },
 };
 </script>
