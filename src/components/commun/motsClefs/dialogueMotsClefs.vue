@@ -10,42 +10,45 @@
 
       <v-card-text>
         <v-skeleton-loader v-if="existants === null" type="paragraph" />
-        <div v-else>
-          <div class="text-center">
-            <dialogue-nouveau-mot-clef>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-bind="attrs"
-                  v-on="on"
-                  color="secondary" text outlined
-                >
-                  <v-icon left>mdi-plus</v-icon>
+        <div v-else class="mt-3">
+          <v-text-field
+            v-model="recherche"
+            outlined
+            dense
+            append-icon="mdi-magnify"
+            class="my-3"
+            hide-details
+          ></v-text-field>
+          <dialogue-nouveau-mot-clef
+            @cree="nouveauMotClef"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-list-item
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-list-item-content>
                   Nouveau mot clef
-                </v-btn>
-              </template>
-            </dialogue-nouveau-mot-clef>
-
-          </div>
-          <div v-if="nonSélectionnés.length">
-            <v-text-field
-              outlined
-              dense
-              append-icon="mdi-magnify"
-              class="mx-10"
-            ></v-text-field>
-            <v-list>
-              <item-liste-mots-clefs
-                v-for="m in nonSélectionnés"
-                :key="m"
-                :id="m"
-                @selectionne="selectionner(m)"
-              />
-            </v-list>
-          </div>
-          <div v-else>
-            <p class="text-h5 mt-5">Aucun autre mot clef disponible</p>
-            <v-img :src="image('vide')" class="my-5" contain height="125px" />
-          </div>
+                </v-list-item-content>
+                <v-list-item-action-text>
+                  <v-icon>mdi-plus</v-icon>
+                </v-list-item-action-text>
+              </v-list-item>
+            </template>
+          </dialogue-nouveau-mot-clef>
+          <v-divider />
+          <v-list scrollable style="max-height: 200px" class="overflow-y-auto">
+            <item-liste-mots-clefs
+              v-for="m in motsClefsVisibles"
+              :key="m"
+              :id="m"
+              @selectionne="selectionner(m)"
+            />
+            <div v-if="!motsClefsVisibles.length" class="text-center">
+              <v-img :src="image('vide')" class="my-3" contain height="75px" />
+              <p class="mt-2">Aucun résultat</p>
+            </div>
+          </v-list>
         </div>
       </v-card-text>
       <v-divider></v-divider>
@@ -76,6 +79,8 @@ export default {
       noms: {},
       existants: null,
       dialogue: false,
+      récemmentAjouté: null,
+      recherche: null
     };
   },
   computed: {
@@ -83,6 +88,14 @@ export default {
       if (this.existants === null) return [];
       return this.existants.filter((m) => !this.selectionnes.includes(m));
     },
+    motsClefsVisibles: function () {
+      let listeFinale = [...this.nonSélectionnés]
+      if (this.recherche) {
+        listeFinale = listeFinale.filter(x=>x.includes(this.recherche))
+      }
+      listeFinale = listeFinale.sort((a,b)=> b===this.récemmentAjouté ? 1 : 0)
+      return listeFinale
+    }
   },
   methods: {
     creerMotClef: async function () {
@@ -91,6 +104,10 @@ export default {
     selectionner: function (id) {
       this.$emit("ajouterMotClef", id);
       this.dialogue = false;
+    },
+    nouveauMotClef: async function({id}) {
+      await this.creerMotClef()
+      this.récemmentAjouté = id  // Montrer le nouveau mot clef en haut de la liste
     },
     initialiserSuivi: async function () {
       const oublierExistants = await this.$ipa.motsClefs.suivreMotsClefs(

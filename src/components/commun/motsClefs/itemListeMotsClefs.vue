@@ -15,9 +15,9 @@
           <v-btn
             v-on="on"
             v-bind="attrs"
-            icon
+            icon small
           >
-            <v-icon>mdi-pencil</v-icon>
+            <v-icon small>mdi-pencil</v-icon>
           </v-btn>
         </template>
         <boîteNoms
@@ -29,6 +29,11 @@
           @effacer="effacerNom"
         />
       </v-menu>
+      <v-btn icon small v-if="permissionÉcrire" color="error"
+        @click.stop="effacerMotClef"
+      >
+        <v-icon small>mdi-delete</v-icon>
+      </v-btn>
     </v-list-item-action-text>
   </v-list-item>
 </template>
@@ -70,6 +75,9 @@ export default {
     },
     effacerNom({ langue }) {
       this.$ipa.motsClefs.effacerNomMotClef(this.id, langue);
+    },
+    effacerMotClef() {
+      this.$ipa.motsClefs.effacerMotClef(this.id);
     },
     initialiserSuivi: async function () {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.id);

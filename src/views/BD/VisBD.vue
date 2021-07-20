@@ -269,14 +269,14 @@
         </v-card>
         <v-card flat class="mx-3 mb-3">
           <div class="d-flex flex-wrap">
-            <v-card flat min-width="200" max-width="350" class="mb-3">
+            <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">Variables</p>
               <p v-if="!variables.length" class="text--disabled">
                 Aucune variable
               </p>
               <jeton-variable v-for="id in variables" :key="id" :id="id" />
             </v-card>
-            <v-card flat min-width="200" max-width="350" class="mb-3">
+            <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">
                 Mots-clefs
                 <dialogue-mots-clefs
@@ -308,7 +308,7 @@
                 @effacer="effacerMotClef"
               />
             </v-card>
-            <v-card flat min-width="200" max-width="350" class="mb-3">
+            <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">Géographie</p>
               <p v-if="!géog.length" class="text--disabled">
                 Aucune région détectée
