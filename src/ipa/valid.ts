@@ -1,5 +1,6 @@
 import CID from "cids";
 import { catégorieVariables } from "./variables";
+import { élémentsBd } from "./client";
 
 export type typeRègle = "catégorie" | "bornes" | "valeurCatégorique";
 export type sourceRègle = "variable" | "tableau";
@@ -7,13 +8,18 @@ export type sourceRègle = "variable" | "tableau";
 export type règleVariable = {
   typeRègle: typeRègle;
   détails: {[key:string]: any};
-  source?: sourceRègle;
 };
+
+export type règleColonne = {
+  règle: règleVariable;
+  source: sourceRègle;
+  colonne: string;
+}
 
 export interface règleBornes extends règleVariable {
   typeRègle: "bornes";
   détails: {
-    val: number | string; //Peut être numérique ou bien le nom d'une autre colonne
+    val: number | string; //Peut être numérique ou bien le nom d'une autre variable
     op: ">" | "<" | ">=" | "<=";
   };
 }
@@ -33,12 +39,11 @@ export interface règleCatégorie extends règleVariable {
 }
 
 export interface Erreur {
-  règle: règleVariable;
+  règle: règleColonne;
 }
 
 export interface erreurValidation {
   empreinte: string;
-  colonne: string;
   erreur: Erreur;
 }
 
@@ -47,17 +52,20 @@ export type schémaFonctionValidation = (
 ) => erreurValidation[];
 
 export interface élémentDonnées {
-  [key: string]: unknown;
+  [key: string]: élémentsBd;
   empreinte: string;
 }
 export function générerFonctionRègle(
-  règle: règleVariable,
-  colonne: string
+  règle: règleColonne
 ): schémaFonctionValidation {
-  switch (règle.typeRègle) {
+  const règleVariable = règle.règle
+  const { colonne } = règle
+  const { typeRègle } = règleVariable
+
+  switch (typeRègle) {
     case "catégorie": {
       return (vals: élémentDonnées[]) => {
-        const catégorie = (règle as règleCatégorie).détails.catégorie;
+        const catégorie = (règleVariable as règleCatégorie).détails.catégorie;
         const nonValides = vals.filter(
           (v) => !ValiderCatégorieVal(v[colonne], catégorie)
         );
@@ -76,7 +84,7 @@ export function générerFonctionRègle(
       let fComp: (v: élémentDonnées) => boolean;
       let fOp: (v1: number, v2: number) => boolean;
 
-      const { val, op } = (règle as règleBornes).détails;
+      const { val, op } = (règleVariable as règleBornes).détails;
 
       switch (op) {
         case ">":
@@ -120,7 +128,7 @@ export function générerFonctionRègle(
     }
 
     case "valeurCatégorique": {
-      const options = (règle as règleValeurCatégorique).détails.options;
+      const options = (règleVariable as règleValeurCatégorique).détails.options;
       return (vals: élémentDonnées[]) => {
         const nonValides = vals.filter((v: élémentDonnées) =>
           options.includes(v[colonne])
@@ -136,7 +144,7 @@ export function générerFonctionRègle(
       };
     }
     default:
-      throw Error(`Catégorie ${règle.typeRègle} inconnue.`);
+      throw Error(`Catégorie ${typeRègle} inconnue.`);
   }
 }
 

@@ -10,6 +10,7 @@ import ContrôleurConstellation from "./accès/contrôleurConstellation";
 import {
   erreurValidation,
   règleVariable,
+  règleColonne,
   générerFonctionRègle,
   schémaFonctionValidation,
   sourceRègle,
@@ -102,12 +103,18 @@ export default class Tableaux {
 
   async suivreDonnées(
     idTableau: string,
-    f: schémaFonctionSuivi<élémentBdListe[]>
+    f: schémaFonctionSuivi<élémentDonnées[]>
   ): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBdListeDeClef(
+    const fFinale = (données: élémentBdListe<élémentDonnées>[]) => {
+      const donnéesFinales: élémentDonnées[] = données.map((x) => {
+        return { ...x.payload.value, empreinte: x.hash };
+      })
+      f(donnéesFinales)
+    }
+    return await this.client.suivreBdListeDeClef<élémentDonnées>(
       idTableau,
       "données",
-      f,
+      fFinale,
       false
     );
   }
@@ -367,30 +374,48 @@ export default class Tableaux {
     );
   }
 
+  async ajouterRègleTableau(
+    idTableau: string,
+    idColonne: string,
+    règle: règleVariable
+  ): Promise<void> {
+    const optionsAccès = await this.client.obtOpsAccès(idTableau);
+    const idBdRègles = await this.client.obtIdBd(
+      "règles",
+      idTableau,
+      "feed",
+      optionsAccès
+    );
+    if (!idBdRègles)
+      throw `Permission de modification refusée pour tableau ${idTableau}.`;
+
+    const bdColonnes = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
+    const entrée: règleColonne = {
+      règle,
+      source: "tableau",
+      colonne: idColonne
+    };
+    await bdColonnes.add(entrée);
+  }
+
   async suivreRègles(
     idTableau: string,
-    f: schémaFonctionSuivi<règleVariable[]>
+    f: schémaFonctionSuivi<règleColonne[]>
   ): Promise<schémaFonctionOublier> {
-    const règles: { tableau: règleVariable[]; variable: règleVariable[] } = {
+    const dicRègles: { tableau: règleColonne[]; variable: règleColonne[] } = {
       tableau: [],
       variable: [],
     };
-    const fFinale = () => f([...règles.tableau, ...règles.variable]);
-
-    const fSuivreRègles = (rgls: règleVariable[], source: sourceRègle) => {
-      const règlesSource = rgls.map(r => {
-        r.source = source;
-        return r;
-      });
-      règles[source] = règlesSource;
-      fFinale();
-    };
+    const fFinale = () => f([...dicRègles.tableau, ...dicRègles.variable]);
 
     //Suivre les règles spécifiées dans le tableau
-    const oublierRèglesTableau = await this.client.suivreBdListeDeClef<règleVariable>(
+    const oublierRèglesTableau = await this.client.suivreBdListeDeClef<règleColonne>(
       idTableau,
       "règles",
-      (règles: règleVariable[]) => fSuivreRègles(règles, "tableau")
+      (règles: règleColonne[]) => {
+        dicRègles.tableau = règles
+        fFinale()
+      }
     );
 
     // Suivre les règles spécifiées dans les variables
@@ -409,7 +434,9 @@ export default class Tableaux {
 
     const oublierRèglesVariable = await this.client.suivreBdsDeFonctionListe(
       fListe,
-      (règles: règleVariable[]) => fSuivreRègles(règles, "variable"),
+      (règles: règleVariable[]) => {
+        fSuivreRègles(règles, "variable")
+      },
       fBranche
     )
 
@@ -437,11 +464,11 @@ export default class Tableaux {
       }
       f(erreurs);
     };
-    const fFinaleRègles = (règles: règleVariable[]) => {
+    const fFinaleRègles = (règles: règleColonne[]) => {
       info.règles = règles.map((r) => générerFonctionRègle(r));
       fFinale();
     };
-    const fFinaleDonnées = (données: unknown[]) => {
+    const fFinaleDonnées = (données: élémentDonnées[]) => {
       info.données = données;
       fFinale();
     };

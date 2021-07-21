@@ -326,9 +326,7 @@ export default {
       const oublierDonnées = await this.$ipa.tableaux.suivreDonnées(
         this.idTableau,
         (données) => {
-          this.données = données.map((x) => {
-            return { ...x.payload.value, empreinte: x.hash };
-          });
+          this.données = données;
         }
       );
 
