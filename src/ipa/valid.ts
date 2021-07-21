@@ -56,8 +56,10 @@ export interface élémentDonnées {
   empreinte: string;
 }
 export function générerFonctionRègle(
-  règle: règleColonne
+  règle: règleColonne,
+  varsÀColonnes: {[key: string]: string}
 ): schémaFonctionValidation {
+
   const règleVariable = règle.règle
   const { colonne } = règle
   const { typeRègle } = règleVariable
@@ -104,7 +106,7 @@ export function générerFonctionRègle(
       switch (typeof val) {
         case "string":
           fComp = (v: élémentDonnées) =>
-            fOp(v[colonne] as number, v[val] as number);
+            fOp(v[colonne] as number, v[varsÀColonnes[val]] as number);
           break;
         case "number":
           fComp = (v: élémentDonnées) =>
