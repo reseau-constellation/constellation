@@ -481,18 +481,18 @@ export default class ClientConstellation extends EventEmitter {
       .find((e: { [key: string]: any }) => e.hash === empreinte).payload.value;
   }
 
-  async suivreBdsDeBdListe<T extends élémentsBd, U>(
+  async suivreBdsDeBdListe<T extends élémentsBd, U, V>(
     id: string,
-    f: schémaFonctionSuivi<T[]>,
+    f: schémaFonctionSuivi<V[]>,
     fBranche: (
       id: string,
       f: schémaFonctionSuivi<U>,
       branche?: T
     ) => Promise<schémaFonctionOublier | undefined>,
     fIdBdDeBranche: (b: T) => string = (b) => b as string,
-    fRéduction: schémaFonctionRéduction<T[][], T[]> = (
-      branches: T[][]
-    ): T[] => [...new Set(branches.flat())],
+    fRéduction: schémaFonctionRéduction<U[], V[]> = (
+      branches: U[]
+    ) => [...new Set(branches.flat())] as unknown as V[],
     fCode: (é: T) => string = (é) => é as string
   ): Promise<schémaFonctionOublier> {
     const fListe = async (fSuivreRacine: (éléments: T[])=>Promise<void>): Promise<schémaFonctionOublier> => {
@@ -508,18 +508,18 @@ export default class ClientConstellation extends EventEmitter {
     )
   }
 
-  async suivreBdsDeFonctionListe<T extends élémentsBd, U>(
+  async suivreBdsDeFonctionListe<T extends élémentsBd, U, V>(
     fListe: (fSuivreRacine: (éléments: T[])=>Promise<void>) => Promise<schémaFonctionOublier>,
-    f: schémaFonctionSuivi<T[]>,
+    f: schémaFonctionSuivi<V[]>,
     fBranche: (
       id: string,
       f: schémaFonctionSuivi<U>,
       branche?: T
     ) => Promise<schémaFonctionOublier | undefined>,
     fIdBdDeBranche: (b: T) => string = (b) => b as string,
-    fRéduction: schémaFonctionRéduction<T[][], T[]> = (
-      branches: T[][]
-    ): T[] => [...new Set(branches.flat())],
+    fRéduction: schémaFonctionRéduction<U[], V[]> = (
+      branches: U[]
+    ) => [...new Set(branches.flat())] as unknown as V[],
     fCode: (é: T) => string = (é) => é as string
   ): Promise<schémaFonctionOublier> {
     interface InterfaceBranches {
@@ -530,9 +530,9 @@ export default class ClientConstellation extends EventEmitter {
 
     const fFinale = () => {
       const listeDonnées = Object.values(arbre)
-        .filter((x) => x.données !== undefined)
-        .map((x) => x.données);
-      const réduits = fRéduction(listeDonnées as unknown as T[][]);
+        .map((x) => x.données)
+        .filter((d) => d !== undefined) as U[];
+      const réduits = fRéduction(listeDonnées);
       f(réduits);
     };
 

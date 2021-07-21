@@ -13,6 +13,7 @@ import {
   générerFonctionRègle,
   schémaFonctionValidation,
   sourceRègle,
+  élémentDonnées
 } from "./valid";
 
 type InfoCol = {
@@ -188,7 +189,7 @@ export default class Tableaux {
     const idsColonnes: string[] = bdColonnes
       .iterator({ limit: -1 })
       .collect()
-      .map((e: élémentFeedStore) => e.payload.value.id);
+      .map((e: élémentFeedStore<InfoCol>) => e.payload.value.id);
     const clefsPermises = [...idsColonnes, "id"];
     const clefsFinales = Object.keys(élément).filter((x: string) =>
       clefsPermises.includes(x)
@@ -308,7 +309,7 @@ export default class Tableaux {
     const fBranche = async (
       id: string,
       fSuivi: schémaFonctionSuivi<InfoCol>,
-      branche: unknown
+      branche?: InfoCol
     ): Promise<schémaFonctionOublier> => {
       return await this.client.variables!.suivreCatégorieVariable(
         id,
@@ -318,7 +319,7 @@ export default class Tableaux {
         }
       );
     };
-    const fIdBdDeBranche = (x: unknown) => (x as InfoCol).variable;
+    const fIdBdDeBranche = (x: InfoCol) => x.variable;
 
     const fCode = (x: InfoCol) => x.id;
     const fSuivreBdColonnes = async (
@@ -376,34 +377,43 @@ export default class Tableaux {
     };
     const fFinale = () => f([...règles.tableau, ...règles.variable]);
 
-    const fSuivreRègles = (rgls: unknown[], source: sourceRègle) => {
-      const règlesTableau = rgls.map((r: unknown): règleVariable => {
-        (r as règleVariable).source = source;
-        return r as règleVariable;
+    const fSuivreRègles = (rgls: règleVariable[], source: sourceRègle) => {
+      const règlesSource = rgls.map(r => {
+        r.source = source;
+        return r;
       });
-      règles[source] = règlesTableau;
+      règles[source] = règlesSource;
       fFinale();
     };
 
-    const oublierRèglesTableau = await this.client.suivreBdListeDeClef(
+    //Suivre les règles spécifiées dans le tableau
+    const oublierRèglesTableau = await this.client.suivreBdListeDeClef<règleVariable>(
       idTableau,
       "règles",
-      (rgls: unknown[]) => fSuivreRègles(rgls, "tableau")
+      (règles: règleVariable[]) => fSuivreRègles(règles, "tableau")
     );
 
-    console.error("À faire");
+    // Suivre les règles spécifiées dans les variables
+    const fListe = async (fSuivreRacine: (éléments: string[]) => Promise<void>) : Promise<schémaFonctionOublier> => {
+      return await this.suivreVariables(
+        idTableau, fSuivreRacine
+      )
+    }
 
-    const fSuivreColonnes = await this.client.suivreBdDeClef<InfoCol>(
-      idTableau,
-      "colonnes",
-      f
-    );
+    const fBranche = async (idVariable: string, fSuivreBranche: schémaFonctionSuivi<règleVariable[]>) => {
+      return await this.client.variables!.suivreRèglesVariable(
+        idVariable,
+        fSuivreBranche
+      )
+    }
 
-    const oublierRèglesVariable = await this.suivreColonnes(
-      idTableau,
-      fSuivreColonnes
-    );
+    const oublierRèglesVariable = await this.client.suivreBdsDeFonctionListe(
+      fListe,
+      (règles: règleVariable[]) => fSuivreRègles(règles, "variable"),
+      fBranche
+    )
 
+    //Tout oublier
     const fOublier = () => {
       oublierRèglesTableau();
       oublierRèglesVariable();
@@ -415,7 +425,7 @@ export default class Tableaux {
     idTableau: string,
     f: schémaFonctionSuivi<erreurValidation[]>
   ): Promise<schémaFonctionOublier> {
-    const info: { données: unknown[]; règles: schémaFonctionValidation[] } = {
+    const info: { données: élémentDonnées[]; règles: schémaFonctionValidation[] } = {
       données: [],
       règles: [],
     };
