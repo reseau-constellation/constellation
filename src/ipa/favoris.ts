@@ -38,7 +38,7 @@ export default class Favoris {
   async épinglerFavori(id: string): Promise<void> {
     const existante = await this.client.rechercherBdListe(
       this.idBd,
-      (e: élémentFeedStore) => e.payload.value.id === id
+      (e: élémentFeedStore<EntréeFavoris>) => e.payload.value.id === id
     );
     if (!existante) {
       const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
@@ -52,7 +52,7 @@ export default class Favoris {
   async désépinglerFavori(id: string): Promise<void> {
     const existante = await this.client.rechercherBdListe(
       this.idBd,
-      (e: élémentFeedStore) => e.payload.value.id === id
+      (e: élémentFeedStore<EntréeFavoris>) => e.payload.value.id === id
     );
     if (existante) {
       const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;

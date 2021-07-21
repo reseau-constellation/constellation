@@ -7,6 +7,9 @@ export interface SpécificationTélécharger extends SpécificationAutomation {
 export interface SpécificationTéléverser extends SpécificationAutomation {
   idTableau: string;
 }
+interface Automation {
+  
+}
 export default class Automations {
   automations: Automation[];
   constructor() {

@@ -49,7 +49,7 @@ export default class Nuée {
       .digest();
     this.nuée = hyperswarm();
     this.nuée.join(this.sujet, { lookup: true, announce: true });
-    window.client = this.client;
+
     this.nuée.on("connection", async (prise: any) => {
       prise.on("data", (données: BufferSource) =>
         this.gérerDonnées(données, prise)
