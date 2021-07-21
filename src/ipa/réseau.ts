@@ -6,6 +6,7 @@ import {
 } from "orbit-db";
 import Semaphore from "@chriscdn/promise-semaphore";
 import ContrôleurConstellation from "./accès/contrôleurConstellation";
+import { EntréeFavoris } from "./favoris";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -21,12 +22,14 @@ export type infoMembre = {
 };
 
 export type infoMembreEnLigne = infoMembre & {
-  vuIlyA?: number;
+  vuÀ?: number;
 };
 
 type infoRéplication = {
-  idBdRacineMembre: string;
+  idBd: string;
+  idBdRacine: string;
   idOrbite: string;
+  vuÀ?: number;
 };
 
 const verrouAjouterMembre = new Semaphore();
@@ -34,10 +37,11 @@ const verrouAjouterMembre = new Semaphore();
 export default class Réseau {
   client: ClientConstellation;
   idBd: string;
-  dispositifsEnLigne: { [key: string]: {
+  dispositifsEnLigne: {
+    [key: string]: {
       info: infoMembre;
       vuÀ: number;
-    }
+    };
   };
   fOublierMembres: { [key: string]: schémaFonctionOublier };
 
@@ -147,7 +151,7 @@ export default class Réseau {
   _vu(info: infoMembre): void {
     this.dispositifsEnLigne[info.idOrbite] = {
       info,
-      vuÀ: new Date().getTime()
+      vuÀ: new Date().getTime(),
     };
   }
 
@@ -165,11 +169,9 @@ export default class Réseau {
     f: schémaFonctionSuivi<infoMembreEnLigne[]>
   ): Promise<schémaFonctionOublier> {
     const fFinale = (membres: infoMembre[]) => {
-      const maintenant = new Date().getTime();
       const listeMembres = membres.map((m) => {
-        const dernierContact = this.dispositifsEnLigne[m.idOrbite].vuÀ;
-        const vuIlyA = dernierContact ? maintenant - dernierContact : undefined;
-        return Object.assign({ vuIlyA }, m);
+        const { vuÀ } = this.dispositifsEnLigne[m.idOrbite];
+        return Object.assign({ vuÀ }, m);
       });
       f(listeMembres);
     };
@@ -299,84 +301,46 @@ export default class Réseau {
     idBd: string,
     f: schémaFonctionSuivi<infoRéplication[]>
   ): Promise<schémaFonctionOublier> {
-    interface infoRéplMembre {
-      idBd: string;
-      idBdRacineMembre: string;
-      idOrbite: string
-    }
-    const infos: { répls: infoRéplMembre[]; dispositifsEnLigne: infoMembre[] } = {
-      répls: [],
-      dispositifsEnLigne: [],
+    const fListe = async (
+      fSuivreRacine: (éléments: infoMembreEnLigne[]) => Promise<void>
+    ): Promise<schémaFonctionOublier> => {
+      return await this.suivreMembres(fSuivreRacine);
     };
-
-    const fFinale = () => {
-      const répls = infos.répls
-        .filter((r) => r.idBd === idBd)
-        .map((r) => {
-          const dispositifs = infos.dispositifsEnLigne.filter(
-            d=>d.idBdRacine === r.idBdRacineMembre
-          )
-          const nDispositifsEnLigne = dispositifs.length
-          return {
-            idBdRacineMembre: r.idBdRacineMembre,
-            idOrbite: r.idOrbite
-          };
-        });
-      console.log("fFinale", { infos, répls});
-      f(répls);
-    };
-
-    const suivreDispositifsEnLigne = setInterval(() => {
-      const maintenant = new Date().getTime();
-      const dispositifsEnLigne = Object.entries(this.dispositifsEnLigne)
-        .filter((e) => maintenant - e[1].vuÀ <= 1000 * 60 * 3 || e[1].info.idOrbite === this.client.orbite!.identity.id)
-        .map((e) => e[1].info);
-      infos.dispositifsEnLigne = dispositifsEnLigne;
-      fFinale();
-    }, 10 * 1000);
-
-    const fRacine = (
-      répls: infoRéplMembre[]
-    ): void => {
-      infos.répls = répls
-      fFinale()
-    }
 
     const fBranche = async (
-      id: string,
-      f: schémaFonctionSuivi<infoRéplMembre[]>
-    ): Promise<schémaFonctionOublier> => {
-      console.log("fBranche", {id})
-      const oublierFavoris = await this.suivreFavorisMembre(id, (favoris) => {
-        const réplsMembre = (favoris || []).map(fav => {
-          return {
-            idBd: fav,
-            idBdRacineMembre: id,
-            //idOrbite: 
-          }
-        })
-        console.log("favoris", réplsMembre)
-        f(réplsMembre);
-      });
-      return oublierFavoris;
+      idBdRacine: string,
+      fSuivreBranche: schémaFonctionSuivi<infoRéplication[]>,
+      branche?: infoMembreEnLigne
+    ) => {
+      const fFinaleSuivreBranche = (favoris?: string[]) => {
+        if (!favoris) return;
+        const réplications: infoRéplication[] = favoris
+          .filter((fav) => fav === idBd)
+          .map((fav) => {
+            return {
+              idBd: fav,
+              idBdRacine: branche!.idBdRacine,
+              idOrbite: branche!.idOrbite,
+              vuÀ: branche!.vuÀ,
+            };
+          });
+        return fSuivreBranche(réplications);
+      };
+      return await this.suivreFavorisMembre(idBdRacine, fFinaleSuivreBranche);
     };
+
     const fIdBdDeBranche = (x: infoMembre) => x.idBdRacine;
     const fCode = (x: infoMembre) => x.idOrbite;
 
-    const oublierMembres = await this.client.suivreBdsDeBdListe(
-      this.idBd,
-      fRacine,
+    const oublierRéplications = await this.client.suivreBdsDeFonctionListe(
+      fListe,
+      f,
       fBranche,
       fIdBdDeBranche,
       undefined,
       fCode
     );
 
-    const oublier = () => {
-      oublierMembres();
-      clearInterval(suivreDispositifsEnLigne);
-    };
-
-    return oublier;
+    return oublierRéplications;
   }
 }
