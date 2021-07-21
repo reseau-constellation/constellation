@@ -481,15 +481,15 @@ export default class ClientConstellation extends EventEmitter {
       .find((e: { [key: string]: any }) => e.hash === empreinte).payload.value;
   }
 
-  async suivreBdsDeBdListe<T extends élémentsBd, U = T[], V=string>(
+  async suivreBdsDeBdListe<T extends élémentsBd, U>(
     id: string,
     f: schémaFonctionSuivi<T[]>,
     fBranche: (
       id: string,
       f: schémaFonctionSuivi<U>,
-      branche?: unknown
+      branche?: T
     ) => Promise<schémaFonctionOublier | undefined>,
-    fIdBdDeBranche: (b: V) => string = (b) => b as unknown as string,
+    fIdBdDeBranche: (b: T) => string = (b) => b as unknown as string,
     fRéduction: schémaFonctionRéduction<T[][], T[]> = (
       branches: T[][]
     ): T[] => [...new Set(branches.flat())],
