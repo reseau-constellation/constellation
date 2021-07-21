@@ -1,3 +1,4 @@
+/*
 import importerDonnéesJSON, { DonnéesJSON } from "./json";
 
 async function importerDonnéesCovid(
@@ -23,3 +24,4 @@ async function importerDonnéesURL(url: string, format = "json") {
 export abstract class Importateur {
   abstract tableaux: () => Promise<string[]>;
 }
+*/

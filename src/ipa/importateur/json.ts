@@ -8,8 +8,10 @@ export type élément = { [key: string]: valsJSON };
 export type DonnéesJSON = élément | élément[];
 
 export type clefsExtraction = (string | number)[];
+/*
 function extraireDonnées<T>(données: DonnéesJSON, clefs: clefsExtraction): T {
   let temp: DonnéesJSON | T = données;
+
   for (const c of clefs) {
     if (typeof c === "number") {
       if (!Array.isArray(temp)) throw Error("Erreur d'indexe");
@@ -19,7 +21,9 @@ function extraireDonnées<T>(données: DonnéesJSON, clefs: clefsExtraction): T 
       temp = temp[c];
     }
   }
+
   return temp;
+
 }
 
 export default async function importerDonnéesJSON(
@@ -44,3 +48,4 @@ export default async function importerDonnéesJSON(
 
   return éléments;
 }
+  */
