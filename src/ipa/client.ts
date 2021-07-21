@@ -489,11 +489,38 @@ export default class ClientConstellation extends EventEmitter {
       f: schémaFonctionSuivi<U>,
       branche?: T
     ) => Promise<schémaFonctionOublier | undefined>,
-    fIdBdDeBranche: (b: T) => string = (b) => b as unknown as string,
+    fIdBdDeBranche: (b: T) => string = (b) => b as string,
     fRéduction: schémaFonctionRéduction<T[][], T[]> = (
       branches: T[][]
     ): T[] => [...new Set(branches.flat())],
-    fCode: (é: any) => string = (é) => é
+    fCode: (é: T) => string = (é) => é as string
+  ): Promise<schémaFonctionOublier> {
+    const fListe = async (fSuivreRacine: (éléments: T[])=>Promise<void>): Promise<schémaFonctionOublier> => {
+      return await this.suivreBdListe(id, fSuivreRacine)
+    }
+    return await this.suivreBdsDeFonctionListe(
+      fListe,
+      f,
+      fBranche,
+      fIdBdDeBranche,
+      fRéduction,
+      fCode
+    )
+  }
+
+  async suivreBdsDeFonctionListe<T extends élémentsBd, U>(
+    fListe: (fSuivreRacine: (éléments: T[])=>Promise<void>) => Promise<schémaFonctionOublier>,
+    f: schémaFonctionSuivi<T[]>,
+    fBranche: (
+      id: string,
+      f: schémaFonctionSuivi<U>,
+      branche?: T
+    ) => Promise<schémaFonctionOublier | undefined>,
+    fIdBdDeBranche: (b: T) => string = (b) => b as string,
+    fRéduction: schémaFonctionRéduction<T[][], T[]> = (
+      branches: T[][]
+    ): T[] => [...new Set(branches.flat())],
+    fCode: (é: T) => string = (é) => é as string
   ): Promise<schémaFonctionOublier> {
     interface InterfaceBranches {
       données?: U;
@@ -541,7 +568,7 @@ export default class ClientConstellation extends EventEmitter {
       });
     };
     fFinale();
-    const oublierBdRacine = await this.suivreBdListe(id, fSuivreRacine);
+    const oublierBdRacine = await fListe(fSuivreRacine);
 
     const oublier = () => {
       oublierBdRacine();
@@ -549,6 +576,8 @@ export default class ClientConstellation extends EventEmitter {
     };
     return oublier;
   }
+
+
 
   async rechercherBdListe<T>(
     id: string,
