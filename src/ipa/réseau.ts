@@ -6,7 +6,7 @@ import {
 } from "orbit-db";
 import Semaphore from "@chriscdn/promise-semaphore";
 import ContrôleurConstellation from "./accès/contrôleurConstellation";
-import { EntréeFavoris } from "./favoris";
+
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
