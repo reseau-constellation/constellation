@@ -286,7 +286,7 @@ export default {
           this.idTableau,
           idColonne,
           règles
-        )
+        );
       }
     },
 

@@ -54,10 +54,7 @@ export default class Nuée {
       prise.on("data", (données: BufferSource) =>
         this.gérerDonnées(données, prise)
       );
-      setInterval(
-        () => this.direSalut(prise),
-        1000 * 60
-      );
+      setInterval(() => this.direSalut(prise), 1000 * 60);
       this.direSalut(prise);
     });
   }

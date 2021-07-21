@@ -9,24 +9,17 @@
       <v-divider />
 
       <v-card-text class="mt-3">
-        <p class="text-overline mb-2">
-          Variable
-        </p>
+        <p class="text-overline mb-2">Variable</p>
         <v-select
           v-model="variable"
           :items="variablesDisponibles"
-          outlined dense
+          outlined
+          dense
         >
           <template v-slot:append-outer>
-            <dialogue-nouvelle-variable
-              @sauvegarde="nouvelleVariable"
-            >
+            <dialogue-nouvelle-variable @sauvegarde="nouvelleVariable">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-on="on"
-                  v-bind="attrs"
-                  icon small
-                >
+                <v-btn v-on="on" v-bind="attrs" icon small>
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
               </template>
@@ -34,23 +27,15 @@
           </template>
         </v-select>
 
-        <p class="text-overline mb-0">
-          Contrôles de qualité (hérités)
-        </p>
+        <p class="text-overline mb-0">Contrôles de qualité (hérités)</p>
         <v-list>
-          <v-list-item v-for="r in règlesVariable" :key="r">
-          </v-list-item>
+          <v-list-item v-for="r in règlesVariable" :key="r"> </v-list-item>
         </v-list>
 
-        <p class="text-overline mb-0">
-          Contrôles de qualité (propres)
-        </p>
+        <p class="text-overline mb-0">Contrôles de qualité (propres)</p>
         <v-list>
-
-          <v-list-item v-for="r in règlesPropre" :key="r">
-          </v-list-item>
+          <v-list-item v-for="r in règlesPropre" :key="r"> </v-list-item>
         </v-list>
-
       </v-card-text>
       <v-divider></v-divider>
 
@@ -59,9 +44,7 @@
         <v-btn color="secondary" text outlined @click="dialogue = false">
           {{ $t("communs.annuler") }}
         </v-btn>
-        <v-btn color="primary"
-          :disabled="!prêt"
-          depressed @click="sauvegarder">
+        <v-btn color="primary" :disabled="!prêt" depressed @click="sauvegarder">
           {{ $t("communs.sauvegarder") }}
         </v-btn>
       </v-card-actions>
@@ -85,34 +68,35 @@ export default {
       variablesDisponibles: [],
       règlesVariable: [],
       règlesPropre: [],
-      oublierRèglesVariable: null
+      oublierRèglesVariable: null,
     };
   },
   watch: {
-    variable: async function(val) {
-      if (this.oublierRèglesVariable) this.oublierRèglesVariable()
+    variable: async function (val) {
+      if (this.oublierRèglesVariable) this.oublierRèglesVariable();
       if (val) {
-        this.oublierRèglesVariable = await this.$ipa.variables.suivreRèglesVariable(
-          val,
-          (règles) => {
-            this.règlesVariable = règles
-          }
-        )
+        this.oublierRèglesVariable =
+          await this.$ipa.variables.suivreRèglesVariable(val, (règles) => {
+            this.règlesVariable = règles;
+          });
       }
-    }
+    },
   },
   computed: {
-    prêt: function() {
-      return this.variable
-    }
+    prêt: function () {
+      return this.variable;
+    },
   },
   methods: {
     sauvegarder: async function () {
-      this.$emit("sauvegarder", { idVariable: this.idVariable, règles: this.règlesPropre });
+      this.$emit("sauvegarder", {
+        idVariable: this.idVariable,
+        règles: this.règlesPropre,
+      });
       this.dialogue = false;
     },
-    nouvelleVariable: function( { id } ) {
-      this.variable = id
+    nouvelleVariable: function ({ id }) {
+      this.variable = id;
     },
     initialiserSuivi: async function () {
       const oublierVariables = await this.$ipa.variables.suivreVariables(
@@ -123,7 +107,7 @@ export default {
 
       this.suivre([oublierVariables]);
     },
-  }
+  },
 };
 </script>
 

@@ -19,17 +19,10 @@
             class="my-3"
             hide-details
           ></v-text-field>
-          <dialogue-nouveau-mot-clef
-            @cree="nouveauMotClef"
-          >
+          <dialogue-nouveau-mot-clef @cree="nouveauMotClef">
             <template v-slot:activator="{ on, attrs }">
-              <v-list-item
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-list-item-content>
-                  Nouveau mot clef
-                </v-list-item-content>
+              <v-list-item v-bind="attrs" v-on="on">
+                <v-list-item-content> Nouveau mot clef </v-list-item-content>
                 <v-list-item-action-text>
                   <v-icon>mdi-plus</v-icon>
                 </v-list-item-action-text>
@@ -66,7 +59,7 @@
 <script>
 import mixinIPA from "@/mixins/ipa";
 import mixinImage from "@/mixins/images";
-import dialogueNouveauMotClef from "@/components/commun/motsClefs/dialogueNouveauMotClef"
+import dialogueNouveauMotClef from "@/components/commun/motsClefs/dialogueNouveauMotClef";
 import itemListeMotsClefs from "@/components/commun/motsClefs/itemListeMotsClefs";
 
 export default {
@@ -80,7 +73,7 @@ export default {
       existants: null,
       dialogue: false,
       récemmentAjouté: null,
-      recherche: null
+      recherche: null,
     };
   },
   computed: {
@@ -89,13 +82,15 @@ export default {
       return this.existants.filter((m) => !this.selectionnes.includes(m));
     },
     motsClefsVisibles: function () {
-      let listeFinale = [...this.nonSélectionnés]
+      let listeFinale = [...this.nonSélectionnés];
       if (this.recherche) {
-        listeFinale = listeFinale.filter(x=>x.includes(this.recherche))
+        listeFinale = listeFinale.filter((x) => x.includes(this.recherche));
       }
-      listeFinale = listeFinale.sort((a,b)=> b===this.récemmentAjouté ? 1 : 0)
-      return listeFinale
-    }
+      listeFinale = listeFinale.sort((a, b) =>
+        b === this.récemmentAjouté ? 1 : 0
+      );
+      return listeFinale;
+    },
   },
   methods: {
     creerMotClef: async function () {
@@ -105,9 +100,9 @@ export default {
       this.$emit("ajouterMotClef", id);
       this.dialogue = false;
     },
-    nouveauMotClef: async function({id}) {
-      await this.creerMotClef()
-      this.récemmentAjouté = id  // Montrer le nouveau mot clef en haut de la liste
+    nouveauMotClef: async function ({ id }) {
+      await this.creerMotClef();
+      this.récemmentAjouté = id; // Montrer le nouveau mot clef en haut de la liste
     },
     initialiserSuivi: async function () {
       const oublierExistants = await this.$ipa.motsClefs.suivreMotsClefs(

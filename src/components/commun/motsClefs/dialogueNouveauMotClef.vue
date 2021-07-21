@@ -18,9 +18,8 @@
           etiquetteLangue="Langue"
           @sauvegarder="sauvegarderNom"
         />
-        <v-divider v-show="Object.keys(noms).length"/>
+        <v-divider v-show="Object.keys(noms).length" />
         <v-list style="max-height: 150px" class="overflow-y-auto">
-
           <item-nom
             v-for="(nom, langue) in noms"
             :key="langue"
@@ -39,9 +38,12 @@
         <v-btn color="secondary" text outlined @click="dialogue = false">
           {{ $t("communs.annuler") }}
         </v-btn>
-        <v-btn color="primary"
+        <v-btn
+          color="primary"
           :disabled="!Object.keys(noms).length"
-          depressed @click="creerMotClef">
+          depressed
+          @click="creerMotClef"
+        >
           {{ $t("communs.sauvegarder") }}
         </v-btn>
       </v-card-actions>
@@ -78,12 +80,12 @@ export default {
       this.sauvegarderNom(langue, nom);
     },
     creerMotClef: async function () {
-      const idMotClef = await this.$ipa.motsClefs.créerMotClef()
-      await this.$ipa.motsClefs.ajouterNomsMotClef(idMotClef, this.noms)
-      this.$emit("cree", {id: idMotClef})
-      this.dialogue = false
-    }
-  }
+      const idMotClef = await this.$ipa.motsClefs.créerMotClef();
+      await this.$ipa.motsClefs.ajouterNomsMotClef(idMotClef, this.noms);
+      this.$emit("cree", { id: idMotClef });
+      this.dialogue = false;
+    },
+  },
 };
 </script>
 

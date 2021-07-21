@@ -12,11 +12,7 @@
         transition="slide-y-transition"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            v-on="on"
-            v-bind="attrs"
-            icon small
-          >
+          <v-btn v-on="on" v-bind="attrs" icon small>
             <v-icon small>mdi-pencil</v-icon>
           </v-btn>
         </template>
@@ -29,7 +25,11 @@
           @effacer="effacerNom"
         />
       </v-menu>
-      <v-btn icon small v-if="permissionÉcrire" color="error"
+      <v-btn
+        icon
+        small
+        v-if="permissionÉcrire"
+        color="error"
         @click.stop="effacerMotClef"
       >
         <v-icon small>mdi-delete</v-icon>

@@ -32,9 +32,7 @@
               tiled
               outlined
               color="primary"
-              @click="
-                ouvrirLien(URL_TÉLÉCHARGEMENTS)
-              "
+              @click="ouvrirLien(URL_TÉLÉCHARGEMENTS)"
             >
               Voir toutes les versions
               <v-icon right>mdi-open-in-new</v-icon>
@@ -130,9 +128,7 @@ export default {
     },
   },
   mounted: async function () {
-    const json = (
-      await axios.get(IPA_TÉLÉCHARGEMENTS)
-    ).data;
+    const json = (await axios.get(IPA_TÉLÉCHARGEMENTS)).data;
 
     const extentions = ["AppImage", "dmg", "exe"];
 

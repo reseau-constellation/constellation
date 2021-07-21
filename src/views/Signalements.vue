@@ -5,15 +5,7 @@
       :image="image('problème')"
       :soustitre="$t('signalements.soustitre')"
     />
-    <v-btn
-      tiled
-      outlined
-      class="mx-2"
-      @click="
-        ouvrirLien(URL_RAPPORTS)
-      "
-      append
-    >
+    <v-btn tiled outlined class="mx-2" @click="ouvrirLien(URL_RAPPORTS)" append>
       {{ $t("signalements.bouton") }}
       <v-icon right> mdi-open-in-new </v-icon>
     </v-btn>
@@ -40,10 +32,10 @@ export default {
   name: "Signalements",
   components: { Titre },
   mixins: [mixinImage],
-  data: function() {
+  data: function () {
     return {
-      URL_RAPPORTS
-    }
+      URL_RAPPORTS,
+    };
   },
   methods: { ouvrirLien },
 };

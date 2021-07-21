@@ -9,9 +9,7 @@
       <v-divider />
 
       <v-card-text class="mt-3">
-        <p class="text-overline mb-2">
-          Nom
-        </p>
+        <p class="text-overline mb-2">Nom</p>
         <v-menu
           offset-x
           :close-on-content-click="false"
@@ -39,9 +37,7 @@
           />
         </v-menu>
 
-        <p class="text-overline mb-2">
-          Description
-        </p>
+        <p class="text-overline mb-2">Description</p>
         <v-menu
           offset-x
           :close-on-content-click="false"
@@ -69,14 +65,8 @@
           />
         </v-menu>
 
-        <p class="text-overline mb-2">
-          Catégorie
-        </p>
-        <v-select
-          v-model="catégorie"
-          :items="optionsCatégories"
-          outlined dense
-        >
+        <p class="text-overline mb-2">Catégorie</p>
+        <v-select v-model="catégorie" :items="optionsCatégories" outlined dense>
           <template v-slot:item="{ on, item }">
             <v-list-item v-on="on">
               <v-list-item-avatar>
@@ -95,19 +85,19 @@
           </template>
         </v-select>
 
-        <p class="text-overline mb-0">
-          Contrôles de qualité
-        </p>
+        <p class="text-overline mb-0">Contrôles de qualité</p>
         <v-list>
-          <v-list-item @click="ajouterRègle">
+          <v-list-item @click="ajouterRègle;">
             <v-list-item-avatar>
               <v-icon>mdi-plus</v-icon>
             </v-list-item-avatar>
-            <v-list-item-content>
-              Ajouter une règle
-            </v-list-item-content>
+            <v-list-item-content> Ajouter une règle </v-list-item-content>
           </v-list-item>
-          <v-list-item v-for="r in [...règlesCatégorie, ...règlesPropre]" :key="r" dense>
+          <v-list-item
+            v-for="r in [...règlesCatégorie, ...règlesPropre]"
+            :key="r"
+            dense
+          >
           </v-list-item>
         </v-list>
       </v-card-text>
@@ -118,9 +108,7 @@
         <v-btn color="secondary" text outlined @click="dialogue = false">
           {{ $t("communs.annuler") }}
         </v-btn>
-        <v-btn color="primary"
-          :disabled="!prêt"
-          depressed @click="sauvegarder">
+        <v-btn color="primary" :disabled="!prêt" depressed @click="sauvegarder">
           {{ $t("communs.sauvegarder") }}
         </v-btn>
       </v-card-actions>
@@ -151,25 +139,23 @@ export default {
       unités: undefined,
 
       règlesCatégorie: [],
-      règlesPropre: []
+      règlesPropre: [],
     };
   },
   watch: {
-    variable: async function(val) {
-      if (this.oublierRèglesVariable) this.oublierRèglesVariable()
+    variable: async function (val) {
+      if (this.oublierRèglesVariable) this.oublierRèglesVariable();
       if (val) {
-        this.oublierRèglesVariable = await this.$ipa.variables.suivreRèglesVariable(
-          val,
-          (règles) => {
-            this.règlesVariable = règles
-          }
-        )
+        this.oublierRèglesVariable =
+          await this.$ipa.variables.suivreRèglesVariable(val, (règles) => {
+            this.règlesVariable = règles;
+          });
       }
-    }
+    },
   },
   computed: {
-    prêt: function() {
-      return Object.keys(this.noms).length && this.catégorie
+    prêt: function () {
+      return Object.keys(this.noms).length && this.catégorie;
     },
     optionsCatégories: () => {
       return catégoriesVariable.map((x) => {
@@ -188,8 +174,8 @@ export default {
     },
   },
   methods: {
-    nouvelleVariable: function( { id } ) {
-      this.variable = id
+    nouvelleVariable: function ({ id }) {
+      this.variable = id;
     },
     sauvegarderNom: function ({ langue, nom }) {
       this.noms = { ...this.noms, [langue]: nom };
@@ -236,10 +222,10 @@ export default {
       }
       this.$emit("sauvegarde", { id: idVariable });
     },
-    ajouterRègle: function() {
-      console.warn("À faire")
-    }
-  }
+    ajouterRègle: function () {
+      console.warn("À faire");
+    },
+  },
 };
 </script>
 

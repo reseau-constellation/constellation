@@ -490,14 +490,15 @@ export default class ClientConstellation extends EventEmitter {
       branche?: T
     ) => Promise<schémaFonctionOublier | undefined>,
     fIdBdDeBranche: (b: T) => string = (b) => b as string,
-    fRéduction: schémaFonctionRéduction<U[], V[]> = (
-      branches: U[]
-    ) => [...new Set(branches.flat())] as unknown as V[],
+    fRéduction: schémaFonctionRéduction<U[], V[]> = (branches: U[]) =>
+      [...new Set(branches.flat())] as unknown as V[],
     fCode: (é: T) => string = (é) => é as string
   ): Promise<schémaFonctionOublier> {
-    const fListe = async (fSuivreRacine: (éléments: T[])=>Promise<void>): Promise<schémaFonctionOublier> => {
-      return await this.suivreBdListe(id, fSuivreRacine)
-    }
+    const fListe = async (
+      fSuivreRacine: (éléments: T[]) => Promise<void>
+    ): Promise<schémaFonctionOublier> => {
+      return await this.suivreBdListe(id, fSuivreRacine);
+    };
     return await this.suivreBdsDeFonctionListe(
       fListe,
       f,
@@ -505,11 +506,13 @@ export default class ClientConstellation extends EventEmitter {
       fIdBdDeBranche,
       fRéduction,
       fCode
-    )
+    );
   }
 
   async suivreBdsDeFonctionListe<T extends élémentsBd, U, V>(
-    fListe: (fSuivreRacine: (éléments: T[])=>Promise<void>) => Promise<schémaFonctionOublier>,
+    fListe: (
+      fSuivreRacine: (éléments: T[]) => Promise<void>
+    ) => Promise<schémaFonctionOublier>,
     f: schémaFonctionSuivi<V[]>,
     fBranche: (
       id: string,
@@ -517,9 +520,8 @@ export default class ClientConstellation extends EventEmitter {
       branche?: T
     ) => Promise<schémaFonctionOublier | undefined>,
     fIdBdDeBranche: (b: T) => string = (b) => b as string,
-    fRéduction: schémaFonctionRéduction<U[], V[]> = (
-      branches: U[]
-    ) => [...new Set(branches.flat())] as unknown as V[],
+    fRéduction: schémaFonctionRéduction<U[], V[]> = (branches: U[]) =>
+      [...new Set(branches.flat())] as unknown as V[],
     fCode: (é: T) => string = (é) => é as string
   ): Promise<schémaFonctionOublier> {
     interface InterfaceBranches {
@@ -577,8 +579,6 @@ export default class ClientConstellation extends EventEmitter {
     return oublier;
   }
 
-
-
   async rechercherBdListe<T>(
     id: string,
     f: (e: élémentFeedStore<T>) => boolean
@@ -607,8 +607,7 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async ouvrirBd(id: string): Promise<Store> {
-
-    if (!isValidAddress(id)) throw new Error(`Adresse ${id} non valide.`)
+    if (!isValidAddress(id)) throw new Error(`Adresse ${id} non valide.`);
 
     //Nous avons besoin d'un verrou afin d'éviter la concurrence
     await verrouOuvertureBd.acquire(id);

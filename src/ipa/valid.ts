@@ -7,14 +7,14 @@ export type sourceRègle = "variable" | "tableau";
 
 export type règleVariable = {
   typeRègle: typeRègle;
-  détails: {[key:string]: any};
+  détails: { [key: string]: any };
 };
 
 export type règleColonne = {
   règle: règleVariable;
   source: sourceRègle;
   colonne: string;
-}
+};
 
 export interface règleBornes extends règleVariable {
   typeRègle: "bornes";
@@ -57,12 +57,11 @@ export interface élémentDonnées {
 }
 export function générerFonctionRègle(
   règle: règleColonne,
-  varsÀColonnes: {[key: string]: string}
+  varsÀColonnes: { [key: string]: string }
 ): schémaFonctionValidation {
-
-  const règleVariable = règle.règle
-  const { colonne } = règle
-  const { typeRègle } = règleVariable
+  const règleVariable = règle.règle;
+  const { colonne } = règle;
+  const { typeRègle } = règleVariable;
 
   switch (typeRègle) {
     case "catégorie": {

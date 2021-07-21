@@ -4,7 +4,7 @@ import ClientConstellation, {
   schémaFonctionOublier,
 } from "./client";
 
-type EntréeFavoris = {
+export type EntréeFavoris = {
   id: string;
 };
 

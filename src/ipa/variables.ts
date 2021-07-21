@@ -274,7 +274,7 @@ export default class Variables {
     const fSuivreCatégorie = (catégorie: catégorieVariables) => {
       const règleCat: règleCatégorie = {
         typeRègle: "catégorie",
-        détails: { catégorie }
+        détails: { catégorie },
       };
       règles.catégorie = [règleCat];
       fFinale();
