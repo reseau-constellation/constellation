@@ -136,7 +136,6 @@ export default class ClientConstellation extends EventEmitter {
     );
     this.bdRacine = (await this.ouvrirBd(idBdRacine)) as KeyValueStore;
     await this.bdRacine.load();
-    console.log("idRacine", this.bdRacine.id);
 
     const accès = this.bdRacine.access as unknown as ContrôleurConstellation;
     this.optionsAccès = {
