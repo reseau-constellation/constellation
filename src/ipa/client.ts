@@ -118,9 +118,11 @@ export default class ClientConstellation extends EventEmitter {
   async initialiser() {
     this.sfip = await initSFIP(this._dir);
     this.idNodeSFIP = await this.sfip.id();
-    this.sfip.libp2p.connectionManager.on("peer:connect", async () => {
-      // console.log("connections", await this.sfip.swarm.peers());
-    });
+    for (const é of ["peer:connect", "peer:disconnect"]) {
+      this.sfip.libp2p.connectionManager.on(é, () => {
+        this.emit("changementConnexions")
+      });
+    }
 
     this.orbite = await initOrbite(this.sfip);
 
@@ -204,7 +206,6 @@ export default class ClientConstellation extends EventEmitter {
 
   async suivreConnexionsPostes(
     f: schémaFonctionSuivi<pairSFIP[]>,
-    t = 3000
   ): Promise<schémaFonctionOublier> {
     const dédoublerConnexions = (connexions: pairSFIP[]): pairSFIP[] => {
       const adrDéjàVues: string[] = [];
@@ -218,13 +219,19 @@ export default class ClientConstellation extends EventEmitter {
       return dédupliquées;
     };
     const fFinale = async () => {
-      // Enlever les doublons (pas trop sûr ce qu'ils font ici)
       const connexions = await this.sfip.swarm.peers();
-      f(dédoublerConnexions(connexions));
+      // Enlever les doublons (pas trop sûr ce qu'ils font ici)
+      const connexionsUniques = dédoublerConnexions(connexions)
+      f(connexionsUniques);
     };
-    const oublier = setInterval(fFinale, t);
+
+    this.on("changementConnexions", fFinale)
     fFinale();
-    return () => clearInterval(oublier);
+
+    const oublier = () => {
+      this.off("changementConnexions", fFinale)
+    }
+    return oublier
   }
 
   async suivreDispositifs(
