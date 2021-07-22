@@ -4,6 +4,7 @@ import {
   élémentFeedStore,
   isValidAddress,
 } from "orbit-db";
+import { EventEmitter } from "events";
 import Semaphore from "@chriscdn/promise-semaphore";
 import ContrôleurConstellation from "./accès/contrôleurConstellation";
 
@@ -34,7 +35,7 @@ type infoRéplication = {
 
 const verrouAjouterMembre = new Semaphore();
 
-export default class Réseau {
+export default class Réseau extends EventEmitter {
   client: ClientConstellation;
   idBd: string;
   dispositifsEnLigne: {
@@ -46,6 +47,8 @@ export default class Réseau {
   fOublierMembres: { [key: string]: schémaFonctionOublier };
 
   constructor(client: ClientConstellation, id: string) {
+    super()
+
     this.client = client;
     this.idBd = id;
     this.dispositifsEnLigne = {};
@@ -153,6 +156,7 @@ export default class Réseau {
       info,
       vuÀ: new Date().getTime(),
     };
+    this.emit("membreVu")
   }
 
   async enleverMembre(id: string): Promise<void> {
@@ -168,14 +172,33 @@ export default class Réseau {
   async suivreMembres(
     f: schémaFonctionSuivi<infoMembreEnLigne[]>
   ): Promise<schémaFonctionOublier> {
-    const fFinale = (membres: infoMembre[]) => {
-      const listeMembres = membres.map((m) => {
+    const info: {membres: infoMembre[]} = {
+      membres: []
+    }
+    const fFinale = () => {
+      const listeMembres = info.membres.map((m) => {
         const { vuÀ } = this.dispositifsEnLigne[m.idOrbite];
         return Object.assign({ vuÀ }, m);
       });
       f(listeMembres);
     };
-    return await this.client.suivreBdListe(this.idBd, fFinale);
+
+    const fSuivreMembres = (membres: infoMembre[]) => {
+      info.membres = membres
+      fFinale()
+    }
+    const oublierMembres = await this.client.suivreBdListe(this.idBd, fSuivreMembres);
+
+    this.on("membreVu", fFinale)
+    const oublierVus = () => {
+      this.off("membreVu", fFinale)
+    }
+
+    const oublier = () => {
+      oublierMembres()
+      oublierVus()
+    }
+    return oublier
   }
 
   async suivreNomsMembre(
