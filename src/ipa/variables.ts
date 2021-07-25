@@ -1,4 +1,4 @@
-import { FeedStore, KeyValueStore } from "orbit-db";
+import { FeedStore, KeyValueStore, AccessController } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -44,6 +44,7 @@ export default class Variables {
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
     const idBdVariable = await this.client.créerBdIndépendante("kvstore", {
       adresseBd: undefined,
+      premierMod: this.client.bdRacine!.id,
     });
     await bdRacine.add(idBdVariable);
 
@@ -120,8 +121,9 @@ export default class Variables {
     // Fonction pour migrer les variables qui n'ont pas le bon contrôleur d'accès
     const migrerVariableSiNécessaire = async (id: string): Promise<string> => {
       const bd = await this.client.ouvrirBd(id);
-      const accès = bd.access.type;
-      if (accès !== typeContrôleurAccèsConst) {
+      const typeAccès = (bd.access.constructor as unknown as AccessController)
+        .type;
+      if (typeAccès !== typeContrôleurAccèsConst) {
         const idNouvelleBd = await this.copierVariable(id);
         await this.marquerObsolète(id, idNouvelleBd);
         return idNouvelleBd;

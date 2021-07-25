@@ -47,7 +47,7 @@ export default class Réseau extends EventEmitter {
   fOublierMembres: { [key: string]: schémaFonctionOublier };
 
   constructor(client: ClientConstellation, id: string) {
-    super()
+    super();
 
     this.client = client;
     this.idBd = id;
@@ -156,7 +156,7 @@ export default class Réseau extends EventEmitter {
       info,
       vuÀ: new Date().getTime(),
     };
-    this.emit("membreVu")
+    this.emit("membreVu");
   }
 
   async enleverMembre(id: string): Promise<void> {
@@ -172,9 +172,9 @@ export default class Réseau extends EventEmitter {
   async suivreMembres(
     f: schémaFonctionSuivi<infoMembreEnLigne[]>
   ): Promise<schémaFonctionOublier> {
-    const info: {membres: infoMembre[]} = {
-      membres: []
-    }
+    const info: { membres: infoMembre[] } = {
+      membres: [],
+    };
     const fFinale = () => {
       const listeMembres = info.membres.map((m) => {
         const { vuÀ } = this.dispositifsEnLigne[m.idOrbite];
@@ -184,21 +184,24 @@ export default class Réseau extends EventEmitter {
     };
 
     const fSuivreMembres = (membres: infoMembre[]) => {
-      info.membres = membres
-      fFinale()
-    }
-    const oublierMembres = await this.client.suivreBdListe(this.idBd, fSuivreMembres);
+      info.membres = membres;
+      fFinale();
+    };
+    const oublierMembres = await this.client.suivreBdListe(
+      this.idBd,
+      fSuivreMembres
+    );
 
-    this.on("membreVu", fFinale)
+    this.on("membreVu", fFinale);
     const oublierVus = () => {
-      this.off("membreVu", fFinale)
-    }
+      this.off("membreVu", fFinale);
+    };
 
     const oublier = () => {
-      oublierMembres()
-      oublierVus()
-    }
-    return oublier
+      oublierMembres();
+      oublierVus();
+    };
+    return oublier;
   }
 
   async suivreNomsMembre(

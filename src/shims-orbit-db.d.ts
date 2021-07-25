@@ -47,9 +47,9 @@ declare module "orbit-db" {
     docstore(string, options?: ?{ [key: string]: any }): Promise<Store>;
   }
   export class AccessController extends EventEmitter {
-    type: string;
-    address: string;
-    canAppend: (entry: any, identityProvider: any) => Promise<boolean>;
+    get type(): string;
+    get address(): string;
+    canAppend(entry: any, identityProvider: any): Promise<boolean>;
     write: string[];
   }
 

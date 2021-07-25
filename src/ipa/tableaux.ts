@@ -42,6 +42,7 @@ export default class Tableaux {
   async créerTableau(): Promise<string> {
     const idBdTableau = await this.client.créerBdIndépendante("kvstore", {
       adresseBd: undefined,
+      premierMod: this.client.bdRacine!.id,
     });
     const bdTableaux = (await this.client.ouvrirBd(
       idBdTableau

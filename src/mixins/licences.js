@@ -30,6 +30,7 @@ export default Vue.extend({
   },
   watch: {
     licence: function (val) {
+      if (!infoLicences[val]) return;
       this.droits = infoLicences[val].droits || [];
       this.conditions = infoLicences[val].conditions || [];
       this.limitations = infoLicences[val].limitations || [];

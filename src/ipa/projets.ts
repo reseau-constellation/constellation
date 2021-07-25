@@ -1,4 +1,4 @@
-import { FeedStore, KeyValueStore } from "orbit-db";
+import { FeedStore, KeyValueStore, AccessController } from "orbit-db";
 import { nomType as typeContrôleurAccèsConst } from "./accès/contrôleurConstellation";
 import ClientConstellation, {
   schémaFonctionSuivi,
@@ -30,6 +30,7 @@ export default class Projets {
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
     const idBdProjet = await this.client.créerBdIndépendante("kvstore", {
       adresseBd: undefined,
+      premierMod: this.client.bdRacine!.id,
     });
     await bdRacine.add(idBdProjet);
 
@@ -113,8 +114,10 @@ export default class Projets {
     // Fonction pour migrer les BDs qui n'ont pas le bon contrôleur d'accès
     const migrerProjetSiNécessaire = async (id: string): Promise<string> => {
       const bd = await this.client.ouvrirBd(id);
-      const accès = bd.access.type;
-      if (accès !== typeContrôleurAccèsConst) {
+
+      const typeAccès = (bd.access.constructor as unknown as AccessController)
+        .type;
+      if (typeAccès !== typeContrôleurAccèsConst) {
         const idNouvelleBd = await this.copierProjet(id);
         await this.marquerObsolète(id, idNouvelleBd);
         return idNouvelleBd;

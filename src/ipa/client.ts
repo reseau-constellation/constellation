@@ -8,6 +8,7 @@ import OrbitDB, {
   Store,
   FeedStore,
   KeyValueStore,
+  AccessController,
   isValidAddress,
   élémentFeedStore,
 } from "orbit-db";
@@ -120,7 +121,7 @@ export default class ClientConstellation extends EventEmitter {
     this.idNodeSFIP = await this.sfip.id();
     for (const é of ["peer:connect", "peer:disconnect"]) {
       this.sfip.libp2p.connectionManager.on(é, () => {
-        this.emit("changementConnexions")
+        this.emit("changementConnexions");
       });
     }
 
@@ -205,7 +206,7 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async suivreConnexionsPostes(
-    f: schémaFonctionSuivi<pairSFIP[]>,
+    f: schémaFonctionSuivi<pairSFIP[]>
   ): Promise<schémaFonctionOublier> {
     const dédoublerConnexions = (connexions: pairSFIP[]): pairSFIP[] => {
       const adrDéjàVues: string[] = [];
@@ -221,17 +222,17 @@ export default class ClientConstellation extends EventEmitter {
     const fFinale = async () => {
       const connexions = await this.sfip.swarm.peers();
       // Enlever les doublons (pas trop sûr ce qu'ils font ici)
-      const connexionsUniques = dédoublerConnexions(connexions)
+      const connexionsUniques = dédoublerConnexions(connexions);
       f(connexionsUniques);
     };
 
-    this.on("changementConnexions", fFinale)
+    this.on("changementConnexions", fFinale);
     fFinale();
 
     const oublier = () => {
-      this.off("changementConnexions", fFinale)
-    }
-    return oublier
+      this.off("changementConnexions", fFinale);
+    };
+    return oublier;
   }
 
   async suivreDispositifs(
@@ -245,10 +246,12 @@ export default class ClientConstellation extends EventEmitter {
     const faisRien = () => {
       // Rien à faire
     };
-    if (accès.type === "ipfs") {
+
+    const typeAccès = (accès.constructor as unknown as AccessController).type;
+    if (typeAccès === "ipfs") {
       f(accès.write);
       return faisRien;
-    } else if (accès.type === "controlleur-constellation") {
+    } else if (typeAccès === "controlleur-constellation") {
       const fFinale = () => {
         const mods = (accès as unknown as ContrôleurConstellation).rôles[
           MODÉRATEUR
@@ -284,7 +287,8 @@ export default class ClientConstellation extends EventEmitter {
   async donnerAccès(id: string, identité: string): Promise<void> {
     const bd = await this.ouvrirBd(id);
     const accès = bd.access;
-    if (accès.type === nomTypeContrôleurConstellation) {
+    const typeAccès = (accès.constructor as unknown as AccessController).type;
+    if (typeAccès === nomTypeContrôleurConstellation) {
       (accès as unknown as ContrôleurConstellation).grant(MEMBRE, identité);
     }
   }
@@ -703,10 +707,11 @@ export default class ClientConstellation extends EventEmitter {
     const moi = this.orbite!.identity.id;
     const bd = await this.ouvrirBd(id);
     const accès = bd.access;
+    const typeAccès = (accès.constructor as unknown as AccessController).type;
 
-    if (accès.type === "ipfs") {
+    if (typeAccès === "ipfs") {
       return accès.write.includes(moi);
-    } else if (accès.type === nomTypeContrôleurConstellation) {
+    } else if (typeAccès === nomTypeContrôleurConstellation) {
       return (accès as unknown as ContrôleurConstellation).estAutorisé(moi);
     }
     return false;
