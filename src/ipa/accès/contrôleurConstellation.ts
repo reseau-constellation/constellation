@@ -5,9 +5,15 @@ import OrbitDB, {
   entréeBD,
   identityProvider,
 } from "orbit-db";
-import { EventEmitter } from "events";
+import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
+import { EventEmitter, once } from "events";
 import { v4 as uuidv4 } from "uuid";
 
+import {
+  schémaFonctionSuivi,
+  schémaFonctionOublier,
+  élémentBdListe,
+} from "../client";
 import { MODÉRATEUR, MEMBRE, rôles } from "./consts";
 
 /* Fortement inspirée du contrôleur Orbit-DB de 3Box
@@ -55,14 +61,91 @@ interface OptionsInitContrôleurConstellation
 
 export type objRôles = { [key in typeof rôles[number]]: string[] };
 
-export default class ContrôleurConstellation extends EventEmitter {
+const événementsSuiviBd = ["ready", "write", "replicate", "replicated"];
+
+const suivreBdAccès = async (
+  bd: FeedStore,
+  f: schémaFonctionSuivi<entréeBDAccès[]>
+): Promise<schémaFonctionOublier> => {
+  const fFinale = () => {
+    const éléments: entréeBDAccès[] = bd
+      .iterator({ limit: -1 })
+      .collect()
+      .map((e: élémentBdListe<entréeBDAccès>) => e.payload.value);
+    f(éléments);
+  };
+  for (const é of événementsSuiviBd) {
+    bd.events.on(é, fFinale);
+  }
+  fFinale();
+  const oublier = () => {
+    événementsSuiviBd.forEach((é) => {
+      bd.events.off(é, fFinale);
+    });
+  };
+  return oublier;
+};
+
+class AccèsUtilisateur extends EventEmitter {
+  orbite: OrbitDB;
+  bd?: FeedStore;
+  bdAccès?: FeedStore;
+  oublierSuivi?: schémaFonctionOublier;
+  autorisés: string[];
+  accès?: ContrôleurConstellation;
+
+  constructor(orbite: OrbitDB) {
+    super();
+    this.orbite = orbite;
+    this.autorisés = [];
+  }
+
+  async initialiser(idBd: string): Promise<void> {
+    this.bd = (await this.orbite.open(idBd)) as FeedStore;
+    await this.bd.load();
+    this.accès = this.bd.access as unknown as ContrôleurConstellation
+    this.bdAccès = this.accès.bd!;
+
+    this.oublierSuivi = await suivreBdAccès(
+      this.bdAccès,
+      async (éléments: entréeBDAccès[]) => {
+        await this._miseÀJour(éléments);
+      }
+    );
+  }
+
+  async _miseÀJour(éléments: entréeBDAccès[]) {
+    const autorisés: string[] = [];
+    éléments = [{
+      id: this.accès!._premierMod,
+      rôle: MODÉRATEUR
+    }, ...éléments]
+    éléments.forEach((é) => {
+      autorisés.push(é.id);
+    });
+    this.autorisés = autorisés;
+  }
+
+  async fermer() {
+    this.oublierSuivi!();
+    await this.bd!.close();
+  }
+}
+
+export default class ContrôleurConstellation extends AccessController {
   bd?: FeedStore;
   nom: string;
   _orbitdb: OrbitDB;
   _premierMod: string;
-  _rôles?: objRôles;
+  _rôles: objRôles;
   adresseBd?: string;
-  type: string;
+  _rôlesIdOrbite: objRôles;
+  _rôlesUtilisateurs: {
+    [key in typeof rôles[number]]: {
+      [key: string]: AccèsUtilisateur;
+    };
+  };
+  _miseÀJourEnCours: boolean;
 
   constructor(orbitdb: OrbitDB, options: OptionsInitContrôleurConstellation) {
     super();
@@ -70,7 +153,10 @@ export default class ContrôleurConstellation extends EventEmitter {
     this._premierMod = options.premierMod;
     this.adresseBd = options.adresseBd;
     this.nom = options.nom;
-    this.type = nomType;
+    this._rôles = { MODÉRATEUR: [], MEMBRE: [] };
+    this._rôlesIdOrbite = { MODÉRATEUR: [], MEMBRE: [] };
+    this._rôlesUtilisateurs = { MODÉRATEUR: {}, MEMBRE: {} };
+    this._miseÀJourEnCours = false
   }
 
   static get type() {
@@ -82,12 +168,17 @@ export default class ContrôleurConstellation extends EventEmitter {
     return this.bd!.address;
   }
 
-  estAutorisé(id: string): boolean {
-    const mods = this.rôles[MODÉRATEUR];
-    const membres = this.rôles[MEMBRE];
-    const estUnMod = mods.includes(id);
-    const estUnMembre = membres.includes(id);
-    return estUnMod || estUnMembre;
+  estUnMembre(id: string): boolean {
+    return this._rôles[MEMBRE].includes(id);
+  }
+
+  estUnModérateur(id: string): boolean {
+    return this._rôles[MODÉRATEUR].includes(id);
+  }
+
+  async estAutorisé(id: string): Promise<boolean> {
+    if (this._miseÀJourEnCours) await once(this, "misÀJour")
+    return this.estUnModérateur(id) || this.estUnMembre(id);
   }
 
   async canAppend(
@@ -97,12 +188,7 @@ export default class ContrôleurConstellation extends EventEmitter {
     const vraiSiSigValide = async () =>
       await identityProvider.verifyIdentity(entry.identity);
 
-    const mods = this.rôles[MODÉRATEUR];
-    const membres = this.rôles[MEMBRE];
-    const estUnMod = mods.includes(entry.identity.id);
-    const estUnMembre = membres.includes(entry.identity.id);
-
-    if (estUnMod || estUnMembre) {
+    if (await this.estAutorisé(entry.identity.id)) {
       return await vraiSiSigValide();
     }
 
@@ -114,20 +200,52 @@ export default class ContrôleurConstellation extends EventEmitter {
     return this._rôles!;
   }
 
-  _updateCapabilites(): void {
-    const modérateurs: string[] = [this._premierMod];
-    const membres: string[] = [];
-    if (this.bd) {
-      Object.entries(this.bd.index).forEach((entry) => {
-        const capability = entry[1].payload.value.capability;
-        const id = entry[1].payload.value.id;
-        if (capability === MODÉRATEUR) {
-          if (!modérateurs.includes(id)) modérateurs.push(id);
+  async _miseÀJourBdAccès(éléments: entréeBDAccès[]): Promise<void> {
+    this._miseÀJourEnCours = true
+    éléments = [{ rôle: MODÉRATEUR, id: this._premierMod }, ...éléments];
+
+    await Promise.all(éléments.map(async (élément) => {
+      const { rôle, id } = élément;
+
+      if (isValidAddress(id)) {
+        if (!this._rôlesUtilisateurs[rôle][id]) {
+          const objAccèsUtilisateur = new AccèsUtilisateur(this._orbitdb);
+          objAccèsUtilisateur.on("misÀJour", () => this._mettreRôlesÀJour());
+          await objAccèsUtilisateur.initialiser(id)
+          this._rôlesUtilisateurs[rôle][id] = objAccèsUtilisateur;
         }
-        if (capability === MEMBRE) membres.push(id);
+      } else {
+        if (!this._rôlesIdOrbite[rôle].includes(id))
+          this._rôlesIdOrbite[rôle].push(id);
+      }
+    }));
+    this._miseÀJourEnCours = false
+    this._mettreRôlesÀJour();
+
+    // Je ne sais pas si ceci est nécessaire mais je le laisse pour l'instant au cas où
+    this.emit("misÀJour");
+  }
+
+  _mettreRôlesÀJour(): void {
+    const _rôles: objRôles = { MODÉRATEUR: [], MEMBRE: [] };
+
+    for (const [rôle, ids] of Object.entries(this._rôlesIdOrbite)) {
+      const listeRôle = _rôles[rôle as keyof objRôles];
+      ids.forEach((id) => {
+        if (!listeRôle.includes(id)) listeRôle.push(id);
       });
     }
-    this._rôles = { MODÉRATEUR: modérateurs, MEMBRE: membres };
+
+    for (const [rôle, utl] of Object.entries(this._rôlesUtilisateurs)) {
+      const listeRôle = _rôles[rôle as keyof objRôles];
+      Object.values(utl).forEach((u) => {
+        u.autorisés.forEach((id) => {
+          if (!listeRôle.includes(id)) listeRôle.push(id);
+        });
+      });
+    }
+
+    this._rôles = _rôles;
   }
 
   get(rôle: typeof rôles[number]): string[] {
@@ -136,6 +254,10 @@ export default class ContrôleurConstellation extends EventEmitter {
 
   async close() {
     await this.bd!.close();
+    const utilisateurs = Object.values(this._rôlesUtilisateurs)
+      .map((l) => Object.values(l))
+      .flat();
+    await Promise.all(utilisateurs.map((u) => u.fermer()));
   }
 
   async load(address: string) {
@@ -145,16 +267,11 @@ export default class ContrôleurConstellation extends EventEmitter {
     }
 
     // TODO - skip manifest for mod-access
-    console.log("ici", ensureAddress(address));
     this.bd = await this._orbitdb.feed(
       ensureAddress(address),
       this._createOrbitOpts(addresseValide)
     );
-
-    this.bd.events.on("ready", this._onUpdate.bind(this));
-    this.bd.events.on("write", this._onUpdate.bind(this));
-    this.bd.events.on("replicated", this._onUpdate.bind(this));
-
+    suivreBdAccès(this.bd, (éléments) => this._miseÀJourBdAccès(éléments));
     await this.bd.load();
   }
 
@@ -215,11 +332,6 @@ export default class ContrôleurConstellation extends EventEmitter {
       throw new Error(`Erreur : Le rôle ${rôle} n'existait pas pour ${id}.`);
     const empreint = élément.hash;
     await this.bd!.remove(empreint);
-  }
-
-  _onUpdate() {
-    this._updateCapabilites();
-    this.emit("updated");
   }
 
   /* Factory */
