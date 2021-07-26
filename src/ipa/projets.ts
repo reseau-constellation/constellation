@@ -1,4 +1,6 @@
-import { FeedStore, KeyValueStore, AccessController } from "orbit-db";
+import { FeedStore, KeyValueStore } from "orbit-db";
+import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
+
 import { nomType as typeContrôleurAccèsConst } from "./accès/contrôleurConstellation";
 import ClientConstellation, {
   schémaFonctionSuivi,

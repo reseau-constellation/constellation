@@ -53,6 +53,11 @@ export type entréeBDAccès = {
   id: string;
 };
 
+export type infoUtilisateur = {
+  rôle: typeof rôles[number];
+  idBdRacine: string;
+};
+
 interface OptionsInitContrôleurConstellation
   extends OptionsContrôleurConstellation {
   premierMod: string;
@@ -103,7 +108,7 @@ class AccèsUtilisateur extends EventEmitter {
   async initialiser(idBd: string): Promise<void> {
     this.bd = (await this.orbite.open(idBd)) as FeedStore;
     await this.bd.load();
-    this.accès = this.bd.access as unknown as ContrôleurConstellation
+    this.accès = this.bd.access as unknown as ContrôleurConstellation;
     this.bdAccès = this.accès.bd!;
 
     this.oublierSuivi = await suivreBdAccès(
@@ -116,10 +121,13 @@ class AccèsUtilisateur extends EventEmitter {
 
   async _miseÀJour(éléments: entréeBDAccès[]) {
     const autorisés: string[] = [];
-    éléments = [{
-      id: this.accès!._premierMod,
-      rôle: MODÉRATEUR
-    }, ...éléments]
+    éléments = [
+      {
+        id: this.accès!._premierMod,
+        rôle: MODÉRATEUR,
+      },
+      ...éléments,
+    ];
     éléments.forEach((é) => {
       autorisés.push(é.id);
     });
@@ -156,7 +164,7 @@ export default class ContrôleurConstellation extends AccessController {
     this._rôles = { MODÉRATEUR: [], MEMBRE: [] };
     this._rôlesIdOrbite = { MODÉRATEUR: [], MEMBRE: [] };
     this._rôlesUtilisateurs = { MODÉRATEUR: {}, MEMBRE: {} };
-    this._miseÀJourEnCours = false
+    this._miseÀJourEnCours = false;
   }
 
   static get type() {
@@ -177,8 +185,39 @@ export default class ContrôleurConstellation extends AccessController {
   }
 
   async estAutorisé(id: string): Promise<boolean> {
-    if (this._miseÀJourEnCours) await once(this, "misÀJour")
+    if (this._miseÀJourEnCours) await once(this, "misÀJour");
     return this.estUnModérateur(id) || this.estUnMembre(id);
+  }
+
+  async suivreUtilisateursAutorisés(
+    f: schémaFonctionSuivi<infoUtilisateur[]>
+  ): Promise<schémaFonctionOublier> {
+    const fFinale = () => {
+      const mods: infoUtilisateur[] = Object.keys(
+        this._rôlesUtilisateurs[MODÉRATEUR]
+      ).map((m) => {
+        return {
+          idBdRacine: m,
+          rôle: MODÉRATEUR,
+        };
+      });
+      const membres: infoUtilisateur[] = Object.keys(
+        this._rôlesUtilisateurs[MEMBRE]
+      ).map((m) => {
+        return {
+          idBdRacine: m,
+          rôle: MEMBRE,
+        };
+      });
+      const utilisateurs: infoUtilisateur[] = [...mods, ...membres];
+      f(utilisateurs);
+    };
+    this.on("misÀJour", fFinale);
+    fFinale();
+    const fOublier = () => {
+      this.off("misÀJour", fFinale);
+    };
+    return fOublier;
   }
 
   async canAppend(
@@ -196,30 +235,31 @@ export default class ContrôleurConstellation extends AccessController {
   }
 
   get rôles(): objRôles {
-    if (!this._rôles) this._updateCapabilites();
     return this._rôles!;
   }
 
   async _miseÀJourBdAccès(éléments: entréeBDAccès[]): Promise<void> {
-    this._miseÀJourEnCours = true
+    this._miseÀJourEnCours = true;
     éléments = [{ rôle: MODÉRATEUR, id: this._premierMod }, ...éléments];
 
-    await Promise.all(éléments.map(async (élément) => {
-      const { rôle, id } = élément;
+    await Promise.all(
+      éléments.map(async (élément) => {
+        const { rôle, id } = élément;
 
-      if (isValidAddress(id)) {
-        if (!this._rôlesUtilisateurs[rôle][id]) {
-          const objAccèsUtilisateur = new AccèsUtilisateur(this._orbitdb);
-          objAccèsUtilisateur.on("misÀJour", () => this._mettreRôlesÀJour());
-          await objAccèsUtilisateur.initialiser(id)
-          this._rôlesUtilisateurs[rôle][id] = objAccèsUtilisateur;
+        if (isValidAddress(id)) {
+          if (!this._rôlesUtilisateurs[rôle][id]) {
+            const objAccèsUtilisateur = new AccèsUtilisateur(this._orbitdb);
+            objAccèsUtilisateur.on("misÀJour", () => this._mettreRôlesÀJour());
+            await objAccèsUtilisateur.initialiser(id);
+            this._rôlesUtilisateurs[rôle][id] = objAccèsUtilisateur;
+          }
+        } else {
+          if (!this._rôlesIdOrbite[rôle].includes(id))
+            this._rôlesIdOrbite[rôle].push(id);
         }
-      } else {
-        if (!this._rôlesIdOrbite[rôle].includes(id))
-          this._rôlesIdOrbite[rôle].push(id);
-      }
-    }));
-    this._miseÀJourEnCours = false
+      })
+    );
+    this._miseÀJourEnCours = false;
     this._mettreRôlesÀJour();
 
     // Je ne sais pas si ceci est nécessaire mais je le laisse pour l'instant au cas où
@@ -298,7 +338,6 @@ export default class ContrôleurConstellation extends AccessController {
       premierMod: this._premierMod,
       nom: this.nom,
     };
-    console.log({ manifest });
     return manifest;
   }
 

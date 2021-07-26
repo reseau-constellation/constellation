@@ -8,10 +8,10 @@ import OrbitDB, {
   Store,
   FeedStore,
   KeyValueStore,
-  AccessController,
   isValidAddress,
   élémentFeedStore,
 } from "orbit-db";
+import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
 import uint8ArrayConcat from "uint8arrays/concat";
 
 import Compte from "./compte";
@@ -73,6 +73,11 @@ export interface pairSFIP {
   peer: Uint8Array;
 }
 
+export type infoAccès = {
+  idBdRacine: string;
+  rôle: keyof objRôles;
+};
+
 // Identique à it-to-buffer, mais avec option de maximum de taille
 async function toBuffer(
   stream: AsyncIterable<Uint8Array> | Iterable<Uint8Array>,
@@ -89,6 +94,14 @@ async function toBuffer(
 }
 
 const verrouOuvertureBd = new Semaphore();
+
+export function adresseOrbiteValide(adresse: unknown): boolean {
+  return (
+    typeof adresse === "string" &&
+    adresse.startsWith("/orbitdb/") &&
+    isValidAddress(adresse)
+  );
+}
 
 export default class ClientConstellation extends EventEmitter {
   _dir: string;
@@ -539,6 +552,7 @@ export default class ClientConstellation extends EventEmitter {
       fOublier?: schémaFonctionOublier;
     }
     const arbre: { [key: string]: InterfaceBranches } = {};
+    const dictBranches: { [key: string]: T } = {};
 
     const fFinale = () => {
       const listeDonnées = Object.values(arbre)
@@ -561,15 +575,33 @@ export default class ClientConstellation extends EventEmitter {
       const disparus = existants.filter(
         (é) => !Object.keys(dictÉléments).includes(é)
       );
+      const changés = Object.entries(dictÉléments)
+        .filter((é) => {
+          return dictBranches[é[0]] !== é[1];
+        })
+        .map((é) => é[0]);
+      nouveaux.push(...changés);
+
+      for (const c of changés) {
+        if (arbre[c]) {
+          const fOublier = arbre[c].fOublier;
+          if (fOublier) fOublier();
+          delete arbre[c];
+        }
+      }
+
       for (const d of disparus) {
         const fOublier = arbre[d].fOublier;
         if (fOublier) fOublier();
         delete arbre[d];
         fFinale();
       }
+
       nouveaux.map(async (n: string) => {
         arbre[n] = { données: undefined };
         const élément = dictÉléments[n];
+        dictBranches[n] = élément;
+
         const idBdBranche = fIdBdDeBranche(élément);
         const fSuivreBranche = (données: U) => {
           arbre[n].données = données;
@@ -617,7 +649,7 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async ouvrirBd(id: string): Promise<Store> {
-    if (!isValidAddress(id)) throw new Error(`Adresse ${id} non valide.`);
+    if (!adresseOrbiteValide(id)) throw new Error(`Adresse ${id} non valide.`);
 
     //Nous avons besoin d'un verrou afin d'éviter la concurrence
     await verrouOuvertureBd.acquire(id);
@@ -676,14 +708,13 @@ export default class ClientConstellation extends EventEmitter {
     const options: any = {
       accessController: optionsAccès,
     };
-    console.log({ type, optionsAccès, nom });
     const bd = await this.orbite![type](nom || uuidv4(), options);
     await bd.load();
     return bd.id;
   }
 
   async _générerBd(type: orbitDbStoreTypes, nom: string): Promise<Store> {
-    if (isValidAddress(nom) && this._bds[nom]) return this._bds[nom];
+    if (adresseOrbiteValide(nom) && this._bds[nom]) return this._bds[nom];
     const bd = await this.orbite![type](nom);
     this._bds[bd.id] = bd;
     return bd;
@@ -717,13 +748,42 @@ export default class ClientConstellation extends EventEmitter {
     return false;
   }
 
+  async suivreAccèsBd(
+    id: string,
+    f: schémaFonctionSuivi<infoAccès[]>
+  ): Promise<schémaFonctionOublier> {
+    const bd = await this.ouvrirBd(id);
+    const accès = bd.access as unknown as AccessController;
+    const typeAccès = (accès.constructor as unknown as AccessController).type;
+
+    const faisRien = () => {
+      //Rien à faire
+    };
+    if (typeAccès === "ipfs") {
+      const listeAccès: infoAccès[] = accès.write.map((id) => {
+        return {
+          idBdRacine: id,
+          rôle: MODÉRATEUR,
+        };
+      });
+      f(listeAccès);
+    } else if (typeAccès === nomTypeContrôleurConstellation) {
+      const fOublier = await (
+        accès as ContrôleurConstellation
+      ).suivreUtilisateursAutorisés(f);
+      return fOublier;
+    }
+    return faisRien;
+  }
+
   async épinglerBd(id: string, déjàVus: string[] = []) {
     if (déjàVus.includes(id)) return;
     const bd = await this.ouvrirBd(id);
     déjàVus.push(id);
     const épinglerSiAdresseValide = (x: unknown) => {
-      if (typeof x === "string" && isValidAddress(x))
-        this.épinglerBd(x, déjàVus);
+      if (adresseOrbiteValide(x)) {
+        this.épinglerBd(x as string, déjàVus);
+      }
     };
 
     //Cette fonction détectera les éléments d'une liste ou d'un dictionnaire

@@ -19,7 +19,7 @@
             <p class="mb-0 text-overline">Présentement répliquée par</p>
             <v-list-item two-line>
               <v-avatar class="me-3 text-h3">
-                {{ replications.length }}
+                {{ dispositifs.length }}
               </v-avatar>
               <v-list-item-content>
                 <v-list-item-title>
@@ -27,7 +27,7 @@
                   <v-icon right>mdi-monitor-cellphone</v-icon>
                 </v-list-item-title>
                 <v-list-item-subtitle class="success--text"
-                  >Dont {{ réplicationsDispositifs().length }} en
+                  >Dont {{ dispositifsEnLigne.length }} en
                   ligne</v-list-item-subtitle
                 >
               </v-list-item-content>
@@ -36,14 +36,14 @@
             <p class="mb-0 text-overline">Représentant</p>
             <v-list-item two-line>
               <v-avatar class="me-3 text-h3">
-                {{ réplicationsMembres(false).length }}
+                {{ membres.length }}
               </v-avatar>
               <v-list-item-content>
                 <v-list-item-title
                   >Membres<v-icon right>mdi-account</v-icon></v-list-item-title
                 >
                 <v-list-item-subtitle class="success--text"
-                  >Dont {{ réplicationsMembres().length }} en
+                  >Dont {{ membresEnLigne.length }} en
                   ligne</v-list-item-subtitle
                 >
               </v-list-item-content>
@@ -64,6 +64,8 @@
 </template>
 
 <script>
+const DÉLAI_EN_LIGNE = 10000;
+
 export default {
   name: "dialogueRéplications",
   props: {
@@ -72,29 +74,43 @@ export default {
   data: function () {
     return {
       dialogue: false,
+      maintenant: new Date().getTime(),
     };
   },
-  methods: {
-    réplicationsDispositifs: function (enLigne = true) {
-      return this.replications.filter((r) => (enLigne ? r.enLigne : true));
+  computed: {
+    dispositifs: function () {
+      return this.replications || [];
     },
-    réplicationsMembres: function (enLigne = true) {
+    dispositifsEnLigne: function () {
+      return this.dispositifs.filter(
+        (d) => this.maintenant - d.vuÀ <= DÉLAI_EN_LIGNE
+      );
+    },
+    membres: function () {
       const répsMembresUniques = [];
       const déjàVues = [];
-      this.replications.forEach((r) => {
+      this.dispositifs.forEach((r) => {
         const existant = répsMembresUniques.find(
           (x) => x.idOrbite === r.idOrbite
         );
-        if (existant) {
-          // Un membre est en ligne si au moins 1 de ses dispositifs est présentement en ligne
-          existant.enLigne = existant.enLigne || r.enLigne;
-        } else {
+        if (!existant || r.vuÀ < existant.vuÀ) {
           répsMembresUniques.push(Object.assign({}, r)); //Copie de r pour permettre les modifications
-          déjàVues.push(r.idOrbite);
+          if (existant) existant.vuÀ = r.vuÀ;
+          else déjàVues.push(r.idOrbite);
         }
       });
-      return répsMembresUniques.filter((r) => (enLigne ? r.enLigne : true));
+      return répsMembresUniques;
     },
+    membresEnLigne: function () {
+      return this.membres.filter(
+        (m) => this.maintenant - m.vuÀ <= DÉLAI_EN_LIGNE
+      );
+    },
+  },
+  mounted: function () {
+    setInterval(() => {
+      this.maintenant = new Date().getTime();
+    }, 1000);
   },
 };
 </script>

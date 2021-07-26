@@ -1,5 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import { FeedStore, KeyValueStore, élémentFeedStore } from "orbit-db";
+import {
+  FeedStore,
+  KeyValueStore,
+  élémentFeedStore,
+  isValidAddress,
+} from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -356,7 +361,7 @@ export default class Tableaux {
     f: schémaFonctionSuivi<string[]>
   ): Promise<schémaFonctionOublier> {
     const fFinale = (variables?: string[]) => {
-      f(variables || []);
+      f((variables || []).filter((v) => v && isValidAddress(v)));
     };
     const fSuivreBdColonnes = async (
       id: string,

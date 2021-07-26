@@ -1,17 +1,26 @@
-import { FeedStore, KeyValueStore, AccessController } from "orbit-db";
-import { nomType as nomTypeContrôleurConstellation } from "./accès/contrôleurConstellation";
+import { FeedStore, KeyValueStore } from "orbit-db";
+import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
+
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
   élémentBdListe,
+  infoAccès,
 } from "./client";
-import ContrôleurConstellation from "./accès/contrôleurConstellation";
+import ContrôleurConstellation, {
+  objRôles,
+  nomType as nomTypeContrôleurConstellation,
+} from "./accès/contrôleurConstellation";
 
 export const STATUT = {
   ACTIVE: "active",
   OBSOLÈTE: "obsolète",
 };
-
+interface infoAuteur {
+  idBdRacine: string;
+  accepté: boolean;
+  rôle: keyof objRôles;
+}
 export default class BDs {
   client: ClientConstellation;
   idBd: string;
@@ -363,6 +372,49 @@ export default class BDs {
       const licence = await (bd as KeyValueStore).get("licence");
       f(licence);
     });
+  }
+
+  async suivreAuteurs(
+    id: string,
+    f: schémaFonctionSuivi<infoAuteur[]>
+  ): Promise<schémaFonctionOublier> {
+    const fListe = async (
+      fSuivreRacine: (éléments: infoAccès[]) => Promise<void>
+    ): Promise<schémaFonctionOublier> => {
+      return await this.client.suivreAccèsBd(id, fSuivreRacine);
+    };
+    const fBranche = async (
+      idBdRacine: string,
+      fSuivreBranche: schémaFonctionSuivi<infoAuteur[]>,
+      branche?: infoAccès
+    ) => {
+      const fFinaleSuivreBranche = (favoris?: string[]) => {
+        favoris = favoris || [];
+        return fSuivreBranche([
+          {
+            idBdRacine: branche!.idBdRacine,
+            rôle: branche!.rôle,
+            accepté: favoris.includes(id),
+          },
+        ]);
+      };
+      return await this.client.réseau!.suivreFavorisMembre(
+        idBdRacine,
+        fFinaleSuivreBranche
+      );
+    };
+    const fIdBdDeBranche = (x: infoAccès) => x.idBdRacine;
+    const fCode = (x: infoAccès) => x.idBdRacine;
+
+    const fOublier = this.client.suivreBdsDeFonctionListe(
+      fListe,
+      f,
+      fBranche,
+      fIdBdDeBranche,
+      undefined,
+      fCode
+    );
+    return fOublier;
   }
 
   async suivreNomsBd(

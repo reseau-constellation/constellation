@@ -167,38 +167,25 @@
               </v-menu>
             </v-card>
             <v-card flat width="200" class="mb-3">
-              <v-menu offset-x :disabled="!score">
+              <dialogue-auteurs :auteurs="auteurs">
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>
-                      <v-icon>mdi-account-multiple</v-icon>
+                      <v-icon left> mdi-account-multiple </v-icon>
                     </v-list-item-avatar>
-                    <v-list-item-content> Auteurs </v-list-item-content>
+                    <v-list-item-content>
+                      <v-skeleton-loader v-if="auteurs === null" type="chip" />
+                      <span v-else>
+                        {{
+                          `${
+                            auteurs ? formatterChiffre(auteurs.length) : ""
+                          } Auteurs`
+                        }}
+                      </span>
+                    </v-list-item-content>
                   </v-list-item>
                 </template>
-                <v-list v-if="auteurs">
-                  <v-subheader>Contributeurs Constellation</v-subheader>
-                  <v-list-item
-                    v-for="a in auteurs.auteurs"
-                    :key="a"
-                    @click="$router.push(`/auteur/${a}`)"
-                  >
-                    <v-list-item-avatar> </v-list-item-avatar>
-                    <v-list-item-content>
-                      {{ a }}
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-subheader v-if="auteurs.sources.length"
-                    >Sources des données</v-subheader
-                  >
-                  <v-list-item v-for="s in auteurs.sources" :key="s">
-                    <v-list-item-avatar> </v-list-item-avatar>
-                    <v-list-item-content>
-                      {{ s }}
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
+              </dialogue-auteurs>
             </v-card>
             <v-card flat width="200" class="mb-3">
               <dialogue-licence
@@ -391,6 +378,7 @@ import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 import dialogueLicence from "@/components/commun/licences/dialogueLicence";
 import dialogueMotsClefs from "@/components/commun/motsClefs/dialogueMotsClefs";
 import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications";
+import dialogueAuteurs from "@/components/BD/auteurs/dialogueAuteurs";
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import itemTableau from "@/components/BD/itemTableau";
 import lienOrbite from "@/components/commun/lienOrbite";
@@ -413,6 +401,7 @@ export default {
     jetonMotClef,
     carteQualité,
     dialogueLicence,
+    dialogueAuteurs,
     dialogueMotsClefs,
     dialogueRéplications,
     boîteNoms,
@@ -481,6 +470,13 @@ export default {
           this.licence = licence;
         }
       );
+      const oublierAuteurs = await this.$ipa.bds.suivreAuteurs(
+        this.idBd,
+        (auteurs) => {
+          console.log({ auteurs });
+          this.auteurs = auteurs;
+        }
+      );
       const oublierNoms = await this.$ipa.bds.suivreNomsBd(
         this.idBd,
         (noms) => {
@@ -513,11 +509,14 @@ export default {
       );
       const oublierRéplications = await this.$ipa.réseau.suivreRéplications(
         this.idBd,
-        (réplications) => (this.réplications = réplications)
+        (réplications) => {
+          this.réplications = réplications;
+        }
       );
 
       this.suivre([
         oublierLicence,
+        oublierAuteurs,
         oublierNoms,
         oublierDescriptions,
         oublierTableaux,

@@ -2,6 +2,8 @@ declare module "orbit-db" {
   import { EventEmitter } from "events";
   import IPFS from "ipfs";
 
+  import { AccessController } from "orbit-db-access-controllers/src/access-controller-interface";
+
   type identity = {
     id: string;
     publicKey: string;
@@ -45,12 +47,6 @@ declare module "orbit-db" {
     eventlog(string, options?: ?{ [key: string]: any }): Promise<Store>;
     counter(string, options?: ?{ [key: string]: any }): Promise<Store>;
     docstore(string, options?: ?{ [key: string]: any }): Promise<Store>;
-  }
-  export class AccessController extends EventEmitter {
-    get type(): string;
-    get address(): string;
-    canAppend(entry: any, identityProvider: any): Promise<boolean>;
-    write: string[];
   }
 
   export class Store {

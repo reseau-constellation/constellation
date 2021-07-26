@@ -10,7 +10,15 @@
 
       <v-card-text>
         <v-list>
-          <item-auteur v-for="auteur in auteurs" :key="auteur" />
+          <v-list-item @click="autoriserAuteur">
+            <v-list-item-avatar>
+              <v-icon>mdi-plus</v-icon>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              Autoriser un autre auteur
+            </v-list-item-content>
+          </v-list-item>
+          <item-auteur v-for="auteur in auteurs" :key="auteur.idBdRacine" :id="auteur.idBdRacine" :mod="auteur.rôle===MODÉRATEUR" :accepté="auteur.accepté"/>
         </v-list>
       </v-card-text>
       <v-divider></v-divider>
@@ -26,18 +34,17 @@
 </template>
 
 <script>
-import itemAuteur from "@/components/commun/auteurs/itemAuteur";
+import itemAuteur from "@/components/BD/auteurs/itemAuteur";
+import { MODÉRATEUR } from "@/ipa/accès/consts";
 
 export default {
   name: "dialogueAuteur",
-  props: {
-    licence: { type: String },
-    permissionModifier: { default: false, type: Boolean },
-  },
+  props: ["auteurs", "permissionModifier"],
   components: { itemAuteur },
   data: function () {
     return {
       dialogue: false,
+      MODÉRATEUR,
     };
   },
 };

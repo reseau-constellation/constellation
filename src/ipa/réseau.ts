@@ -34,6 +34,7 @@ type infoRéplication = {
 };
 
 const verrouAjouterMembre = new Semaphore();
+const INTERVALE_SALUT = 1000 * 60;
 
 export default class Réseau extends EventEmitter {
   client: ClientConstellation;
@@ -54,14 +55,19 @@ export default class Réseau extends EventEmitter {
     this.dispositifsEnLigne = {};
     this.fOublierMembres = {};
 
-    // N'oublions pas de nous ajouter nous-mêmes la première fois
-    this.ajouterMembre({
-      idSFIP: this.client.idNodeSFIP!.id,
-      idOrbite: this.client.orbite!.identity.id,
-      clefPublique: this.client.orbite!.identity.publicKey,
-      signatures: this.client.orbite!.identity.signatures,
-      idBdRacine: this.client.bdRacine!.id,
-    });
+    // N'oublions pas de nous ajouter nous-mêmes
+    const ajouterSoiMême = () => {
+      this.ajouterMembre({
+        idSFIP: this.client.idNodeSFIP!.id,
+        idOrbite: this.client.orbite!.identity.id,
+        clefPublique: this.client.orbite!.identity.publicKey,
+        signatures: this.client.orbite!.identity.signatures,
+        idBdRacine: this.client.bdRacine!.id,
+      });
+    };
+    setInterval(ajouterSoiMême, INTERVALE_SALUT);
+    ajouterSoiMême();
+
     this._nettoyerListeMembres();
   }
 
@@ -177,7 +183,9 @@ export default class Réseau extends EventEmitter {
     };
     const fFinale = () => {
       const listeMembres = info.membres.map((m) => {
-        const { vuÀ } = this.dispositifsEnLigne[m.idOrbite];
+        const vuÀ = this.dispositifsEnLigne[m.idOrbite]
+          ? this.dispositifsEnLigne[m.idOrbite].vuÀ
+          : undefined;
         return Object.assign({ vuÀ }, m);
       });
       f(listeMembres);

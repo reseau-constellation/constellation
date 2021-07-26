@@ -1,21 +1,7 @@
 <template>
   <v-card v-if="actif" width="300" class="ma-2 text-start">
     <v-card-title>
-      <v-badge
-        :value="vuIlyA !== undefined"
-        bottom
-        dot
-        overlap
-        :color="
-          vuIlyA ? (vuIlyA <= 1000 * 60 * 3 ? 'success' : 'warning') : 'error'
-        "
-        offset-x="25"
-        offset-y="17"
-      >
-        <v-list-item-avatar class="ms-0">
-          <img :src="imageProfil" />
-        </v-list-item-avatar>
-      </v-badge>
+      <avatar-profil :id="id" :vuIlyA="vuIlyA" />
       {{ nom ? couper(nom, 17) : "Incognito" }}
       <v-spacer />
       <lien-orbite :lien="id" />
@@ -57,19 +43,18 @@
 import { traduireNom, couper } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite";
 import jetonBd from "@/components/commun/jetonBd";
+import avatarProfil from "@/components/commun/avatarProfil";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
-import mixinImage from "@/mixins/images";
 
 export default {
   name: "carteMembre",
   props: ["id", "vuIlyA"],
-  mixins: [mixinLangues, mixinIPA, mixinImage],
-  components: { lienOrbite, jetonBd },
+  mixins: [mixinLangues, mixinIPA],
+  components: { lienOrbite, jetonBd, avatarProfil },
   data: function () {
     return {
       noms: {},
-      imageCompte: null,
       courriel: null,
       bds: [],
       projets: [],
@@ -86,18 +71,9 @@ export default {
     moiMême: function () {
       return this.id === this.$ipa.bdRacine.id;
     },
-    imageProfil: function () {
-      if (this.imageCompte) {
-        return this.imageCompte;
-      }
-      const options = [this.image("profilFemme"), this.image("profilHomme")];
-      // Dans le doute, on garde ça équitable :)
-      return options[Math.floor(Math.random() * options.length)];
-    },
     actif: function () {
       return (
         Object.keys(this.noms).length ||
-        this.imageCompte ||
         this.courriel ||
         this.bds.length ||
         this.projets.length
@@ -131,27 +107,7 @@ export default {
           this.projets = projets;
         }
       );
-      const oublierImage = await this.$ipa.réseau.suivreImageMembre(
-        this.id,
-        (image) => {
-          if (image) {
-            const url = URL.createObjectURL(
-              new Blob([image.buffer], { type: "image/png" })
-            );
-            this.imageCompte = url;
-          } else {
-            this.imageCompte = null;
-          }
-        }
-      );
-
-      this.suivre([
-        oublierNoms,
-        oublierImage,
-        oublierCourriel,
-        oublierBds,
-        oublierProjets,
-      ]);
+      this.suivre([oublierNoms, oublierCourriel, oublierBds, oublierProjets]);
     },
   },
 };
