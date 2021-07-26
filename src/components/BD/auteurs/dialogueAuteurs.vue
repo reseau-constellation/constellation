@@ -18,7 +18,13 @@
               Autoriser un autre auteur
             </v-list-item-content>
           </v-list-item>
-          <item-auteur v-for="auteur in auteurs" :key="auteur.idBdRacine" :id="auteur.idBdRacine" :mod="auteur.rôle===MODÉRATEUR" :accepté="auteur.accepté"/>
+          <item-auteur
+            v-for="auteur in auteurs"
+            :key="auteur.idBdRacine"
+            :id="auteur.idBdRacine"
+            :mod="auteur.rôle === MODÉRATEUR"
+            :accepté="auteur.accepté"
+          />
         </v-list>
       </v-card-text>
       <v-divider></v-divider>
