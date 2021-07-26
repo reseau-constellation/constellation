@@ -3,7 +3,7 @@
     <input
       type="file"
       ref="fileInput"
-      style="display: none;"
+      style="display: none"
       :accept="fichiersAcceptés"
       @change="fichierChoisi"
     />
@@ -78,9 +78,7 @@
               @click="() => télécharger()"
             >
               Télécharger
-              <v-icon right>
-                mdi-download
-              </v-icon>
+              <v-icon right> mdi-download </v-icon>
             </v-btn>
           </div>
         </v-card-text>
@@ -93,6 +91,7 @@
 </template>
 
 <script>
+import { formatsFichiers as formats } from "@/ipa/valid";
 import { téléchargerFlux, téléchargerURL, couper } from "@/utils";
 import mixinImage from "@/mixins/images";
 
@@ -106,23 +105,6 @@ export default {
       téléversementEnProgrès: false,
       url: undefined,
       vis: false,
-      formats: {
-        images: [
-          "webp",
-          "svg",
-          "png",
-          "jpg",
-          "jpeg",
-          "jfif",
-          "pjpeg",
-          "pjp",
-          "gif",
-          "avif",
-          "apng",
-        ],
-        vidéo: ["mp4"],
-        audio: ["mp3", "ogg", "m4a"],
-      },
     };
   },
   computed: {
@@ -133,11 +115,11 @@ export default {
     },
     formatFichier: function () {
       const ext = this.val.ext.toLowerCase();
-      if (this.formats.images.includes(ext)) {
+      if (formats.images.includes(ext)) {
         return "image";
-      } else if (this.formats.vidéo.includes(ext)) {
+      } else if (formats.vidéo.includes(ext)) {
         return "vidéo";
-      } else if (this.formats.audio.includes(ext)) {
+      } else if (formats.audio.includes(ext)) {
         return "audio";
       } else {
         return "autre";

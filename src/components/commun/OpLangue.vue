@@ -1,9 +1,7 @@
 <template>
   <v-list-item @click="$emit('click')">
     <v-list-item-action>
-      <v-icon v-if="sélectionnée" color="primary">
-        mdi-check-bold
-      </v-icon>
+      <v-icon v-if="sélectionnée" color="primary"> mdi-check-bold </v-icon>
     </v-list-item-action>
     <v-list-item-content>
       <v-list-item-title>{{ codeÀNomLangue(code) || code }}</v-list-item-title>

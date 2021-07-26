@@ -20,7 +20,7 @@
         <v-icon>mdi-earth</v-icon>
       </v-btn>
     </template>
-    <v-list class="overflow-y-auto" style="max-height: 300px;">
+    <v-list class="overflow-y-auto" style="max-height: 300px">
       <op-langue
         v-for="lng in langues"
         :key="lng"

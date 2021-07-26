@@ -1,35 +1,61 @@
 declare module "orbit-db" {
   import { EventEmitter } from "events";
+  import IPFS from "ipfs";
+
+  import { AccessController } from "orbit-db-access-controllers/src/access-controller-interface";
+
+  type identity = {
+    id: string;
+    publicKey: string;
+    signatures: {
+      id: string;
+      publicKey: string;
+    };
+    provider: {
+      verify(signature: string, publicKey: string, message: string);
+      sign(id: identity, message: string);
+    };
+  };
+  export type entréeBD<T> = {
+    identity: identity;
+    payload: {
+      value: T;
+    };
+  };
+
+  export class identityProvider {
+    verifyIdentity(identity: identity): Promise<boolean>;
+  }
 
   export default class OrbitDB {
     static createInstance(
       ipfs: any,
       options: { [key: string]: any }
     ): Promise<OrbitDB>;
-    identity: {
-      id: string;
-    };
+    identity: identity;
+    _ipfs: IPFS;
+    determineAddress(
+      name: string,
+      type: string,
+      options?: ?{ [key: string]: any }
+    );
     isValidAddress(address: string): boolean;
     open(address: string, options?: ?{ [key: string]: any }): Promise<Store>;
-    kvstore(string): Promise<Store>;
-    keyvalue(string): Promise<Store>;
-    feed(string): Promise<Store>;
-    eventlog(string): Promise<Store>;
-    counter(string): Promise<Store>;
-    docstore(string): Promise<Store>;
-  }
-  export class IPFSAccessController extends EventEmitter {
-    type: string;
-    address: string;
-    canAppend: (entry: any, identityProvider: any) => Promise<boolean>;
-    write: string[];
+    kvstore(string, options?: ?{ [key: string]: any }): Promise<Store>;
+    keyvalue(string, options?: ?{ [key: string]: any }): Promise<KeyValueStore>;
+    feed(string, options?: ?{ [key: string]: any }): Promise<FeedStore>;
+    eventlog(string, options?: ?{ [key: string]: any }): Promise<Store>;
+    counter(string, options?: ?{ [key: string]: any }): Promise<Store>;
+    docstore(string, options?: ?{ [key: string]: any }): Promise<Store>;
   }
 
   export class Store {
     id: string;
+    address: string;
     type: string;
     events: EventEmitter;
-    access: IPFSAccessController;
+    access: AccessController;
+    index: { [key: string]: entréeBD };
     drop(): Promise<void>;
     load(): Promise<void>;
     close(): Promise<void>;
@@ -47,10 +73,10 @@ declare module "orbit-db" {
     collect(): any[];
   }
 
-  export interface élémentFeedStore {
+  export interface élémentFeedStore<T> {
     hash: string;
     payload: {
-      value: any;
+      value: T;
     };
   }
 

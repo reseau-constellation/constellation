@@ -47,12 +47,13 @@ export default {
         }
       );
 
-      const oublierCatégorie = await this.$ipa.variables.suivreCatégorieVariable(
-        this.id,
-        (catégorie) => {
-          this.catégorie = catégorie;
-        }
-      );
+      const oublierCatégorie =
+        await this.$ipa.variables.suivreCatégorieVariable(
+          this.id,
+          (catégorie) => {
+            this.catégorie = catégorie;
+          }
+        );
 
       this.suivre([oublierNoms, oublierCatégorie]);
     },

@@ -40,6 +40,9 @@ const imagesThème: { [key: string]: any } = {
   logoBD: {
     unDraw: require("@/assets/undraw/undraw_Projections_re_1mrh.svg"),
   },
+  dispositif: {
+    unDraw: require("@/assets/undraw/undraw_Mobile_re_q4nk.svg"),
+  },
   vide: {
     unDraw: require("@/assets/undraw/undraw_adventure_map_hnin.svg"),
     வவவ: require("@/assets/வவவ/கிணறு.svg"),

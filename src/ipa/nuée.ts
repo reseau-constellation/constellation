@@ -1,8 +1,39 @@
 import ClientConstellation from "./client";
 import hyperswarm from "hyperswarm-web";
 import crypto from "crypto";
-import { isValidAddress } from "orbit-db";
 const décodeur = new TextDecoder("utf-8");
+
+interface Message {
+  signature: Signature;
+  valeur: ValeurMessage;
+}
+
+export interface Signature {
+  signature: string;
+  clefPublique: string;
+}
+
+interface ValeurMessage {
+  type: string;
+  contenu: ContenuMessage;
+}
+
+interface ContenuMessage {
+  [key: string]: unknown;
+}
+
+interface ValeurMessageSalut extends ValeurMessage {
+  type: "Salut !";
+  contenu: ContenuMessageSalut;
+}
+
+interface ContenuMessageSalut extends ContenuMessage {
+  idSFIP: string;
+  idOrbite: string;
+  idBdRacine: string;
+  clefPublique: string;
+  signatures: { id: string; publicKey: string };
+}
 
 export default class Nuée {
   client: ClientConstellation;
@@ -19,29 +50,53 @@ export default class Nuée {
     this.nuée = hyperswarm();
     this.nuée.join(this.sujet, { lookup: true, announce: true });
 
-    this.nuée.on("connection", (prise: any) => {
+    this.nuée.on("connection", async (prise: any) => {
       prise.on("data", (données: BufferSource) =>
         this.gérerDonnées(données, prise)
       );
-      const message = {
-        type: "Salut !",
-        contenu: {
-          id: this.client.idNodeSFIP!.id,
-          racine: this.client.bdRacine!.id,
-        },
-      };
-      prise.write(JSON.stringify(message));
+      setInterval(() => this.direSalut(prise), 1000 * 60);
+      this.direSalut(prise);
     });
   }
 
-  gérerDonnées(données: BufferSource, prise: any): void {
-    const message = JSON.parse(décodeur.decode(données));
-    console.log("reçu", message);
-    switch (message.type) {
-      case "Salut !":
-        if (isValidAddress(message.contenu.racine)) {
-          this.client.réseau!.ajouterMembre(message.contenu.racine);
-        }
+  async direSalut(prise: any): Promise<void> {
+    const valeur: ValeurMessageSalut = {
+      type: "Salut !",
+      contenu: {
+        idSFIP: this.client.idNodeSFIP!.id,
+        idOrbite: this.client.orbite!.identity.id,
+        clefPublique: this.client.orbite!.identity.publicKey,
+        signatures: this.client.orbite!.identity.signatures,
+        idBdRacine: this.client.bdRacine!.id,
+      },
+    };
+    const signature = await this.client.signer(JSON.stringify(valeur));
+    const message: Message = {
+      signature,
+      valeur,
+    };
+    prise.write(JSON.stringify(message));
+  }
+
+  async gérerDonnées(données: BufferSource, prise: any): Promise<void> {
+    const message: Message = JSON.parse(décodeur.decode(données));
+    const { valeur, signature } = message;
+
+    // Assurer que la signature est valide (message envoyé par détenteur de idOrbite)
+    const signatureValide = await this.client.vérifierSignature(
+      signature,
+      JSON.stringify(valeur)
+    );
+    if (!signatureValide) return;
+    switch (valeur.type) {
+      case "Salut !": {
+        const contenu = valeur.contenu as ContenuMessageSalut;
+        const { clefPublique } = contenu;
+
+        // S'assurer que idOrbite est la même que celle sur la signature
+        if (clefPublique !== signature.clefPublique) return;
+        this.client.réseau!.ajouterMembre(contenu);
+      }
     }
   }
 }

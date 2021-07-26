@@ -14,7 +14,7 @@
     <v-card-title
       >{{ couper(nom, 20) }}
       <v-spacer />
-      <lien-orbite :lien="idBD" />
+      <lien-orbite :lien="idBd" />
     </v-card-title>
     <v-divider />
     <v-card-subtitle>{{ détails }}</v-card-subtitle>
@@ -38,28 +38,37 @@
           </span>
         </span>
       </v-chip>
-      <v-chip
-        outlined
-        label
-        small
-        class="me-1 my-1"
-        @click.stop="
-          licenceApprouvée ? ouvrirLien($t(`licences.${licence}.lien`)) : ''
-        "
+      <dialogue-licence
+        :licence="licence"
+        :permissionModifier="permissionÉcrire"
+        @changerLicence="changerLicence"
       >
-        <v-icon left small :color="licenceApprouvée ? 'secondary' : 'error'">
-          {{ licence ? "mdi-scale-balance" : "mdi-alert-outline" }}
-        </v-icon>
-        {{
-          licence && !licenceApprouvée
-            ? licence
-            : $t(`licences.${licence || "introuvable"}.nom`)
-        }}
-        <v-icon v-if="licenceApprouvée" right small>
-          mdi-open-in-new
-        </v-icon>
-      </v-chip>
+        <template v-slot:activator="{ on, attrs }">
+          <v-chip
+            v-bind="attrs"
+            v-on="on"
+            outlined
+            label
+            small
+            class="me-1 my-1"
+          >
+            <v-icon
+              left
+              small
+              :color="licenceApprouvée ? 'secondary' : 'error'"
+            >
+              {{ licence ? "mdi-scale-balance" : "mdi-alert-outline" }}
+            </v-icon>
+            {{
+              licence && !licenceApprouvée
+                ? licence
+                : $t(`licences.info.${licence || "introuvable"}.abr`)
+            }}
+          </v-chip>
+        </template>
+      </dialogue-licence>
     </v-card-text>
+
     <v-card-actions>
       <v-spacer />
       <v-tooltip bottom>
@@ -83,29 +92,31 @@
 </template>
 
 <script>
-import { traduireNom, couper, ouvrirLien, couleurScore } from "@/utils";
+import { traduireNom, couper, couleurScore } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite";
 import mixinIPA from "@/mixins/ipa";
-import { licences } from "@/ipa/licences";
+import mixinLicences from "@/mixins/licences";
+import dialogueLicence from "@/components/commun/licences/dialogueLicence";
 
 export default {
   name: "carteBD",
   props: ["bd"],
-  components: { lienOrbite },
-  mixins: [mixinIPA],
+  components: { lienOrbite, dialogueLicence },
+  mixins: [mixinIPA, mixinLicences],
   data: function () {
     return {
       épinglée: null,
       licence: null,
       logo: null,
       score: null,
+      permissionÉcrire: false,
       nomsBD: {},
       détailsBD: {},
       variables: [],
     };
   },
   computed: {
-    idBD: function () {
+    idBd: function () {
       return decodeURIComponent(this.bd);
     },
     langues: function () {
@@ -114,18 +125,14 @@ export default {
     nom: function () {
       return Object.keys(this.nomsBD).length
         ? traduireNom(this.nomsBD, this.langues)
-        : this.idBD;
+        : this.idBd;
     },
     détails: function () {
       return traduireNom(this.détailsBD, this.langues);
     },
-    licenceApprouvée: function () {
-      return this.licence && licences.includes(this.licence);
-    },
   },
   methods: {
     couper,
-    ouvrirLien,
     couleurScore,
     épingler: async function () {
       await this.$ipa.favoris.épinglerFavori(this.bd);
@@ -133,34 +140,45 @@ export default {
     désépingler: async function () {
       await this.$ipa.favoris.désépinglerFavori(this.bd);
     },
+    changerLicence({ licence }) {
+      this.$ipa.bds.changerLicenceBd(this.idBd, licence);
+    },
     initialiserSuivi: async function () {
+      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBd);
+
       const oublierLicence = await this.$ipa.bds.suivreLicence(
-        this.idBD,
+        this.idBd,
         (licence) => {
           this.licence = licence;
         }
       );
       const oublierNoms = await this.$ipa.bds.suivreNomsBd(
-        this.idBD,
+        this.idBd,
         (noms) => {
           this.nomsBD = noms;
         }
       );
       const oublierDétails = await this.$ipa.bds.suivreDescrBd(
-        this.idBD,
+        this.idBd,
         (détails) => {
           this.détailsBD = détails;
         }
       );
       const oublierScore = await this.$ipa.bds.suivreScoreBd(
-        this.idBD,
+        this.idBd,
         (score) => (this.score = score)
       );
       const oublierFavori = await this.$ipa.favoris.suivreÉtatFavori(
-        this.idBD,
+        this.idBd,
         (épinglée) => (this.épinglée = épinglée)
       );
-      this.suivre([oublierLicence, oublierNoms, oublierDétails, oublierScore]);
+      this.suivre([
+        oublierLicence,
+        oublierNoms,
+        oublierDétails,
+        oublierScore,
+        oublierFavori,
+      ]);
     },
   },
 };

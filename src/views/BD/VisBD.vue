@@ -47,14 +47,18 @@
           </v-btn>
         </span>
         <span>
-          <lien-orbite :lien="idBD" />
+          <lien-orbite :lien="idBd" />
         </span>
         <v-spacer />
         <span>
-          <lienTélécharger :lien="idBD" />
+          <lienTélécharger :lien="idBd" />
         </span>
 
-        <v-dialog v-if="permissionÉcrire" v-model="dialogue" width="500">
+        <v-dialog
+          v-if="permissionÉcrire"
+          v-model="dialogueEffacerBd"
+          width="500"
+        >
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" icon color="error">
               <v-icon>mdi-delete</v-icon>
@@ -76,7 +80,12 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="error" text outlined @click="dialogue = false">
+              <v-btn
+                color="error"
+                text
+                outlined
+                @click="dialogueEffacerBd = false"
+              >
                 Non !
               </v-btn>
               <v-btn color="error" depressed @click="effacerBd">
@@ -87,11 +96,8 @@
         </v-dialog>
       </v-card-title>
       <v-card-subtitle>
-        <span v-if="this.descriptions">
-          {{ descriptions }}
-        </span>
-        <span v-else-if="permissionÉcrire">
-          Aucune description.
+        <span v-if="descriptionsBD">
+          {{ description ? description : "Aucune description." }}
         </span>
         <v-menu
           v-if="permissionÉcrire"
@@ -128,11 +134,12 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>
+                      <v-skeleton-loader v-if="!score" type="avatar" />
                       <v-progress-circular
-                        :rotate="score ? 270 : undefined"
+                        v-else
+                        :rotate="270"
                         :width="5"
-                        :value="score && score.total ? score.total : 0"
-                        :indeterminate="!score"
+                        :value="score.total ? score.total : 0"
                         :color="
                           score ? couleurScore(score.total).couleur : 'primary'
                         "
@@ -160,106 +167,135 @@
               </v-menu>
             </v-card>
             <v-card flat width="200" class="mb-3">
-              <v-menu offset-x :disabled="!score">
+              <dialogue-auteurs :auteurs="auteurs">
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>
-                      <v-icon>mdi-account-multiple</v-icon>
+                      <v-icon left> mdi-account-multiple </v-icon>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      Auteurs
+                      <v-skeleton-loader v-if="auteurs === null" type="chip" />
+                      <span v-else>
+                        {{
+                          `${
+                            auteurs ? formatterChiffre(auteurs.length) : ""
+                          } Auteurs`
+                        }}
+                      </span>
                     </v-list-item-content>
                   </v-list-item>
                 </template>
-                <v-list v-if="auteurs">
-                  <v-subheader>Contributeurs Constellation</v-subheader>
-                  <v-list-item
-                    v-for="a in auteurs.auteurs"
-                    :key="a"
-                    @click="$router.push(`/auteur/${a}`)"
-                  >
-                    <v-list-item-avatar> </v-list-item-avatar>
-                    <v-list-item-content>
-                      {{ a }}
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-subheader v-if="auteurs.sources.length"
-                    >Sources des données</v-subheader
-                  >
-                  <v-list-item v-for="s in auteurs.sources" :key="s">
-                    <v-list-item-avatar> </v-list-item-avatar>
-                    <v-list-item-content>
-                      {{ s }}
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
+              </dialogue-auteurs>
             </v-card>
             <v-card flat width="200" class="mb-3">
-              <v-list-item
-                v-if="licence !== null"
-                @click="
-                  licenceApprouvée
-                    ? ouvrirLien($t(`licences.${licence}.lien`))
-                    : ''
-                "
+              <dialogue-licence
+                :licence="licence"
+                :permissionModifier="permissionÉcrire"
+                @changerLicence="changerLicence"
               >
-                <v-list-item-avatar>
-                  <v-icon
-                    left
-                    :color="licenceApprouvée ? 'secondary' : 'error'"
-                  >
-                    {{ licence ? "mdi-scale-balance" : "mdi-alert-outline" }}
-                  </v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  {{
-                    licence && !licenceApprouvée
-                      ? licence
-                      : $t(`licences.${licence || "introuvable"}.nom`)
-                  }}
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-icon>mdi-open-in-new</v-icon>
-                </v-list-item-action>
-              </v-list-item>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-list-item v-bind="attrs" v-on="on">
+                    <v-list-item-avatar>
+                      <v-icon
+                        left
+                        :color="
+                          licence && !licenceApprouvée ? 'error' : 'secondary'
+                        "
+                      >
+                        mdi-scale-balance
+                      </v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-skeleton-loader v-if="licence === null" type="chip" />
+                      <span v-else>
+                        {{
+                          couper(
+                            licence && !licenceApprouvée
+                              ? licence
+                              : $t(
+                                  `licences.info.${
+                                    licence || "introuvable"
+                                  }.abr`
+                                ),
+                            20
+                          )
+                        }}
+                      </span>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+              </dialogue-licence>
+            </v-card>
+            <v-card flat width="200" class="mb-3">
+              <dialogueRéplications :replications="réplications">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-list-item v-bind="attrs" v-on="on">
+                    <v-list-item-avatar>
+                      <v-icon left> mdi-database-sync </v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-skeleton-loader
+                        v-if="réplications === null"
+                        type="chip"
+                      />
+                      <span v-else>
+                        {{
+                          `${
+                            réplications
+                              ? formatterChiffre(réplications.length)
+                              : ""
+                          } Réplications`
+                        }}
+                      </span>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+              </dialogueRéplications>
             </v-card>
           </div>
         </v-card>
         <v-card flat class="mx-3 mb-3">
           <div class="d-flex flex-wrap">
-            <v-card flat min-width="200" max-width="350" class="mb-3 mx-2">
+            <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">Variables</p>
               <p v-if="!variables.length" class="text--disabled">
                 Aucune variable
               </p>
               <jeton-variable v-for="id in variables" :key="id" :id="id" />
             </v-card>
-            <v-card flat min-width="200" max-width="350" class="mb-3">
+            <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">
                 Mots-clefs
-                <v-btn v-if="permissionÉcrire" small icon>
-                  <v-icon small>
-                    mdi-plus
-                  </v-icon>
-                </v-btn>
+                <dialogue-mots-clefs
+                  v-if="permissionÉcrire"
+                  :selectionnes="motsClefs"
+                  @ajouterMotClef="ajouterMotClef"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      v-if="permissionÉcrire"
+                      small
+                      icon
+                    >
+                      <v-icon small> mdi-plus </v-icon>
+                    </v-btn>
+                  </template>
+                </dialogue-mots-clefs>
               </p>
               <p v-if="!motsClefs.length" class="text--disabled">
                 Aucun mot clef
               </p>
-              <v-chip
+              <jeton-mot-clef
                 v-for="m in motsClefs"
                 :key="m"
-                :close="permissionÉcrire"
-                outlined
-                small
-                label
-                class="mx-1 my-1"
-                close-icon="mdi-close"
-                >{{ m }}</v-chip
-              >
+                :id="m"
+                :permissionModifier="permissionÉcrire"
+                @effacer="effacerMotClef"
+              />
             </v-card>
-            <v-card flat min-width="200" max-width="350" class="mb-3">
+            <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">Géographie</p>
               <p v-if="!géog.length" class="text--disabled">
                 Aucune région détectée
@@ -292,11 +328,22 @@
             <v-btn
               v-if="permissionÉcrire"
               color="primary"
+              class="mx-2"
               outlined
               text
               @click="ajouterTableau"
             >
               Ajouter un tableau
+            </v-btn>
+            <v-btn
+              v-if="permissionÉcrire"
+              color="primary"
+              class="mx-2"
+              outlined
+              text
+              @click="importer"
+            >
+              Importer des données
             </v-btn>
           </div>
           <transition-group
@@ -309,11 +356,11 @@
               v-for="t in tableaux"
               :key="t"
               :id="t"
-              :idBD="idBD"
+              :idBD="idBd"
               @click="
                 $router.push(
                   `/bd/visualiser/${encodeURIComponent(
-                    idBD
+                    idBd
                   )}/tableau/${encodeURIComponent(t)}`
                 )
               "
@@ -327,8 +374,11 @@
 
 <script>
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
-import { licences } from "@/ipa/licences";
 
+import dialogueLicence from "@/components/commun/licences/dialogueLicence";
+import dialogueMotsClefs from "@/components/commun/motsClefs/dialogueMotsClefs";
+import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications";
+import dialogueAuteurs from "@/components/BD/auteurs/dialogueAuteurs";
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
 import itemTableau from "@/components/BD/itemTableau";
 import lienOrbite from "@/components/commun/lienOrbite";
@@ -336,7 +386,9 @@ import lienTélécharger from "@/components/commun/lienTélécharger";
 import mixinImage from "@/mixins/images";
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
+import mixinLicences from "@/mixins/licences";
 import jetonVariable from "@/components/commun/jetonVariable";
+import jetonMotClef from "@/components/commun/motsClefs/jetonMotClef";
 import carteQualité from "@/components/commun/carteQualité";
 
 export default {
@@ -346,21 +398,27 @@ export default {
     lienOrbite,
     lienTélécharger,
     jetonVariable,
+    jetonMotClef,
     carteQualité,
+    dialogueLicence,
+    dialogueAuteurs,
+    dialogueMotsClefs,
+    dialogueRéplications,
     boîteNoms,
   },
-  mixins: [mixinImage, mixinLangues, mixinIPA],
+  mixins: [mixinImage, mixinLangues, mixinIPA, mixinLicences],
   data: function () {
     return {
-      dialogue: false,
+      dialogueEffacerBd: false,
       licence: null,
-      descriptionsBD: {},
+      descriptionsBD: null,
       nomsBD: {},
       permissionÉcrire: false,
       tableaux: null,
       logo: null,
       score: null,
       variables: [],
+      réplications: null,
 
       géog: [],
       motsClefs: [],
@@ -374,12 +432,13 @@ export default {
     nom: function () {
       return Object.keys(this.nomsBD).length
         ? traduireNom(this.nomsBD, this.langues)
-        : this.idBD;
+        : this.idBd;
     },
-    descriptions: function () {
+    description: function () {
+      if (this.descriptionsBD === null) return "";
       return traduireNom(this.descriptionsBD, this.langues);
     },
-    idBD: function () {
+    idBd: function () {
       return decodeURIComponent(this.$route.params.id);
     },
     petitPousset: function () {
@@ -387,9 +446,6 @@ export default {
         { text: "Données", href: "/bd" },
         { text: couper(this.nom, 35), disabled: true },
       ];
-    },
-    licenceApprouvée: function () {
-      return licences.includes(this.licence);
     },
     logoBD: function () {
       return this.logo || this.image("logoBD");
@@ -400,75 +456,105 @@ export default {
     couleurScore,
     ouvrirLien,
     ajouterTableau: async function () {
-      await this.$ipa.bds.ajouterTableauBD(this.idBD);
+      await this.$ipa.bds.ajouterTableauBD(this.idBd);
+    },
+    ajouterMotClef: async function (idMotClef) {
+      await this.$ipa.bds.ajouterMotsClefsBd(this.idBd, idMotClef);
     },
     initialiserSuivi: async function () {
-      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBD);
+      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBd);
 
       const oublierLicence = await this.$ipa.bds.suivreLicence(
-        this.idBD,
+        this.idBd,
         (licence) => {
           this.licence = licence;
         }
       );
+      const oublierAuteurs = await this.$ipa.bds.suivreAuteurs(
+        this.idBd,
+        (auteurs) => {
+          console.log({ auteurs });
+          this.auteurs = auteurs;
+        }
+      );
       const oublierNoms = await this.$ipa.bds.suivreNomsBd(
-        this.idBD,
+        this.idBd,
         (noms) => {
           this.nomsBD = noms;
         }
       );
       const oublierDescriptions = await this.$ipa.bds.suivreDescrBd(
-        this.idBD,
+        this.idBd,
         (descriptions) => {
           this.descriptionsBD = descriptions;
         }
       );
       const oublierTableaux = await this.$ipa.bds.suivreTableauxBd(
-        this.idBD,
+        this.idBd,
         (tableaux) => {
           this.tableaux = tableaux;
         }
       );
       const oublierScore = await this.$ipa.bds.suivreScoreBd(
-        this.idBD,
+        this.idBd,
         (score) => (this.score = score)
       );
       const oublierVariables = await this.$ipa.bds.suivreVariablesBd(
-        this.idBD,
+        this.idBd,
         (variables) => (this.variables = variables)
       );
+      const oublierMotsClefs = await this.$ipa.bds.suivreMotsClefsBd(
+        this.idBd,
+        (motsClefs) => (this.motsClefs = motsClefs)
+      );
+      const oublierRéplications = await this.$ipa.réseau.suivreRéplications(
+        this.idBd,
+        (réplications) => {
+          this.réplications = réplications;
+        }
+      );
+
       this.suivre([
         oublierLicence,
+        oublierAuteurs,
         oublierNoms,
         oublierDescriptions,
         oublierTableaux,
         oublierScore,
         oublierVariables,
+        oublierMotsClefs,
+        oublierRéplications,
       ]);
     },
     effacerBd: async function () {
-      await this.$ipa.bds.effacerBd(this.idBD);
+      await this.$ipa.bds.effacerBd(this.idBd);
       this.$router.push("/bd");
     },
     sauvegarderNom({ langue, nom }) {
-      this.$ipa.bds.sauvegarderNomBD(this.idBD, langue, nom);
+      this.$ipa.bds.sauvegarderNomBd(this.idBd, langue, nom);
     },
     changerLangueNom({ langueOriginale, langue, nom }) {
-      this.$ipa.compte.effacerNomBd(this.idBD, langueOriginale);
-      this.$ipa.compte.sauvegarderNomBD(this.idBD, langue, nom);
+      this.$ipa.bds.effacerNomBd(this.idBd, langueOriginale);
+      this.$ipa.bds.sauvegarderNomBd(this.idBd, langue, nom);
     },
     effacerNom({ langue }) {
-      this.$ipa.compte.effacerNomBd(this.idBD, langue);
+      this.$ipa.bds.effacerNomBd(this.idBd, langue);
     },
     sauvegarderDescr({ langue, nom }) {
-      this.$ipa.bds.sauvegarderDescrBd(this.idBD, langue, nom);
+      this.$ipa.bds.sauvegarderDescrBd(this.idBd, langue, nom);
     },
     changerLangueDescr({ langueOriginale, langue, nom }) {
-      this.$ipa.compte.effacerDescrBD(langueOriginale);
-      this.$ipa.compte.sauvegarderDescrBd(langue, nom);
+      this.$ipa.bds.effacerDescrBd(this.idBd, langueOriginale);
+      this.$ipa.bds.sauvegarderDescrBd(this.idBd, langue, nom);
     },
     effacerDescr({ langue }) {
-      this.$ipa.compte.effacerDescrBD(langue);
+      this.$ipa.bds.effacerDescrBd(this.idBd, langue);
+    },
+    effacerMotClef({ id }) {
+      this.$ipa.bds.effacerMotClefBd(this.idBd, id);
+    },
+    changerLicence({ licence }) {
+      this.$ipa.bds.changerLicenceBd(this.idBd, licence);
     },
   },
 };

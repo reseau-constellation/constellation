@@ -14,8 +14,10 @@
       <v-list-item>
         <v-list-item-content>{{ lien }}</v-list-item-content>
         <v-list-item-action>
-          <v-btn icon @click="copier(lien)">
-            <v-icon>{{ copié ? "mdi-check" : "mdi-content-copy" }}</v-icon>
+          <v-btn icon small @click="copier(lien)">
+            <v-icon small>{{
+              copié ? "mdi-check" : "mdi-content-copy"
+            }}</v-icon>
           </v-btn>
         </v-list-item-action>
       </v-list-item>

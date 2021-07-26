@@ -4,9 +4,9 @@ import ClientConstellation, {
   schémaFonctionOublier,
 } from "./client";
 
-interface EntréeFavoris {
+export type EntréeFavoris = {
   id: string;
-}
+};
 
 export default class Favoris {
   client: ClientConstellation;
@@ -18,23 +18,27 @@ export default class Favoris {
   }
 
   async suivreFavoris(
-    f: schémaFonctionSuivi,
+    f: schémaFonctionSuivi<string[]>,
     idBdRacine?: string
   ): Promise<schémaFonctionOublier> {
     idBdRacine = idBdRacine || this.idBd;
     const fFinale = (listeFavoris: EntréeFavoris[]) => {
-      f(listeFavoris
-        .map((x: EntréeFavoris) => typeof x === "string" ? x : x.id)
-        .filter(x => x)
+      f(
+        listeFavoris
+          .map((x: EntréeFavoris) => (typeof x === "string" ? x : x.id))
+          .filter((x) => x)
       );
     };
-    return await this.client.suivreBdListe(idBdRacine, fFinale);
+    return await this.client.suivreBdListe(
+      idBdRacine,
+      fFinale as (x: unknown) => Promise<schémaFonctionOublier>
+    );
   }
 
   async épinglerFavori(id: string): Promise<void> {
     const existante = await this.client.rechercherBdListe(
       this.idBd,
-      (e: élémentFeedStore) => e.payload.value.id === id
+      (e: élémentFeedStore<EntréeFavoris>) => e.payload.value.id === id
     );
     if (!existante) {
       const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
@@ -48,7 +52,7 @@ export default class Favoris {
   async désépinglerFavori(id: string): Promise<void> {
     const existante = await this.client.rechercherBdListe(
       this.idBd,
-      (e: élémentFeedStore) => e.payload.value.id === id
+      (e: élémentFeedStore<EntréeFavoris>) => e.payload.value.id === id
     );
     if (existante) {
       const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
@@ -58,11 +62,14 @@ export default class Favoris {
 
   async suivreÉtatFavori(
     id: string,
-    f: schémaFonctionSuivi
+    f: schémaFonctionSuivi<boolean>
   ): Promise<schémaFonctionOublier> {
     const fFinale = (favoris: EntréeFavoris[]) => {
       f(favoris.map((x: EntréeFavoris) => x.id).includes(id));
     };
-    return await this.client.suivreBdListe(this.idBd, fFinale);
+    return await this.client.suivreBdListe(
+      this.idBd,
+      fFinale as (x: unknown) => Promise<schémaFonctionOublier>
+    );
   }
 }

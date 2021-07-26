@@ -1,7 +1,12 @@
 <template>
   <v-col cols="12">
     <v-slide-x-transition group class="d-flex flex-wrap justify-center">
-      <carte-membre v-for="{ id } in membres" :key="id" :id="id" />
+      <carte-membre
+        v-for="membre in membres"
+        :key="membre.idBdRacine"
+        :id="membre.idBdRacine"
+        :vuIlyA="membre.vuIlyA"
+      />
     </v-slide-x-transition>
   </v-col>
 </template>

@@ -14,7 +14,7 @@
       @sauvegarder="(e) => $emit('sauvegarder', e)"
     />
     <v-divider />
-    <v-list style="max-height: 300px;" class="overflow-y-auto">
+    <v-list style="max-height: 300px" class="overflow-y-auto">
       <item-nom
         v-for="(nom, langue) in noms"
         :key="langue"

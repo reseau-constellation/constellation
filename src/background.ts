@@ -6,7 +6,42 @@ import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 const isDevelopment = process.env.NODE_ENV !== "production";
 import Store from "electron-store";
+import Ctl from "ipfsd-ctl";
 
+let ipfsd: typeof Ctl;
+async function initSFIP() {
+  /* if (!ipfsd) {
+    const port = 9090
+    const server = await Ctl.createServer(port, {
+      ipfsHttpModule: require('ipfs-http-client'),
+      ipfsModule: require("ipfs")
+    })
+    await server.start()
+
+    console.log({server})
+    const factory = Ctl.createFactory({
+      ipfsHttpModule: require('ipfs-http-client'),
+      remote: true,
+      endpoint: `http://localhost:${port}` // or you can set process.env.IPFSD_CTL_SERVER to http://localhost:9090
+    })
+    ipfsd = await factory.spawn()
+    console.log(ipfsd)
+  }
+
+  const id = await ipfsd.api.id()
+
+  console.log(id)
+  */
+}
+
+async function fermerSFIP() {
+  if (ipfsd) await ipfsd.stop();
+}
+
+async function fermerConstellation() {
+  await fermerSFIP();
+  app.quit();
+}
 Store.initRenderer();
 
 // Scheme must be registered before the app is ready
@@ -15,7 +50,6 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 async function createWindow() {
-
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
@@ -26,7 +60,9 @@ async function createWindow() {
 
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: (process.env
+      nodeIntegration: process.env
+        .ELECTRON_NODE_INTEGRATION as unknown as boolean,
+      contextIsolation: !(process.env
         .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
     },
   });
@@ -40,13 +76,14 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
   }
-  win.once('ready-to-show', () => {
+  win.once("ready-to-show", () => {
     autoUpdater.checkForUpdatesAndNotify();
   });
-  autoUpdater.on('update-available', () => {
-    win.webContents.send('update_available');
-  });autoUpdater.on('update-downloaded', () => {
-    win.webContents.send('update_downloaded');
+  autoUpdater.on("update-available", () => {
+    win.webContents.send("update_available");
+  });
+  autoUpdater.on("update-downloaded", () => {
+    win.webContents.send("update_downloaded");
   });
 }
 
@@ -55,7 +92,7 @@ app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
-    app.quit();
+    fermerConstellation();
   }
 });
 
@@ -69,6 +106,7 @@ app.on("activate", () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
+  initSFIP();
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
@@ -85,17 +123,17 @@ if (isDevelopment) {
   if (process.platform === "win32") {
     process.on("message", (data) => {
       if (data === "graceful-exit") {
-        app.quit();
+        fermerConstellation();
       }
     });
   } else {
     process.on("SIGTERM", () => {
-      app.quit();
+      fermerConstellation();
     });
   }
 }
 
 // https://medium.com/@johndyer24/creating-and-deploying-an-auto-updating-electron-app-for-mac-and-windows-using-electron-builder-6a3982c0cee6
-ipcMain.on('app_version', (event) => {
-  event.sender.send('app_version', { version: app.getVersion() });
+ipcMain.on("app_version", (event) => {
+  event.sender.send("app_version", { version: app.getVersion() });
 });
