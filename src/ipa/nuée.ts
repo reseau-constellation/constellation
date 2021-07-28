@@ -1,4 +1,4 @@
-import ClientConstellation from "./client";
+import ClientConstellation, { schémaFonctionOublier } from "./client";
 import hyperswarm from "hyperswarm-web";
 import crypto from "crypto";
 const décodeur = new TextDecoder("utf-8");
@@ -22,6 +22,10 @@ interface ContenuMessage {
   [key: string]: unknown;
 }
 
+interface infoPrise {
+  prise: any;
+  fOublier: schémaFonctionOublier;
+}
 interface ValeurMessageSalut extends ValeurMessage {
   type: "Salut !";
   contenu: ContenuMessageSalut;
@@ -39,9 +43,12 @@ export default class Nuée {
   client: ClientConstellation;
   sujet: Buffer;
   nuée: any;
+  prises: {[key: string]: infoPrise}
 
   constructor(client: ClientConstellation) {
     this.client = client;
+    this.prises = {}
+    setInterval(() => this.direSalutÀTous(), 1000 * 60);
 
     this.sujet = crypto
       .createHash("sha256")
@@ -51,12 +58,25 @@ export default class Nuée {
     this.nuée.join(this.sujet, { lookup: true, announce: true });
 
     this.nuée.on("connection", async (prise: any) => {
-      prise.on("data", (données: BufferSource) =>
-        this.gérerDonnées(données, prise)
-      );
-      setInterval(() => this.direSalut(prise), 1000 * 60);
+      const fGérerDonnées = (données: BufferSource) => this.gérerDonnées(données, prise)
+      prise.on("data", fGérerDonnées);
+      const fOublier = () => {
+        prise.off("data", fGérerDonnées)
+      }
+      this.prises[prise._id] = { prise, fOublier }
       this.direSalut(prise);
     });
+  }
+
+  async direSalutÀTous(): Promise<void> {
+    await Promise.all(Object.values(this.prises).map((p) => {
+      if (p.prise.writable)
+        this.direSalut(p.prise)
+      else {
+        p.fOublier()
+        delete this.prises[p.prise._id]
+      }
+    }))
   }
 
   async direSalut(prise: any): Promise<void> {

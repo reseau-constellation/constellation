@@ -33,6 +33,11 @@ type infoRéplication = {
   vuÀ?: number;
 };
 
+type infoDispositifEnLigne = {
+    info: infoMembre;
+    vuÀ: number;
+};
+
 const verrouAjouterMembre = new Semaphore();
 const INTERVALE_SALUT = 1000 * 60;
 
@@ -40,10 +45,7 @@ export default class Réseau extends EventEmitter {
   client: ClientConstellation;
   idBd: string;
   dispositifsEnLigne: {
-    [key: string]: {
-      info: infoMembre;
-      vuÀ: number;
-    };
+    [key: string]: infoDispositifEnLigne;
   };
   fOublierMembres: { [key: string]: schémaFonctionOublier };
 
@@ -210,6 +212,20 @@ export default class Réseau extends EventEmitter {
       oublierVus();
     };
     return oublier;
+  }
+
+  async suivreDispositifsEnLigne(
+    f: schémaFonctionSuivi<infoDispositifEnLigne[]>
+  ): Promise<schémaFonctionOublier> {
+    const fFinale = () => {
+      f(Object.values(this.dispositifsEnLigne))
+    }
+    this.on("membreVu", fFinale)
+    fFinale()
+    const fOublier = ()=> {
+      this.off("membreVu", fFinale)
+    }
+    return fOublier
   }
 
   async suivreNomsMembre(

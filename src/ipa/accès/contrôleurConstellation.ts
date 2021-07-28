@@ -1,5 +1,8 @@
 import ensureAddress from "orbit-db-access-controllers/src/utils/ensure-ac-address";
+import Semaphore from "@chriscdn/promise-semaphore";
+
 import OrbitDB, {
+  Store,
   FeedStore,
   isValidAddress,
   entréeBD,
@@ -79,6 +82,7 @@ const suivreBdAccès = async (
       .map((e: élémentBdListe<entréeBDAccès>) => e.payload.value);
     f(éléments);
   };
+  bd.events.setMaxListeners(100)
   for (const é of événementsSuiviBd) {
     bd.events.on(é, fFinale);
   }
@@ -90,6 +94,36 @@ const suivreBdAccès = async (
   };
   return oublier;
 };
+
+const verrouOuvertureBd = new Semaphore();
+
+class AccesseurBdOrbite {
+  bds: {[key: string]: Store}
+  constructor() {
+    this.bds = {}
+  }
+
+  async ouvrirBd(orbite: OrbitDB, idBd: string): Promise<Store> {
+    const idOrbite = orbite.identity.id
+    const idBdEtOrbite = idBd + idOrbite
+
+    verrouOuvertureBd.acquire(idBdEtOrbite)
+
+    const existante = this.bds[idBdEtOrbite]
+    if (existante) {
+      verrouOuvertureBd.release(idBdEtOrbite);
+      return existante
+    }
+    const bd = await orbite.open(idBd);
+    await bd.load()
+
+    this.bds[idBdEtOrbite] = bd
+    verrouOuvertureBd.release(idBdEtOrbite);
+    return bd
+  }
+}
+
+const accesseurBdOrbite = new AccesseurBdOrbite()
 
 class AccèsUtilisateur extends EventEmitter {
   orbite: OrbitDB;
@@ -106,8 +140,8 @@ class AccèsUtilisateur extends EventEmitter {
   }
 
   async initialiser(idBd: string): Promise<void> {
-    this.bd = (await this.orbite.open(idBd)) as FeedStore;
-    await this.bd.load();
+    this.bd = await accesseurBdOrbite.ouvrirBd(this.orbite, idBd) as FeedStore
+
     this.accès = this.bd.access as unknown as ContrôleurConstellation;
     this.bdAccès = this.accès.bd!;
 
@@ -230,7 +264,6 @@ export default class ContrôleurConstellation extends AccessController {
     if (await this.estAutorisé(entry.identity.id)) {
       return await vraiSiSigValide();
     }
-
     return false;
   }
 
@@ -302,17 +335,22 @@ export default class ContrôleurConstellation extends AccessController {
 
   async load(address: string) {
     const addresseValide = isValidAddress(address);
-    if (this.bd) {
-      await this.bd.close();
+
+    let adresseFinale
+    if (addresseValide) {
+      adresseFinale = address
+    } else {
+      adresseFinale = this._orbitdb.determineAddress(
+        ensureAddress(address),
+        "feed",
+        this._createOrbitOpts(addresseValide)
+      )
     }
 
-    // TODO - skip manifest for mod-access
-    this.bd = await this._orbitdb.feed(
-      ensureAddress(address),
-      this._createOrbitOpts(addresseValide)
-    );
-    suivreBdAccès(this.bd, (éléments) => this._miseÀJourBdAccès(éléments));
-    await this.bd.load();
+    this.bd = await accesseurBdOrbite.ouvrirBd(this._orbitdb, adresseFinale) as FeedStore
+
+    suivreBdAccès(this.bd, (éléments) => this._miseÀJourBdAccès(éléments))
+
   }
 
   _createOrbitOpts(loadByAddress = false) {

@@ -17,9 +17,11 @@ interface OptionsInitContrôleurAccèsConstellation
 export default class ContrôleurAccès extends EventEmitter {
   _accèsÉcriture: string[];
   _premierMod: string;
+  orbitdb: OrbitDB;
 
-  constructor(options: OptionsInitContrôleurAccèsConstellation) {
+  constructor(orbitdb: OrbitDB, options: OptionsInitContrôleurAccèsConstellation) {
     super();
+    this.orbitdb = orbitdb
     this._accèsÉcriture = [options.premierMod]; // Peut ajouter d'autres membres ou modératrices
     this._premierMod = options.premierMod;
   }
@@ -42,18 +44,23 @@ export default class ContrôleurAccès extends EventEmitter {
   ) {
     const idÉlément = entry.identity.id;
     const { rôle, id: idAjout } = entry.payload.value;
-    const isMod = this.estUnModérateur(idÉlément);
-    const validCapability = rôles.includes(rôle);
+    let isMod = this.estUnModérateur(idÉlément);
+    const rôleValide = rôles.includes(rôle);
+    console.log({isMod, rôleValide, rôle, idÉlément, idAjout, accèsÉcriture: [...this._accèsÉcriture], entry})
     const validSig = async () =>
       identityProvider.verifyIdentity(entry.identity);
-    if (isMod && validCapability && (await validSig())) {
+    const sleep = (milliseconds: number) => {
+      return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+    if (!isMod) await sleep(2000)
+    isMod = this.estUnModérateur(idÉlément);
+    if (isMod && rôleValide && (await validSig())) {
       if (rôle === MODÉRATEUR) {
         if (idAjout === this._premierMod) return true;
-        this._accèsÉcriture.push(idAjout);
+        if (!this._accèsÉcriture.includes(idAjout)) this._accèsÉcriture.push(idAjout);
       }
       return true;
     }
-
     return false;
   }
 
@@ -71,9 +78,8 @@ export default class ContrôleurAccès extends EventEmitter {
     options: OptionsContrôleurAccèsConstellation = {}
   ) {
     const premierMod = options.premierMod;
-
     if (!premierMod)
       throw new Error("Contrôle d'accès: premier modérateur requis");
-    return new ContrôleurAccès({ premierMod });
+    return new ContrôleurAccès(orbitdb, { premierMod });
   }
 }

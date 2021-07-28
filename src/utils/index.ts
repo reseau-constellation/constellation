@@ -14,6 +14,10 @@ export function couper(texte: string, nChar: number) {
     return texte.slice(0, nChar - 3).concat("...");
   }
 }
+export async function copier(texte: string): Promise<void> {
+  if (!navigator.clipboard) return;
+  await navigator.clipboard.writeText(texte);
+}
 export function traduireNom(
   dicNom: { [key: string]: string },
   langues: string[]

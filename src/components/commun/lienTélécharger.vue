@@ -88,6 +88,8 @@
 </template>
 
 <script>
+import { copier } from "@/utils";
+
 export default {
   name: "lienOrbit",
   props: ["lien"],
@@ -113,8 +115,7 @@ export default {
   },
   methods: {
     async copier(texte) {
-      if (!navigator.clipboard) return;
-      await navigator.clipboard.writeText(texte);
+      copier(texte);
       this.copié = true;
     },
   },

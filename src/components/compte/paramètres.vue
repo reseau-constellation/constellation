@@ -83,19 +83,24 @@
 
         <v-divider v-if="dispositifs && dispositifs.length" />
         <v-skeleton-loader v-if="dispositifs === null" type="paragraph" />
-        <v-list v-if="dispositifs !== null" two-line dense>
-          <v-list-item @click="ajouterDispositif">
-            <v-list-item-avatar>
-              <v-icon>mdi-plus</v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title> Ajouter un dispositif </v-list-item-title>
-              <v-list-item-subtitle>
-                Ajouttez un autre ordinateur, téléphone, ou navigateur à votre
-                compte pour plus de sécurité.
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+        <v-list v-else two-line dense>
+          <dialogue-ajouter-dispositif>
+            <template v-slot:activator="{ on, attrs }">
+              <v-list-item v-bind="attrs" v-on="on">
+                <v-list-item-avatar>
+                  <v-icon>mdi-plus</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title> Ajouter un dispositif </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Ajouttez un autre ordinateur, téléphone, ou navigateur à votre
+                    compte pour plus de sécurité.
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </dialogue-ajouter-dispositif>
+
           <v-list-item v-for="d in dispositifs" :key="d">
             <v-list-item-avatar>
               <v-img :src="image('dispositif')" contain />
@@ -117,6 +122,8 @@
 import mixinIPA from "@/mixins/ipa";
 import mixinImages from "@/mixins/images";
 import boîteNoms from "@/components/commun/boîteNoms/boîte";
+import dialogueAjouterDispositif from "@/components/compte/dialogueAjouterDispositif";
+
 import { traduireNom } from "@/utils";
 
 export default {
@@ -132,7 +139,7 @@ export default {
     };
   },
   mixins: [mixinIPA, mixinImages],
-  components: { boîteNoms },
+  components: { boîteNoms, dialogueAjouterDispositif },
   computed: {
     nom: function () {
       const languesPréférées = [this.$i18n.locale];
