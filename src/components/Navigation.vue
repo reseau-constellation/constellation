@@ -26,52 +26,76 @@
         link
         @click="$router.push({ path: '/'.concat(l.page) })"
       >
-        <v-list-item-icon>
+        <v-list-item-avatar v-if="l.page === 'compte' && imageCompte" :size="25" >
+          <v-img :src="imageCompte" />
+        </v-list-item-avatar>
+        <v-list-item-icon v-else>
           <v-icon> {{ l.icône }} </v-icon>
         </v-list-item-icon>
-        <v-list-item-title> {{ $t("nav.".concat(l.page)) }} </v-list-item-title>
+        <v-list-item-title :class="{ 'ms-4': l.page === 'compte' && imageCompte }"> {{ $t("nav.".concat(l.page)) }} </v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script>
+import mixinIPA from "@/mixins/ipa";
+
 export default {
   name: "Navigation",
-  data: () => ({
-    liens: [
-      {
-        page: "compte",
-        icône: "mdi-account",
-      },
-      /*
-      {
-        page: "projets",
-        icône: "mdi-folder"
-      },
-      */
-      {
-        page: "bd",
-        icône: "mdi-database",
-      },
-      {
-        page: "recherche",
-        icône: "mdi-magnify",
-      },
-      {
-        page: "favoris",
-        icône: "mdi-pin",
-      },
-      {
-        page: "automation",
-        icône: "mdi-sync",
-      },
-      {
-        page: "signalements",
-        icône: "mdi-bug",
-      },
-    ],
-  }),
+  mixins: [mixinIPA],
+  data: function () {
+    return {
+      imageCompte: null,
+      liens: [
+        {
+          page: "compte",
+          icône: "mdi-account",
+        },
+        /*
+        {
+          page: "projets",
+          icône: "mdi-folder"
+        },
+        */
+        {
+          page: "bd",
+          icône: "mdi-database",
+        },
+        {
+          page: "recherche",
+          icône: "mdi-magnify",
+        },
+        {
+          page: "favoris",
+          icône: "mdi-pin",
+        },
+        {
+          page: "automation",
+          icône: "mdi-sync",
+        },
+        {
+          page: "signalements",
+          icône: "mdi-bug",
+        },
+      ]
+    }
+  },
+  methods: {
+    initialiserSuivi: async function () {
+      const oublierImage = await this.$ipa.compte.suivreImage((image) => {
+        if (image) {
+          const url = URL.createObjectURL(
+            new Blob([image.buffer], { type: "image/png" })
+          );
+          this.imageCompte = url;
+        } else {
+          this.imageCompte = null;
+        }
+      });
+      this.suivre(oublierImage);
+    }
+  }
 };
 </script>
 
