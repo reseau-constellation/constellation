@@ -20,7 +20,7 @@ jobs:
           node-version: 14
 
       - name: Installer Snapcraft
-        uses: wixplosives/action-snapcraft@v1
+        uses: samuelmeuli/action-snapcraft@v1
         # Only install Snapcraft on Ubuntu
         if: startsWith(matrix.os, 'ubuntu')
         with:
