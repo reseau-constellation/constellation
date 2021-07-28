@@ -19,8 +19,16 @@ jobs:
         with:
           node-version: 14
 
+      - name: Installer Snapcraft
+        uses: wixplosives/action-snapcraft@v1
+        # Only install Snapcraft on Ubuntu
+        if: startsWith(matrix.os, 'ubuntu')
+        with:
+          # Log in to Snap Store
+          snapcraft_token: ${{ secrets.snapcraft_token }}
+
       - name: Compiler et publier l'application Électron
-        uses: wixplosives/action-electron-builder@v1
+        uses: samuelmeuli/action-electron-builder@v1
         with:
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
