@@ -52,7 +52,7 @@ export default class ContrôleurAccès extends EventEmitter {
     const sleep = (milliseconds: number) => {
       return new Promise(resolve => setTimeout(resolve, milliseconds))
     }
-    if (!isMod) await sleep(2000)
+    if (!isMod) await sleep(5000)
     isMod = this.estUnModérateur(idÉlément);
     if (isMod && rôleValide && (await validSig())) {
       if (rôle === MODÉRATEUR) {
