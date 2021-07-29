@@ -188,7 +188,7 @@ export default {
 
       const oublierDispositifs = await this.$ipa.suivreDispositifs(
         (dispositifs) => {
-          this.dispositifs = dispositifs;
+          this.dispositifs = dispositifs.sort((a, _) => a === this.idDispositif ? -1 : 1);
         }
       );
       this.suivre([oublierCourriel, oublierNoms, oublierDispositifs]);
