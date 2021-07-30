@@ -309,12 +309,14 @@ export default class ClientConstellation extends EventEmitter {
     await this.initialiserBds()
   }
 
-  async donnerAccès(id: string, identité: string): Promise<void> {
+  async donnerAccès(id: string, identité: string, rôle: keyof objRôles = MEMBRE): Promise<void> {
+    if (!adresseOrbiteValide(identité)) throw new Error(`Identité ${identité} non valide.`)
+
     const bd = await this.ouvrirBd(id);
     const accès = bd.access;
     const typeAccès = (accès.constructor as unknown as AccessController).type;
     if (typeAccès === nomTypeContrôleurConstellation) {
-      (accès as unknown as ContrôleurConstellation).grant(MEMBRE, identité);
+      (accès as unknown as ContrôleurConstellation).grant(rôle, identité);
     }
   }
 
@@ -360,7 +362,7 @@ export default class ClientConstellation extends EventEmitter {
   async suivreBd(
     id: string,
     f: schémaFonctionSuivi<Store>,
-    événements: string[] = ["write", "replicate", "replicated", "ready"]
+    événements: string[] = ["write", "replicated", "ready"]
   ): Promise<schémaFonctionOublier> {
     const bd = await this.ouvrirBd(id);
     const fFinale = () => f(bd);
@@ -386,7 +388,7 @@ export default class ClientConstellation extends EventEmitter {
     ) => Promise<schémaFonctionOublier>
   ) {
     if (!fSuivre) {
-      fSuivre = (id, f) => this.suivreBd(id, f);
+      fSuivre = async (id, f) => await this.suivreBd(id, f);
     }
 
     let oublierFSuivre: schémaFonctionOublier | undefined;
@@ -402,6 +404,7 @@ export default class ClientConstellation extends EventEmitter {
           oublierFSuivre = await fSuivre!(idBdCible, f);
         } else {
           f(undefined);
+          if (oublierFSuivre) oublierFSuivre();
           oublierFSuivre = undefined;
         }
       }
@@ -581,7 +584,7 @@ export default class ClientConstellation extends EventEmitter {
         éléments.map((é) => [fCode(é), é])
       );
       const existants = Object.keys(arbre);
-      const nouveaux = Object.keys(dictÉléments).filter(
+      let nouveaux = Object.keys(dictÉléments).filter(
         (é) => !existants.includes(é)
       );
       const disparus = existants.filter(
@@ -593,6 +596,7 @@ export default class ClientConstellation extends EventEmitter {
         })
         .map((é) => é[0]);
       nouveaux.push(...changés);
+      nouveaux = [...new Set(nouveaux)]
 
       for (const c of changés) {
         if (arbre[c]) {
