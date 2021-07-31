@@ -246,22 +246,28 @@ export default class Réseau extends EventEmitter {
 
   async suivreCourrielMembre(
     idMembre: string,
-    f: schémaFonctionSuivi<string>
+    f: schémaFonctionSuivi<string | undefined>
   ): Promise<schémaFonctionOublier> {
-    const fFinale = async (bd?: KeyValueStore) => {
-      if (bd) return await this.client.compte!.suivreCourriel(f, bd.id);
-    };
-    return await this.client.suivreBdDeClef(idMembre, "compte", fFinale);
+    return await this.client.suivreBdDeClef(
+      idMembre,
+      "compte",
+      f,
+      async (id: string, f: schémaFonctionSuivi<string>) =>
+        await this.client.compte!.suivreCourriel(f, id)
+    );
   }
 
   async suivreImageMembre(
     idMembre: string,
     f: schémaFonctionSuivi<Uint8Array | null>
   ): Promise<schémaFonctionOublier> {
-    const fFinale = async (bd?: KeyValueStore) => {
-      if (bd) return await this.client.compte!.suivreImage(f, bd.id);
+    const fFinale = async (image?: Uint8Array | null) => {
+      return f(image || null)
     };
-    return await this.client.suivreBdDeClef(idMembre, "compte", fFinale);
+    const fSuivre = async (id: string, f: schémaFonctionSuivi<Uint8Array | null>): Promise<schémaFonctionOublier> => {
+      return await this.client.compte!.suivreImage(f, id);
+    }
+    return await this.client.suivreBdDeClef(idMembre, "compte", fFinale, fSuivre);
   }
 
   async suivreBdsMembre(
@@ -272,8 +278,8 @@ export default class Réseau extends EventEmitter {
       id,
       "bds",
       f,
-      (id: string, f: schémaFonctionSuivi<string[]>) =>
-        this.client.bds!.suivreBds(f, id)
+      async (id: string, f: schémaFonctionSuivi<string[]>) =>
+        await this.client.bds!.suivreBds(f, id)
     );
   }
 
@@ -285,8 +291,8 @@ export default class Réseau extends EventEmitter {
       id,
       "projets",
       f,
-      (id: string, f: schémaFonctionSuivi<string[]>) =>
-        this.client.projets!.suivreProjetsMembre(f, id)
+      async (id: string, f: schémaFonctionSuivi<string[]>) =>
+        await this.client.projets!.suivreProjetsMembre(f, id)
     );
   }
 
@@ -294,12 +300,14 @@ export default class Réseau extends EventEmitter {
     id: string,
     f: schémaFonctionSuivi<string[] | undefined>
   ): Promise<schémaFonctionOublier> {
+    const fSuivreFavoris = async (id: string, f: schémaFonctionSuivi<string[]>) => {
+      return await this.client.favoris!.suivreFavoris(f, id)
+    }
     return await this.client.suivreBdDeClef(
       id,
       "bds",
       f,
-      (id: string, f: schémaFonctionSuivi<string[]>) =>
-        this.client.favoris!.suivreFavoris(f, id)
+      fSuivreFavoris
     );
   }
 
@@ -318,10 +326,13 @@ export default class Réseau extends EventEmitter {
         const toutes = [...new Set([...bds.propres, ...bds.favoris])];
         f(toutes);
       };
-      const oublierBdsPropres = await this.suivreBdsMembre(id, (propres) => {
-        bds.propres = propres || [];
-        fFinale();
-      });
+      const oublierBdsPropres = await this.suivreBdsMembre(
+        id,
+        (propres) => {
+          bds.propres = propres || [];
+          fFinale();
+        }
+      );
       const oublierBdsFavoris = await this.suivreFavorisMembre(
         id,
         (favoris) => {

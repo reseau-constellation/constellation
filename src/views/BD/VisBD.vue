@@ -126,11 +126,7 @@
           <p class="mb-0 text-overline">Information Générale</p>
           <div class="d-flex flex-wrap">
             <v-card flat width="200" class="mb-3">
-              <v-menu
-                offset-x
-                :disabled="score === null"
-                :close-on-content-click="false"
-              >
+              <dialogueQualité :score="score" :permissionModifier="permissionÉcrire">
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>
@@ -159,15 +155,11 @@
                     </v-list-item-content>
                   </v-list-item>
                 </template>
-                <carteQualité
-                  v-if="score"
-                  :score="score"
-                  :permissionÉcrire="permissionÉcrire"
-                />
-              </v-menu>
+              </dialogueQualité>
             </v-card>
+
             <v-card flat width="200" class="mb-3">
-              <dialogue-auteurs :auteurs="auteurs">
+              <dialogue-auteurs :idBd="idBd" :auteurs="auteurs" :permissionModerateur="true || permissionModerateur">
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>
@@ -373,8 +365,11 @@
 </template>
 
 <script>
+import { MODÉRATEUR } from "@/ipa/accès/consts";
+
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 
+import dialogueQualité from "@/components/commun/dialogueQualité";
 import dialogueLicence from "@/components/commun/licences/dialogueLicence";
 import dialogueMotsClefs from "@/components/commun/motsClefs/dialogueMotsClefs";
 import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications";
@@ -389,7 +384,6 @@ import mixinIPA from "@/mixins/ipa";
 import mixinLicences from "@/mixins/licences";
 import jetonVariable from "@/components/commun/jetonVariable";
 import jetonMotClef from "@/components/commun/motsClefs/jetonMotClef";
-import carteQualité from "@/components/commun/carteQualité";
 
 export default {
   name: "visBD",
@@ -399,7 +393,7 @@ export default {
     lienTélécharger,
     jetonVariable,
     jetonMotClef,
-    carteQualité,
+    dialogueQualité,
     dialogueLicence,
     dialogueAuteurs,
     dialogueMotsClefs,
@@ -450,6 +444,13 @@ export default {
     logoBD: function () {
       return this.logo || this.image("logoBD");
     },
+    permissionModerateur: function() {
+      if (!this.auteurs) return false;
+      const accèsMod = this.auteurs.find(
+        a=> a.idBdRacine === this.$ipa.idBdRacine && a.rôle === MODÉRATEUR
+      )
+      return Boolean(accèsMod)
+    }
   },
   methods: {
     couper,
@@ -473,7 +474,6 @@ export default {
       const oublierAuteurs = await this.$ipa.bds.suivreAuteurs(
         this.idBd,
         (auteurs) => {
-          console.log({ auteurs });
           this.auteurs = auteurs;
         }
       );

@@ -309,10 +309,10 @@ export default class ClientConstellation extends EventEmitter {
     await this.initialiserBds()
   }
 
-  async donnerAccès(id: string, identité: string, rôle: keyof objRôles = MEMBRE): Promise<void> {
+  async donnerAccès(idBd: string, identité: string, rôle: keyof objRôles = MEMBRE): Promise<void> {
     if (!adresseOrbiteValide(identité)) throw new Error(`Identité ${identité} non valide.`)
 
-    const bd = await this.ouvrirBd(id);
+    const bd = await this.ouvrirBd(idBd);
     const accès = bd.access;
     const typeAccès = (accès.constructor as unknown as AccessController).type;
     if (typeAccès === nomTypeContrôleurConstellation) {
@@ -365,6 +365,7 @@ export default class ClientConstellation extends EventEmitter {
     événements: string[] = ["write", "replicated", "ready"]
   ): Promise<schémaFonctionOublier> {
     const bd = await this.ouvrirBd(id);
+
     const fFinale = () => f(bd);
     for (const é of événements) {
       bd.events.on(é, fFinale);

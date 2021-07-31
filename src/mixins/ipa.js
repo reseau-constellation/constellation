@@ -12,6 +12,14 @@ export default {
       }
       this.crochets = [...crochet, ...this.crochets];
     },
+    oublierCrochets() {
+      this.crochets.forEach((c) => c());
+      this.crochets = []
+    },
+    async réInitialiserSuivi() {
+      this.oublierCrochets();
+      await this.initialiserSuivi();
+    }
   },
   mounted: function () {
     this.crochetIPA = this.initialiserSuivi.bind(this);
@@ -21,8 +29,8 @@ export default {
       this.initialiserSuivi();
     }
   },
-  destroyed() {
+  unMounted: function () {
     this.$ipa.off("pret", this.crochetIPA);
-    this.crochets.map((c) => c());
+    this.oublierCrochets();
   },
 };

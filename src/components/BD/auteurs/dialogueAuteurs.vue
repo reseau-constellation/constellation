@@ -10,21 +10,29 @@
 
       <v-card-text>
         <v-list>
-          <v-list-item @click="autoriserAuteur">
-            <v-list-item-avatar>
-              <v-icon>mdi-plus</v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              Autoriser un autre auteur
-            </v-list-item-content>
-          </v-list-item>
-          <item-auteur
-            v-for="auteur in auteurs"
-            :key="auteur.idBdRacine"
-            :id="auteur.idBdRacine"
-            :mod="auteur.rôle === MODÉRATEUR"
-            :accepté="auteur.accepté"
-          />
+          <v-skeleton-loader v-if="auteurs===null" type="paragraph@3" />
+          <span v-else>
+            <dialogue-nouvel-auteur v-if="permissionModerateur" :permissionModerateur="true || permissionModerateur" :idBd="idBd">
+              <template v-slot:activator="{ on, attrs }">
+                <v-list-item v-bind="attrs" v-on="on">
+                  <v-list-item-avatar>
+                    <v-icon>mdi-plus</v-icon>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    Autoriser un autre auteur
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </dialogue-nouvel-auteur>
+
+            <item-auteur
+              v-for="auteur in auteurs"
+              :key="auteur.idBdRacine"
+              :id="auteur.idBdRacine"
+              :mod="auteur.rôle === MODÉRATEUR"
+              :accepté="auteur.accepté"
+            />
+          </span>
         </v-list>
       </v-card-text>
       <v-divider></v-divider>
@@ -41,18 +49,19 @@
 
 <script>
 import itemAuteur from "@/components/BD/auteurs/itemAuteur";
+import dialogueNouvelAuteur from "@/components/BD/auteurs/dialogueNouvelAuteur";
 import { MODÉRATEUR } from "@/ipa/accès/consts";
 
 export default {
-  name: "dialogueAuteur",
-  props: ["auteurs", "permissionModifier"],
-  components: { itemAuteur },
+  name: "dialogueAuteurs",
+  props: ["idBd", "auteurs", "permissionModerateur"],
+  components: { itemAuteur, dialogueNouvelAuteur },
   data: function () {
     return {
       dialogue: false,
       MODÉRATEUR,
     };
-  },
+  }
 };
 </script>
 

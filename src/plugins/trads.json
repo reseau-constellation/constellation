@@ -6,7 +6,9 @@
       "btnInstaller": "Installer Constellation",
       "fermer": "Fermer",
       "annuler": "Annuler",
-      "sauvegarder": "Sauvegarder"
+      "sauvegarder": "Sauvegarder",
+      "confirmer": "Confirmer",
+      "retour": "Retour"
     },
     "alerteConditions": {
       "texte": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
@@ -21,10 +23,15 @@
     "qualité": {
       "titre": "Composition du score",
       "sousTitre": "Un meilleur score augmente la confiance que les autres porteront à vos données et favorisera le classement de vos données dans les recherches.",
-      "sousTitres": {
+      "titres": {
         "accès": "Accessibilité",
         "couverture": "Couverture tests",
         "passe": "Qualité données"
+      },
+      "sousTitres": {
+        "accès": "Cette section mesure l'accessibilité de votre base de données. Le plus elle est disponible dans les langues parlées là d'où proviennent vous données, le plus fort votre score.",
+        "couverture": "Cette section mesure le pourcentage de vos colonnes qui sont couvertes par des tests de contrôle de la qualité. Vous pouvez ajouter ou modifier les tests ci-dessous.",
+        "passe": "Cette section mesure le pourcentage des données qui passent les tests de contrôle de la qualité. Vous pouvez voir ci-dessous les données problématiques, s'il y en a."
       }
     },
     "nav": {

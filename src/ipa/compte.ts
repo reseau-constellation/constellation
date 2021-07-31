@@ -95,7 +95,7 @@ export default class Compte {
         idImage,
         MAX_TAILLE_IMAGE_VIS
       );
-      f(image);
+      return f(image);
     });
   }
 }

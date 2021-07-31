@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="actif" width="300" class="ma-2 text-start">
+  <v-card v-show="actif" width="300" class="ma-2 text-start">
     <v-card-title>
       <avatar-profil :id="id" :vuIlyA="vuIlyA" />
       {{ nom ? couper(nom, 17) : "Incognito" }}

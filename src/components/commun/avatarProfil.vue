@@ -26,7 +26,7 @@ export default {
   mixins: [mixinIPA, mixinImage],
   data: function () {
     return {
-      imageCompte: null,
+      imageCompte: null
     };
   },
   computed: {
@@ -39,8 +39,15 @@ export default {
       return options[Math.floor(Math.random() * options.length)];
     },
   },
+  watch: {
+    id: async function () {
+      await this.réInitialiserSuivi();
+    },
+  },
   methods: {
     initialiserSuivi: async function () {
+      this.imageCompte = null;
+
       const oublierImage = await this.$ipa.réseau.suivreImageMembre(
         this.id,
         (image) => {
