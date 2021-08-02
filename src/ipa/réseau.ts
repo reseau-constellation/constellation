@@ -1,5 +1,4 @@
 import {
-  KeyValueStore,
   FeedStore,
   élémentFeedStore,
   isValidAddress,
