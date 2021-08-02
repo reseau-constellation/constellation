@@ -11,6 +11,9 @@
         <v-btn icon>
           <v-icon>mdi-download</v-icon>
         </v-btn>
+        <v-btn icon>
+          <v-icon @click="dialogue = false">mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-card-subtitle>
         <v-icon left small>mdi-information-outline</v-icon>
