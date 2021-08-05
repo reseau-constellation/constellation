@@ -43,11 +43,11 @@ export default class Nuée {
   client: ClientConstellation;
   sujet: Buffer;
   nuée: any;
-  prises: {[key: string]: infoPrise}
+  prises: { [key: string]: infoPrise };
 
   constructor(client: ClientConstellation) {
     this.client = client;
-    this.prises = {}
+    this.prises = {};
     setInterval(() => this.direSalutÀTous(), 1000 * 60);
 
     this.sujet = crypto
@@ -58,25 +58,27 @@ export default class Nuée {
     this.nuée.join(this.sujet, { lookup: true, announce: true });
 
     this.nuée.on("connection", async (prise: any) => {
-      const fGérerDonnées = (données: BufferSource) => this.gérerDonnées(données, prise)
+      const fGérerDonnées = (données: BufferSource) =>
+        this.gérerDonnées(données, prise);
       prise.on("data", fGérerDonnées);
       const fOublier = () => {
-        prise.off("data", fGérerDonnées)
-      }
-      this.prises[prise._id] = { prise, fOublier }
+        prise.off("data", fGérerDonnées);
+      };
+      this.prises[prise._id] = { prise, fOublier };
       this.direSalut(prise);
     });
   }
 
   async direSalutÀTous(): Promise<void> {
-    await Promise.all(Object.values(this.prises).map((p) => {
-      if (p.prise.writable)
-        this.direSalut(p.prise)
-      else {
-        p.fOublier()
-        delete this.prises[p.prise._id]
-      }
-    }))
+    await Promise.all(
+      Object.values(this.prises).map((p) => {
+        if (p.prise.writable) this.direSalut(p.prise);
+        else {
+          p.fOublier();
+          delete this.prises[p.prise._id];
+        }
+      })
+    );
   }
 
   async direSalut(prise: any): Promise<void> {

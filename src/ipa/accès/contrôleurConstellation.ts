@@ -82,7 +82,7 @@ const suivreBdAccès = async (
       .map((e: élémentBdListe<entréeBDAccès>) => e.payload.value);
     f(éléments);
   };
-  bd.events.setMaxListeners(100)
+  bd.events.setMaxListeners(100);
   for (const é of événementsSuiviBd) {
     bd.events.on(é, fFinale);
   }
@@ -98,32 +98,32 @@ const suivreBdAccès = async (
 const verrouOuvertureBd = new Semaphore();
 
 class AccesseurBdOrbite {
-  bds: {[key: string]: Store}
+  bds: { [key: string]: Store };
   constructor() {
-    this.bds = {}
+    this.bds = {};
   }
 
   async ouvrirBd(orbite: OrbitDB, idBd: string): Promise<Store> {
-    const idOrbite = orbite.identity.id
-    const idBdEtOrbite = idBd + idOrbite
+    const idOrbite = orbite.identity.id;
+    const idBdEtOrbite = idBd + idOrbite;
 
-    verrouOuvertureBd.acquire(idBdEtOrbite)
+    verrouOuvertureBd.acquire(idBdEtOrbite);
 
-    const existante = this.bds[idBdEtOrbite]
+    const existante = this.bds[idBdEtOrbite];
     if (existante) {
       verrouOuvertureBd.release(idBdEtOrbite);
-      return existante
+      return existante;
     }
     const bd = await orbite.open(idBd);
-    await bd.load()
+    await bd.load();
 
-    this.bds[idBdEtOrbite] = bd
+    this.bds[idBdEtOrbite] = bd;
     verrouOuvertureBd.release(idBdEtOrbite);
-    return bd
+    return bd;
   }
 }
 
-const accesseurBdOrbite = new AccesseurBdOrbite()
+const accesseurBdOrbite = new AccesseurBdOrbite();
 
 class AccèsUtilisateur extends EventEmitter {
   orbite: OrbitDB;
@@ -140,7 +140,10 @@ class AccèsUtilisateur extends EventEmitter {
   }
 
   async initialiser(idBd: string): Promise<void> {
-    this.bd = await accesseurBdOrbite.ouvrirBd(this.orbite, idBd) as FeedStore
+    this.bd = (await accesseurBdOrbite.ouvrirBd(
+      this.orbite,
+      idBd
+    )) as FeedStore;
 
     this.accès = this.bd.access as unknown as ContrôleurConstellation;
     this.bdAccès = this.accès.bd!;
@@ -336,21 +339,23 @@ export default class ContrôleurConstellation extends AccessController {
   async load(address: string) {
     const addresseValide = isValidAddress(address);
 
-    let adresseFinale
+    let adresseFinale;
     if (addresseValide) {
-      adresseFinale = address
+      adresseFinale = address;
     } else {
       adresseFinale = this._orbitdb.determineAddress(
         ensureAddress(address),
         "feed",
         this._createOrbitOpts(addresseValide)
-      )
+      );
     }
 
-    this.bd = await accesseurBdOrbite.ouvrirBd(this._orbitdb, adresseFinale) as FeedStore
+    this.bd = (await accesseurBdOrbite.ouvrirBd(
+      this._orbitdb,
+      adresseFinale
+    )) as FeedStore;
 
-    suivreBdAccès(this.bd, (éléments) => this._miseÀJourBdAccès(éléments))
-
+    suivreBdAccès(this.bd, (éléments) => this._miseÀJourBdAccès(éléments));
   }
 
   _createOrbitOpts(loadByAddress = false) {

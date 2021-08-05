@@ -26,7 +26,7 @@ export default {
   mixins: [mixinIPA, mixinImage],
   data: function () {
     return {
-      imageCompte: null
+      imageCompte: null,
     };
   },
   computed: {

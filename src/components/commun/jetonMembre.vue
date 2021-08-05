@@ -1,9 +1,5 @@
 <template>
-  <v-chip
-    class="me-1 mb-1"
-    label
-    outlined
-  >
+  <v-chip class="me-1 mb-1" label outlined>
     <avatar-profil :id="id" />
     {{ couper(nom, 25) }}
     <lien-orbite :lien="id" />
@@ -25,7 +21,7 @@ export default {
   components: { avatarProfil, lienOrbite },
   data: function () {
     return {
-      noms: {}
+      noms: {},
     };
   },
   computed: {

@@ -10,9 +10,13 @@
 
       <v-card-text>
         <v-list>
-          <v-skeleton-loader v-if="auteurs===null" type="paragraph@3" />
+          <v-skeleton-loader v-if="auteurs === null" type="paragraph@3" />
           <span v-else>
-            <dialogue-nouvel-auteur v-if="permissionModerateur" :permissionModerateur="true || permissionModerateur" :idBd="idBd">
+            <dialogue-nouvel-auteur
+              v-if="permissionModerateur"
+              :permissionModerateur="true || permissionModerateur"
+              :idBd="idBd"
+            >
               <template v-slot:activator="{ on, attrs }">
                 <v-list-item v-bind="attrs" v-on="on">
                   <v-list-item-avatar>
@@ -61,7 +65,7 @@ export default {
       dialogue: false,
       MODÉRATEUR,
     };
-  }
+  },
 };
 </script>
 

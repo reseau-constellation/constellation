@@ -120,15 +120,15 @@ export default class ClientConstellation extends EventEmitter {
   projets?: Projets;
   nuée?: Nuée;
   motsClefs?: MotsClefs;
-  pret: boolean;
+  prêt: boolean;
   idBdRacine?: string;
 
   constructor(idBdRacine?: string, dir = "./sfip-cnstl") {
     super();
     this._dir = dir;
     this._bds = {};
-    this.pret = false;
-    this.idBdRacine = idBdRacine
+    this.prêt = false;
+    this.idBdRacine = idBdRacine;
   }
 
   async initialiser() {
@@ -149,17 +149,18 @@ export default class ClientConstellation extends EventEmitter {
     };
     if (!this.idBdRacine) {
       this.idBdRacine = await this.créerBdIndépendante(
-      "kvstore",
-      optionsAccèsRacine,
-      "racine"
-    )};
+        "kvstore",
+        optionsAccèsRacine,
+        "racine"
+      );
+    }
 
-    await this.initialiserBds()
+    await this.initialiserBds();
 
     this.nuée = new Nuée(this);
 
-    this.pret = true;
-    this.emit("pret");
+    this.prêt = true;
+    this.emit("prêt");
 
     //On commence par épingler notre compte (de manière récursive)
     //afin de le rendre disponible
@@ -220,7 +221,7 @@ export default class ClientConstellation extends EventEmitter {
     message: string
   ): Promise<boolean> {
     if (!signature || !signature.clefPublique || !signature.signature)
-      return false
+      return false;
     return await this.orbite!.identity.provider.verify(
       signature.signature,
       signature.clefPublique,
@@ -262,7 +263,7 @@ export default class ClientConstellation extends EventEmitter {
     f: schémaFonctionSuivi<string[]>,
     idBdRacine?: string
   ): Promise<schémaFonctionOublier> {
-    if (!this.bdRacine) await once(this, "pret");
+    if (!this.bdRacine) await once(this, "prêt");
     idBdRacine = idBdRacine || this.bdRacine!.id;
     const bd = await this.ouvrirBd(idBdRacine);
     const accès = bd.access;
@@ -292,25 +293,31 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async ajouterDispositif(identité: string): Promise<void> {
-    if (!this.bdRacine) await once(this, "pret");
+    if (!this.bdRacine) await once(this, "prêt");
     const accès = this.bdRacine!.access as unknown as ContrôleurConstellation;
     accès.grant(MODÉRATEUR, identité);
   }
 
   async enleverDispositif(identité: string): Promise<void> {
-    if (!this.bdRacine) await once(this, "pret");
+    if (!this.bdRacine) await once(this, "prêt");
     const accès = this.bdRacine!.access as unknown as ContrôleurConstellation;
     await accès.revoke(MODÉRATEUR, identité);
   }
 
   async rejoindreCompte(idBdRacine: string): Promise<void> {
-    if (!adresseOrbiteValide(idBdRacine)) throw new Error(`Adresse compte ${idBdRacine} non valide`)
-    this.idBdRacine = idBdRacine
-    await this.initialiserBds()
+    if (!adresseOrbiteValide(idBdRacine))
+      throw new Error(`Adresse compte ${idBdRacine} non valide`);
+    this.idBdRacine = idBdRacine;
+    await this.initialiserBds();
   }
 
-  async donnerAccès(idBd: string, identité: string, rôle: keyof objRôles = MEMBRE): Promise<void> {
-    if (!adresseOrbiteValide(identité)) throw new Error(`Identité ${identité} non valide.`)
+  async donnerAccès(
+    idBd: string,
+    identité: string,
+    rôle: keyof objRôles = MEMBRE
+  ): Promise<void> {
+    if (!adresseOrbiteValide(identité))
+      throw new Error(`Identité ${identité} non valide.`);
 
     const bd = await this.ouvrirBd(idBd);
     const accès = bd.access;
@@ -597,7 +604,7 @@ export default class ClientConstellation extends EventEmitter {
         })
         .map((é) => é[0]);
       nouveaux.push(...changés);
-      nouveaux = [...new Set(nouveaux)]
+      nouveaux = [...new Set(nouveaux)];
 
       for (const c of changés) {
         if (arbre[c]) {

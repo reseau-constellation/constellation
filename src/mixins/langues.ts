@@ -14,7 +14,7 @@ import { mapGetters } from "vuex";
 const ORIG = "fr";
 
 export default Vue.extend({
-  data () {
+  data() {
     return {
       langueOriginale: ORIG as string,
     };
@@ -24,7 +24,7 @@ export default Vue.extend({
       return this.$i18n.locale;
     },
     languesPréférées: function (): string[] {
-      return [this.$i18n.locale, ...this.$i18n.fallbackLocale as Locale[]];
+      return [this.$i18n.locale, ...(this.$i18n.fallbackLocale as Locale[])];
     },
     langues: function (): string[] {
       const liste_langues = [
@@ -34,7 +34,11 @@ export default Vue.extend({
         ]),
       ];
       return liste_langues.sort((a, b) => {
-        return b === this.langueOriginale ? 1 : this.progrès(a) < this.progrès(b) ? 1 : -1;
+        return b === this.langueOriginale
+          ? 1
+          : this.progrès(a) < this.progrès(b)
+          ? 1
+          : -1;
       });
     },
     languesNuchabal: (): string[] => {
@@ -60,48 +64,55 @@ export default Vue.extend({
       this.$store.commit("paramètres/changerLangue", { langue: lng });
     },
     clefsMessages(lng: string): string[] {
-      lng = lng || this.langueOriginale
+      lng = lng || this.langueOriginale;
       const messages = this.$i18n.messages;
-      const extraireMessages = (d: LocaleMessageObject, préc?: string): string[] => {
+      const extraireMessages = (
+        d: LocaleMessageObject,
+        préc?: string
+      ): string[] => {
         let msgs: string[] = [];
         for (const [c, v] of Object.entries(d)) {
           const clef = préc ? `${préc}.${c}` : c;
           if (typeof v === "string") {
             msgs.push(clef);
           } else {
-            msgs = [...msgs, ...extraireMessages(v as LocaleMessageObject, clef)];
+            msgs = [
+              ...msgs,
+              ...extraireMessages(v as LocaleMessageObject, clef),
+            ];
           }
         }
         return msgs;
       };
-      return extraireMessages(messages[lng])
+      return extraireMessages(messages[lng]);
     },
-    progrès (lng: string): number {
+    progrès(lng: string): number {
       const messages = this.$i18n.messages;
       const messagesOrig = this.clefsMessages(this.langueOriginale);
-      const messagesLng = new Set(
-        messages[lng] ? this.clefsMessages(lng) : []
-      );
+      const messagesLng = new Set(messages[lng] ? this.clefsMessages(lng) : []);
       const communs = messagesOrig.filter((c) => messagesLng.has(c));
       return communs.length / messagesOrig.length;
     },
     traduireClef(clef: string, langues: Locale[]) {
-      const clefs = clef.split(".")
-      const trouverTrad = (listeClefs: string[], dicTrads: LocaleMessageObject): string | undefined => {
+      const clefs = clef.split(".");
+      const trouverTrad = (
+        listeClefs: string[],
+        dicTrads: LocaleMessageObject
+      ): string | undefined => {
         const [première, ...toutLeReste] = listeClefs;
-        const prochain = dicTrads[première]
+        const prochain = dicTrads[première];
         if (!toutLeReste.length) {
           return typeof prochain === "string" ? prochain : undefined;
-        } else if (typeof prochain !== "object" ) {
-          return undefined
+        } else if (typeof prochain !== "object") {
+          return undefined;
         } else {
-          return trouverTrad(toutLeReste, prochain as LocaleMessageObject)
+          return trouverTrad(toutLeReste, prochain as LocaleMessageObject);
         }
-      }
+      };
       for (const langue of langues) {
-        const dicLangue = this.$i18n.messages[langue]
-        const trad = trouverTrad(clefs, dicLangue)
-        if (trad) return trad
+        const dicLangue = this.$i18n.messages[langue];
+        const trad = trouverTrad(clefs, dicLangue);
+        if (trad) return trad;
       }
     },
     changerNumération: function (système: string) {

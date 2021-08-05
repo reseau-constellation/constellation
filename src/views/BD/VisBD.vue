@@ -126,7 +126,10 @@
           <p class="mb-0 text-overline">Information Générale</p>
           <div class="d-flex flex-wrap">
             <v-card flat width="200" class="mb-3">
-              <dialogueQualité :score="score" :permissionModifier="permissionÉcrire">
+              <dialogueQualité
+                :score="score"
+                :permissionModifier="permissionÉcrire"
+              >
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>
@@ -159,7 +162,11 @@
             </v-card>
 
             <v-card flat width="200" class="mb-3">
-              <dialogue-auteurs :idBd="idBd" :auteurs="auteurs" :permissionModerateur="true || permissionModerateur">
+              <dialogue-auteurs
+                :idBd="idBd"
+                :auteurs="auteurs"
+                :permissionModerateur="true || permissionModerateur"
+              >
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
                     <v-list-item-avatar>
@@ -444,13 +451,13 @@ export default {
     logoBD: function () {
       return this.logo || this.image("logoBD");
     },
-    permissionModerateur: function() {
+    permissionModerateur: function () {
       if (!this.auteurs) return false;
       const accèsMod = this.auteurs.find(
-        a=> a.idBdRacine === this.$ipa.idBdRacine && a.rôle === MODÉRATEUR
-      )
-      return Boolean(accèsMod)
-    }
+        (a) => a.idBdRacine === this.$ipa.idBdRacine && a.rôle === MODÉRATEUR
+      );
+      return Boolean(accèsMod);
+    },
   },
   methods: {
     couper,

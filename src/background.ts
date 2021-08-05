@@ -85,7 +85,7 @@ async function createWindow() {
   autoUpdater.on("update-downloaded", () => {
     win.webContents.send("update_downloaded");
   });
-  ipcMain.on('restart_app', () => {
+  ipcMain.on("restart_app", () => {
     autoUpdater.quitAndInstall();
   });
 }

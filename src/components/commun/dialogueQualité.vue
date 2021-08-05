@@ -13,9 +13,7 @@
           :size="25"
           :indeterminate="!score"
           :value="scoreTitre ? scoreTitre : 0"
-          :color="
-            scoreTitre ? couleurScore(scoreTitre).couleur : 'primary'
-          "
+          :color="scoreTitre ? couleurScore(scoreTitre).couleur : 'primary'"
         />
         {{ $t(titre) }}
       </v-card-title>
@@ -56,24 +54,31 @@
                   </span>
                 </v-list-item-content>
                 <v-list-item-action>
-                  <v-icon>{{ $vuetify.rtl ? "mdi-chevron-left" : "mdi-chevron-right" }}</v-icon>
+                  <v-icon>{{
+                    $vuetify.rtl ? "mdi-chevron-left" : "mdi-chevron-right"
+                  }}</v-icon>
                 </v-list-item-action>
               </v-list-item>
             </v-list>
           </v-window-item>
-          <v-window-item :value="2">
-          </v-window-item>
-          <v-window-item :value="3">
-          </v-window-item>
-          <v-window-item :value="4">
-          </v-window-item>
+          <v-window-item :value="2"> </v-window-item>
+          <v-window-item :value="3"> </v-window-item>
+          <v-window-item :value="4"> </v-window-item>
         </v-window>
       </v-card-text>
       <v-divider></v-divider>
 
       <v-card-actions>
-        <v-btn v-show="étape !== 1" color="secondary" text outlined @click="étape = 1">
-          <v-icon left>{{ $vuetify.rtl ? "mdi-chevron-right" : "mdi-chevron-left" }}</v-icon>
+        <v-btn
+          v-show="étape !== 1"
+          color="secondary"
+          text
+          outlined
+          @click="étape = 1"
+        >
+          <v-icon left>{{
+            $vuetify.rtl ? "mdi-chevron-right" : "mdi-chevron-left"
+          }}</v-icon>
           {{ $t("communs.retour") }}
         </v-btn>
         <v-spacer></v-spacer>
@@ -89,7 +94,6 @@
 import mixinLangues from "@/mixins/langues";
 import { couleurScore } from "@/utils";
 
-
 export default {
   name: "dialogueQualité",
   props: ["score", "permissionModifier"],
@@ -97,74 +101,74 @@ export default {
   data: function () {
     return {
       dialogue: false,
-      étape: 1
+      étape: 1,
     };
   },
   computed: {
-    titre: function() {
+    titre: function () {
       switch (this.étape) {
         case 1: {
-          return "qualité.titre"
-        };
+          return "qualité.titre";
+        }
         case 2: {
-          return "qualité.titres.accès"
-        };
+          return "qualité.titres.accès";
+        }
         case 3: {
-          return "qualité.titres.couverture"
-        };
+          return "qualité.titres.couverture";
+        }
         case 4: {
-          return "qualité.titres.passe"
-        };
+          return "qualité.titres.passe";
+        }
         default:
-          return ""
+          return "";
       }
     },
-    sousTitre: function() {
+    sousTitre: function () {
       switch (this.étape) {
         case 1: {
-          return "qualité.sousTitre"
-        };
+          return "qualité.sousTitre";
+        }
         case 2: {
-          return "qualité.sousTitres.accès"
-        };
+          return "qualité.sousTitres.accès";
+        }
         case 3: {
-          return "qualité.sousTitres.couverture"
-        };
+          return "qualité.sousTitres.couverture";
+        }
         case 4: {
-          return "qualité.sousTitres.passe"
-        };
+          return "qualité.sousTitres.passe";
+        }
         default:
-          return ""
+          return "";
       }
     },
-    scoreTitre: function() {
+    scoreTitre: function () {
       switch (this.étape) {
         case 1: {
-          return this.score ? this.score.total : 0
-        };
+          return this.score ? this.score.total : 0;
+        }
         case 2: {
-          return this.score ? this.score.accès : 0
-        };
+          return this.score ? this.score.accès : 0;
+        }
         case 3: {
-          return this.score ? this.score.couverture : 0
-        };
+          return this.score ? this.score.couverture : 0;
+        }
         case 4: {
-          return this.score ? this.score.passe : 0
-        };
+          return this.score ? this.score.passe : 0;
+        }
         default:
-          return ""
+          return "";
       }
-    }
+    },
   },
   methods: {
     couleurScore,
-    avancer: function(section) {
+    avancer: function (section) {
       const pages = {
         accès: 2,
         couverture: 3,
-        passe: 4
-      }
-      this.étape = pages[section]
+        passe: 4,
+      };
+      this.étape = pages[section];
     },
   },
 };

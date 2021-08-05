@@ -1,9 +1,17 @@
-const webpack = require("webpack");
-const merge = require("webpack-merge");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+
 module.exports = {
   publicPath: process.env.NODE_ENV === "production" ? "/constellation/" : "/",
   transpileDependencies: ["vuetify"],
   productionSourceMap: false,
+  configureWebpack: {
+    plugins: [new NodePolyfillPlugin()],
+    resolve: {
+      fallback: {
+        fs: false,
+      },
+    },
+  },
   pluginOptions: {
     electronBuilder: {
       nodeIntegration: true,

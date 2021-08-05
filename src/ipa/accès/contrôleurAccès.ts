@@ -19,9 +19,12 @@ export default class ContrôleurAccès extends EventEmitter {
   _premierMod: string;
   orbitdb: OrbitDB;
 
-  constructor(orbitdb: OrbitDB, options: OptionsInitContrôleurAccèsConstellation) {
+  constructor(
+    orbitdb: OrbitDB,
+    options: OptionsInitContrôleurAccèsConstellation
+  ) {
     super();
-    this.orbitdb = orbitdb
+    this.orbitdb = orbitdb;
     this._accèsÉcriture = [options.premierMod]; // Peut ajouter d'autres membres ou modératrices
     this._premierMod = options.premierMod;
   }
@@ -35,12 +38,12 @@ export default class ContrôleurAccès extends EventEmitter {
   }
 
   async estUnModérateurPatient(id: string): Promise<boolean> {
-    if (this.estUnModérateur(id)) return true
+    if (this.estUnModérateur(id)) return true;
     const dormir = (milliseconds: number) => {
-      return new Promise(resolve => setTimeout(resolve, milliseconds))
-    }
-    await dormir(5000)
-    return this.estUnModérateur(id)
+      return new Promise((resolve) => setTimeout(resolve, milliseconds));
+    };
+    await dormir(5000);
+    return this.estUnModérateur(id);
   }
 
   get premierMod() {
@@ -56,14 +59,23 @@ export default class ContrôleurAccès extends EventEmitter {
     const estUnMod = this.estUnModérateurPatient(idÉlément);
     const rôleValide = rôles.includes(rôle);
 
-    console.log({estUnMod, rôleValide, rôle, idÉlément, idAjout, accèsÉcriture: [...this._accèsÉcriture], entry})
+    console.log({
+      estUnMod,
+      rôleValide,
+      rôle,
+      idÉlément,
+      idAjout,
+      accèsÉcriture: [...this._accèsÉcriture],
+      entry,
+    });
     const validSig = async () =>
       identityProvider.verifyIdentity(entry.identity);
 
     if (rôleValide && (await estUnMod) && (await validSig())) {
       if (rôle === MODÉRATEUR) {
         if (idAjout === this._premierMod) return true;
-        if (!this._accèsÉcriture.includes(idAjout)) this._accèsÉcriture.push(idAjout);
+        if (!this._accèsÉcriture.includes(idAjout))
+          this._accèsÉcriture.push(idAjout);
       }
       return true;
     }

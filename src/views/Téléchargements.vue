@@ -67,7 +67,6 @@ import Titre from "@/components/commun/Titre";
 import carteFichierInstallation from "@/components/téléchargements/carteFichierInstallation";
 
 const obtExt = function (nomFichier) {
-  console.log(nomFichier);
   return nomFichier.split(".").pop();
 };
 

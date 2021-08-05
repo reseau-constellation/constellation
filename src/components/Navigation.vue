@@ -26,13 +26,20 @@
         link
         @click="$router.push({ path: '/'.concat(l.page) })"
       >
-        <v-list-item-avatar v-if="l.page === 'compte' && imageCompte" :size="25" >
+        <v-list-item-avatar
+          v-if="l.page === 'compte' && imageCompte"
+          :size="25"
+        >
           <v-img :src="imageCompte" />
         </v-list-item-avatar>
         <v-list-item-icon v-else>
           <v-icon> {{ l.icône }} </v-icon>
         </v-list-item-icon>
-        <v-list-item-title :class="{ 'ms-4': l.page === 'compte' && imageCompte }"> {{ $t("nav.".concat(l.page)) }} </v-list-item-title>
+        <v-list-item-title
+          :class="{ 'ms-4': l.page === 'compte' && imageCompte }"
+        >
+          {{ $t("nav.".concat(l.page)) }}
+        </v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -78,8 +85,8 @@ export default {
           page: "signalements",
           icône: "mdi-bug",
         },
-      ]
-    }
+      ],
+    };
   },
   methods: {
     initialiserSuivi: async function () {
@@ -94,8 +101,8 @@ export default {
         }
       });
       this.suivre(oublierImage);
-    }
-  }
+    },
+  },
 };
 </script>
 

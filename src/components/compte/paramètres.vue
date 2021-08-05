@@ -93,8 +93,8 @@
                 <v-list-item-content>
                   <v-list-item-title> Ajouter un dispositif </v-list-item-title>
                   <v-list-item-subtitle>
-                    Ajouttez un autre ordinateur, téléphone, ou navigateur à votre
-                    compte pour plus de sécurité.
+                    Ajouttez un autre ordinateur, téléphone, ou navigateur à
+                    votre compte pour plus de sécurité.
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -188,7 +188,9 @@ export default {
 
       const oublierDispositifs = await this.$ipa.suivreDispositifs(
         (dispositifs) => {
-          this.dispositifs = dispositifs.sort((a, _) => a === this.idDispositif ? -1 : 1);
+          this.dispositifs = dispositifs.sort((a, _) =>
+            a === this.idDispositif ? -1 : 1
+          );
         }
       );
       this.suivre([oublierCourriel, oublierNoms, oublierDispositifs]);

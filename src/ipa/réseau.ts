@@ -1,8 +1,4 @@
-import {
-  FeedStore,
-  élémentFeedStore,
-  isValidAddress,
-} from "orbit-db";
+import { FeedStore, élémentFeedStore, isValidAddress } from "orbit-db";
 import { EventEmitter } from "events";
 import Semaphore from "@chriscdn/promise-semaphore";
 import ContrôleurConstellation from "./accès/contrôleurConstellation";
@@ -33,8 +29,8 @@ type infoRéplication = {
 };
 
 type infoDispositifEnLigne = {
-    info: infoMembre;
-    vuÀ: number;
+  info: infoMembre;
+  vuÀ: number;
 };
 
 const verrouAjouterMembre = new Semaphore();
@@ -217,14 +213,14 @@ export default class Réseau extends EventEmitter {
     f: schémaFonctionSuivi<infoDispositifEnLigne[]>
   ): Promise<schémaFonctionOublier> {
     const fFinale = () => {
-      f(Object.values(this.dispositifsEnLigne))
-    }
-    this.on("membreVu", fFinale)
-    fFinale()
-    const fOublier = ()=> {
-      this.off("membreVu", fFinale)
-    }
-    return fOublier
+      f(Object.values(this.dispositifsEnLigne));
+    };
+    this.on("membreVu", fFinale);
+    fFinale();
+    const fOublier = () => {
+      this.off("membreVu", fFinale);
+    };
+    return fOublier;
   }
 
   async suivreNomsMembre(
@@ -261,12 +257,20 @@ export default class Réseau extends EventEmitter {
     f: schémaFonctionSuivi<Uint8Array | null>
   ): Promise<schémaFonctionOublier> {
     const fFinale = async (image?: Uint8Array | null) => {
-      return f(image || null)
+      return f(image || null);
     };
-    const fSuivre = async (id: string, f: schémaFonctionSuivi<Uint8Array | null>): Promise<schémaFonctionOublier> => {
+    const fSuivre = async (
+      id: string,
+      f: schémaFonctionSuivi<Uint8Array | null>
+    ): Promise<schémaFonctionOublier> => {
       return await this.client.compte!.suivreImage(f, id);
-    }
-    return await this.client.suivreBdDeClef(idMembre, "compte", fFinale, fSuivre);
+    };
+    return await this.client.suivreBdDeClef(
+      idMembre,
+      "compte",
+      fFinale,
+      fSuivre
+    );
   }
 
   async suivreBdsMembre(
@@ -299,15 +303,13 @@ export default class Réseau extends EventEmitter {
     id: string,
     f: schémaFonctionSuivi<string[] | undefined>
   ): Promise<schémaFonctionOublier> {
-    const fSuivreFavoris = async (id: string, f: schémaFonctionSuivi<string[]>) => {
-      return await this.client.favoris!.suivreFavoris(f, id)
-    }
-    return await this.client.suivreBdDeClef(
-      id,
-      "bds",
-      f,
-      fSuivreFavoris
-    );
+    const fSuivreFavoris = async (
+      id: string,
+      f: schémaFonctionSuivi<string[]>
+    ) => {
+      return await this.client.favoris!.suivreFavoris(f, id);
+    };
+    return await this.client.suivreBdDeClef(id, "bds", f, fSuivreFavoris);
   }
 
   async suivreBds(
@@ -325,13 +327,10 @@ export default class Réseau extends EventEmitter {
         const toutes = [...new Set([...bds.propres, ...bds.favoris])];
         f(toutes);
       };
-      const oublierBdsPropres = await this.suivreBdsMembre(
-        id,
-        (propres) => {
-          bds.propres = propres || [];
-          fFinale();
-        }
-      );
+      const oublierBdsPropres = await this.suivreBdsMembre(id, (propres) => {
+        bds.propres = propres || [];
+        fFinale();
+      });
       const oublierBdsFavoris = await this.suivreFavorisMembre(
         id,
         (favoris) => {
