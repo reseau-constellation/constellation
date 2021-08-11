@@ -1,37 +1,25 @@
 <template>
   <v-card class="pa-5">
-    <v-row>
-      <v-col cols="12">
-        <p class="px-0 text-overline">
-          {{ $t("compte.onglets.réseau.équipes") }}
-        </p>
-        <p class="text--disabled">
-          Les fonctionnalités d'équipe seront ajoutées prochainement.
-        </p>
-      </v-col>
-      <v-col cols="12">
-        <p class="px-0 text-overline">
-          {{ $t("compte.onglets.réseau.connexions") }}
-        </p>
-        <v-divider v-if="connexions.length" />
-        <v-list v-if="connexions.length" two-line dense>
-          <v-list-item v-for="c in connexions" :key="c.addr.toString()">
-            <v-list-item-avatar>
-              {{ c.peer.toString()[c.peer.toString().length - 1] }}
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ c.peer.toString() }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ c.addr.toString() }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <p v-else class="text--disabled">Aucune connexion pour l'instant</p>
-      </v-col>
-    </v-row>
+    <p class="px-0 mb-0 text-overline">
+      {{ $t("compte.onglets.réseau.connexions") }}
+    </p>
+    <v-divider v-if="connexions.length" />
+    <v-list v-if="connexions.length" two-line dense>
+      <v-list-item v-for="c in connexions" :key="c.addr">
+        <v-list-item-avatar>
+          {{ c.peer[c.peer.length - 1] }}
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ c.peer }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            {{ c.addr }}
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+    <p v-else class="text--disabled">Aucune connexion pour l'instant</p>
   </v-card>
 </template>
 

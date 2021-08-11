@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on, attrs }">
       <v-chip outlined label small v-bind="attrs" v-on="on" class="mx-1 my-1">
         <v-icon v-if="catégorie" left small>{{ icôneCatégorie }}</v-icon>
-        {{ couper(nom, 10) }}
+        {{ couper(nom, longueur) }}
       </v-chip>
     </template>
     <carte-variable :id="id" />
@@ -18,7 +18,13 @@ import mixinLangues from "@/mixins/langues";
 
 export default {
   name: "jetonVariable",
-  props: ["id"],
+  props: {
+    longueur: {
+      type: Number,
+      default: 10,
+    },
+    id: String,
+  },
   components: { carteVariable },
   mixins: [mixinLangues, mixinIPA],
   data: function () {
@@ -35,6 +41,11 @@ export default {
     },
     icôneCatégorie: function () {
       return icôneCatégorieVariable(this.catégorie);
+    },
+  },
+  watch: {
+    id: function () {
+      this.réInitialiserSuivi();
     },
   },
   methods: {

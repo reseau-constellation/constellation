@@ -77,7 +77,6 @@
         },
         "réseau": {
           "entête": "Réseau",
-          "équipes": "Équipes",
           "connexions": "Connexions"
         }
       },
@@ -141,6 +140,7 @@
         "dateEtHeure": "Date et heure",
         "chaîne": "Chaîne (text)",
         "catégorique": "Catégorique",
+        "booléen": "Booléenne",
         "géojson": "GéoJSON",
         "vidéo": "Vidéo",
         "audio": "Audio",
@@ -557,7 +557,6 @@
         },
         "réseau": {
           "entête": "Forschung",
-          "équipes": "Teams",
           "connexions": "Verbindungen"
         }
       },

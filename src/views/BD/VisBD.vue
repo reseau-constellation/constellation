@@ -371,200 +371,258 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import { MODÉRATEUR } from "@/ipa/accès/consts";
+import { infoAuteur, interfaceScore } from "@/ipa/bds";
+import { infoRéplication } from "@/ipa/réseau";
 
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 
-import dialogueQualité from "@/components/commun/dialogueQualité";
-import dialogueLicence from "@/components/commun/licences/dialogueLicence";
-import dialogueMotsClefs from "@/components/commun/motsClefs/dialogueMotsClefs";
-import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications";
-import dialogueAuteurs from "@/components/BD/auteurs/dialogueAuteurs";
-import boîteNoms from "@/components/commun/boîteNoms/boîte";
-import itemTableau from "@/components/BD/itemTableau";
-import lienOrbite from "@/components/commun/lienOrbite";
-import lienTélécharger from "@/components/commun/lienTélécharger";
+import dialogueQualité from "@/components/commun/dialogueQualité.vue";
+import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
+import dialogueMotsClefs from "@/components/commun/motsClefs/dialogueMotsClefs.vue";
+import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications.vue";
+import dialogueAuteurs from "@/components/BD/auteurs/dialogueAuteurs.vue";
+import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
+import itemTableau from "@/components/BD/itemTableau.vue";
+import lienOrbite from "@/components/commun/lienOrbite.vue";
+import lienTélécharger from "@/components/commun/lienTélécharger.vue";
+import jetonVariable from "@/components/commun/jetonVariable.vue";
+import jetonMotClef from "@/components/commun/motsClefs/jetonMotClef.vue";
+
 import mixinImage from "@/mixins/images";
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 import mixinLicences from "@/mixins/licences";
-import jetonVariable from "@/components/commun/jetonVariable";
-import jetonMotClef from "@/components/commun/motsClefs/jetonMotClef";
 
-export default {
-  name: "visBD",
-  components: {
-    itemTableau,
-    lienOrbite,
-    lienTélécharger,
-    jetonVariable,
-    jetonMotClef,
-    dialogueQualité,
-    dialogueLicence,
-    dialogueAuteurs,
-    dialogueMotsClefs,
-    dialogueRéplications,
-    boîteNoms,
-  },
-  mixins: [mixinImage, mixinLangues, mixinIPA, mixinLicences],
-  data: function () {
-    return {
-      dialogueEffacerBd: false,
-      licence: null,
-      descriptionsBD: null,
-      nomsBD: {},
-      permissionÉcrire: false,
-      tableaux: null,
-      logo: null,
-      score: null,
-      variables: [],
-      réplications: null,
+export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
+  {
+    name: "visBD",
+    components: {
+      itemTableau,
+      lienOrbite,
+      lienTélécharger,
+      jetonVariable,
+      jetonMotClef,
+      dialogueQualité,
+      dialogueLicence,
+      dialogueAuteurs,
+      dialogueMotsClefs,
+      dialogueRéplications,
+      boîteNoms,
+    },
+    mixins: [mixinImage, mixinLangues, mixinIPA, mixinLicences],
+    data: function () {
+      return {
+        dialogueEffacerBd: false,
 
-      géog: [],
-      motsClefs: [],
-      auteurs: null,
-    };
-  },
-  computed: {
-    langues: function () {
-      return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
-    },
-    nom: function () {
-      return Object.keys(this.nomsBD).length
-        ? traduireNom(this.nomsBD, this.langues)
-        : this.idBd;
-    },
-    description: function () {
-      if (this.descriptionsBD === null) return "";
-      return traduireNom(this.descriptionsBD, this.langues);
-    },
-    idBd: function () {
-      return decodeURIComponent(this.$route.params.id);
-    },
-    petitPousset: function () {
-      return [
-        { text: "Données", href: "/bd" },
-        { text: couper(this.nom, 35), disabled: true },
-      ];
-    },
-    logoBD: function () {
-      return this.logo || this.image("logoBD");
-    },
-    permissionModerateur: function () {
-      if (!this.auteurs) return false;
-      const accèsMod = this.auteurs.find(
-        (a) => a.idBdRacine === this.$ipa.idBdRacine && a.rôle === MODÉRATEUR
-      );
-      return Boolean(accèsMod);
-    },
-  },
-  methods: {
-    couper,
-    couleurScore,
-    ouvrirLien,
-    ajouterTableau: async function () {
-      await this.$ipa.bds.ajouterTableauBD(this.idBd);
-    },
-    ajouterMotClef: async function (idMotClef) {
-      await this.$ipa.bds.ajouterMotsClefsBd(this.idBd, idMotClef);
-    },
-    initialiserSuivi: async function () {
-      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBd);
+        idBdRacine: undefined as undefined | string,
+        licence: null as null | string,
+        descriptionsBD: {} as { [key: string]: string },
+        nomsBD: {} as { [key: string]: string },
+        permissionÉcrire: false,
+        tableaux: null as null | string[],
+        logo: null as null | string,
+        score: null as null | interfaceScore,
+        variables: [] as string[],
+        réplications: null as null | infoRéplication[],
 
-      const oublierLicence = await this.$ipa.bds.suivreLicence(
-        this.idBd,
-        (licence) => {
-          this.licence = licence;
-        }
-      );
-      const oublierAuteurs = await this.$ipa.bds.suivreAuteurs(
-        this.idBd,
-        (auteurs) => {
-          this.auteurs = auteurs;
-        }
-      );
-      const oublierNoms = await this.$ipa.bds.suivreNomsBd(
-        this.idBd,
-        (noms) => {
-          this.nomsBD = noms;
-        }
-      );
-      const oublierDescriptions = await this.$ipa.bds.suivreDescrBd(
-        this.idBd,
-        (descriptions) => {
-          this.descriptionsBD = descriptions;
-        }
-      );
-      const oublierTableaux = await this.$ipa.bds.suivreTableauxBd(
-        this.idBd,
-        (tableaux) => {
-          this.tableaux = tableaux;
-        }
-      );
-      const oublierScore = await this.$ipa.bds.suivreScoreBd(
-        this.idBd,
-        (score) => (this.score = score)
-      );
-      const oublierVariables = await this.$ipa.bds.suivreVariablesBd(
-        this.idBd,
-        (variables) => (this.variables = variables)
-      );
-      const oublierMotsClefs = await this.$ipa.bds.suivreMotsClefsBd(
-        this.idBd,
-        (motsClefs) => (this.motsClefs = motsClefs)
-      );
-      const oublierRéplications = await this.$ipa.réseau.suivreRéplications(
-        this.idBd,
-        (réplications) => {
-          this.réplications = réplications;
-        }
-      );
+        géog: [] as string[],
+        motsClefs: [] as string[],
+        auteurs: null as null | infoAuteur[],
+      };
+    },
+    computed: {
+      langues: function (): string[] {
+        return [this.$i18n.locale, ...(this.$i18n.fallbackLocale as string[])];
+      },
+      nom: function (): string {
+        return Object.keys(this.nomsBD).length
+          ? traduireNom(this.nomsBD, this.langues)
+          : this.idBd;
+      },
+      description: function (): string {
+        return traduireNom(this.descriptionsBD, this.langues);
+      },
+      idBd: function (): string {
+        return decodeURIComponent(this.$route.params.id);
+      },
+      petitPousset: function (): {
+        text: string;
+        href?: string;
+        disabled?: boolean;
+      }[] {
+        return [
+          { text: "Données", href: "/bd" },
+          { text: couper(this.nom, 35), disabled: true },
+        ];
+      },
+      logoBD: function (): string {
+        return this.logo || this.image("logoBD");
+      },
+      permissionModerateur: function (): boolean {
+        if (!this.auteurs) return false;
+        const accèsMod = this.auteurs.find(
+          (a: infoAuteur) =>
+            a.idBdRacine === this.idBdRacine && a.rôle === MODÉRATEUR
+        );
+        return Boolean(accèsMod);
+      },
+    },
+    methods: {
+      couper,
+      couleurScore,
+      ouvrirLien,
+      ajouterTableau: async function (): Promise<void> {
+        await this.$ipa.bds!.ajouterTableauBD(this.idBd);
+      },
+      ajouterMotClef: async function (idMotClef: string): Promise<void> {
+        await this.$ipa.bds!.ajouterMotsClefsBd(this.idBd, idMotClef);
+      },
+      effacerBd: async function (): Promise<void> {
+        await this.$ipa.bds!.effacerBd(this.idBd);
+        this.$router.push("/bd");
+      },
+      sauvegarderNom: async function ({
+        langue,
+        nom,
+      }: {
+        langue: string;
+        nom: string;
+      }): Promise<void> {
+        await this.$ipa.bds!.sauvegarderNomBd(this.idBd, langue, nom);
+      },
+      changerLangueNom: async function ({
+        langueOriginale,
+        langue,
+        nom,
+      }: {
+        langueOriginale: string;
+        langue: string;
+        nom: string;
+      }): Promise<void> {
+        await this.$ipa.bds!.effacerNomBd(this.idBd, langueOriginale);
+        await this.$ipa.bds!.sauvegarderNomBd(this.idBd, langue, nom);
+      },
+      effacerNom: async function ({
+        langue,
+      }: {
+        langue: string;
+      }): Promise<void> {
+        await this.$ipa.bds!.effacerNomBd(this.idBd, langue);
+      },
+      sauvegarderDescr: async function ({
+        langue,
+        nom,
+      }: {
+        langue: string;
+        nom: string;
+      }): Promise<void> {
+        await this.$ipa.bds!.sauvegarderDescrBd(this.idBd, langue, nom);
+      },
+      changerLangueDescr: async function ({
+        langueOriginale,
+        langue,
+        nom,
+      }: {
+        langueOriginale: string;
+        langue: string;
+        nom: string;
+      }): Promise<void> {
+        await this.$ipa.bds!.effacerDescrBd(this.idBd, langueOriginale);
+        await this.$ipa.bds!.sauvegarderDescrBd(this.idBd, langue, nom);
+      },
+      effacerDescr: async function ({
+        langue,
+      }: {
+        langue: string;
+      }): Promise<void> {
+        await this.$ipa.bds!.effacerDescrBd(this.idBd, langue);
+      },
+      effacerMotClef: async function ({ id }: { id: string }): Promise<void> {
+        await this.$ipa.bds!.effacerMotClefBd(this.idBd, id);
+      },
+      changerLicence: async function ({
+        licence,
+      }: {
+        licence: string;
+      }): Promise<void> {
+        await this.$ipa.bds!.changerLicenceBd(this.idBd, licence);
+      },
+      initialiserSuivi: async function () {
+        this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBd);
 
-      this.suivre([
-        oublierLicence,
-        oublierAuteurs,
-        oublierNoms,
-        oublierDescriptions,
-        oublierTableaux,
-        oublierScore,
-        oublierVariables,
-        oublierMotsClefs,
-        oublierRéplications,
-      ]);
+        const oublierIdBdRacine = await this.$ipa.suivreIdBdRacine(
+          (id: string | undefined) => (this.idBdRacine = id)
+        );
+
+        const oublierLicence = await this.$ipa.bds!.suivreLicence(
+          this.idBd,
+          (licence: string) => {
+            this.licence = licence;
+          }
+        );
+        const oublierAuteurs = await this.$ipa.bds!.suivreAuteurs(
+          this.idBd,
+          (auteurs: infoAuteur[]) => {
+            this.auteurs = auteurs;
+          }
+        );
+        const oublierNoms = await this.$ipa.bds!.suivreNomsBd(
+          this.idBd,
+          (noms: { [key: string]: string }) => {
+            this.nomsBD = noms;
+          }
+        );
+        const oublierDescriptions = await this.$ipa.bds!.suivreDescrBd(
+          this.idBd,
+          (descriptions: { [key: string]: string }) => {
+            this.descriptionsBD = descriptions;
+          }
+        );
+        const oublierTableaux = await this.$ipa.bds!.suivreTableauxBd(
+          this.idBd,
+          (tableaux: string[]) => {
+            this.tableaux = tableaux;
+          }
+        );
+        const oublierScore = await this.$ipa.bds!.suivreScoreBd(
+          this.idBd,
+          (score: interfaceScore) => (this.score = score)
+        );
+        const oublierVariables = await this.$ipa.bds!.suivreVariablesBd(
+          this.idBd,
+          (variables: string[]) => (this.variables = variables)
+        );
+        const oublierMotsClefs = await this.$ipa.bds!.suivreMotsClefsBd(
+          this.idBd,
+          (motsClefs: string[]) => (this.motsClefs = motsClefs)
+        );
+        const oublierRéplications = await this.$ipa.réseau!.suivreRéplications(
+          this.idBd,
+          (réplications: infoRéplication[]) => {
+            this.réplications = réplications;
+          }
+        );
+
+        this.suivre([
+          oublierIdBdRacine,
+          oublierLicence,
+          oublierAuteurs,
+          oublierNoms,
+          oublierDescriptions,
+          oublierTableaux,
+          oublierScore,
+          oublierVariables,
+          oublierMotsClefs,
+          oublierRéplications,
+        ]);
+      },
     },
-    effacerBd: async function () {
-      await this.$ipa.bds.effacerBd(this.idBd);
-      this.$router.push("/bd");
-    },
-    sauvegarderNom({ langue, nom }) {
-      this.$ipa.bds.sauvegarderNomBd(this.idBd, langue, nom);
-    },
-    changerLangueNom({ langueOriginale, langue, nom }) {
-      this.$ipa.bds.effacerNomBd(this.idBd, langueOriginale);
-      this.$ipa.bds.sauvegarderNomBd(this.idBd, langue, nom);
-    },
-    effacerNom({ langue }) {
-      this.$ipa.bds.effacerNomBd(this.idBd, langue);
-    },
-    sauvegarderDescr({ langue, nom }) {
-      this.$ipa.bds.sauvegarderDescrBd(this.idBd, langue, nom);
-    },
-    changerLangueDescr({ langueOriginale, langue, nom }) {
-      this.$ipa.bds.effacerDescrBd(this.idBd, langueOriginale);
-      this.$ipa.bds.sauvegarderDescrBd(this.idBd, langue, nom);
-    },
-    effacerDescr({ langue }) {
-      this.$ipa.bds.effacerDescrBd(this.idBd, langue);
-    },
-    effacerMotClef({ id }) {
-      this.$ipa.bds.effacerMotClefBd(this.idBd, id);
-    },
-    changerLicence({ licence }) {
-      this.$ipa.bds.changerLicenceBd(this.idBd, licence);
-    },
-  },
-};
+  }
+);
 </script>
 
 <style></style>

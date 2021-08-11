@@ -10,8 +10,11 @@ import clientIPA from "./plugins/ipa";
 import ipaTest from "./plugins/ipaParallèle";
 
 Vue.config.productionTip = false;
-Vue.use(clientIPA);
-Vue.use(ipaTest);
+if (process.env.TRAVAILLEUR) {
+  Vue.use(ipaTest);
+} else {
+  Vue.use(clientIPA);
+}
 Vue.use(VuePlyr);
 
 new Vue({

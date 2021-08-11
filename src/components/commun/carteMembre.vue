@@ -58,6 +58,7 @@ export default {
       courriel: null,
       bds: [],
       projets: [],
+      monIdBdRacine: null,
 
       N_MAX_LISTE: 4,
     };
@@ -69,7 +70,7 @@ export default {
         : null;
     },
     moiMême: function () {
-      return this.id === this.$ipa.bdRacine.id;
+      return this.id === this.monIdBdRacine;
     },
     actif: function () {
       return (
@@ -83,6 +84,10 @@ export default {
   methods: {
     couper,
     initialiserSuivi: async function () {
+      const oublierIdBdRacine = await this.$ipa.suivreIdBdRacine(
+        (id) => (this.monIdBdRacine = id)
+      );
+
       const oublierNoms = await this.$ipa.réseau.suivreNomsMembre(
         this.id,
         (noms) => {
@@ -107,7 +112,13 @@ export default {
           this.projets = projets;
         }
       );
-      this.suivre([oublierNoms, oublierCourriel, oublierBds, oublierProjets]);
+      this.suivre([
+        oublierIdBdRacine,
+        oublierNoms,
+        oublierCourriel,
+        oublierBds,
+        oublierProjets,
+      ]);
     },
   },
 };

@@ -9,13 +9,16 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
+import carteVariable from "@/components/commun/carteVariable.vue";
+
 import { traduireNom, couper } from "@/utils";
-import carteVariable from "@/components/commun/carteVariable";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
-export default {
+export default mixins(mixinIPA, mixinLangues).extend({
   name: "titreEntêteTableau",
   props: ["idVariable", "idColonne"],
   mixins: [mixinLangues, mixinIPA],
@@ -26,7 +29,7 @@ export default {
     };
   },
   computed: {
-    titre: function () {
+    titre: function (): string {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : this.idColonne;
@@ -35,7 +38,7 @@ export default {
   methods: {
     couper,
     initialiserSuivi: async function () {
-      const oublierNoms = await this.$ipa.variables.suivreNomsVariable(
+      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable(
         this.idVariable,
         (noms) => {
           this.noms = noms;
@@ -44,7 +47,7 @@ export default {
       this.suivre([oublierNoms]);
     },
   },
-};
+});
 </script>
 
 <style></style>

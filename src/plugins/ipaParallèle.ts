@@ -10,7 +10,7 @@ interface Tâche {
 }
 
 export interface MessageDeTravailleur {
-  type: "prêt" | "suivre" | "action";
+  type: "prêt" | "suivre" | "suivrePrêt" | "action";
 }
 
 export interface MessagePrêtDeTravailleur extends MessageDeTravailleur {
@@ -21,6 +21,11 @@ export interface MessageSuivreDeTravailleur extends MessageDeTravailleur {
   type: "suivre";
   id: string;
   données: unknown;
+}
+
+export interface MessageSuivrePrêtDeTravailleur extends MessageDeTravailleur {
+  type: "suivrePrêt";
+  id: string;
 }
 
 export interface MessageActionDeTravailleur extends MessageDeTravailleur {
@@ -91,16 +96,14 @@ class IPAParallèle extends Callable {
 
   constructor() {
     super();
-    console.log("Constructeur IPA parallèl")
+    console.log("Constructeur IPA parallèl");
     this.événements = new EventEmitter();
     this.tâches = {};
     this.ipaPrêt = false;
     this.messagesEnAttente = [];
     this.erreurs = [];
 
-    this.travailleur = new Worker(
-      new URL("./travailleur.ts", import.meta.url)
-    );
+    this.travailleur = new Worker(new URL("./travailleur.ts", import.meta.url));
     this.travailleur.onerror = (e) => {
       this.erreur(e);
     };
@@ -116,6 +119,11 @@ class IPAParallèle extends Callable {
           const { id, données } = e.data as MessageSuivreDeTravailleur;
           const { fSuivre } = this.tâches[id];
           fSuivre(données);
+          break;
+        }
+        case "suivrePrêt": {
+          const { id } = e.data as MessageSuivrePrêtDeTravailleur;
+          this.événements.emit(id);
           break;
         }
         case "action": {
@@ -149,7 +157,7 @@ class IPAParallèle extends Callable {
     }
   }
 
-  appelerFonctionSuivre(
+  async appelerFonctionSuivre(
     id: string,
     fonction: string[],
     listeArgs: unknown[],
@@ -190,11 +198,8 @@ class IPAParallèle extends Callable {
 
     this.envoyerMessage(message);
 
-    const fAttendreConfirmé = once(this.événements, id);
-    return new Promise<schémaFonctionOublier>(async function (resolve) {
-      await fAttendreConfirmé;
-      resolve(fOublierTâche);
-    });
+    await once(this.événements, id);
+    return fOublierTâche;
   }
 
   async appelerFonctionAction(
@@ -211,16 +216,14 @@ class IPAParallèle extends Callable {
     this.envoyerMessage(message);
 
     const événements = this.événements;
-    return new Promise<unknown>(async function (resolve) {
-      console.log(événements)
-      const résultat = await once(événements, id);
-      resolve(résultat);
-    });
+    const résultat = await once(événements, id);
+    console.log("appelerFonctionAction", { résultat });
+    return résultat;
   }
 
   ipaActivé(): void {
     this.messagesEnAttente.forEach((m) => this.travailleur.postMessage(m));
-    console.log("messages en attente envoyés: ", [...this.messagesEnAttente])
+    console.log("messages en attente envoyés: ", [...this.messagesEnAttente]);
     this.messagesEnAttente = [];
     this.ipaPrêt = true;
   }

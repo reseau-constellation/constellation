@@ -32,12 +32,14 @@
   </v-container>
 </template>
 
-<script>
-import Titre from "@/components/commun/Titre";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
+import Titre from "@/components/commun/Titre.vue";
 import mixinImage from "@/mixins/images";
 import { compilerMarkdown } from "@/utils";
 
-export default {
+export default mixins(mixinImage).extend({
   name: "Favoris",
   components: { Titre },
   mixins: [mixinImage],
@@ -121,11 +123,11 @@ export default {
   },
   methods: {
     compilerMarkdown,
-    accepter: function (acceptées) {
+    accepter: function (acceptées: boolean) {
       this.$store.commit("conditions/accepterConditions", { acceptées });
     },
   },
-};
+});
 </script>
 
 <style></style>

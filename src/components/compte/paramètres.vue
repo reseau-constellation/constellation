@@ -1,120 +1,122 @@
 <template>
   <v-card class="pa-5">
-    <v-row>
-      <v-col cols="12">
-        <p class="px-0 mb-0 text-overline">
-          {{ $t("compte.onglets.compte.info") }}
-        </p>
-        <p class="py-0 text--disabled">
-          <v-icon small disabled>mdi-information-outline</v-icon>
-          {{ $t("compte.onglets.compte.infoPublique") }}
-        </p>
-        <v-row>
-          <v-col cols="4">
-            <v-menu
-              offset-x
-              :close-on-content-click="false"
-              transition="slide-y-transition"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  flat
-                  dense
-                  hide-details
-                  prepend-icon="mdi-account"
-                  v-on="on"
-                  v-bind="attrs"
-                  :readonly="true"
-                  :value="nom ? nom : $t('compte.onglets.compte.aucunNom')"
-                  :label="$t('compte.onglets.compte.nom')"
-                />
-              </template>
-              <boîteNoms
-                :noms="noms"
-                titre="compte.onglets.compte.titreBoîteNoms"
-                sousTitre="compte.onglets.compte.sousTitreBoîteNoms"
-                @sauvegarder="sauvegarderNom"
-                @changerLangue="changerLangueNom"
-                @effacer="effacerNom"
-              />
-            </v-menu>
-          </v-col>
-          <v-col cols="4">
+    <p class="px-0 mb-0 text-overline">
+      {{ $t("compte.onglets.compte.info") }}
+    </p>
+    <v-divider />
+    <p class="py-0 text--disabled">
+      <v-icon small disabled>mdi-information-outline</v-icon>
+      {{ $t("compte.onglets.compte.infoPublique") }}
+    </p>
+    <div class="d-flex flex-wrap">
+      <v-card flat width="300" class="mx-3 my-3">
+        <v-menu
+          offset-x
+          :close-on-content-click="false"
+          :disabled="noms === null"
+          transition="slide-y-transition"
+        >
+          <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              v-model="courriel"
-              outlined
+              flat
               dense
               hide-details
-              prepend-icon="mdi-email"
-              :label="$t('compte.onglets.compte.courriel')"
-              @blur="sauvegarderCourriel"
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="4">
-            <v-file-input
-              v-model="imageProfil"
-              accept="image/*"
-              prepend-icon="mdi-camera-outline"
-              append-icon="mdi-close"
-              :clearable="false"
-              outlined
-              small-chips
-              dense
-              :label="$t('compte.onglets.compte.image')"
-              :error="fichierTropGrand"
-              :error-messages="
-                fichierTropGrand
-                  ? [
-                      'La taille de l\'image doit être inférieure à 1,5 megaoctets.',
-                    ]
-                  : []
+              prepend-icon="mdi-account"
+              v-on="on"
+              v-bind="attrs"
+              :readonly="true"
+              :loading="noms === null"
+              :disabled="noms === null"
+              :value="
+                noms ? (nom ? nom : $t('compte.onglets.compte.aucunNom')) : ''
               "
-              @click:append="effacerImage"
-            ></v-file-input>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="12">
-        <p class="px-0 my-0 text-overline">
-          {{ $t("compte.onglets.compte.dispositifs") }}
-        </p>
+              :label="$t('compte.onglets.compte.nom')"
+            />
+          </template>
+          <boîteNoms
+            :noms="noms || {}"
+            titre="compte.onglets.compte.titreBoîteNoms"
+            sousTitre="compte.onglets.compte.sousTitreBoîteNoms"
+            @sauvegarder="sauvegarderNom"
+            @changerLangue="changerLangueNom"
+            @effacer="effacerNom"
+          />
+        </v-menu>
+      </v-card>
 
-        <v-divider v-if="dispositifs && dispositifs.length" />
-        <v-skeleton-loader v-if="dispositifs === null" type="paragraph" />
-        <v-list v-else two-line dense>
-          <dialogue-ajouter-dispositif>
-            <template v-slot:activator="{ on, attrs }">
-              <v-list-item v-bind="attrs" v-on="on">
-                <v-list-item-avatar>
-                  <v-icon>mdi-plus</v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title> Ajouter un dispositif </v-list-item-title>
-                  <v-list-item-subtitle>
-                    Ajouttez un autre ordinateur, téléphone, ou navigateur à
-                    votre compte pour plus de sécurité.
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-          </dialogue-ajouter-dispositif>
+      <v-card flat width="300" class="mx-3 my-3">
+        <v-text-field
+          v-model="courriel"
+          outlined
+          dense
+          hide-details
+          prepend-icon="mdi-email"
+          :loading="!courrielOrig"
+          :disabled="!courrielOrig"
+          :label="$t('compte.onglets.compte.courriel')"
+          @blur="sauvegarderCourriel"
+        />
+      </v-card>
 
-          <v-list-item v-for="d in dispositifs" :key="d">
+      <v-card flat width="300" class="mx-3 my-3">
+        <v-file-input
+          v-model="imageProfil"
+          accept="image/*"
+          prepend-icon="mdi-camera-outline"
+          append-icon="mdi-close"
+          :clearable="false"
+          outlined
+          small-chips
+          dense
+          :label="$t('compte.onglets.compte.image')"
+          :error="fichierTropGrand"
+          :error-messages="
+            fichierTropGrand
+              ? ['La taille de l\'image doit être inférieure à 1,5 megaoctets.']
+              : []
+          "
+          @click:append="effacerImage"
+        ></v-file-input>
+      </v-card>
+
+      <v-card flat width="300" class="mb-3"> </v-card>
+    </div>
+    <p class="px-0 my-0 text-overline">
+      {{ $t("compte.onglets.compte.dispositifs") }}
+    </p>
+
+    <v-divider v-if="dispositifs && dispositifs.length" />
+    <v-skeleton-loader v-if="dispositifs === null" type="paragraph" />
+    <v-list v-else two-line dense>
+      <dialogue-ajouter-dispositif>
+        <template v-slot:activator="{ on, attrs }">
+          <v-list-item v-bind="attrs" v-on="on">
             <v-list-item-avatar>
-              <v-img :src="image('dispositif')" contain />
+              <v-icon>mdi-plus</v-icon>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title> Id: {{ d }} </v-list-item-title>
-              <v-list-item-subtitle class="success--text">
-                {{ d === idDispositif ? "Dispositif présent" : "" }}
+              <v-list-item-title> Ajouter un dispositif </v-list-item-title>
+              <v-list-item-subtitle>
+                Ajouttez un autre ordinateur, téléphone, ou navigateur à votre
+                compte pour plus de sécurité.
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-        </v-list>
-      </v-col>
-    </v-row>
+        </template>
+      </dialogue-ajouter-dispositif>
+
+      <v-list-item v-for="d in dispositifs" :key="d">
+        <v-list-item-avatar>
+          <v-img :src="image('dispositif')" contain />
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title> Id: {{ d }} </v-list-item-title>
+          <v-list-item-subtitle class="success--text">
+            {{ d === idDispositif ? "Dispositif présent" : "" }}
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
   </v-card>
 </template>
 
@@ -131,11 +133,12 @@ export default {
   data: function () {
     return {
       imageProfil: undefined,
-      courrielOrig: "",
+      courrielOrig: undefined,
       courriel: "",
-      noms: {},
+      noms: null,
       fichierTropGrand: false,
       dispositifs: null,
+      idDispositif: null,
     };
   },
   mixins: [mixinIPA, mixinImages],
@@ -143,10 +146,7 @@ export default {
   computed: {
     nom: function () {
       const languesPréférées = [this.$i18n.locale];
-      return traduireNom(this.noms, languesPréférées);
-    },
-    idDispositif: function () {
-      return this.$ipa.orbite.identity.id;
+      return traduireNom(this.noms || {}, languesPréférées);
     },
   },
   watch: {
@@ -176,6 +176,10 @@ export default {
       }
     },
     initialiserSuivi: async function () {
+      const oublierIdOrbite = await this.$ipa.suivreIdOrbite(
+        (id) => (this.idDispositif = id)
+      );
+
       const oublierCourriel = await this.$ipa.compte.suivreCourriel(
         (courriel) => {
           if (courriel) this.courrielOrig = courriel;
@@ -193,7 +197,13 @@ export default {
           );
         }
       );
-      this.suivre([oublierCourriel, oublierNoms, oublierDispositifs]);
+
+      this.suivre([
+        oublierIdOrbite,
+        oublierCourriel,
+        oublierNoms,
+        oublierDispositifs,
+      ]);
     },
     effacerImage: async function () {
       if (this.fichierTropGrand) {

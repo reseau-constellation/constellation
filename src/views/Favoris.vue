@@ -15,12 +15,14 @@
 </template>
 
 <script>
+import mixins from "vue-typed-mixins";
+
 import Titre from "@/components/commun/Titre";
 import carteBd from "@/components/BD/carteBD";
 import mixinImage from "@/mixins/images";
 import mixinIPA from "@/mixins/ipa";
 
-export default {
+export default mixins(mixinImage, mixinIPA).extend({
   name: "Favoris",
   components: { Titre, carteBd },
   mixins: [mixinImage, mixinIPA],
@@ -40,7 +42,7 @@ export default {
       this.suivre([oublierFavoris]);
     },
   },
-};
+});
 </script>
 
 <style></style>

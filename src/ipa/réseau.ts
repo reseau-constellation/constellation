@@ -7,6 +7,7 @@ import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
   élémentBdListe,
+  élémentsBd,
 } from "./client";
 
 export type infoMembre = {
@@ -17,21 +18,36 @@ export type infoMembre = {
   signatures: { id: string; publicKey: string };
 };
 
+export interface schémaBd {
+  motsClefs?: {
+    tous?: string[];
+    auMoinsUn?: string[];
+  };
+  tableaux: {
+    vars: string[];
+  }[];
+}
+
 export type infoMembreEnLigne = infoMembre & {
   vuÀ?: number;
 };
 
-type infoRéplication = {
+export type infoRéplication = {
   idBd: string;
   idBdRacine: string;
   idOrbite: string;
   vuÀ?: number;
 };
 
-type infoDispositifEnLigne = {
+export type infoDispositifEnLigne = {
   info: infoMembre;
   vuÀ: number;
 };
+
+export interface élémentDeMembre<T = élémentsBd> {
+  idBdAuteur: string;
+  élément: élémentBdListe<T>;
+}
 
 const verrouAjouterMembre = new Semaphore();
 const INTERVALE_SALUT = 1000 * 60;
@@ -401,5 +417,82 @@ export default class Réseau extends EventEmitter {
     );
 
     return oublierRéplications;
+  }
+
+  async suivreBdsSelonSchéma(
+    schéma: schémaBd,
+    f: schémaFonctionSuivi<string[]>
+  ): Promise<schémaFonctionOublier> {
+    const fListe = async (
+      fSuivreRacine: (éléments: string[]) => Promise<void>
+    ): Promise<schémaFonctionOublier> => {
+      return await this.suivreBds(fSuivreRacine);
+    };
+
+    const fCondition = async (
+      id: string,
+      fSuivreCondition: (état: boolean) => void
+    ): Promise<schémaFonctionOublier> => {
+      const lFOublier: schémaFonctionOublier[] = [];
+
+      const dicÉtat = { motsClefs: false, tableaux: false };
+      const fFinale = () => {
+        const état = Object.values(dicÉtat).every((x) => x);
+        fSuivreCondition(état);
+      };
+
+      if (schéma.motsClefs) {
+        const fSuivreMotsClefs = (motsClefsBd: string[]) => {
+          const { tous, auMoinsUn } = schéma.motsClefs!;
+          const étatMotsClefs =
+            (tous || []).every((m) => motsClefsBd.includes(m)) &&
+            (auMoinsUn || []).some((m) => motsClefsBd.includes(m));
+          dicÉtat.motsClefs = étatMotsClefs;
+          fFinale();
+        };
+        lFOublier.push(
+          await this.client.bds!.suivreMotsClefsBd(id, fSuivreMotsClefs)
+        );
+      } else {
+        dicÉtat.motsClefs = true;
+        fFinale();
+      }
+
+      if (schéma.tableaux) {
+        const fSuivreTableaux = (tableaux: string[]) => {};
+        lFOublier.push(
+          await this.client.bds!.suivreTableauxBd(id, fSuivreTableaux)
+        );
+      } else {
+        dicÉtat.tableaux = true;
+        fFinale();
+      }
+
+      return () => lFOublier.forEach((f) => f());
+    };
+
+    return await this.client.suivreBdsSelonCondition(fListe, fCondition, f);
+  }
+
+  async suivreÉlémentsBdsSelonSchéma<T extends élémentsBd>(
+    schéma: schémaBd,
+    iTableau: number,
+    f: schémaFonctionSuivi<élémentDeMembre<T>[]>
+  ): Promise<schémaFonctionOublier> {
+    const fListe = async (
+      fSuivreRacine: (éléments: string[]) => Promise<void>
+    ): Promise<schémaFonctionOublier> => {
+      return await this.suivreBdsSelonSchéma(schéma, fSuivreRacine);
+    };
+
+    const fBranche = async (
+      id: string,
+      f: schémaFonctionSuivi<élémentBdListe<T>[]>
+    ): Promise<schémaFonctionOublier> => {
+      const idTableau = Error;
+      return await this.client.suivreBdListe(idTableau, f, false);
+    };
+
+    return await this.client.suivreBdsDeFonctionListe(fListe, f, fBranche);
   }
 }

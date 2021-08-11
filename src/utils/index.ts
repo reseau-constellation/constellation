@@ -7,31 +7,31 @@ import { WritableStream } from "web-streams-polyfill/ponyfill";
 import { rutzibChabäl as écritureLangue } from "nuchabal";
 
 streamSaver.WritableStream = WritableStream;
-export function couper(texte: string, nChar: number) {
+export function couper(texte: string, nChar: number): string {
   if (texte.length <= nChar) {
     return texte;
   } else {
     return texte.slice(0, nChar - 3).concat("...");
   }
 }
+
 export async function copier(texte: string): Promise<void> {
   if (!navigator.clipboard) return;
   await navigator.clipboard.writeText(texte);
 }
+
 export function traduireNom(
   dicNom: { [key: string]: string },
   langues: string[]
-) {
+): string {
   let nom;
   for (const l of langues) {
     nom = dicNom[l];
     if (nom) return nom;
   }
   // Si la langue n'est pas disponible, cherchons quelque chose avec au moins le même alphabet
-  const écrituresVoulues = langues.map((l) => {
-    return { écriture: écritureLangue(l), langue: l };
-  });
-  for (const { langue, écriture } of écrituresVoulues) {
+  for (const langue of langues) {
+    const écriture = écritureLangue(langue);
     const langueAlternative = Object.keys(dicNom).find(
       (x) => écritureLangue(x) === écriture
     );
@@ -42,7 +42,7 @@ export function traduireNom(
   return Object.values(dicNom)[0];
 }
 
-export async function ouvrirLien(lien: string) {
+export async function ouvrirLien(lien: string): Promise<void> {
   if (isElectron()) {
     const electron = await import("electron");
     const { shell } = electron;
@@ -52,11 +52,11 @@ export async function ouvrirLien(lien: string) {
   }
 }
 
-export function compilerMarkdown(texte: string) {
+export function compilerMarkdown(texte: string): string {
   return DOMPurify.sanitize(marked(texte));
 }
 
-export function téléchargerURL(uri: URL, nom: string) {
+export function téléchargerURL(uri: URL, nom: string): void {
   const lien = document.createElement("a");
   lien.download = nom;
   // @ts-ignore
@@ -64,11 +64,14 @@ export function téléchargerURL(uri: URL, nom: string) {
   lien.click();
 }
 
-export function téléchargerFlux(fluxLecture: ReadableStream, nom: string) {
+export function téléchargerFlux(
+  fluxLecture: ReadableStream,
+  nom: string
+): void {
   console.log({ fluxLecture });
   const fileStream = streamSaver.createWriteStream(nom);
   if (window.WritableStream && fluxLecture.pipeTo) {
-    return fluxLecture.pipeTo(fileStream);
+    fluxLecture.pipeTo(fileStream);
   }
 
   const writer = fileStream.getWriter();
@@ -85,7 +88,12 @@ export function téléchargerFlux(fluxLecture: ReadableStream, nom: string) {
   pump();
 }
 
-export function couleurScore(score: number) {
+export interface interfaceCouleurScore {
+  couleur: string;
+  note: string;
+}
+
+export function couleurScore(score: number): interfaceCouleurScore {
   if (score === null) return { couleur: "#666666", note: "?" };
   if (score >= 95) {
     return { couleur: "#1e7145", note: "A" };
@@ -106,7 +114,7 @@ export function couleurScore(score: number) {
   }
 }
 
-export function icôneCatégorieVariable(catégorie: string) {
+export function icôneCatégorieVariable(catégorie: string): string {
   switch (catégorie) {
     case "numérique":
       return "mdi-numeric";

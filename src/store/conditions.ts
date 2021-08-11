@@ -1,11 +1,16 @@
+const state = {
+  acceptées: false,
+};
+
 export default {
   namespaced: true,
-  state: {
-    acceptées: false,
-  },
+  state,
   mutations: {
-    accepterConditions(state: any, payload: { acceptées: boolean }) {
-      state.acceptées = Boolean(payload.acceptées);
+    accepterConditions(
+      _state: typeof state,
+      payload: { acceptées: boolean }
+    ): void {
+      _state.acceptées = Boolean(payload.acceptées);
     },
   },
   actions: {},

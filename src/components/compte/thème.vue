@@ -1,10 +1,11 @@
 <template>
   <v-card class="pa-5">
-    <v-row>
-      <v-col cols="4">
-        <p class="px-0 text-overline">
+    <div class="d-flex flex-wrap">
+      <v-card flat width="300" class="mx-3 my-3">
+        <p class="px-0 mb-0 text-overline">
           {{ $t("compte.onglets.thème.couleurs") }}
         </p>
+        <v-divider class="mb-4" />
         <v-switch
           v-model="thèmeNuit"
           inset
@@ -13,11 +14,13 @@
           "
           :label="$t('compte.options.thèmeNuit')"
         ></v-switch>
-      </v-col>
-      <v-col cols="4">
-        <p class="px-0 text-overline">
+      </v-card>
+
+      <v-card flat width="300" class="mx-3 my-3">
+        <p class="px-0 mb-0 text-overline">
           {{ $t("compte.onglets.thème.culture") }}
         </p>
+        <v-divider class="mb-4" />
         <v-radio-group
           :value="thèmeImages"
           :label="$t('compte.options.thèmeImages')"
@@ -27,11 +30,13 @@
           <v-radio value="unDraw" label="unDraw" />
           <v-radio value="வவவ" label="வள்ளுவர் வள்ளலார் வட்டம்" />
         </v-radio-group>
-      </v-col>
-      <v-col cols="4">
-        <p class="px-0 text-overline">
+      </v-card>
+
+      <v-card flat width="300" class="mx-3 my-3">
+        <p class="px-0 mb-0 text-overline">
           {{ $t("compte.onglets.thème.langue") }}
         </p>
+        <v-divider class="mb-4" />
         <v-select
           :items="
             langues.map((l) => {
@@ -82,8 +87,8 @@
             </v-list-item>
           </template>
         </v-select>
-      </v-col>
-    </v-row>
+      </v-card>
+    </div>
   </v-card>
 </template>
 

@@ -69,6 +69,7 @@ export default {
   },
   methods: {
     ajouter(langue, nom) {
+      if (!langue || !nom) return; //Éviter de sauvegarder si tout n'est pas prêt
       this.$emit("sauvegarder", { langue, nom });
       this.langueNouveauNom = this.nouveauNom = "";
     },

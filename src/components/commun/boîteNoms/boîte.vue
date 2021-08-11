@@ -19,7 +19,7 @@
         v-for="(nom, langue) in noms"
         :key="langue"
         :nomOriginal="nom"
-        :langueOriginale="langue"
+        :langueOriginaleNom="langue"
         @sauvegarder="(e) => $emit('sauvegarder', e)"
         @effacer="(e) => $emit('effacer', e)"
         @changerLangue="(e) => $emit('changerLangue', e)"
@@ -61,9 +61,6 @@ export default {
       langueNouveauNom: "",
       nouveauNom: "",
     };
-  },
-  mounted: function () {
-    console.log(Object.keys(this.noms)[-1]);
   },
   computed: {
     itemsLangues: function () {

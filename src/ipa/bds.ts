@@ -1,4 +1,6 @@
 import { FeedStore, KeyValueStore } from "orbit-db";
+import { schémaBd } from "@/ipa/réseau";
+
 import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
 
 import ClientConstellation, {
@@ -16,11 +18,19 @@ export const STATUT = {
   ACTIVE: "active",
   OBSOLÈTE: "obsolète",
 };
-interface infoAuteur {
+export interface infoAuteur {
   idBdRacine: string;
   accepté: boolean;
   rôle: keyof objRôles;
 }
+
+export interface interfaceScore {
+  accès: number;
+  couverture: number;
+  passe: number;
+  total: number;
+}
+
 export default class BDs {
   client: ClientConstellation;
   idBd: string;
@@ -160,6 +170,35 @@ export default class BDs {
       }
     });
   }
+
+  async rechercherBdsParMotsClefs(
+    motsClefs: string[],
+    f: schémaFonctionSuivi<string[]>,
+    idBdRacine?: string
+  ): Promise<schémaFonctionOublier> {
+    const fListe = async (
+      fSuivreRacine: (éléments: string[]) => Promise<void>
+    ): Promise<schémaFonctionOublier> => {
+      return await this.suivreBds(fSuivreRacine, idBdRacine);
+    };
+
+    const fCondition = async (
+      id: string,
+      fSuivreCondition: (état: boolean) => void
+    ): Promise<schémaFonctionOublier> => {
+      const fFinaleSuivreCondition = (motsClefsBd: string[]) => {
+        const état = motsClefs.every((m) => motsClefsBd.includes(m));
+        fSuivreCondition(état);
+      };
+      return await this.suivreMotsClefsBd(id, fFinaleSuivreCondition);
+    };
+    return await this.client.suivreBdsSelonCondition(fListe, fCondition, f);
+  }
+
+  async suivreTableauBdDeSchéma(
+    schéma: schémaBd,
+    f: schémaFonctionSuivi<string>
+  ): Promise<schémaFonctionOublier> {}
 
   async ajouterNomsBd(
     id: string,
@@ -447,7 +486,7 @@ export default class BDs {
 
   async suivreScoreBd(
     id: string,
-    f: schémaFonctionSuivi<{ [key: string]: number }>
+    f: schémaFonctionSuivi<interfaceScore>
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBd(id, () => {
       const accès = Math.floor(Math.random() * 100);

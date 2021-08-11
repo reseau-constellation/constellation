@@ -205,7 +205,7 @@ export default class Variables {
     await bdDescr.set(langue, nom);
   }
 
-  async effacerbdDescrVariable(id: string, langue: string): Promise<void> {
+  async effacerDescrVariable(id: string, langue: string): Promise<void> {
     const idBdDescr = await this.client.obtIdBd("descriptions", id, "kvstore");
     if (!idBdDescr) throw `Permission de modification refusée pour BD ${id}.`;
 

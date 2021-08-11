@@ -1,32 +1,37 @@
 import { rajilanïkChabäl as numLangue } from "nuchabal";
 
+const state = {
+  langue: null as null | string,
+  numération: null as null | string,
+  thèmeImages: "unDraw",
+  thèmeNuit: false,
+};
+
 export default {
   namespaced: true,
-  state: {
-    langue: null,
-    numération: null,
-    thèmeImages: "unDraw",
-    thèmeNuit: false,
-  },
+  state,
   mutations: {
-    changerNumération(state: any, payload: { système: string }) {
-      state.numération = payload.système;
+    changerNumération(
+      _state: typeof state,
+      payload: { système: string }
+    ): void {
+      _state.numération = payload.système;
     },
-    changerThèmeImage(state: any, payload: { thème: string }) {
-      state.thèmeImages = payload.thème;
+    changerThèmeImage(_state: typeof state, payload: { thème: string }): void {
+      _state.thèmeImages = payload.thème;
     },
-    changerLangue(state: any, payload: { langue: string }) {
-      state.langue = payload.langue;
+    changerLangue(_state: typeof state, payload: { langue: string }): void {
+      _state.langue = payload.langue;
     },
-    changerThèmeNuit(state: any, payload: { val: string }) {
-      state.thèmeNuit = payload.val;
+    changerThèmeNuit(_state: typeof state, payload: { val: boolean }): void {
+      _state.thèmeNuit = payload.val;
     },
   },
   actions: {},
   getters: {
-    systèmeNumération: (state: any) => {
-      const num = state.numération;
-      return num === null ? numLangue(state.langue) || "latin" : num;
+    systèmeNumération: (_state: typeof state): string => {
+      const num = _state.numération;
+      return num === null ? numLangue(_state.langue) || "latin" : num;
     },
   },
   modules: {},

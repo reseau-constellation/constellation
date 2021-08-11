@@ -55,7 +55,7 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import axios from "axios";
 import isElectron from "is-electron";
 
@@ -63,14 +63,41 @@ import { ouvrirLien } from "@/utils";
 import { URL_TÉLÉCHARGEMENTS, IPA_TÉLÉCHARGEMENTS } from "@/utils/config";
 import mixinImage from "@/mixins/images";
 
-import Titre from "@/components/commun/Titre";
-import carteFichierInstallation from "@/components/téléchargements/carteFichierInstallation";
+import Titre from "@/components/commun/Titre.vue";
+import carteFichierInstallation from "@/components/téléchargements/carteFichierInstallation.vue";
 
-const obtExt = function (nomFichier) {
+type SO = "Linux" | "macOS" | "Windows";
+
+interface infoSO {
+  nom: SO;
+  logo: string;
+  exts: string[];
+}
+
+interface publicationGitHub {
+  url: string;
+  id: number;
+  node_id: string;
+  name: string;
+  label: string;
+  content_type: string;
+  state: string;
+  size: number;
+  download_count: number;
+  created_at: string;
+  updated_at: string;
+  browser_download_url: string;
+}
+
+interface publicationGitHubAvecVersion extends publicationGitHub {
+  version: string;
+}
+
+const obtExt = function (nomFichier: string) {
   return nomFichier.split(".").pop();
 };
 
-export default {
+export default mixinImage.extend({
   name: "Téléchargements",
   components: { Titre, carteFichierInstallation },
   mixins: [mixinImage],
@@ -78,8 +105,8 @@ export default {
     return {
       URL_TÉLÉCHARGEMENTS,
       IPA_TÉLÉCHARGEMENTS,
-      fichiers: [],
-      versions: [],
+      fichiers: [] as publicationGitHubAvecVersion[],
+      versions: [] as string[],
       systèmesOpératoirs: [
         {
           nom: "Linux",
@@ -96,34 +123,40 @@ export default {
           logo: require("@/assets/logosSO/Windows.png"),
           exts: ["exe"],
         },
-      ],
-      système: null,
-      version: null,
+      ] as infoSO[],
+      système: null as null | string,
+      version: null as null | string,
       électron: isElectron(),
     };
   },
   computed: {
-    fichiersChoisis: function () {
+    fichiersChoisis: function (): publicationGitHubAvecVersion[] {
       const extsSoChoisi = this.système
-        ? this.systèmesOpératoirs.find((s) => s.nom === this.système).exts
+        ? (
+            this.systèmesOpératoirs.find(
+              (s) => s.nom === this.système
+            ) as infoSO
+          ).exts
         : [];
       return this.fichiers
         .filter((f) => !this.version || f.version === this.version)
-        .filter(
-          (f) => !extsSoChoisi.length || extsSoChoisi.includes(obtExt(f.name))
-        );
+        .filter((f) => {
+          const ext = obtExt(f.name);
+          return !extsSoChoisi.length || (ext && extsSoChoisi.includes(ext));
+        });
     },
   },
   methods: {
     ouvrirLien,
-    soFichier: function (fichier) {
+    soFichier: function (fichier: string): infoSO | undefined {
       const ext = obtExt(fichier);
+      if (!ext) return;
       const so = this.systèmesOpératoirs.find((s) => s.exts.includes(ext));
       return so;
     },
-    imageFichier: function (fichier) {
+    imageFichier: function (fichier: string): string {
       const so = this.soFichier(fichier);
-      return so.logo || this.image("docs");
+      return so ? so.logo || this.image("docs") : this.image("docs");
     },
   },
   mounted: async function () {
@@ -132,20 +165,23 @@ export default {
     const extentions = ["AppImage", "dmg", "exe"];
 
     for (const v of json) {
-      const version = v.name;
+      const version = v.name as string;
       this.fichiers = [
         ...this.fichiers,
         ...v.assets
-          .map((a) => {
+          .map((a: publicationGitHub) => {
             return { ...a, version };
           })
-          .filter((a) => extentions.includes(obtExt(a.name))),
+          .filter((a: publicationGitHubAvecVersion) => {
+            const ext = obtExt(a.name);
+            return ext && extentions.includes(ext);
+          }),
       ];
       this.versions = [...this.versions, version];
       if (this.versions.length) this.version = this.versions[0];
     }
   },
-};
+});
 </script>
 
 <style></style>

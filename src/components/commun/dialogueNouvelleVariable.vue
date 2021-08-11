@@ -105,7 +105,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" text outlined @click="dialogue = false">
+        <v-btn color="secondary" text outlined @click="fermer">
           {{ $t("communs.annuler") }}
         </v-btn>
         <v-btn color="primary" :disabled="!prêt" depressed @click="sauvegarder">
@@ -188,8 +188,8 @@ export default {
       );
     },
     changerLangueNom: function ({ langueOriginale, langue, nom }) {
-      this.effacerNom(langueOriginale);
-      this.sauvegarderNom(langue, nom);
+      this.effacerNom({ langue: langueOriginale });
+      this.sauvegarderNom({ langue, nom });
     },
     sauvegarderDescr: function ({ langue, nom }) {
       this.descriptions = { ...this.descriptions, [langue]: nom };
@@ -202,8 +202,8 @@ export default {
       );
     },
     changerLangueDescr: function ({ langueOriginale, langue, nom }) {
-      this.effacerDescr(langueOriginale);
-      this.sauvegarderDescr(langue, nom);
+      this.effacerDescr({ langueOriginale });
+      this.sauvegarderDescr({ langue, nom });
     },
     sauvegarder: async function () {
       const idVariable = await this.$ipa.variables.créerVariable(
@@ -221,6 +221,16 @@ export default {
         );
       }
       this.$emit("sauvegarde", { id: idVariable });
+
+      this.fermer();
+    },
+    fermer: function () {
+      this.catégorie = null;
+      this.descriptions = {};
+      this.noms = {};
+      this.unités = null;
+
+      this.dialogue = false;
     },
     ajouterRègle: function () {
       console.warn("À faire");

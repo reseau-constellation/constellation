@@ -49,7 +49,7 @@
 <script>
 import mixinLangues from "@/mixins/langues";
 import opLangue from "@/components/commun/OpLangue";
-import dialogueTraductionsInterface from "@/components/commun/dialogueTraductionsInterface";
+import dialogueTraductionsInterface from "@/components/commun/traductions/dialogueTraductionsInterface";
 
 export default {
   name: "opsLangue",

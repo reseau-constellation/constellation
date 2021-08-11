@@ -63,7 +63,7 @@ export default Vue.extend({
       this.$vuetify.rtl = this.droiteÀGauche(lng);
       this.$store.commit("paramètres/changerLangue", { langue: lng });
     },
-    clefsMessages(lng: string): string[] {
+    clefsMessages(lng?: string): string[] {
       lng = lng || this.langueOriginale;
       const messages = this.$i18n.messages;
       const extraireMessages = (
@@ -93,7 +93,10 @@ export default Vue.extend({
       const communs = messagesOrig.filter((c) => messagesLng.has(c));
       return communs.length / messagesOrig.length;
     },
-    traduireClef(clef: string, langues: Locale[]) {
+    traduireClef(
+      clef: string,
+      langues: Locale[]
+    ): { trad: string; langue: string } | undefined {
       const clefs = clef.split(".");
       const trouverTrad = (
         listeClefs: string[],
@@ -111,8 +114,10 @@ export default Vue.extend({
       };
       for (const langue of langues) {
         const dicLangue = this.$i18n.messages[langue];
-        const trad = trouverTrad(clefs, dicLangue);
-        if (trad) return trad;
+        if (dicLangue) {
+          const trad = trouverTrad(clefs, dicLangue);
+          if (trad) return { trad, langue };
+        }
       }
     },
     changerNumération: function (système: string) {

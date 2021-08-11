@@ -51,12 +51,14 @@
   </v-dialog>
 </template>
 
-<script>
-import itemAuteur from "@/components/BD/auteurs/itemAuteur";
-import dialogueNouvelAuteur from "@/components/BD/auteurs/dialogueNouvelAuteur";
+<script lang="ts">
+import Vue from "vue";
 import { MODÉRATEUR } from "@/ipa/accès/consts";
 
-export default {
+import itemAuteur from "@/components/BD/auteurs/itemAuteur.vue";
+import dialogueNouvelAuteur from "@/components/BD/auteurs/dialogueNouvelAuteur.vue";
+
+export default Vue.extend({
   name: "dialogueAuteurs",
   props: ["idBd", "auteurs", "permissionModerateur"],
   components: { itemAuteur, dialogueNouvelAuteur },
@@ -66,7 +68,7 @@ export default {
       MODÉRATEUR,
     };
   },
-};
+});
 </script>
 
 <style></style>

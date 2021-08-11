@@ -20,6 +20,7 @@
             hide-details
             :dir="droiteÀGauche(lng) ? 'rtl' : 'ltr'"
             @blur="sauvegarder"
+            @keydown.enter="sauvegarder"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -38,7 +39,7 @@ import mixinLangues from "@/mixins/langues";
 
 export default {
   name: "itemNom",
-  props: ["langueOriginale", "nomOriginal"],
+  props: ["langueOriginaleNom", "nomOriginal"],
   mixins: [mixinLangues],
   data: function () {
     return {
@@ -58,9 +59,9 @@ export default {
   },
   methods: {
     sauvegarder: function () {
-      if (this.lng === this.langueOriginale && this.nom === this.nomOriginal)
+      if (this.lng === this.langueOriginaleNom && this.nom === this.nomOriginal)
         return;
-      if (this.lng !== this.langueOriginale) this.effacer();
+      if (this.lng !== this.langueOriginaleNom) this.effacer();
       if (this.nom === "") {
         this.effacer();
       } else {
@@ -69,7 +70,7 @@ export default {
     },
     changerLangue: function () {
       this.$emit("changerLangue", {
-        langueOriginale: this.langueOriginale,
+        langueOriginale: this.langueOriginaleNom,
         langue: this.lng,
         nom: this.nom,
       });
@@ -79,7 +80,7 @@ export default {
     },
   },
   mounted: function () {
-    this.lng = this.langueOriginale;
+    this.lng = this.langueOriginaleNom;
     this.nom = this.nomOriginal;
   },
 };

@@ -215,18 +215,27 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import { licences, infoLicences, catégories } from "@/ipa/licences";
 import mixinLangues from "@/mixins/langues";
 import mixinImages from "@/mixins/images";
 import mixinLicences from "@/mixins/licences";
-import itemNom from "@/components/commun/boîteNoms/itemNom";
-import itemNouveauNom from "@/components/commun/boîteNoms/itemNouveauNom";
-import jetonDroit from "@/components/commun/licences/jetonDroit";
-import jetonLimitation from "@/components/commun/licences/jetonLimitation";
-import jetonCondition from "@/components/commun/licences/jetonCondition";
+import mixinIPA from "@/mixins/ipa";
 
-export default {
+import itemNom from "@/components/commun/boîteNoms/itemNom.vue";
+import itemNouveauNom from "@/components/commun/boîteNoms/itemNouveauNom.vue";
+import jetonDroit from "@/components/commun/licences/jetonDroit.vue";
+import jetonLimitation from "@/components/commun/licences/jetonLimitation.vue";
+import jetonCondition from "@/components/commun/licences/jetonCondition.vue";
+
+export default mixins(
+  mixinLangues,
+  mixinImages,
+  mixinLicences,
+  mixinIPA
+).extend({
   name: "NouvelleBD",
   components: {
     itemNom,
@@ -239,10 +248,10 @@ export default {
   data: function () {
     return {
       étape: 1,
-      licences,
-      licence: null,
-      noms: {},
-      descriptions: {},
+      licences: [...licences] as string[],
+      licence: null as null | string,
+      noms: {} as { [key: string]: string },
+      descriptions: {} as { [key: string]: string },
       enCréation: false,
       jaiCompris: false,
       licencesSpécilisées: false,
@@ -269,17 +278,24 @@ export default {
     },
 
     itemsLicences: function () {
-      const licencesFinales = [
-        { header: "Licences pour BDs (recommendées)" },
-        { divider: true },
-      ];
-      const licences = this.licences.filter((l) =>
+      const licencesFinales: {
+        header?: string;
+        divider?: boolean;
+        value?: string;
+        text?: string;
+      }[] = [{ header: "Licences pour BDs (recommendées)" }, { divider: true }];
+      const licences: string[] = this.licences.filter((l: string) =>
         this.licencesSpécilisées ? true : !infoLicences[l].spécialisée
       );
 
-      const générerÉléments = (liste) => {
+      const générerÉléments = (
+        liste: string[]
+      ): { value: string; text: string }[] => {
         return liste.map((l) => {
-          return { value: l, text: this.$t(`licences.info.${l}.nom`) || l };
+          return {
+            value: l,
+            text: (this.$t(`licences.info.${l}.nom`) as string) || l,
+          };
         });
       };
 
@@ -324,47 +340,78 @@ export default {
     },
   },
   methods: {
-    sauvegarderNom: function ({ langue, nom }) {
+    sauvegarderNom: function ({
+      langue,
+      nom,
+    }: {
+      langue: string;
+      nom: string;
+    }) {
       this.noms = { ...this.noms, [langue]: nom };
     },
-    effacerNom: function ({ langue }) {
+    effacerNom: function ({ langue }: { langue: string }) {
       this.noms = Object.fromEntries(
         Object.keys(this.noms)
           .filter((x) => x !== langue)
           .map((x) => [x, this.noms[x]])
       );
     },
-    changerLangueNom: function ({ langueOriginale, langue, nom }) {
-      this.effacerNom(langueOriginale);
-      this.sauvegarderNom(langue, nom);
+    changerLangueNom: function ({
+      langueOriginale,
+      langue,
+      nom,
+    }: {
+      langueOriginale: string;
+      langue: string;
+      nom: string;
+    }) {
+      this.effacerNom({ langue: langueOriginale });
+      this.sauvegarderNom({ langue, nom });
     },
-    sauvegarderDescr: function ({ langue, nom }) {
+    sauvegarderDescr: function ({
+      langue,
+      nom,
+    }: {
+      langue: string;
+      nom: string;
+    }) {
       this.descriptions = { ...this.descriptions, [langue]: nom };
     },
-    effacerDescr: function ({ langue }) {
+    effacerDescr: function ({ langue }: { langue: string }): void {
       this.descriptions = Object.fromEntries(
         Object.keys(this.descriptions)
           .filter((x) => x !== langue)
           .map((x) => [x, this.descriptions[x]])
       );
     },
-    changerLangueDescr: function ({ langueOriginale, langue, nom }) {
-      this.effacerDescr(langueOriginale);
-      this.sauvegarderDescr(langue, nom);
+    changerLangueDescr: function ({
+      langueOriginale,
+      langue,
+      nom,
+    }: {
+      langueOriginale: string;
+      langue: string;
+      nom: string;
+    }) {
+      this.effacerDescr({ langue: langueOriginale });
+      this.sauvegarderDescr({ langue, nom });
     },
     créerBd: async function () {
+      if (!this.licence) return;
       this.enCréation = true;
-      const id = await this.$ipa.bds.créerBd(this.licence);
+
+      const id = await this.$ipa.bds!.créerBd(this.licence);
       if (Object.keys(this.noms).length) {
-        await this.$ipa.bds.ajouterNomsBd(id, this.noms);
+        await this.$ipa.bds!.ajouterNomsBd(id, this.noms);
       }
       if (Object.keys(this.descriptions).length) {
-        await this.$ipa.bds.ajouterDescriptionsBd(id, this.descriptions);
+        await this.$ipa.bds!.ajouterDescriptionsBd(id, this.descriptions);
       }
+      this.enCréation = false;
       this.$router.push(`/bd/visualiser/${encodeURIComponent(id)}`);
     },
   },
-};
+});
 </script>
 
 <style></style>

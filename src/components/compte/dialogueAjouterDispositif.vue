@@ -94,7 +94,7 @@
                 ><v-icon>mdi-content-copy</v-icon></v-list-item-avatar
               >
               <v-list-item-content>{{
-                couper(idBdRacine, 30)
+                couper(idBdRacine || "", 30)
               }}</v-list-item-content>
             </v-list-item>
           </v-window-item>
@@ -123,7 +123,7 @@
                 ><v-icon>mdi-content-copy</v-icon></v-list-item-avatar
               >
               <v-list-item-content>{{
-                couper(idDispositif, 30)
+                couper(idDispositif || "", 30)
               }}</v-list-item-content>
             </v-list-item>
             <v-list-item class="text-left">
@@ -245,6 +245,9 @@ export default {
       étape: 1,
       idOrbiteNouveau: null,
       idBdRacineNouveau: null,
+      idBdRacine: null,
+      idDispositif: null,
+
       cestParti: false,
       nomsNouveauCompte: {},
       oublierNoms: undefined,
@@ -277,12 +280,6 @@ export default {
     };
   },
   computed: {
-    idDispositif: function () {
-      return this.$ipa.orbite.identity.id;
-    },
-    idBdRacine: function () {
-      return this.$ipa.bdRacine.id;
-    },
     idsOrbite: function () {
       return this.dispositifs.map((d) => d.info.idOrbite);
     },
@@ -350,6 +347,12 @@ export default {
       this.dialogue = false;
     },
     initialiserSuivi: async function () {
+      const oublierIdBdRacine = await this.$ipa.suivreIdBdRacine(
+        (id) => (this.idBdRacine = id)
+      );
+      const oublierIdOrbite = await this.$ipa.suivreIdOrbite(
+        (id) => (this.idDispositif = id)
+      );
       const oublierDispositifsEnLigne =
         await this.$ipa.réseau.suivreDispositifsEnLigne((dispositifs) => {
           this.dispositifs = dispositifs;
@@ -359,7 +362,12 @@ export default {
           this.dispositifsDeCeCompte = dispositifs;
         }
       );
-      this.suivre([oublierDispositifsEnLigne, oublierDispositifsDeCeCompte]);
+      this.suivre([
+        oublierIdBdRacine,
+        oublierIdOrbite,
+        oublierDispositifsEnLigne,
+        oublierDispositifsDeCeCompte,
+      ]);
     },
   },
 };

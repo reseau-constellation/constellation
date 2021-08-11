@@ -59,19 +59,21 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import { traduireNom, couper } from "@/utils";
 
-import tableau from "@/components/tableaux/tableau";
+import tableau from "@/components/tableaux/tableau.vue";
 
-import boîteNoms from "@/components/commun/boîteNoms/boîte";
-import lienOrbite from "@/components/commun/lienOrbite";
-import lienTélécharger from "@/components/commun/lienTélécharger";
+import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
+import lienOrbite from "@/components/commun/lienOrbite.vue";
+import lienTélécharger from "@/components/commun/lienTélécharger.vue";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 
-export default {
+export default mixins(mixinLangues, mixinIPA).extend({
   name: "visTableau",
   components: {
     lienOrbite,
@@ -89,12 +91,12 @@ export default {
     };
   },
   computed: {
-    nom: function () {
+    nom: function (): string {
       return Object.keys(this.nomsTableau).length
         ? traduireNom(this.nomsTableau, this.languesPréférées)
         : this.idTableau;
     },
-    nomBD: function () {
+    nomBD: function (): string {
       return Object.keys(this.nomsBD).length
         ? traduireNom(this.nomsBD, this.languesPréférées)
         : this.idBd;
@@ -105,7 +107,11 @@ export default {
     idTableau: function () {
       return decodeURIComponent(this.$route.params.idTableau);
     },
-    petitPousset: function () {
+    petitPousset: function (): {
+      text: string;
+      href?: string;
+      disabled?: boolean;
+    }[] {
       return [
         { text: "Données", href: "/bd" },
         {
@@ -121,27 +127,35 @@ export default {
   },
   methods: {
     couper,
-    sauvegarderNom({ langue, nom }) {
-      this.$ipa.tableaux.sauvegarderNomTableau(this.idTableau, langue, nom);
+    sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
+      this.$ipa.tableaux!.sauvegarderNomTableau(this.idTableau, langue, nom);
     },
-    changerLangueNom({ langueOriginale, langue, nom }) {
-      this.$ipa.tableaux.effacerNomTableau(this.idTableau, langueOriginale);
-      this.$ipa.tableaux.sauvegarderNomTableau(this.idTableau, langue, nom);
+    changerLangueNom({
+      langueOriginale,
+      langue,
+      nom,
+    }: {
+      langueOriginale: string;
+      langue: string;
+      nom: string;
+    }) {
+      this.$ipa.tableaux!.effacerNomTableau(this.idTableau, langueOriginale);
+      this.$ipa.tableaux!.sauvegarderNomTableau(this.idTableau, langue, nom);
     },
-    effacerNom({ langue }) {
-      this.$ipa.tableaux.effacerNomTableau(this.idTableau, langue);
+    effacerNom({ langue }: { langue: string }) {
+      this.$ipa.tableaux!.effacerNomTableau(this.idTableau, langue);
     },
     initialiserSuivi: async function () {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);
 
-      const oublierNoms = await this.$ipa.tableaux.suivreNomsTableau(
+      const oublierNoms = await this.$ipa.tableaux!.suivreNomsTableau(
         this.idTableau,
         (noms) => {
           this.nomsTableau = noms;
         }
       );
 
-      const oublierNomsBD = await this.$ipa.bds.suivreNomsBd(
+      const oublierNomsBD = await this.$ipa.bds!.suivreNomsBd(
         this.idBd,
         (noms) => {
           this.nomsBD = noms;
@@ -151,7 +165,7 @@ export default {
       this.suivre([oublierNoms, oublierNomsBD]);
     },
   },
-};
+});
 </script>
 
 <style></style>

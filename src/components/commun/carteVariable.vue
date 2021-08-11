@@ -1,7 +1,7 @@
 <template>
   <v-card min-width="300">
     <v-card-title>
-      {{ nom }}
+      {{ couper(nom, 20) }}
       <span v-if="permissionÉcrire">
         <v-menu
           offset-x
@@ -24,7 +24,28 @@
       <v-spacer />
       <lien-orbite :lien="id" />
     </v-card-title>
-    <v-card-subtitle>{{ description }}</v-card-subtitle>
+    <v-card-subtitle>
+      {{ couper(description, 45) }}
+      <span v-if="permissionÉcrire">
+        <v-menu
+          offset-x
+          :close-on-content-click="false"
+          transition="slide-y-transition"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon small v-on="on" v-bind="attrs">
+              <v-icon small>mdi-pencil</v-icon>
+            </v-btn>
+          </template>
+          <boîteNoms
+            :noms="descriptions"
+            @sauvegarder="sauvegarderDescr"
+            @changerLangue="changerLangueDescr"
+            @effacer="effacerDescr"
+          />
+        </v-menu>
+      </span>
+    </v-card-subtitle>
     <v-divider />
     <v-card-text>
       <p class="mb-0 text-overline">
@@ -52,50 +73,111 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import {
+  couper,
   traduireNom,
   icôneCatégorieVariable,
   catégoriesVariable,
 } from "@/utils";
-import lienOrbite from "@/components/commun/lienOrbite";
+import lienOrbite from "@/components/commun/lienOrbite.vue";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
-import boîteNoms from "@/components/commun/boîteNoms/boîte";
+import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 
-export default {
+export default mixins(mixinLangues, mixinIPA).extend({
   name: "carteVariable",
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
   components: { lienOrbite, boîteNoms },
   data: function () {
     return {
-      noms: {},
-      descriptions: {},
-      unités: undefined,
+      noms: {} as { [key: string]: string },
+      descriptions: {} as { [key: string]: string },
+      unités: undefined as undefined | string,
       permissionÉcrire: false,
-      catégorie: undefined,
+      catégorie: undefined as undefined | string,
       catégoriesVariable,
     };
   },
   computed: {
-    nom: function () {
+    nom: function (): string {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : this.id;
     },
-    description: function () {
+    description: function (): string {
       return Object.keys(this.descriptions).length
         ? traduireNom(this.descriptions, this.languesPréférées)
         : "";
     },
-    icôneCatégorie: function () {
+    icôneCatégorie: function (): string {
+      if (!this.catégorie) return "";
       return icôneCatégorieVariable(this.catégorie);
     },
   },
   methods: {
-    sauvegarderCategorie: async function (catégorie) {
-      await this.$ipa.variables.sauvegarderCatégorieVariable(
+    couper,
+    sauvegarderNom: async function ({
+      langue,
+      nom,
+    }: {
+      langue: string;
+      nom: string;
+    }) {
+      await this.$ipa.variables!.ajouterNomsVariable(this.id, {
+        [langue]: nom,
+      });
+    },
+    effacerNom: async function ({ langue }: { langue: string }) {
+      await this.$ipa.variables!.effacerNomVariable(this.id, langue);
+    },
+    changerLangueNom: async function ({
+      langueOriginale,
+      langue,
+      nom,
+    }: {
+      langueOriginale: string;
+      langue: string;
+      nom: string;
+    }) {
+      await this.$ipa.variables!.effacerNomVariable(this.id, langueOriginale);
+      await this.$ipa.variables!.ajouterNomsVariable(this.id, {
+        [langue]: nom,
+      });
+    },
+    sauvegarderDescr: async function ({
+      langue,
+      nom,
+    }: {
+      langue: string;
+      nom: string;
+    }) {
+      await this.$ipa.variables!.ajouterDescriptionsVariable(this.id, {
+        [langue]: nom,
+      });
+    },
+    effacerDescr: async function ({ langue }: { langue: string }) {
+      await this.$ipa.variables!.effacerDescrVariable(this.id, langue);
+    },
+    changerLangueDescr: async function ({
+      langueOriginale,
+      langue,
+      nom,
+    }: {
+      langueOriginale: string;
+      langue: string;
+      nom: string;
+    }) {
+      await this.$ipa.variables!.effacerDescrVariable(this.id, langueOriginale);
+      await this.$ipa.variables!.ajouterDescriptionsVariable(this.id, {
+        [langue]: nom,
+      });
+    },
+    sauvegarderCategorie: async function (catégorie: string) {
+      await this.$ipa.variables!.sauvegarderCatégorieVariable(
         this.id,
         catégorie
       );
@@ -103,29 +185,27 @@ export default {
     initialiserSuivi: async function () {
       this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.id);
 
-      const oublierNoms = await this.$ipa.variables.suivreNomsVariable(
+      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable(
         this.id,
         (noms) => {
           this.noms = noms;
         }
       );
 
-      const oublierDescriptions = await this.$ipa.variables.suivreDescrVariable(
-        this.id,
-        (descrs) => {
+      const oublierDescriptions =
+        await this.$ipa.variables!.suivreDescrVariable(this.id, (descrs) => {
           this.descriptions = descrs;
-        }
-      );
+        });
 
       const oublierCatégorie =
-        await this.$ipa.variables.suivreCatégorieVariable(
+        await this.$ipa.variables!.suivreCatégorieVariable(
           this.id,
           (catégorie) => {
             this.catégorie = catégorie;
           }
         );
 
-      const oublierUnités = await this.$ipa.variables.suivreUnitésVariable(
+      const oublierUnités = await this.$ipa.variables!.suivreUnitésVariable(
         this.id,
         (unités) => {
           this.unités = unités;
@@ -140,7 +220,7 @@ export default {
       ]);
     },
   },
-};
+});
 </script>
 
 <style></style>

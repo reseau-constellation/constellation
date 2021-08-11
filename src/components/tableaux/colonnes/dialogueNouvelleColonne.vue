@@ -25,6 +25,12 @@
               </template>
             </dialogue-nouvelle-variable>
           </template>
+          <template v-slot:item="{ item, on, attrs }">
+            <item-variable v-bind="attrs" v-on="on" :id="item" />
+          </template>
+          <template v-slot:selection="{ item }">
+            <jeton-variable :id="item" :longueur="25" />
+          </template>
         </v-select>
 
         <p class="text-overline mb-0">Contrôles de qualité (hérités)</p>
@@ -41,7 +47,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" text outlined @click="dialogue = false">
+        <v-btn color="secondary" text outlined @click="fermer">
           {{ $t("communs.annuler") }}
         </v-btn>
         <v-btn color="primary" :disabled="!prêt" depressed @click="sauvegarder">
@@ -52,55 +58,71 @@
   </v-dialog>
 </template>
 
-<script>
-import dialogueNouvelleVariable from "@/components/commun/dialogueNouvelleVariable";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
+import { schémaFonctionOublier } from "@/ipa/client";
+import { règleVariable } from "@/ipa/valid";
+
+import dialogueNouvelleVariable from "@/components/commun/dialogueNouvelleVariable.vue";
+import itemVariable from "@/components/tableaux/colonnes/itemVariable.vue";
+import jetonVariable from "@/components/commun/jetonVariable.vue";
+
 import mixinIPA from "@/mixins/ipa";
 
-export default {
+export default mixins(mixinIPA).extend({
   name: "dialogueNouvelleColonne",
-  components: { dialogueNouvelleVariable },
+  components: { dialogueNouvelleVariable, itemVariable, jetonVariable },
   mixins: [mixinIPA],
   data: function () {
     return {
       dialogue: false,
 
-      variable: null,
-      variablesDisponibles: [],
-      règlesVariable: [],
-      règlesPropre: [],
-      oublierRèglesVariable: null,
+      variable: undefined as string | undefined,
+      variablesDisponibles: [] as string[],
+      règlesVariable: [] as règleVariable[],
+      règlesPropre: [] as règleVariable[],
+      oublierRèglesVariable: undefined as schémaFonctionOublier | undefined,
     };
   },
   watch: {
-    variable: async function (val) {
+    variable: async function (val: string) {
       if (this.oublierRèglesVariable) this.oublierRèglesVariable();
       if (val) {
         this.oublierRèglesVariable =
-          await this.$ipa.variables.suivreRèglesVariable(val, (règles) => {
-            this.règlesVariable = règles;
-          });
+          await this.$ipa.variables.suivreRèglesVariable(
+            val,
+            (règles: règleVariable[]) => {
+              this.règlesVariable = règles;
+            }
+          );
       }
     },
   },
   computed: {
-    prêt: function () {
-      return this.variable;
+    prêt: function (): boolean {
+      return Boolean(this.variable);
     },
   },
   methods: {
     sauvegarder: async function () {
       this.$emit("sauvegarder", {
-        idVariable: this.idVariable,
+        idVariable: this.variable,
         règles: this.règlesPropre,
       });
-      this.dialogue = false;
+
+      this.fermer();
     },
-    nouvelleVariable: function ({ id }) {
+    nouvelleVariable: function ({ id }: { id: string }) {
       this.variable = id;
+    },
+    fermer: function () {
+      this.variable = undefined;
+      this.dialogue = false;
     },
     initialiserSuivi: async function () {
       const oublierVariables = await this.$ipa.variables.suivreVariables(
-        (variables) => {
+        (variables: string[]) => {
           this.variablesDisponibles = variables;
         }
       );
@@ -108,7 +130,10 @@ export default {
       this.suivre([oublierVariables]);
     },
   },
-};
+  destroyed: function () {
+    if (this.oublierRèglesVariable) this.oublierRèglesVariable();
+  },
+});
 </script>
 
 <style></style>

@@ -24,26 +24,28 @@
   </v-container>
 </template>
 
-<script>
-import titre from "@/components/commun/Titre";
-import paramètres from "@/components/compte/paramètres";
-import réseau from "@/components/compte/réseau";
-import thème from "@/components/compte/thème";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
+import titre from "@/components/commun/Titre.vue";
+import paramètres from "@/components/compte/paramètres.vue";
+import réseau from "@/components/compte/réseau.vue";
+import thème from "@/components/compte/thème.vue";
 import mixinImage from "@/mixins/images";
 import mixinIPA from "@/mixins/ipa";
 
-export default {
+export default mixins(mixinImage, mixinIPA).extend({
   name: "Compte",
   components: { titre, réseau, thème, paramètres },
   mixins: [mixinImage, mixinIPA],
   data: function () {
     return {
       onglet: null,
-      imageCompte: null,
+      imageCompte: null as null | string,
     };
   },
   computed: {
-    imageProfil: function () {
+    imageProfil: function (): string {
       if (this.imageCompte) {
         return this.imageCompte;
       }
@@ -54,7 +56,7 @@ export default {
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierImage = await this.$ipa.compte.suivreImage((image) => {
+      const oublierImage = await this.$ipa.compte!.suivreImage((image) => {
         if (image) {
           const url = URL.createObjectURL(
             new Blob([image.buffer], { type: "image/png" })
@@ -67,7 +69,7 @@ export default {
       this.suivre(oublierImage);
     },
   },
-};
+});
 </script>
 
 <style></style>

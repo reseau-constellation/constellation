@@ -230,7 +230,7 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async suivreConnexionsPostes(
-    f: schémaFonctionSuivi<pairSFIP[]>
+    f: schémaFonctionSuivi<{ addr: string; peer: string }[]>
   ): Promise<schémaFonctionOublier> {
     const dédoublerConnexions = (connexions: pairSFIP[]): pairSFIP[] => {
       const adrDéjàVues: string[] = [];
@@ -247,7 +247,11 @@ export default class ClientConstellation extends EventEmitter {
       const connexions = await this.sfip.swarm.peers();
       // Enlever les doublons (pas trop sûr ce qu'ils font ici)
       const connexionsUniques = dédoublerConnexions(connexions);
-      f(connexionsUniques);
+      f(
+        connexionsUniques.map((c) => {
+          return { addr: c.addr.toString(), peer: c.peer.toString() };
+        })
+      );
     };
 
     this.on("changementConnexions", fFinale);
@@ -309,6 +313,7 @@ export default class ClientConstellation extends EventEmitter {
       throw new Error(`Adresse compte ${idBdRacine} non valide`);
     this.idBdRacine = idBdRacine;
     await this.initialiserBds();
+    this.emit("compteChangé");
   }
 
   async donnerAccès(
@@ -341,6 +346,24 @@ export default class ClientConstellation extends EventEmitter {
     return () => {
       accès.off("updated", fFinale);
     };
+  }
+
+  async suivreIdBdRacine(
+    f: schémaFonctionSuivi<string | undefined>
+  ): Promise<schémaFonctionOublier> {
+    const fFinale = () => f(this.idBdRacine);
+    this.on("compteChangé", fFinale);
+    fFinale();
+    return () => this.off("compteChangé", fFinale);
+  }
+
+  async suivreIdOrbite(
+    f: schémaFonctionSuivi<string | undefined>
+  ): Promise<schémaFonctionOublier> {
+    const fFinale = () => f(this.orbite!.identity.id);
+    this.on("compteChangé", fFinale);
+    fFinale();
+    return () => this.off("compteChangé", fFinale);
   }
 
   async copierContenuBdListe(
@@ -394,7 +417,7 @@ export default class ClientConstellation extends EventEmitter {
       id: string,
       f: schémaFonctionSuivi<any>
     ) => Promise<schémaFonctionOublier>
-  ) {
+  ): Promise<schémaFonctionOublier> {
     if (!fSuivre) {
       fSuivre = async (id, f) => await this.suivreBd(id, f);
     }
@@ -645,10 +668,45 @@ export default class ClientConstellation extends EventEmitter {
     return oublier;
   }
 
+  async suivreBdsSelonCondition(
+    fListe: (
+      fSuivreRacine: (ids: string[]) => Promise<void>
+    ) => Promise<schémaFonctionOublier>,
+    fCondition: (
+      id: string,
+      fSuivreCondition: (état: boolean) => void
+    ) => Promise<schémaFonctionOublier>,
+    f: schémaFonctionSuivi<string[]>
+  ): Promise<schémaFonctionOublier> {
+    interface branche {
+      id: string;
+      état: boolean;
+    }
+
+    const fFinale = (éléments: branche[]) => {
+      const bdsRecherchées = éléments
+        .filter((él) => él.état)
+        .map((él) => él.id);
+      f(bdsRecherchées);
+    };
+
+    const fBranche = async (
+      id: string,
+      fSuivreBranche: schémaFonctionSuivi<branche>
+    ): Promise<schémaFonctionOublier> => {
+      const fFinaleSuivreBranche = (état: boolean) => {
+        fSuivreBranche({ id, état });
+      };
+      return await fCondition(id, fFinaleSuivreBranche);
+    };
+
+    return await this.suivreBdsDeFonctionListe(fListe, fFinale, fBranche);
+  }
+
   async rechercherBdListe<T>(
     id: string,
     f: (e: élémentFeedStore<T>) => boolean
-  ): Promise<any> {
+  ): Promise<élémentFeedStore<T>> {
     const bd = (await this.ouvrirBd(id)) as FeedStore;
     const élément = bd
       .iterator({ limit: -1 })

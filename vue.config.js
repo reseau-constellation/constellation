@@ -11,6 +11,9 @@ module.exports = {
         fs: false,
       },
     },
+    watchOptions: {
+      ignored: /node_modules/,
+    },
   },
   pluginOptions: {
     electronBuilder: {

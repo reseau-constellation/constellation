@@ -58,15 +58,22 @@
   </v-dialog>
 </template>
 
-<script>
-import jetonMembre from "@/components/commun/jetonMembre";
-import itemMembre from "@/components/commun/itemMembre";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
+import jetonMembre from "@/components/commun/jetonMembre.vue";
+import itemMembre from "@/components/commun/itemMembre.vue";
 
 import mixinIPA from "@/mixins/ipa";
 
 import { MODÉRATEUR, MEMBRE } from "@/ipa/accès/consts";
+import { infoMembreEnLigne } from "@/ipa/réseau";
 
-export default {
+interface Membre extends infoMembreEnLigne {
+  value: string;
+}
+
+export default mixins(mixinIPA).extend({
   name: "dialogueNouvelAuteur",
   props: ["auteurs", "idBd", "permissionModifier"],
   mixins: [mixinIPA],
@@ -75,27 +82,31 @@ export default {
     return {
       dialogue: false,
       enProgrès: false,
-      membres: null,
-      auteurSélectionné: null,
+      membres: null as null | infoMembreEnLigne[],
+      auteurSélectionné: null as null | string,
       donnerPermissionModérateur: false,
+
+      enCours: false,
     };
   },
   computed: {
-    listeMembres: function () {
+    listeMembres: function (): Membre[] {
       return this.membres
-        ? this.membres.map((m) => {
+        ? this.membres.map((m: infoMembreEnLigne) => {
             return { ...m, value: m.idBdRacine };
           })
         : [];
     },
   },
   methods: {
-    annuler: function () {
+    annuler: function (): void {
       this.auteurSélectionné = null;
       this.donnerPermissionModérateur = false;
       this.dialogue = false;
     },
-    confirmer: async function () {
+    confirmer: async function (): Promise<void> {
+      if (!this.auteurSélectionné) return;
+
       this.enCours = true;
       await this.$ipa.donnerAccès(
         this.idBd,
@@ -106,14 +117,16 @@ export default {
       this.annuler();
     },
     initialiserSuivi: async function () {
-      const oublierMembres = await this.$ipa.réseau.suivreMembres((membres) => {
-        this.membres = membres;
-      });
+      const oublierMembres = await this.$ipa.réseau!.suivreMembres(
+        (membres) => {
+          this.membres = membres;
+        }
+      );
 
       this.suivre([oublierMembres]);
     },
   },
-};
+});
 </script>
 
 <style></style>

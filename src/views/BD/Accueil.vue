@@ -47,29 +47,32 @@
   </v-container>
 </template>
 
-<script>
-import carteBd from "@/components/BD/carteBD";
-import Titre from "@/components/commun/Titre";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
+import carteBd from "@/components/BD/carteBD.vue";
+import Titre from "@/components/commun/Titre.vue";
+
 import mixinIPA from "@/mixins/ipa";
 
-export default {
+export default mixins(mixinIPA).extend({
   name: "BD",
   components: { carteBd, Titre },
   mixins: [mixinIPA],
   data: function () {
     return {
-      idsBds: [],
+      idsBds: [] as string[],
     };
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierListeBDs = await this.$ipa.bds.suivreBds((bds) => {
+      const oublierListeBDs = await this.$ipa.bds!.suivreBds((bds) => {
         this.idsBds = bds;
       });
       this.suivre(oublierListeBDs);
     },
   },
-};
+});
 </script>
 
 <style></style>

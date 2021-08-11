@@ -22,13 +22,15 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+
 import { ouvrirLien } from "@/utils";
 import { URL_RAPPORTS } from "@/utils/config";
 import Titre from "@/components/commun/Titre.vue";
 import mixinImage from "@/mixins/images";
 
-export default {
+export default Vue.extend({
   name: "Signalements",
   components: { Titre },
   mixins: [mixinImage],
@@ -38,7 +40,7 @@ export default {
     };
   },
   methods: { ouvrirLien },
-};
+});
 </script>
 
 <style></style>

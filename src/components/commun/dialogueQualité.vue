@@ -16,6 +16,10 @@
           :color="scoreTitre ? couleurScore(scoreTitre).couleur : 'primary'"
         />
         {{ $t(titre) }}
+        <v-spacer />
+        <v-btn icon @click="dialogue = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-card-subtitle v-if="permissionModifier">
         {{ $t(sousTitre) }}
