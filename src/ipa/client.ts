@@ -600,7 +600,11 @@ export default class ClientConstellation extends EventEmitter {
     const arbre: { [key: string]: InterfaceBranches } = {};
     const dictBranches: { [key: string]: T } = {};
 
+    let prêt = false // Afin d'éviter d'appeler fFinale() avant que toutes les branches aient été évaluées 1 fois
+
     const fFinale = () => {
+      if (!prêt) return
+
       const listeDonnées = Object.values(arbre)
         .map((x) => x.données)
         .filter((d) => d !== undefined) as U[];
@@ -644,7 +648,7 @@ export default class ClientConstellation extends EventEmitter {
         fFinale();
       }
 
-      nouveaux.map(async (n: string) => {
+      await Promise.all(nouveaux.map(async (n: string) => {
         arbre[n] = { données: undefined };
         const élément = dictÉléments[n];
         dictBranches[n] = élément;
@@ -656,9 +660,11 @@ export default class ClientConstellation extends EventEmitter {
         };
         const fOublier = await fBranche(idBdBranche, fSuivreBranche, élément);
         arbre[n].fOublier = fOublier;
-      });
+      }));
+      prêt = true
+      fFinale();
     };
-    fFinale();
+
     const oublierBdRacine = await fListe(fSuivreRacine);
 
     const oublier = () => {
