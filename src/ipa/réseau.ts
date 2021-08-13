@@ -10,6 +10,8 @@ import ClientConstellation, {
   élémentsBd,
 } from "./client";
 
+import { InfoCol } from "@/ipa/tableaux";
+
 export type infoMembre = {
   idSFIP: string;
   idOrbite: string;
@@ -44,10 +46,10 @@ export type infoDispositifEnLigne = {
   vuÀ: number;
 };
 
-export interface élémentDeMembre<T = élémentsBd> {
+export type élémentDeMembre<T = élémentsBd> = {
   idBdAuteur: string;
   élément: élémentBdListe<T>;
-}
+};
 
 const verrouAjouterMembre = new Semaphore();
 const INTERVALE_SALUT = 1000 * 60;
@@ -84,7 +86,7 @@ export default class Réseau extends EventEmitter {
     this._nettoyerListeMembres();
   }
 
-  async _nettoyerListeMembres() {
+  async _nettoyerListeMembres(): Promise<void> {
     const bd = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
     const éléments = ClientConstellation.obtÉlémentsDeBdListe<infoMembre>(
       bd,
@@ -421,7 +423,8 @@ export default class Réseau extends EventEmitter {
 
   async suivreBdsSelonSchéma(
     schéma: schémaBd,
-    f: schémaFonctionSuivi<string[]>
+    f: schémaFonctionSuivi<string[]>,
+    stricte = false
   ): Promise<schémaFonctionOublier> {
     const fListe = async (
       fSuivreRacine: (éléments: string[]) => Promise<void>
@@ -459,10 +462,36 @@ export default class Réseau extends EventEmitter {
       }
 
       if (schéma.tableaux) {
-        const fSuivreTableaux = (tableaux: string[]) => {};
-        lFOublier.push(
-          await this.client.bds!.suivreTableauxBd(id, fSuivreTableaux)
+        const fOublierTableaux = await this.client.suivreBdsDeFonctionListe(
+          async (
+            fSuivreRacine: (éléments: string[]) => Promise<void>
+          ): Promise<schémaFonctionOublier> => {
+            return await this.client.bds!.suivreTableauxBd(id, fSuivreRacine);
+          },
+          (tableaux: { id: string; cols: InfoCol[] }[]) => {
+            if (stricte && tableaux.length !== schéma.tableaux.length) {
+              dicÉtat.tableaux = false;
+              fFinale();
+            } else {
+              //S'assurer que les variables correspondent
+              const varsSchéma = schéma.tableaux.map((t) => t.vars);
+              dicÉtat.tableaux;
+              fFinale();
+            }
+          },
+          async (
+            id: string,
+            f: schémaFonctionSuivi<{ id: string; cols: InfoCol[] }>
+          ): Promise<schémaFonctionOublier> => {
+            return await this.client.tableaux!.suivreColonnes(
+              id,
+              (cols: InfoCol[]) => {
+                f({ id, cols });
+              }
+            );
+          }
         );
+        lFOublier.push(fOublierTableaux);
       } else {
         dicÉtat.tableaux = true;
         fFinale();
@@ -489,8 +518,26 @@ export default class Réseau extends EventEmitter {
       id: string,
       f: schémaFonctionSuivi<élémentBdListe<T>[]>
     ): Promise<schémaFonctionOublier> => {
-      const idTableau = Error;
-      return await this.client.suivreBdListe(idTableau, f, false);
+      const fListeBranche = async (
+        fSuivreRacine: (éléments: string[]) => Promise<void>
+      ): Promise<schémaFonctionOublier> => {
+        return await this.client.bds!.suivreTableauxBd(id, fSuivreRacine);
+      };
+
+      const fBrancheBranche = async (
+        fSuivreBranche: schémaFonctionSuivi<élémentsBd>
+      ): Promise<schémaFonctionOublier> => {
+        return await this.client.tableaux!.suivreDonnées(
+          idTableau,
+          fSuivreRacine
+        );
+      };
+
+      return await this.client.suivreBdsDeFonctionListe(
+        fListeBranche,
+        f,
+        fBrancheBranche
+      );
     };
 
     return await this.client.suivreBdsDeFonctionListe(fListe, f, fBranche);

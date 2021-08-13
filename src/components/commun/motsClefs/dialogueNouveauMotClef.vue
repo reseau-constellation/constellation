@@ -51,42 +51,58 @@
   </v-dialog>
 </template>
 
-<script>
-import itemNom from "@/components/commun/boîteNoms/itemNom";
-import itemNouveauNom from "@/components/commun/boîteNoms/itemNouveauNom";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
+import itemNom from "@/components/commun/boîteNoms/itemNom.vue";
+import itemNouveauNom from "@/components/commun/boîteNoms/itemNouveauNom.vue";
+
+export default Vue.extend({
   name: "dialogueNouveauMotClef",
   components: { itemNom, itemNouveauNom },
   data: function () {
     return {
-      noms: {},
+      noms: {} as { [key: string]: string },
       dialogue: false,
     };
   },
   methods: {
-    sauvegarderNom: function ({ langue, nom }) {
+    sauvegarderNom: function ({
+      langue,
+      nom,
+    }: {
+      langue: string;
+      nom: string;
+    }) {
       this.noms = { ...this.noms, [langue]: nom };
     },
-    effacerNom: function ({ langue }) {
+    effacerNom: function ({ langue }: { langue: string }) {
       this.noms = Object.fromEntries(
         Object.keys(this.noms)
           .filter((x) => x !== langue)
           .map((x) => [x, this.noms[x]])
       );
     },
-    changerLangueNom: function ({ langueOriginale, langue, nom }) {
-      this.effacerNom(langueOriginale);
-      this.sauvegarderNom(langue, nom);
+    changerLangueNom: function ({
+      langueOriginale,
+      langue,
+      nom,
+    }: {
+      langueOriginale: string;
+      langue: string;
+      nom: string;
+    }) {
+      this.effacerNom({ langue: langueOriginale });
+      this.sauvegarderNom({ langue, nom });
     },
     creerMotClef: async function () {
-      const idMotClef = await this.$ipa.motsClefs.créerMotClef();
-      await this.$ipa.motsClefs.ajouterNomsMotClef(idMotClef, this.noms);
+      const idMotClef = await this.$ipa.motsClefs!.créerMotClef();
+      await this.$ipa.motsClefs!.ajouterNomsMotClef(idMotClef, this.noms);
       this.$emit("cree", { id: idMotClef });
       this.dialogue = false;
     },
   },
-};
+});
 </script>
 
 <style></style>

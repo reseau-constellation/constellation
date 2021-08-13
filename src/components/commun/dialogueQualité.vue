@@ -94,22 +94,25 @@
   </v-dialog>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import mixinLangues from "@/mixins/langues";
 import { couleurScore } from "@/utils";
 
-export default {
+export default mixins(mixinLangues).extend({
   name: "dialogueQualité",
   props: ["score", "permissionModifier"],
   mixins: [mixinLangues],
   data: function () {
     return {
       dialogue: false,
+
       étape: 1,
     };
   },
   computed: {
-    titre: function () {
+    titre: function (): string {
       switch (this.étape) {
         case 1: {
           return "qualité.titre";
@@ -145,7 +148,7 @@ export default {
           return "";
       }
     },
-    scoreTitre: function () {
+    scoreTitre: function (): number | undefined {
       switch (this.étape) {
         case 1: {
           return this.score ? this.score.total : 0;
@@ -160,14 +163,14 @@ export default {
           return this.score ? this.score.passe : 0;
         }
         default:
-          return "";
+          return undefined;
       }
     },
   },
   methods: {
     couleurScore,
-    avancer: function (section) {
-      const pages = {
+    avancer: function (section: "accès" | "couverture" | "passe") {
+      const pages: { accès: number; couverture: number; passe: number } = {
         accès: 2,
         couverture: 3,
         passe: 4,
@@ -175,7 +178,7 @@ export default {
       this.étape = pages[section];
     },
   },
-};
+});
 </script>
 
 <style></style>

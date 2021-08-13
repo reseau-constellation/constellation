@@ -46,16 +46,18 @@
   </v-menu>
 </template>
 
-<script>
-import mixinLangues from "@/mixins/langues";
-import opLangue from "@/components/commun/OpLangue";
-import dialogueTraductionsInterface from "@/components/commun/traductions/dialogueTraductionsInterface";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
 
-export default {
+import mixinLangues from "@/mixins/langues";
+import opLangue from "@/components/commun/OpLangue.vue";
+import dialogueTraductionsInterface from "@/components/commun/traductions/dialogueTraductionsInterface.vue";
+
+export default mixins(mixinLangues).extend({
   name: "opsLangue",
   components: { opLangue, dialogueTraductionsInterface },
   mixins: [mixinLangues],
-};
+});
 </script>
 
 <style></style>

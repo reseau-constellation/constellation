@@ -11,23 +11,25 @@
   </v-list-item>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 import { traduireNom, couper } from "@/utils";
 
-export default {
+export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemListeVariables",
   props: ["id"],
   mixins: [mixinIPA, mixinLangues],
   data: function () {
     return {
-      noms: {},
+      noms: {} as { [key: string]: string },
       permissionÉcrire: false,
     };
   },
   computed: {
-    nom: function () {
+    nom: function (): string {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : couper(this.id, 30);
@@ -36,22 +38,25 @@ export default {
   methods: {
     couper,
     effacerVariable: async function () {
-      await this.$ipa.variables.effacerVariable(this.id);
+      await this.$ipa.variables!.effacerVariable(this.id);
     },
     initialiserSuivi: async function () {
-      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.id);
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
+        this.id,
+        (permission) => (this.permissionÉcrire = permission)
+      );
 
-      const oublierNoms = await this.$ipa.variables.suivreNomsVariable(
+      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable(
         this.id,
         (noms) => {
           this.noms = noms;
         }
       );
 
-      this.suivre([oublierNoms]);
+      this.suivre([oublierNoms, oublierPermissionÉcrire]);
     },
   },
-};
+});
 </script>
 
 <style></style>

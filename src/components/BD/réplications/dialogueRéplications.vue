@@ -63,14 +63,22 @@
   </v-dialog>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+import { PropType } from "vue";
+
+import mixinLangues from "@/mixins/langues";
+
+import { infoRéplication } from "@/ipa/réseau";
+
 const DÉLAI_EN_LIGNE = 10000;
 
-export default {
+export default mixins(mixinLangues).extend({
   name: "dialogueRéplications",
   props: {
-    replications: {},
+    replications: Array as PropType<infoRéplication[]>,
   },
+  mixins: [mixinLangues],
   data: function () {
     return {
       dialogue: false,
@@ -78,22 +86,22 @@ export default {
     };
   },
   computed: {
-    dispositifs: function () {
+    dispositifs: function (): infoRéplication[] {
       return this.replications || [];
     },
-    dispositifsEnLigne: function () {
-      return this.dispositifs.filter(
-        (d) => this.maintenant - d.vuÀ <= DÉLAI_EN_LIGNE
+    dispositifsEnLigne: function (): infoRéplication[] {
+      return this.dispositifs.filter((d) =>
+        d.vuÀ ? this.maintenant - d.vuÀ <= DÉLAI_EN_LIGNE : false
       );
     },
-    membres: function () {
-      const répsMembresUniques = [];
+    membres: function (): infoRéplication[] {
+      const répsMembresUniques: infoRéplication[] = [];
       const déjàVues = [];
       this.dispositifs.forEach((r) => {
         const existant = répsMembresUniques.find(
           (x) => x.idOrbite === r.idOrbite
         );
-        if (!existant || r.vuÀ < existant.vuÀ) {
+        if (!existant || !existant.vuÀ || (r.vuÀ && r.vuÀ < existant.vuÀ)) {
           répsMembresUniques.push(Object.assign({}, r)); //Copie de r pour permettre les modifications
           if (existant) existant.vuÀ = r.vuÀ;
           else déjàVues.push(r.idOrbite);
@@ -101,9 +109,9 @@ export default {
       });
       return répsMembresUniques;
     },
-    membresEnLigne: function () {
-      return this.membres.filter(
-        (m) => this.maintenant - m.vuÀ <= DÉLAI_EN_LIGNE
+    membresEnLigne: function (): infoRéplication[] {
+      return this.membres.filter((m) =>
+        m.vuÀ ? this.maintenant - m.vuÀ <= DÉLAI_EN_LIGNE : false
       );
     },
   },
@@ -112,7 +120,7 @@ export default {
       this.maintenant = new Date().getTime();
     }, 1000);
   },
-};
+});
 </script>
 
 <style></style>

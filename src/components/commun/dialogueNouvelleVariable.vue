@@ -116,9 +116,14 @@
   </v-dialog>
 </template>
 
-<script>
-import boîteNoms from "@/components/commun/boîteNoms/boîte";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
+import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
+
 import mixinLangues from "@/mixins/langues";
+
+import { catégorieVariables } from "@/ipa/variables";
 
 import {
   traduireNom,
@@ -126,96 +131,113 @@ import {
   icôneCatégorieVariable,
 } from "@/utils";
 
-export default {
+export default mixins(mixinLangues).extend({
   name: "dialogueNouvelleVariable",
   components: { boîteNoms },
   mixins: [mixinLangues],
   data: function () {
     return {
       dialogue: false,
-      catégorie: null,
-      noms: {},
-      descriptions: {},
-      unités: undefined,
+
+      catégorie: undefined as undefined | catégorieVariables,
+      noms: {} as { [key: string]: string },
+      descriptions: {} as { [key: string]: string },
+      unités: undefined as undefined | string,
 
       règlesCatégorie: [],
       règlesPropre: [],
     };
   },
-  watch: {
-    variable: async function (val) {
-      if (this.oublierRèglesVariable) this.oublierRèglesVariable();
-      if (val) {
-        this.oublierRèglesVariable =
-          await this.$ipa.variables.suivreRèglesVariable(val, (règles) => {
-            this.règlesVariable = règles;
-          });
-      }
-    },
-  },
   computed: {
-    prêt: function () {
-      return Object.keys(this.noms).length && this.catégorie;
+    prêt: function (): boolean {
+      return Boolean(Object.keys(this.noms).length && this.catégorie);
     },
-    optionsCatégories: () => {
+    optionsCatégories: (): { text: string; icône: string }[] => {
       return catégoriesVariable.map((x) => {
         return { text: x, icône: icôneCatégorieVariable(x) };
       });
     },
-    nom: function () {
+    nom: function (): string | undefined {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : undefined;
     },
-    descr: function () {
+    descr: function (): string | undefined {
       return Object.keys(this.descriptions).length
         ? traduireNom(this.descriptions, this.languesPréférées)
         : undefined;
     },
   },
   methods: {
-    nouvelleVariable: function ({ id }) {
-      this.variable = id;
-    },
-    sauvegarderNom: function ({ langue, nom }) {
+    sauvegarderNom: function ({
+      langue,
+      nom,
+    }: {
+      langue: string;
+      nom: string;
+    }) {
       this.noms = { ...this.noms, [langue]: nom };
     },
-    effacerNom: function ({ langue }) {
+    effacerNom: function ({ langue }: { langue: string }) {
       this.noms = Object.fromEntries(
         Object.keys(this.noms)
           .filter((x) => x !== langue)
           .map((x) => [x, this.noms[x]])
       );
     },
-    changerLangueNom: function ({ langueOriginale, langue, nom }) {
+    changerLangueNom: function ({
+      langueOriginale,
+      langue,
+      nom,
+    }: {
+      langueOriginale: string;
+      langue: string;
+      nom: string;
+    }) {
       this.effacerNom({ langue: langueOriginale });
       this.sauvegarderNom({ langue, nom });
     },
-    sauvegarderDescr: function ({ langue, nom }) {
+    sauvegarderDescr: function ({
+      langue,
+      nom,
+    }: {
+      langue: string;
+      nom: string;
+    }) {
       this.descriptions = { ...this.descriptions, [langue]: nom };
     },
-    effacerDescr: function ({ langue }) {
+    effacerDescr: function ({ langue }: { langue: string }) {
       this.descriptions = Object.fromEntries(
         Object.keys(this.descriptions)
           .filter((x) => x !== langue)
           .map((x) => [x, this.descriptions[x]])
       );
     },
-    changerLangueDescr: function ({ langueOriginale, langue, nom }) {
-      this.effacerDescr({ langueOriginale });
+    changerLangueDescr: function ({
+      langueOriginale,
+      langue,
+      nom,
+    }: {
+      langueOriginale: string;
+      langue: string;
+      nom: string;
+    }) {
+      this.effacerDescr({ langue: langueOriginale });
       this.sauvegarderDescr({ langue, nom });
     },
     sauvegarder: async function () {
-      const idVariable = await this.$ipa.variables.créerVariable(
+      if (!this.catégorie)
+        throw new Error("Catégorie de variable non spécifiée");
+      const idVariable = await this.$ipa.variables!.créerVariable(
         this.catégorie
       );
-      await this.$ipa.variables.ajouterNomsVariable(idVariable, this.noms);
-      await this.$ipa.variables.ajouterDescriptionsVariable(
+      await this.$ipa.variables!.ajouterNomsVariable(idVariable, this.noms);
+      await this.$ipa.variables!.ajouterDescriptionsVariable(
         idVariable,
         this.descriptions
       );
       if (this.unités) {
-        await this.$ipa.variables.ajouterUnitésVariable(
+        await this.$ipa.variables!.sauvegarderUnitésVariable(
           idVariable,
           this.unités
         );
@@ -225,10 +247,10 @@ export default {
       this.fermer();
     },
     fermer: function () {
-      this.catégorie = null;
+      this.catégorie = undefined;
       this.descriptions = {};
       this.noms = {};
-      this.unités = null;
+      this.unités = undefined;
 
       this.dialogue = false;
     },
@@ -236,7 +258,7 @@ export default {
       console.warn("À faire");
     },
   },
-};
+});
 </script>
 
 <style></style>

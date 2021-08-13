@@ -10,8 +10,10 @@
   />
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
   name: "celluleBooléenne",
   props: ["val", "editer", "couleurActive"],
   methods: {
@@ -23,7 +25,7 @@ export default {
       }
     },
   },
-};
+});
 </script>
 
 <style></style>

@@ -6,10 +6,12 @@
 </template>
 
 <script>
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
   name: "jetonLimitation",
   props: ["limitation"],
-};
+});
 </script>
 
 <style></style>

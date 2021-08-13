@@ -24,7 +24,7 @@ export interface infoAuteur {
   rôle: keyof objRôles;
 }
 
-export interface interfaceScore {
+export interface infoScore {
   accès: number;
   couverture: number;
   passe: number;
@@ -196,9 +196,50 @@ export default class BDs {
   }
 
   async suivreTableauBdDeSchéma(
-    schéma: schémaBd,
-    f: schémaFonctionSuivi<string>
-  ): Promise<schémaFonctionOublier> {}
+    motsClefs: string[],
+    iTableau: number,
+    idsVars: string[],
+    licence: string,
+    f: schémaFonctionSuivi<string>,
+    attente = 5000
+  ): Promise<schémaFonctionOublier> {
+    let infoBd: { idBd: string; fOublier: schémaFonctionOublier };
+
+    const fFinale = async (bds: string[]) => {
+      if (bds.length === 0) {
+        const idBd = await this.créerBd(licence);
+        await this.ajouterMotsClefsBd(idBd, motsClefs);
+        const idTableau = await this.ajouterTableauBD(idBd);
+        await Promise.all(
+          idsVars.map(async (idVar) => {
+            await this.client.tableaux!.ajouterColonneTableau(idTableau, idVar);
+          })
+        );
+      } else if (bds.length === 1) {
+        const idBd = bds[0];
+        const fOublierBd = this.suivreTableauBdSelonÉtiquette(
+          idBd,
+          étiquetteTableau,
+          f
+        );
+        infoBd = { idBd, fOublier: fOublierBd };
+      } else {
+        throw new Error("Pas implémenté");
+      }
+    };
+    const fOublierRechercheBds = await this.rechercherBdsParMotsClefs(
+      motsClefs,
+      fFinale
+    );
+    const fOublier = () => {
+      fOublierRechercheBds();
+      if (infoBd) infoBd.fOublier();
+    };
+    return fOublier;
+    // Assurer que la BD avec les mots-clefs existe dans mes BDs
+    // Assurer que la BD a les bons tableaux
+    // Appeler f avec l'idTableau
+  }
 
   async ajouterNomsBd(
     id: string,
@@ -486,7 +527,7 @@ export default class BDs {
 
   async suivreScoreBd(
     id: string,
-    f: schémaFonctionSuivi<interfaceScore>
+    f: schémaFonctionSuivi<infoScore>
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBd(id, () => {
       const accès = Math.floor(Math.random() * 100);
@@ -534,7 +575,7 @@ export default class BDs {
     const entrée = bdRacine
       .iterator({ limit: -1 })
       .collect()
-      .find((e: { [key: string]: any }) => e.payload.value === id);
+      .find((e: élémentBdListe<string>) => e.payload.value === id);
     await bdRacine.remove(entrée.hash);
 
     // Et puis maintenant aussi effacer les données et la BD elle-même
@@ -553,10 +594,10 @@ export default class BDs {
       const bdTableaux = (await this.client.ouvrirBd(
         idBdTableaux
       )) as FeedStore;
-      const tableaux = bdTableaux
+      const tableaux: string[] = bdTableaux
         .iterator({ limit: -1 })
         .collect()
-        .map((e: { [key: string]: any }) => e.payload.value);
+        .map((e: élémentBdListe<string>) => e.payload.value);
       for (const t of tableaux) {
         await this.client.tableaux!.effacerTableau(t);
       }

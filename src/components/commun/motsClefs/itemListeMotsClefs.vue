@@ -38,27 +38,29 @@
   </v-list-item>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import { couper, traduireNom } from "@/utils";
-import boîteNoms from "@/components/commun/boîteNoms/boîte";
-import lienOrbite from "@/components/commun/lienOrbite";
+import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
+import lienOrbite from "@/components/commun/lienOrbite.vue";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
-export default {
+export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemListeMotsClefs",
   props: ["id"],
   mixins: [mixinIPA, mixinLangues],
   components: { boîteNoms, lienOrbite },
   data: function () {
     return {
-      noms: {},
+      noms: {} as { [key: string]: string },
       permissionÉcrire: false,
     };
   },
   computed: {
-    nom: function () {
+    nom: function (): string {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : this.id.slice(9);
@@ -66,32 +68,43 @@ export default {
   },
   methods: {
     couper,
-    sauvegarderNom({ langue, nom }) {
-      this.$ipa.motsClefs.sauvegarderNomMotClef(this.id, langue, nom);
+    sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
+      this.$ipa.motsClefs!.sauvegarderNomMotClef(this.id, langue, nom);
     },
-    changerLangueNom({ langueOriginale, langue, nom }) {
-      this.$ipa.motsClefs.effacerNomMotClef(this.id, langueOriginale);
-      this.$ipa.motsClefs.sauvegarderNomMotClef(this.id, langue, nom);
+    changerLangueNom({
+      langueOriginale,
+      langue,
+      nom,
+    }: {
+      langueOriginale: string;
+      langue: string;
+      nom: string;
+    }) {
+      this.$ipa.motsClefs!.effacerNomMotClef(this.id, langueOriginale);
+      this.$ipa.motsClefs!.sauvegarderNomMotClef(this.id, langue, nom);
     },
-    effacerNom({ langue }) {
-      this.$ipa.motsClefs.effacerNomMotClef(this.id, langue);
+    effacerNom({ langue }: { langue: string }) {
+      this.$ipa.motsClefs!.effacerNomMotClef(this.id, langue);
     },
     effacerMotClef() {
-      this.$ipa.motsClefs.effacerMotClef(this.id);
+      this.$ipa.motsClefs!.effacerMotClef(this.id);
     },
     initialiserSuivi: async function () {
-      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.id);
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
+        this.id,
+        (permission) => (this.permissionÉcrire = permission)
+      );
 
-      const oublierNoms = await this.$ipa.motsClefs.suivreNomsMotClef(
+      const oublierNoms = await this.$ipa.motsClefs!.suivreNomsMotClef(
         this.id,
         (noms) => {
           this.noms = noms;
         }
       );
-      this.suivre([oublierNoms]);
+      this.suivre([oublierPermissionÉcrire, oublierNoms]);
     },
   },
-};
+});
 </script>
 
 <style></style>

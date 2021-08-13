@@ -5,6 +5,7 @@ import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
   élémentsBd,
+  élémentBdListe,
 } from "./client";
 import ContrôleurConstellation, {
   nomType as typeContrôleurAccèsConst,
@@ -221,6 +222,16 @@ export default class Variables {
     await bdVariable.set("catégorie", catégorie);
   }
 
+  async sauvegarderUnitésVariable(
+    idVariable: string,
+    idUnité: string
+  ): Promise<void> {
+    const bdVariable = (await this.client.ouvrirBd(
+      idVariable
+    )) as KeyValueStore;
+    await bdVariable.set("unités", idUnité);
+  }
+
   async ajouterRègleVariable(id: string, règle: règleVariable): Promise<void> {
     const idBdRègles = await this.client.obtIdBd("règles", id, "feed");
     if (!idBdRègles) throw `Permission de modification refusée pour BD ${id}.`;
@@ -324,7 +335,7 @@ export default class Variables {
     const entrée = bdRacine
       .iterator({ limit: -1 })
       .collect()
-      .find((e: { [key: string]: any }) => e.payload.value === id);
+      .find((e: élémentBdListe<string>) => e.payload.value === id);
     await bdRacine.remove(entrée.hash);
     await this.client.effacerBd(id);
   }

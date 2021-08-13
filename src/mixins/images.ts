@@ -1,6 +1,6 @@
 import Vue from "vue";
 
-const imagesThème: { [key: string]: any } = {
+const imagesThème: { [key: string]: { [key: string]: string } } = {
   constr: {
     unDraw: require("@/assets/undraw/undraw_under_construction_46pa.svg"),
     வவவ: require("@/assets/வவவ/குயவர்.svg"),

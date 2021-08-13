@@ -20,10 +20,12 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+
 import { couper } from "@/utils";
 
-export default {
+export default Vue.extend({
   name: "celluleGéoJSON",
   props: ["val", "editer", "couleurActive"],
   data: function () {
@@ -32,7 +34,7 @@ export default {
     };
   },
   methods: { couper },
-};
+});
 </script>
 
 <style></style>

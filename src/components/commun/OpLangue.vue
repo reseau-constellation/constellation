@@ -19,14 +19,20 @@
   </v-list-item>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+
 import { rubiChabäl as codeÀNomLangue } from "nuchabal";
 
-export default {
+export default Vue.extend({
   name: "opsLangue",
-  props: ["sélectionnée", "progrès", "code"],
+  props: {
+    sélectionnée: Boolean,
+    progrès: Number,
+    code: String,
+  },
   methods: { codeÀNomLangue },
-};
+});
 </script>
 
 <style></style>

@@ -204,12 +204,12 @@ export default class ContrôleurConstellation extends AccessController {
     this._miseÀJourEnCours = false;
   }
 
-  static get type() {
+  static get type(): string {
     return nomType;
   }
 
   // return address of AC (in this case orbitdb address of AC)
-  get address() {
+  get address(): string {
     return this.bd!.address;
   }
 
@@ -260,7 +260,7 @@ export default class ContrôleurConstellation extends AccessController {
   async canAppend(
     entry: entréeBD<entréeBDAccès>,
     identityProvider: identityProvider
-  ) {
+  ): Promise<boolean> {
     const vraiSiSigValide = async () =>
       await identityProvider.verifyIdentity(entry.identity);
 
@@ -328,7 +328,7 @@ export default class ContrôleurConstellation extends AccessController {
     return this.rôles[rôle] || [];
   }
 
-  async close() {
+  async close(): Promise<void> {
     await this.bd!.close();
     const utilisateurs = Object.values(this._rôlesUtilisateurs)
       .map((l) => Object.values(l))
@@ -336,7 +336,7 @@ export default class ContrôleurConstellation extends AccessController {
     await Promise.all(utilisateurs.map((u) => u.fermer()));
   }
 
-  async load(address: string) {
+  async load(address: string): Promise<void> {
     const addresseValide = isValidAddress(address);
 
     let adresseFinale;
@@ -358,7 +358,9 @@ export default class ContrôleurConstellation extends AccessController {
     suivreBdAccès(this.bd, (éléments) => this._miseÀJourBdAccès(éléments));
   }
 
-  _createOrbitOpts(loadByAddress = false) {
+  _createOrbitOpts(loadByAddress = false): {
+    [key: string]: string | { [key: string]: string };
+  } {
     const contrôleurAccès = {
       type: "controlleur-accès-constellation",
       premierMod: this._premierMod,
@@ -367,7 +369,7 @@ export default class ContrôleurConstellation extends AccessController {
     return loadByAddress ? {} : { accessController: contrôleurAccès };
   }
 
-  async save() {
+  async save(): Promise<{ [key: string]: string }> {
     const adresse =
       this.adresseBd ||
       (await this._orbitdb.determineAddress(
@@ -384,7 +386,7 @@ export default class ContrôleurConstellation extends AccessController {
     return manifest;
   }
 
-  async grant(rôle: typeof rôles[number], id: string) {
+  async grant(rôle: typeof rôles[number], id: string): Promise<void> {
     if (!rôles.includes(rôle)) {
       throw new Error(`Erreur: Le rôle ${rôle} n'existe pas.`);
     }
@@ -392,7 +394,7 @@ export default class ContrôleurConstellation extends AccessController {
       return;
     }
     try {
-      const entry = { rôle, id };
+      const entry: entréeBDAccès = { rôle, id };
       await this.bd!.add(entry);
     } catch (e) {
       if (e.toString().includes("not append entry"))
@@ -403,11 +405,11 @@ export default class ContrôleurConstellation extends AccessController {
     }
   }
 
-  async revoke(rôle: typeof rôles[number], id: string) {
+  async revoke(rôle: typeof rôles[number], id: string): Promise<void> {
     const élément = this.bd!.iterator({ limit: -1 })
       .collect()
       .find(
-        (e: { [key: string]: any }) =>
+        (e: élémentBdListe<entréeBDAccès>) =>
           e.payload.value.rôle === rôle && e.payload.value.id === id
       );
     if (!élément)
@@ -420,7 +422,7 @@ export default class ContrôleurConstellation extends AccessController {
   static async create(
     orbitdb: OrbitDB,
     options: OptionsContrôleurConstellation
-  ) {
+  ): Promise<ContrôleurConstellation> {
     if (!options.premierMod) options.premierMod = orbitdb.identity.id;
     options.nom = options.nom || uuidv4();
     return new ContrôleurConstellation(

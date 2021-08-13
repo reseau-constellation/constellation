@@ -12,15 +12,17 @@
   </v-list-item>
 </template>
 
-<script>
-import avatarProfil from "@/components/commun/avatarProfil";
-import lienOrbite from "@/components/commun/lienOrbite";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
+import avatarProfil from "@/components/commun/avatarProfil.vue";
+import lienOrbite from "@/components/commun/lienOrbite.vue";
 
 import { traduireNom, couper } from "@/utils";
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 
-export default {
+export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemMembre",
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
@@ -32,7 +34,7 @@ export default {
     };
   },
   computed: {
-    nom: function () {
+    nom: function (): string {
       return Object.keys(this.nomsAuteur).length
         ? traduireNom(this.nomsAuteur, this.languesPréférées)
         : this.id;
@@ -40,11 +42,8 @@ export default {
   },
   methods: {
     couper,
-    effacerTableau: async function () {
-      await this.$ipa.bds.effacerTableauBD(this.idBD, this.idTableau);
-    },
     initialiserSuivi: async function () {
-      const oublierNoms = await this.$ipa.réseau.suivreNomsMembre(
+      const oublierNoms = await this.$ipa.réseau!.suivreNomsMembre(
         this.id,
         (noms) => {
           this.nomsAuteur = noms;
@@ -53,7 +52,7 @@ export default {
       this.suivre([oublierNoms]);
     },
   },
-};
+});
 </script>
 
 <style></style>

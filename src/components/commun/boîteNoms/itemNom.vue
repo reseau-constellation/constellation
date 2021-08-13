@@ -34,10 +34,12 @@
   </v-list-item>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import mixinLangues from "@/mixins/langues";
 
-export default {
+export default mixins(mixinLangues).extend({
   name: "itemNom",
   props: ["langueOriginaleNom", "nomOriginal"],
   mixins: [mixinLangues],
@@ -48,7 +50,7 @@ export default {
     };
   },
   computed: {
-    itemsLangues: function () {
+    itemsLangues: function (): { text: string; value: string }[] {
       return this.langues.map((code) => {
         return {
           text: this.nomDeLangue(code) || code,
@@ -83,7 +85,7 @@ export default {
     this.lng = this.langueOriginaleNom;
     this.nom = this.nomOriginal;
   },
-};
+});
 </script>
 
 <style></style>

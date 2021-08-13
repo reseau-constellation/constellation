@@ -25,10 +25,12 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+
 import { copier } from "@/utils";
 
-export default {
+export default Vue.extend({
   name: "lienOrbit",
   props: ["lien"],
   data: function () {
@@ -37,12 +39,12 @@ export default {
     };
   },
   methods: {
-    async copier(texte) {
+    async copier(texte: string) {
       copier(texte);
       this.copié = true;
     },
   },
-};
+});
 </script>
 
 <style></style>

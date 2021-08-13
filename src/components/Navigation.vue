@@ -45,15 +45,17 @@
   </v-navigation-drawer>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import mixinIPA from "@/mixins/ipa";
 
-export default {
+export default mixins(mixinIPA).extend({
   name: "Navigation",
   mixins: [mixinIPA],
   data: function () {
     return {
-      imageCompte: null,
+      imageCompte: null as null | string,
       liens: [
         {
           page: "compte",
@@ -90,7 +92,7 @@ export default {
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierImage = await this.$ipa.compte.suivreImage((image) => {
+      const oublierImage = await this.$ipa.compte!.suivreImage((image) => {
         if (image) {
           const url = URL.createObjectURL(
             new Blob([image.buffer], { type: "image/png" })
@@ -103,7 +105,7 @@ export default {
       this.suivre(oublierImage);
     },
   },
-};
+});
 </script>
 
 <style></style>

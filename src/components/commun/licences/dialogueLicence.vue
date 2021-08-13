@@ -117,13 +117,15 @@
   </v-dialog>
 </template>
 
-<script>
-import mixinLicences from "@/mixins/licences";
-import jetonDroit from "@/components/commun/licences/jetonDroit";
-import jetonLimitation from "@/components/commun/licences/jetonLimitation";
-import jetonCondition from "@/components/commun/licences/jetonCondition";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
 
-export default {
+import mixinLicences from "@/mixins/licences";
+import jetonDroit from "@/components/commun/licences/jetonDroit.vue";
+import jetonLimitation from "@/components/commun/licences/jetonLimitation.vue";
+import jetonCondition from "@/components/commun/licences/jetonCondition.vue";
+
+export default mixins(mixinLicences).extend({
   name: "dialogueLicence",
   props: {
     licence: { type: String },
@@ -136,7 +138,7 @@ export default {
       dialogue: false,
     };
   },
-};
+});
 </script>
 
 <style></style>

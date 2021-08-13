@@ -56,37 +56,40 @@
   </v-dialog>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import mixinIPA from "@/mixins/ipa";
 import mixinImage from "@/mixins/images";
-import dialogueNouveauMotClef from "@/components/commun/motsClefs/dialogueNouveauMotClef";
-import itemListeMotsClefs from "@/components/commun/motsClefs/itemListeMotsClefs";
+import dialogueNouveauMotClef from "@/components/commun/motsClefs/dialogueNouveauMotClef.vue";
+import itemListeMotsClefs from "@/components/commun/motsClefs/itemListeMotsClefs.vue";
 
-export default {
+export default mixins(mixinIPA, mixinImage).extend({
   name: "dialogueMotsClefs",
   props: ["selectionnes"],
   components: { itemListeMotsClefs, dialogueNouveauMotClef },
   mixins: [mixinIPA, mixinImage],
   data: function () {
     return {
-      noms: {},
-      existants: null,
       dialogue: false,
-      récemmentAjouté: null,
-      recherche: null,
+
+      noms: {} as { [key: string]: string },
+      existants: null as null | string[],
+      récemmentAjouté: null as null | string,
+      recherche: null as null | string,
     };
   },
   computed: {
-    nonSélectionnés: function () {
+    nonSélectionnés: function (): string[] {
       if (this.existants === null) return [];
       return this.existants.filter((m) => !this.selectionnes.includes(m));
     },
-    motsClefsVisibles: function () {
+    motsClefsVisibles: function (): string[] {
       let listeFinale = [...this.nonSélectionnés];
       if (this.recherche) {
-        listeFinale = listeFinale.filter((x) => x.includes(this.recherche));
+        listeFinale = listeFinale.filter((x) => x.includes(this.recherche!));
       }
-      listeFinale = listeFinale.sort((a, b) =>
+      listeFinale = listeFinale.sort((_, b) =>
         b === this.récemmentAjouté ? 1 : 0
       );
       return listeFinale;
@@ -94,18 +97,18 @@ export default {
   },
   methods: {
     creerMotClef: async function () {
-      await this.$ipa.motsClefs.créerMotClef();
+      await this.$ipa.motsClefs!.créerMotClef();
     },
-    selectionner: function (id) {
+    selectionner: function (id: string) {
       this.$emit("ajouterMotClef", id);
       this.dialogue = false;
     },
-    nouveauMotClef: async function ({ id }) {
+    nouveauMotClef: async function ({ id }: { id: string }) {
       await this.creerMotClef();
       this.récemmentAjouté = id; // Montrer le nouveau mot clef en haut de la liste
     },
     initialiserSuivi: async function () {
-      const oublierExistants = await this.$ipa.motsClefs.suivreMotsClefs(
+      const oublierExistants = await this.$ipa.motsClefs!.suivreMotsClefs(
         (existants) => {
           this.existants = existants;
         }
@@ -113,7 +116,7 @@ export default {
       this.suivre([oublierExistants]);
     },
   },
-};
+});
 </script>
 
 <style></style>

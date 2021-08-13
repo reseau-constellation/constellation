@@ -226,16 +226,21 @@
   </v-dialog>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
+
 import { copier, couper, traduireNom } from "@/utils";
-import avatarProfil from "@/components/commun/avatarProfil";
-import lienOrbite from "@/components/commun/lienOrbite";
 
-import { adresseOrbiteValide } from "@/ipa/client";
+import avatarProfil from "@/components/commun/avatarProfil.vue";
+import lienOrbite from "@/components/commun/lienOrbite.vue";
 
-export default {
+import { adresseOrbiteValide, schémaFonctionOublier } from "@/ipa/client";
+import { infoDispositifEnLigne } from "@/ipa/réseau";
+
+export default mixins(mixinIPA, mixinLangues).extend({
   name: "dialogueAjouterDispositif",
   mixins: [mixinIPA, mixinLangues],
   components: { avatarProfil, lienOrbite },
@@ -243,22 +248,23 @@ export default {
     return {
       dialogue: false,
       étape: 1,
-      idOrbiteNouveau: null,
-      idBdRacineNouveau: null,
-      idBdRacine: null,
-      idDispositif: null,
+
+      idOrbiteNouveau: undefined as undefined | string,
+      idBdRacineNouveau: undefined as undefined | string,
+      idBdRacine: undefined as undefined | string,
+      idDispositif: undefined as undefined | string,
 
       cestParti: false,
       nomsNouveauCompte: {},
-      oublierNoms: undefined,
-      dispositifsDeCeCompte: [],
-      dispositifs: [],
+      oublierNoms: undefined as undefined | schémaFonctionOublier,
+      dispositifsDeCeCompte: [] as string[],
+      dispositifs: [] as infoDispositifEnLigne[],
       règlesValide: {
         adresseBdRacine: [
-          (val) =>
+          (val: string) =>
             adresseOrbiteValide(val || "") ||
             "Le code doit être une adresse Orbite valide.",
-          (val) =>
+          (val: string) =>
             (val || "").slice(-7) === "/racine" ||
             "L'adresse Orbite doit terminer en `/racine`.",
         ],
@@ -280,23 +286,23 @@ export default {
     };
   },
   computed: {
-    idsOrbite: function () {
+    idsOrbite: function (): string[] {
       return this.dispositifs.map((d) => d.info.idOrbite);
     },
-    nomNouveauCompte: function () {
+    nomNouveauCompte: function (): string | null {
       return Object.keys(this.nomsNouveauCompte).length
         ? traduireNom(this.nomsNouveauCompte, this.languesPréférées)
         : null;
     },
-    toutEstPrêt: function () {
+    toutEstPrêt: function (): boolean {
       if (this.étape === 2) {
-        return this.idOrbiteNouveau;
+        return Boolean(this.idOrbiteNouveau);
       } else if (this.étape === 3) {
-        return (
+        return Boolean(
           this.idBdRacineNouveau &&
-          this.règlesValide.adresseBdRacine.every(
-            (r) => r(this.idBdRacineNouveau) === true
-          )
+            this.règlesValide.adresseBdRacine.every(
+              (r) => r(this.idBdRacineNouveau!) === true
+            )
         );
       }
       return false;
@@ -308,7 +314,7 @@ export default {
         val &&
         this.règlesValide.adresseBdRacine.every((r) => r(val) === true)
       ) {
-        const oublierNoms = await this.$ipa.réseau.suivreNomsMembre(
+        const oublierNoms = await this.$ipa.réseau!.suivreNomsMembre(
           val,
           (noms) => {
             this.nomsNouveauCompte = noms;
@@ -325,13 +331,14 @@ export default {
     couper,
     retourAuDébut: function () {
       this.étape = 1;
-      this.idOrbiteNouveau = null;
-      this.idBdRacineNouveau = null;
+      this.idOrbiteNouveau = undefined;
+      this.idBdRacineNouveau = undefined;
     },
     auSuivant: function () {
       this.étape = 4;
     },
     confirmer: async function () {
+      if (!this.idBdRacineNouveau) return;
       this.cestParti = true;
       if (this.idOrbiteNouveau) {
         await this.$ipa.ajouterDispositif(this.idOrbiteNouveau);
@@ -354,7 +361,7 @@ export default {
         (id) => (this.idDispositif = id)
       );
       const oublierDispositifsEnLigne =
-        await this.$ipa.réseau.suivreDispositifsEnLigne((dispositifs) => {
+        await this.$ipa.réseau!.suivreDispositifsEnLigne((dispositifs) => {
           this.dispositifs = dispositifs;
         });
       const oublierDispositifsDeCeCompte = await this.$ipa.suivreDispositifs(
@@ -370,7 +377,10 @@ export default {
       ]);
     },
   },
-};
+  destroyed: function () {
+    if (this.oublierNoms) this.oublierNoms();
+  },
+});
 </script>
 
 <style></style>

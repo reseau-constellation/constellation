@@ -92,16 +92,20 @@
   </v-card>
 </template>
 
-<script>
-import opLangue from "@/components/commun/OpLangue";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
+import opLangue from "@/components/commun/OpLangue.vue";
+
 import mixinLangues from "@/mixins/langues";
+
 import {
   rubiChabäl as codeÀNomLangue,
   rajilanïkChabäl as numLangue,
 } from "nuchabal";
 import { முறைமைகள் as systèmesNum, உரைக்கு as chifreÀTexte } from "ennikkai";
 
-export default {
+export default mixins(mixinLangues).extend({
   name: "ongletThème",
   components: { opLangue },
   mixins: [mixinLangues],
@@ -118,7 +122,7 @@ export default {
     },
   },
   computed: {
-    thèmeImages: function () {
+    thèmeImages: function (): string {
       return this.$store.state.paramètres.thèmeImages;
     },
   },
@@ -126,11 +130,11 @@ export default {
     codeÀNomLangue,
     numLangue,
     chifreÀTexte,
-    changerThèmeImages: function (thème) {
+    changerThèmeImages: function (thème: string) {
       this.$store.commit("paramètres/changerThèmeImage", { thème });
     },
   },
-};
+});
 </script>
 
 <style></style>

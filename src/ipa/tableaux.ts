@@ -21,9 +21,13 @@ import {
   élémentDonnées,
 } from "./valid";
 
-type InfoCol = {
+export type InfoCol = {
   id: string;
   variable: string;
+};
+
+export type InfoColAvecCatégorie = InfoCol & {
+  catégorie: string;
 };
 
 export function élémentsÉgaux(
@@ -313,20 +317,20 @@ export default class Tableaux {
 
   async suivreColonnes(
     idTableau: string,
-    f: schémaFonctionSuivi<InfoCol[]>
+    f: schémaFonctionSuivi<InfoColAvecCatégorie[]>
   ): Promise<schémaFonctionOublier> {
-    const fFinale = (colonnes?: InfoCol[]) => {
+    const fFinale = (colonnes?: InfoColAvecCatégorie[]) => {
       return f(colonnes || []);
     };
     const fBranche = async (
       id: string,
-      fSuivi: schémaFonctionSuivi<InfoCol>,
+      fSuivi: schémaFonctionSuivi<InfoColAvecCatégorie>,
       branche?: InfoCol
     ): Promise<schémaFonctionOublier> => {
       return await this.client.variables!.suivreCatégorieVariable(
         id,
         async (catégorie: string) => {
-          const col = Object.assign({ catégorie }, branche as InfoCol);
+          const col = Object.assign({ catégorie }, branche!);
           fSuivi(col);
         }
       );
@@ -382,7 +386,7 @@ export default class Tableaux {
   async ajouterRègleTableau(
     idTableau: string,
     idColonne: string,
-    règle: règleVariable
+    règles: règleVariable[]
   ): Promise<void> {
     const optionsAccès = await this.client.obtOpsAccès(idTableau);
     const idBdRègles = await this.client.obtIdBd(
@@ -395,12 +399,15 @@ export default class Tableaux {
       throw `Permission de modification refusée pour tableau ${idTableau}.`;
 
     const bdColonnes = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
-    const entrée: règleColonne = {
-      règle,
-      source: "tableau",
-      colonne: idColonne,
-    };
-    await bdColonnes.add(entrée);
+
+    for (const règle of règles) {
+      const entrée: règleColonne = {
+        règle,
+        source: "tableau",
+        colonne: idColonne,
+      };
+      await bdColonnes.add(entrée);
+    }
   }
 
   async suivreRègles(

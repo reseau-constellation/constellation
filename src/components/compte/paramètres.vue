@@ -120,43 +120,49 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
+import { MAX_TAILLE_IMAGE } from "@/ipa/compte";
+
 import mixinIPA from "@/mixins/ipa";
 import mixinImages from "@/mixins/images";
-import boîteNoms from "@/components/commun/boîteNoms/boîte";
-import dialogueAjouterDispositif from "@/components/compte/dialogueAjouterDispositif";
+
+import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
+import dialogueAjouterDispositif from "@/components/compte/dialogueAjouterDispositif.vue";
 
 import { traduireNom } from "@/utils";
 
-export default {
+export default mixins(mixinIPA, mixinImages).extend({
   name: "ongletParamètresCompte",
   data: function () {
     return {
-      imageProfil: undefined,
-      courrielOrig: undefined,
+      imageProfil: undefined as undefined | string,
+      courrielOrig: undefined as undefined | string,
       courriel: "",
-      noms: null,
+
+      noms: null as null | { [key: string]: string },
       fichierTropGrand: false,
-      dispositifs: null,
-      idDispositif: null,
+      dispositifs: null as null | string[],
+      idDispositif: undefined as undefined | string,
     };
   },
   mixins: [mixinIPA, mixinImages],
   components: { boîteNoms, dialogueAjouterDispositif },
   computed: {
-    nom: function () {
+    nom: function (): string {
       const languesPréférées = [this.$i18n.locale];
       return traduireNom(this.noms || {}, languesPréférées);
     },
   },
   watch: {
-    imageProfil: function (fichier) {
+    imageProfil: async function (fichier) {
       if (fichier) {
-        if (fichier.size > this.$ipa.compte.MAX_TAILLE_IMAGE) {
+        if (fichier.size > MAX_TAILLE_IMAGE) {
           this.fichierTropGrand = true;
         } else {
           this.fichierTropGrand = false;
-          this.$ipa.compte.sauvegarderImage(fichier);
+          await this.$ipa.compte!.sauvegarderImage(fichier);
         }
       } else {
         this.effacerImage();
@@ -167,12 +173,14 @@ export default {
     },
   },
   methods: {
-    sauvegarderCourriel: function () {
+    sauvegarderCourriel: async function () {
       const courriel = this.courriel.trim();
       if (courriel !== this.courrielOrig) {
-        courriel.length
-          ? this.$ipa.compte.sauvegarderCourriel(courriel)
-          : this.$ipa.compte.effacerCourriel();
+        if (courriel.length) {
+          await this.$ipa.compte!.sauvegarderCourriel(courriel);
+        } else {
+          await this.$ipa.compte!.effacerCourriel();
+        }
       }
     },
     initialiserSuivi: async function () {
@@ -180,19 +188,19 @@ export default {
         (id) => (this.idDispositif = id)
       );
 
-      const oublierCourriel = await this.$ipa.compte.suivreCourriel(
+      const oublierCourriel = await this.$ipa.compte!.suivreCourriel(
         (courriel) => {
           if (courriel) this.courrielOrig = courriel;
         }
       );
 
-      const oublierNoms = await this.$ipa.compte.suivreNoms((noms) => {
+      const oublierNoms = await this.$ipa.compte!.suivreNoms((noms) => {
         this.noms = noms;
       });
 
       const oublierDispositifs = await this.$ipa.suivreDispositifs(
         (dispositifs) => {
-          this.dispositifs = dispositifs.sort((a, _) =>
+          this.dispositifs = dispositifs.sort((a) =>
             a === this.idDispositif ? -1 : 1
           );
         }
@@ -210,24 +218,32 @@ export default {
         this.imageProfil = undefined;
         this.fichierTropGrand = false;
       } else {
-        await this.$ipa.compte.effacerImage();
+        await this.$ipa.compte!.effacerImage();
       }
     },
-    sauvegarderNom({ langue, nom }) {
-      this.$ipa.compte.sauvegarderNom(langue, nom);
+    sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
+      this.$ipa.compte!.sauvegarderNom(langue, nom);
     },
-    changerLangueNom({ langueOriginale, langue, nom }) {
-      this.$ipa.compte.effacerNom(langueOriginale);
-      this.$ipa.compte.sauvegarderNom(langue, nom);
+    changerLangueNom({
+      langueOriginale,
+      langue,
+      nom,
+    }: {
+      langueOriginale: string;
+      langue: string;
+      nom: string;
+    }) {
+      this.$ipa.compte!.effacerNom(langueOriginale);
+      this.$ipa.compte!.sauvegarderNom(langue, nom);
     },
-    effacerNom({ langue }) {
-      this.$ipa.compte.effacerNom(langue);
+    effacerNom({ langue }: { langue: string }) {
+      this.$ipa.compte!.effacerNom(langue);
     },
     ajouterDispositif() {
       console.warn("À faire");
     },
   },
-};
+});
 </script>
 
 <style></style>

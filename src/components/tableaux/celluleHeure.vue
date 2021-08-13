@@ -16,10 +16,12 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import mixinLangues from "@/mixins/langues";
 
-export default {
+export default mixins(mixinLangues).extend({
   name: "celluleDate",
   props: ["val", "editer", "couleurActive"],
   mixins: [mixinLangues],
@@ -34,7 +36,7 @@ export default {
     },
   },
   methods: {
-    formatterHeure: function (val) {
+    formatterHeure: function (val: number) {
       return new Date(val).toLocaleTimeString(this.$i18n.locale);
     },
     actionModifié: function () {
@@ -43,7 +45,7 @@ export default {
       }
     },
   },
-};
+});
 </script>
 
 <style></style>

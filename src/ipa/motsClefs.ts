@@ -2,6 +2,7 @@ import { FeedStore, KeyValueStore } from "orbit-db";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
+  élémentBdListe,
 } from "./client";
 import ContrôleurConstellation from "./accès/contrôleurConstellation";
 
@@ -108,7 +109,7 @@ export default class MotsClefs {
     const entrée = bdRacine
       .iterator({ limit: -1 })
       .collect()
-      .find((e: { [key: string]: any }) => e.payload.value === id);
+      .find((e: élémentBdListe<string>) => e.payload.value === id);
     await bdRacine.remove(entrée.hash);
     await this.client.effacerBd(id);
   }

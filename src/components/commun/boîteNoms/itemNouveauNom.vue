@@ -40,21 +40,23 @@
   </v-list-item>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import mixinLangues from "@/mixins/langues";
 
-export default {
+export default mixins(mixinLangues).extend({
   name: "itemNouveauNom",
   props: ["languesExistantes", "etiquetteLangue", "etiquetteNom"],
   mixins: [mixinLangues],
   data: function () {
     return {
-      langueNouveauNom: null,
-      nouveauNom: null,
+      langueNouveauNom: null as null | string,
+      nouveauNom: null as null | string,
     };
   },
   computed: {
-    itemsLangues: function () {
+    itemsLangues: function (): { text: string; value: string }[] {
       return this.langues
         .filter((lng) => {
           return !this.languesExistantes.includes(lng);
@@ -68,13 +70,13 @@ export default {
     },
   },
   methods: {
-    ajouter(langue, nom) {
+    ajouter(langue: string, nom: string) {
       if (!langue || !nom) return; //Éviter de sauvegarder si tout n'est pas prêt
       this.$emit("sauvegarder", { langue, nom });
       this.langueNouveauNom = this.nouveauNom = "";
     },
   },
-};
+});
 </script>
 
 <style></style>

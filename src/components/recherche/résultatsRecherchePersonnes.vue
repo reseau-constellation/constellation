@@ -11,29 +11,36 @@
   </v-col>
 </template>
 
-<script>
-import mixinIPA from "@/mixins/ipa";
-import carteMembre from "@/components/commun/carteMembre";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
 
-export default {
+import mixinIPA from "@/mixins/ipa";
+
+import carteMembre from "@/components/commun/carteMembre.vue";
+
+import { infoMembreEnLigne } from "@/ipa/réseau";
+
+export default mixins(mixinIPA).extend({
   name: "résultatsRecherchePersonnes",
   mixins: [mixinIPA],
   components: { carteMembre },
   data: function () {
     return {
-      membres: [],
+      membres: [] as infoMembreEnLigne[],
     };
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierMembres = await this.$ipa.réseau.suivreMembres((membres) => {
-        this.membres = membres;
-      });
+      const oublierMembres = await this.$ipa.réseau!.suivreMembres(
+        (membres) => {
+          this.membres = membres;
+        }
+      );
 
       this.suivre([oublierMembres]);
     },
   },
-};
+});
 </script>
 
 <style></style>

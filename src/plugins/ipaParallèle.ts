@@ -5,7 +5,7 @@ import { schémaFonctionSuivi, schémaFonctionOublier } from "@/ipa/client";
 
 interface Tâche {
   id: string;
-  fSuivre: schémaFonctionSuivi<any>;
+  fSuivre: schémaFonctionSuivi<unknown>;
   fOublier: schémaFonctionOublier;
 }
 
@@ -47,7 +47,7 @@ export interface MessageSuivrePourTravailleur extends MessagePourTravailleur {
   type: "suivre";
   id: string;
   fonction: string[];
-  args: any[];
+  args: unknown[];
   iArgFonction: number;
 }
 
@@ -55,7 +55,7 @@ export interface MessageActionPourTravailleur extends MessagePourTravailleur {
   type: "action";
   id: string;
   fonction: string[];
-  args: any[];
+  args: unknown[];
 }
 
 export interface MessageOublierPourTravailleur extends MessagePourTravailleur {
@@ -146,7 +146,7 @@ class IPAParallèle extends Callable {
     this.travailleur.postMessage(messageInit);
   }
 
-  __call__(fonction: string[], listeArgs: any[]): Promise<unknown> {
+  __call__(fonction: string[], listeArgs: unknown[]): Promise<unknown> {
     const id = uuidv4();
     const iArgFonction = listeArgs.findIndex((a) => typeof a === "function");
 
@@ -163,7 +163,7 @@ class IPAParallèle extends Callable {
     listeArgs: unknown[],
     iArgFonction: number
   ) {
-    const f = listeArgs[iArgFonction] as schémaFonctionSuivi<any>;
+    const f = listeArgs[iArgFonction] as schémaFonctionSuivi<unknown>;
     const args = listeArgs.filter((a) => typeof a !== "function");
     if (args.length !== listeArgs.length - 1) {
       this.erreur(new Error("Plus d'un argument est une fonction."));
@@ -258,7 +258,7 @@ class Handler {
     this.listeAtributs = listeAtributs || [];
   }
 
-  get(obj: IPAParallèle, prop: string): any {
+  get(obj: IPAParallèle, prop: string): unknown {
     const directes = ["événements", "erreur"];
     if (directes.includes(prop)) {
       return obj[prop as keyof IPAParallèle];

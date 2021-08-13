@@ -146,7 +146,10 @@ export default mixins(mixinLangues, mixinIPA).extend({
       this.$ipa.tableaux!.effacerNomTableau(this.idTableau, langue);
     },
     initialiserSuivi: async function () {
-      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
+        this.idTableau,
+        (permission) => (this.permissionÉcrire = permission)
+      );
 
       const oublierNoms = await this.$ipa.tableaux!.suivreNomsTableau(
         this.idTableau,
@@ -162,7 +165,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
         }
       );
 
-      this.suivre([oublierNoms, oublierNomsBD]);
+      this.suivre([oublierPermissionÉcrire, oublierNoms, oublierNomsBD]);
     },
   },
 });

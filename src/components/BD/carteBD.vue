@@ -91,43 +91,48 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
+import { infoScore } from "@/ipa/bds";
+
 import { traduireNom, couper, couleurScore } from "@/utils";
-import lienOrbite from "@/components/commun/lienOrbite";
+
+import lienOrbite from "@/components/commun/lienOrbite.vue";
+import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
 import mixinIPA from "@/mixins/ipa";
 import mixinLicences from "@/mixins/licences";
-import dialogueLicence from "@/components/commun/licences/dialogueLicence";
 
-export default {
+export default mixins(mixinIPA, mixinLicences).extend({
   name: "carteBD",
   props: ["bd"],
   components: { lienOrbite, dialogueLicence },
   mixins: [mixinIPA, mixinLicences],
   data: function () {
     return {
-      épinglée: null,
-      licence: null,
-      logo: null,
-      score: null,
+      épinglée: null as null | boolean,
+      licence: null as null | string,
+      logo: null as null | string,
+      score: null as null | infoScore,
       permissionÉcrire: false,
-      nomsBD: {},
-      détailsBD: {},
-      variables: [],
+      nomsBD: {} as { [key: string]: string },
+      détailsBD: {} as { [key: string]: string },
+      variables: [] as string[],
     };
   },
   computed: {
-    idBd: function () {
+    idBd: function (): string {
       return decodeURIComponent(this.bd);
     },
-    langues: function () {
-      return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
+    langues: function (): string[] {
+      return [this.$i18n.locale, ...(this.$i18n.fallbackLocale as string)];
     },
-    nom: function () {
+    nom: function (): string {
       return Object.keys(this.nomsBD).length
         ? traduireNom(this.nomsBD, this.langues)
         : this.idBd;
     },
-    détails: function () {
+    détails: function (): string {
       return traduireNom(this.détailsBD, this.langues);
     },
   },
@@ -135,44 +140,48 @@ export default {
     couper,
     couleurScore,
     épingler: async function () {
-      await this.$ipa.favoris.épinglerFavori(this.bd);
+      await this.$ipa.favoris!.épinglerFavori(this.bd);
     },
     désépingler: async function () {
-      await this.$ipa.favoris.désépinglerFavori(this.bd);
+      await this.$ipa.favoris!.désépinglerFavori(this.bd);
     },
-    changerLicence({ licence }) {
-      this.$ipa.bds.changerLicenceBd(this.idBd, licence);
+    changerLicence({ licence }: { licence: string }) {
+      this.$ipa.bds!.changerLicenceBd(this.idBd, licence);
     },
     initialiserSuivi: async function () {
-      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBd);
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
+        this.idBd,
+        (permission) => (this.permissionÉcrire = permission)
+      );
 
-      const oublierLicence = await this.$ipa.bds.suivreLicence(
+      const oublierLicence = await this.$ipa.bds!.suivreLicence(
         this.idBd,
         (licence) => {
           this.licence = licence;
         }
       );
-      const oublierNoms = await this.$ipa.bds.suivreNomsBd(
+      const oublierNoms = await this.$ipa.bds!.suivreNomsBd(
         this.idBd,
         (noms) => {
           this.nomsBD = noms;
         }
       );
-      const oublierDétails = await this.$ipa.bds.suivreDescrBd(
+      const oublierDétails = await this.$ipa.bds!.suivreDescrBd(
         this.idBd,
         (détails) => {
           this.détailsBD = détails;
         }
       );
-      const oublierScore = await this.$ipa.bds.suivreScoreBd(
+      const oublierScore = await this.$ipa.bds!.suivreScoreBd(
         this.idBd,
         (score) => (this.score = score)
       );
-      const oublierFavori = await this.$ipa.favoris.suivreÉtatFavori(
+      const oublierFavori = await this.$ipa.favoris!.suivreÉtatFavori(
         this.idBd,
         (épinglée) => (this.épinglée = épinglée)
       );
       this.suivre([
+        oublierPermissionÉcrire,
         oublierLicence,
         oublierNoms,
         oublierDétails,
@@ -181,7 +190,7 @@ export default {
       ]);
     },
   },
-};
+});
 </script>
 
 <style></style>

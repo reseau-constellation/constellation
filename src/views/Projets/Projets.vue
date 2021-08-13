@@ -50,19 +50,21 @@
   </v-container>
 </template>
 
-<script>
-import Titre from "@/components/commun/Titre";
-import carteProjet from "@/components/projets/carteProjet";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
 
-export default {
+import Titre from "@/components/commun/Titre.vue";
+import carteProjet from "@/components/projets/carteProjet.vue";
+
+export default mixins().extend({
   name: "Projets",
   components: { Titre, carteProjet },
   data: function () {
     return {
-      projets: [],
+      projets: [] as string[],
     };
   },
-};
+});
 </script>
 
 <style></style>

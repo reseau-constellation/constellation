@@ -194,24 +194,37 @@
   </span>
 </template>
 
-<script>
-import titreEntêteTableau from "@/components/tableaux/titreEntêteTableau";
-import dialogueNouvelleColonne from "@/components/tableaux/colonnes/dialogueNouvelleColonne";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
 
-import celluleBooléenne from "@/components/tableaux/celluleBooléenne";
-import celluleNumérique from "@/components/tableaux/celluleNumérique";
-import celluleChaîne from "@/components/tableaux/celluleChaîne";
-import celluleGéoJSON from "@/components/tableaux/celluleGéoJSON";
-import celluleCatégorique from "@/components/tableaux/celluleCatégorique";
-import celluleFichier from "@/components/tableaux/celluleFichier";
-import celluleDate from "@/components/tableaux/celluleDate";
-import celluleDateEtHeure from "@/components/tableaux/celluleDateEtHeure";
-import celluleHeure from "@/components/tableaux/celluleHeure";
+import titreEntêteTableau from "@/components/tableaux/titreEntêteTableau.vue";
+import dialogueNouvelleColonne from "@/components/tableaux/colonnes/dialogueNouvelleColonne.vue";
+
+import celluleBooléenne from "@/components/tableaux/celluleBooléenne.vue";
+import celluleNumérique from "@/components/tableaux/celluleNumérique.vue";
+import celluleChaîne from "@/components/tableaux/celluleChaîne.vue";
+import celluleGéoJSON from "@/components/tableaux/celluleGéoJSON.vue";
+import celluleCatégorique from "@/components/tableaux/celluleCatégorique.vue";
+import celluleFichier from "@/components/tableaux/celluleFichier.vue";
+import celluleDate from "@/components/tableaux/celluleDate.vue";
+import celluleDateEtHeure from "@/components/tableaux/celluleDateEtHeure.vue";
+import celluleHeure from "@/components/tableaux/celluleHeure.vue";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
-export default {
+import { InfoColAvecCatégorie } from "@/ipa/tableaux";
+import { règleVariable, élémentDonnées } from "@/ipa/valid";
+import { élémentsBd } from "@/ipa/client";
+
+type typeEntête = {
+  text: string;
+  value: string;
+  catégorie?: string;
+  sortable?: boolean;
+};
+
+export default mixins(mixinIPA, mixinLangues).extend({
   name: "tableau",
   props: ["idTableau"],
   components: {
@@ -231,17 +244,17 @@ export default {
   data: function () {
     return {
       permissionÉcrire: false,
-      colonnes: null,
-      données: null,
+      colonnes: null as null | InfoColAvecCatégorie[],
+      données: null as null | élémentDonnées[],
       nouvelleLigne: false,
       éditer: false,
       valsNouvelleLigne: {},
     };
   },
   computed: {
-    entête: function () {
+    entête: function (): typeEntête[] {
       const cols = this.colonnes || [];
-      const entêtes = cols.map((x) => {
+      const entêtes: typeEntête[] = cols.map((x) => {
         return {
           text: x.variable,
           value: x.id,
@@ -257,7 +270,7 @@ export default {
       }
       return entêtes;
     },
-    éléments: function () {
+    éléments: function (): { [key: string]: élémentsBd }[] {
       const données = (this.données || []).sort((x, y) =>
         x.id > y.id ? 1 : -1
       );
@@ -276,13 +289,19 @@ export default {
     },
   },
   methods: {
-    creerColonne: async function ({ idVariable, règles }) {
-      const idColonne = await this.$ipa.tableaux.ajouterColonneTableau(
+    creerColonne: async function ({
+      idVariable,
+      règles,
+    }: {
+      idVariable: string;
+      règles: règleVariable[];
+    }) {
+      const idColonne = await this.$ipa.tableaux!.ajouterColonneTableau(
         this.idTableau,
         idVariable
       );
       if (règles.length) {
-        await this.$ipa.tableaux.ajouterRèglesColonne(
+        await this.$ipa.tableaux!.ajouterRègleTableau(
           this.idTableau,
           idColonne,
           règles
@@ -290,13 +309,17 @@ export default {
       }
     },
 
-    valÉditée: function (empreinte, variable, val) {
+    valÉditée: function (
+      empreinte: string | -1,
+      variable: string,
+      val: élémentsBd
+    ) {
       if (empreinte === -1) {
         this.valsNouvelleLigne = Object.assign({}, this.valsNouvelleLigne, {
           [variable]: val,
         });
       } else {
-        this.$ipa.tableaux.modifierÉlément(
+        this.$ipa.tableaux!.modifierÉlément(
           this.idTableau,
           { [variable]: val },
           empreinte
@@ -305,35 +328,40 @@ export default {
     },
 
     ajouterÉlément: function () {
-      this.$ipa.tableaux.ajouterÉlément(this.idTableau, this.valsNouvelleLigne);
+      this.$ipa.tableaux!.ajouterÉlément(
+        this.idTableau,
+        this.valsNouvelleLigne
+      );
       this.nouvelleLigne = false;
-      this.valsLigneActive = {};
     },
 
-    effacerÉlément: async function (empreinte) {
-      await this.$ipa.tableaux.effacerÉlément(this.idTableau, empreinte);
+    effacerÉlément: async function (empreinte: string) {
+      await this.$ipa.tableaux!.effacerÉlément(this.idTableau, empreinte);
     },
 
     initialiserSuivi: async function () {
-      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
+        this.idTableau,
+        (permission) => (this.permissionÉcrire = permission)
+      );
 
-      const oublierColonnes = await this.$ipa.tableaux.suivreColonnes(
+      const oublierColonnes = await this.$ipa.tableaux!.suivreColonnes(
         this.idTableau,
         (cols) => {
           this.colonnes = cols;
         }
       );
-      const oublierDonnées = await this.$ipa.tableaux.suivreDonnées(
+      const oublierDonnées = await this.$ipa.tableaux!.suivreDonnées(
         this.idTableau,
         (données) => {
           this.données = données;
         }
       );
 
-      this.suivre([oublierColonnes, oublierDonnées]);
+      this.suivre([oublierPermissionÉcrire, oublierColonnes, oublierDonnées]);
     },
   },
-};
+});
 </script>
 
 <style></style>

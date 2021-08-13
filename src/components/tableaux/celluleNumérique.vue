@@ -34,19 +34,18 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import mixinLangues from "@/mixins/langues";
 
-export default {
+export default mixins(mixinLangues).extend({
   name: "celluleNumérique",
   props: ["val", "editer", "couleurActive"],
   mixins: [mixinLangues],
   data: function () {
     return {
       valÉditée: "",
-      règles: {
-        numérique: () => this.valÉditéeNumérique !== undefined,
-      },
     };
   },
   watch: {
@@ -58,22 +57,15 @@ export default {
     },
   },
   computed: {
-    valÉditéeNumérique: function () {
-      if (!this.valÉditée.length) return;
-
-      // De https://stackoverflow.com/questions/175739/built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number
-      if (!isNaN(this.valÉditée) && !isNaN(parseFloat(this.valÉditée))) {
-        return Number(this.valÉditée);
-      } else {
-        const converti = this.texteÀChiffre(
-          this.valÉditée,
-          this.systèmeNumération
-        );
-        return converti || undefined;
-      }
+    valsÉgales: function (): boolean {
+      return this.val === this.valNumérique(this.valÉditée);
     },
-    valsÉgales: function () {
-      return this.val === this.valÉditéeNumérique;
+    règles: function () {
+      return {
+        règles: {
+          numérique: (val: string) => this.valNumérique(val),
+        },
+      };
     },
   },
   methods: {
@@ -83,7 +75,19 @@ export default {
     },
     actionModifié: function () {
       if (!this.valsÉgales) {
-        this.$emit("edite", { val: this.valÉditéeNumérique });
+        this.$emit("edite", { val: this.valNumérique(this.valÉditée) });
+      }
+    },
+    valNumérique: function (val: string) {
+      if (!val.length) return;
+
+      // De https://stackoverflow.com/questions/175739/built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number
+      //@ts-ignore
+      if (!isNaN(val) && !isNaN(parseFloat(val))) {
+        return Number(val);
+      } else {
+        const convertie = this.texteÀChiffre(val, this.systèmeNumération);
+        return convertie || undefined;
       }
     },
   },
@@ -91,7 +95,7 @@ export default {
     if (this.val !== undefined)
       this.valÉditée = this.formatterChiffre(this.val);
   },
-};
+});
 </script>
 
 <style></style>

@@ -90,12 +90,15 @@
   </span>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import { formatsFichiers as formats } from "@/ipa/valid";
 import { téléchargerFlux, téléchargerURL, couper } from "@/utils";
+
 import mixinImage from "@/mixins/images";
 
-export default {
+export default mixins(mixinImage).extend({
   name: "celluleFichier",
   props: ["val", "editer", "couleurActive", "type"],
   mixins: [mixinImage],
@@ -103,7 +106,7 @@ export default {
     return {
       téléchargementEnProgrès: false,
       téléversementEnProgrès: false,
-      url: undefined,
+      url: undefined as undefined | string,
       vis: false,
     };
   },
@@ -153,12 +156,13 @@ export default {
   methods: {
     couper,
     choisirFichier() {
+      //@ts-ignore
       this.$refs.fileInput.click();
     },
     effacerFichier() {
       this.$emit("edite", { val: undefined });
     },
-    async fichierChoisi(e) {
+    async fichierChoisi(e: { target: { files: FileList } }) {
       this.téléversementEnProgrès = true;
       const fichier = e.target.files[0];
       const extention = fichier.name.split(".").pop();
@@ -166,18 +170,20 @@ export default {
       this.téléversementEnProgrès = false;
       this.$emit("edite", { val: { cid: idDoc, ext: extention } });
     },
-    async obtURL() {
+    async obtURL(): Promise<string | undefined> {
       const { cid } = this.val;
       const octets = await this.$ipa.obtFichierSFIP(cid);
+      if (!octets) return;
       const url = URL.createObjectURL(new Blob([octets.buffer]));
       this.url = url;
+      return url;
     },
     async télécharger() {
       this.téléchargementEnProgrès = true;
       const { cid } = this.val;
       if (navigator.userAgent.includes("Mozilla")) {
-        await this.obtURL();
-        téléchargerURL(this.url, this.nomFichier);
+        const url = (await this.obtURL()) as string;
+        téléchargerURL(url, this.nomFichier);
       } else {
         const flux = this.$ipa.obtFluxSFIP(cid);
         téléchargerFlux(flux, this.nomFichier);
@@ -185,7 +191,7 @@ export default {
       this.téléchargementEnProgrès = false;
     },
   },
-};
+});
 </script>
 
 <style></style>

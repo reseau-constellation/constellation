@@ -1,7 +1,9 @@
-import ClientConstellation, { schémaFonctionOublier } from "./client";
+import EventEmitter from "events";
 import hyperswarm from "hyperswarm-web";
 import crypto from "crypto";
 const décodeur = new TextDecoder("utf-8");
+
+import ClientConstellation, { schémaFonctionOublier } from "./client";
 
 interface Message {
   signature: Signature;
@@ -23,7 +25,7 @@ interface ContenuMessage {
 }
 
 interface infoPrise {
-  prise: any;
+  prise: Prise;
   fOublier: schémaFonctionOublier;
 }
 interface ValeurMessageSalut extends ValeurMessage {
@@ -39,10 +41,20 @@ interface ContenuMessageSalut extends ContenuMessage {
   signatures: { id: string; publicKey: string };
 }
 
+interface Prise extends EventEmitter {
+  _id: string;
+  writable: boolean;
+  write: (x: string) => void;
+}
+
+interface HyperSwarm extends EventEmitter {
+  join: (sujet: Buffer, ops: { lookup: boolean; announce: boolean }) => void;
+}
+
 export default class Nuée {
   client: ClientConstellation;
   sujet: Buffer;
-  nuée: any;
+  nuée: HyperSwarm;
   prises: { [key: string]: infoPrise };
 
   constructor(client: ClientConstellation) {
@@ -57,7 +69,7 @@ export default class Nuée {
     this.nuée = hyperswarm();
     this.nuée.join(this.sujet, { lookup: true, announce: true });
 
-    this.nuée.on("connection", async (prise: any) => {
+    this.nuée.on("connection", async (prise: Prise) => {
       const fGérerDonnées = (données: BufferSource) =>
         this.gérerDonnées(données, prise);
       prise.on("data", fGérerDonnées);
@@ -81,7 +93,7 @@ export default class Nuée {
     );
   }
 
-  async direSalut(prise: any): Promise<void> {
+  async direSalut(prise: Prise): Promise<void> {
     const valeur: ValeurMessageSalut = {
       type: "Salut !",
       contenu: {
@@ -97,10 +109,11 @@ export default class Nuée {
       signature,
       valeur,
     };
+
     prise.write(JSON.stringify(message));
   }
 
-  async gérerDonnées(données: BufferSource, prise: any): Promise<void> {
+  async gérerDonnées(données: BufferSource, prise: Prise): Promise<void> {
     const message: Message = JSON.parse(décodeur.decode(données));
     const { valeur, signature } = message;
 

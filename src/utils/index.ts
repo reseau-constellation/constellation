@@ -56,7 +56,7 @@ export function compilerMarkdown(texte: string): string {
   return DOMPurify.sanitize(marked(texte));
 }
 
-export function téléchargerURL(uri: URL, nom: string): void {
+export function téléchargerURL(uri: string, nom: string): void {
   const lien = document.createElement("a");
   lien.download = nom;
   // @ts-ignore

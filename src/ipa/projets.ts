@@ -5,6 +5,7 @@ import { nomType as typeContrôleurAccèsConst } from "./accès/contrôleurConst
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
+  élémentBdListe,
 } from "./client";
 import { STATUT } from "./bds";
 import ContrôleurConstellation from "./accès/contrôleurConstellation";
@@ -268,7 +269,7 @@ export default class Projets {
     const entrée = bdBds
       .iterator({ limit: -1 })
       .collect()
-      .find((e: { [key: string]: any }) => e.payload.value === idBd);
+      .find((e: élémentBdListe<ßtring>) => e.payload.value === idBd);
     await bdBds.remove(entrée.hash);
   }
 
@@ -326,7 +327,7 @@ export default class Projets {
     const entrée = bdRacine
       .iterator({ limit: -1 })
       .collect()
-      .find((e: { [key: string]: any }) => e.payload.value === id);
+      .find((e: élémentBdListe<string>) => e.payload.value === id);
     await bdRacine.remove(entrée.hash);
 
     // Et puis maintenant aussi effacer les données et le projet lui-même

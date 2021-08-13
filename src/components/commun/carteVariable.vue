@@ -183,7 +183,10 @@ export default mixins(mixinLangues, mixinIPA).extend({
       );
     },
     initialiserSuivi: async function () {
-      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.id);
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
+        this.id,
+        (permission) => (this.permissionÉcrire = permission)
+      );
 
       const oublierNoms = await this.$ipa.variables!.suivreNomsVariable(
         this.id,
@@ -213,6 +216,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
       );
 
       this.suivre([
+        oublierPermissionÉcrire,
         oublierNoms,
         oublierDescriptions,
         oublierCatégorie,

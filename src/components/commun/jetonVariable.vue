@@ -10,13 +10,17 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import { traduireNom, couper, icôneCatégorieVariable } from "@/utils";
-import carteVariable from "@/components/commun/carteVariable";
+
+import carteVariable from "@/components/commun/carteVariable.vue";
+
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
-export default {
+export default mixins(mixinIPA, mixinLangues).extend({
   name: "jetonVariable",
   props: {
     longueur: {
@@ -29,17 +33,18 @@ export default {
   mixins: [mixinLangues, mixinIPA],
   data: function () {
     return {
-      noms: {},
-      catégorie: undefined,
+      noms: {} as { [key: string]: string },
+      catégorie: undefined as undefined | string,
     };
   },
   computed: {
-    nom: function () {
+    nom: function (): string {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : this.id.replace(/^\/orbitdb\//, "");
     },
-    icôneCatégorie: function () {
+    icôneCatégorie: function (): string | undefined {
+      if (!this.catégorie) return;
       return icôneCatégorieVariable(this.catégorie);
     },
   },
@@ -51,7 +56,7 @@ export default {
   methods: {
     couper,
     initialiserSuivi: async function () {
-      const oublierNoms = await this.$ipa.variables.suivreNomsVariable(
+      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable(
         this.id,
         (noms) => {
           this.noms = noms;
@@ -59,7 +64,7 @@ export default {
       );
 
       const oublierCatégorie =
-        await this.$ipa.variables.suivreCatégorieVariable(
+        await this.$ipa.variables!.suivreCatégorieVariable(
           this.id,
           (catégorie) => {
             this.catégorie = catégorie;
@@ -69,7 +74,7 @@ export default {
       this.suivre([oublierNoms, oublierCatégorie]);
     },
   },
-};
+});
 </script>
 
 <style></style>

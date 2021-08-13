@@ -16,21 +16,23 @@
   </v-badge>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import mixinIPA from "@/mixins/ipa";
 import mixinImage from "@/mixins/images";
 
-export default {
+export default mixins(mixinIPA, mixinImage).extend({
   name: "avatarProfil",
   props: ["id", "vuIlyA"],
   mixins: [mixinIPA, mixinImage],
   data: function () {
     return {
-      imageCompte: null,
+      imageCompte: null as null | string,
     };
   },
   computed: {
-    imageProfil: function () {
+    imageProfil: function (): string {
       if (this.imageCompte) {
         return this.imageCompte;
       }
@@ -48,7 +50,7 @@ export default {
     initialiserSuivi: async function () {
       this.imageCompte = null;
 
-      const oublierImage = await this.$ipa.réseau.suivreImageMembre(
+      const oublierImage = await this.$ipa.réseau!.suivreImageMembre(
         this.id,
         (image) => {
           if (image) {
@@ -64,7 +66,7 @@ export default {
       this.suivre([oublierImage]);
     },
   },
-};
+});
 </script>
 
 <style></style>

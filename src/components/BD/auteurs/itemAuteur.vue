@@ -37,7 +37,11 @@ import mixinIPA from "@/mixins/ipa";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemAuteur",
-  props: ["id", "mod", "accepté"],
+  props: {
+    id: String,
+    mod: Boolean,
+    accepté: Boolean,
+  },
   mixins: [mixinLangues, mixinIPA],
   components: { avatarProfil, lienOrbite },
   data: function () {

@@ -50,9 +50,9 @@
         </v-card-title>
         <v-card-text>
           <v-list style="max-height: 200px" class="overflow-y-auto">
-            <item-trad-communauté
+            <itemTradCommunauté
               v-for="suggestion in suggestions"
-              :key="suggestion.hash"
+              :key="suggestion.élément.hash"
               :suggestion="suggestion"
               @click="utiliserSuggestion(suggestion)"
             />
@@ -66,11 +66,13 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { élémentBdListe, élémentsBd } from "@/ipa/client";
-
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
-import { schémaBd, élémentDeMembre } from "@/ipa/réseau";
+import { schémaBd } from "@/ipa/réseau";
+
+import itemTradCommunauté from "@/components/commun/traductions/itemTradCommunauté.vue";
+
+import { suggestionTrad, élémentBdTraduction } from "./types";
 
 const ID_MOTCLEF_TRAD =
   "/orbitdb/zdpuAsiATt21PFpiHj8qLX7X7kN3bgozZmhEVswGncZYVHidX/7e0cde32-7fee-487c-ad6e-4247f627488e";
@@ -112,21 +114,11 @@ const schémaBdTrads: schémaBd = {
   ],
 };
 
-type suggestionTrad = élémentDeMembre<élémentBdTraduction>;
-
-interface élémentBdTraduction {
-  clef: string;
-  langueSource: string;
-  langueCible: string;
-  texteOriginal?: string;
-  traduction: string;
-  date: number;
-}
-
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "panneauTraduction",
   props: ["clef", "texteOriginal", "langueSource", "langueCible"],
   mixins: [mixinLangues, mixinIPA],
+  components: { itemTradCommunauté },
   data: function () {
     return {
       idTableau: undefined as undefined | string,
@@ -207,13 +199,17 @@ export default mixins(mixinLangues, mixinIPA).extend({
       const oublierIdBdRacine = await this.$ipa.suivreIdBdRacine(
         (id) => (this.idBdRacine = id)
       );
+
       const oublierTableauBdTrads =
         await this.$ipa.bds!.suivreTableauBdDeSchéma(
-          schémaBdTrads,
+          motsClefsBdsTrads,
+          0,
+          idsVars,
+          "ODbl-1_0",
           (idTableau) => (this.idTableau = idTableau)
         );
       const oublierSuggestionsTrads =
-        await this.$ipa.réseau!.suivreÉlémentsBdsSelonSchéma(
+        await this.$ipa.réseau!.suivreÉlémentsBdsSelonSchéma<élémentBdTraduction>(
           schémaBdTrads,
           0,
           (suggestions) => (this.suggestions = suggestions)

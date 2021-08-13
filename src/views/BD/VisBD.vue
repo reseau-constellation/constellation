@@ -375,7 +375,7 @@
 import mixins from "vue-typed-mixins";
 
 import { MODÉRATEUR } from "@/ipa/accès/consts";
-import { infoAuteur, interfaceScore } from "@/ipa/bds";
+import { infoAuteur, infoScore } from "@/ipa/bds";
 import { infoRéplication } from "@/ipa/réseau";
 
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
@@ -425,7 +425,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         permissionÉcrire: false,
         tableaux: null as null | string[],
         logo: null as null | string,
-        score: null as null | interfaceScore,
+        score: null as null | infoScore,
         variables: [] as string[],
         réplications: null as null | infoRéplication[],
 
@@ -552,7 +552,10 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         await this.$ipa.bds!.changerLicenceBd(this.idBd, licence);
       },
       initialiserSuivi: async function () {
-        this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idBd);
+        const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
+          this.idBd,
+          (permission) => (this.permissionÉcrire = permission)
+        );
 
         const oublierIdBdRacine = await this.$ipa.suivreIdBdRacine(
           (id: string | undefined) => (this.idBdRacine = id)
@@ -590,7 +593,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         );
         const oublierScore = await this.$ipa.bds!.suivreScoreBd(
           this.idBd,
-          (score: interfaceScore) => (this.score = score)
+          (score: infoScore) => (this.score = score)
         );
         const oublierVariables = await this.$ipa.bds!.suivreVariablesBd(
           this.idBd,
@@ -608,6 +611,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         );
 
         this.suivre([
+          oublierPermissionÉcrire,
           oublierIdBdRacine,
           oublierLicence,
           oublierAuteurs,

@@ -82,18 +82,20 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import { traduireNom } from "@/utils";
-export default {
+export default mixins().extend({
   name: "carteProjet",
   props: ["projet"],
   computed: {
-    nom: function () {
-      const lngs = [this.$i18n.locale, ...this.$i18n.fallbackLocale];
+    nom: function (): string {
+      const lngs = [this.$i18n.locale, ...this.$i18n.fallbackLocale as string];
       return traduireNom(this.projet.nom, lngs);
     },
   },
-};
+});
 </script>
 
 <style></style>

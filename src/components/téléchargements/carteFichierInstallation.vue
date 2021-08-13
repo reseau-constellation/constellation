@@ -20,16 +20,18 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import { ouvrirLien } from "@/utils";
 import mixinLangues from "@/mixins/langues";
 
-export default {
+export default mixins(mixinLangues).extend({
   name: "carteFichierInstallation",
   props: ["url", "SO", "img", "version"],
   mixins: [mixinLangues],
   methods: { ouvrirLien },
-};
+});
 </script>
 
 <style></style>

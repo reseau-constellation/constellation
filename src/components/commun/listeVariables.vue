@@ -14,10 +14,12 @@
   </span>
 </template>
 
-<script>
-import jetonVariable from "@/components/commun/jetonVariable";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
+import jetonVariable from "@/components/commun/jetonVariable.vue";
+
+export default Vue.extend({
   name: "listeVariables",
   props: ["variables", "nMax"],
   components: { jetonVariable },
@@ -29,7 +31,7 @@ export default {
       return this.variables.slice(this.nMax);
     },
   },
-};
+});
 </script>
 
 <style></style>

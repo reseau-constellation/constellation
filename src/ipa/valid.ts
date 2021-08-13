@@ -7,7 +7,7 @@ export type sourceRègle = "variable" | "tableau";
 
 export type règleVariable = {
   typeRègle: typeRègle;
-  détails: { [key: string]: any };
+  détails: { [key: string]: unknown };
 };
 
 export type règleColonne = {

@@ -23,15 +23,17 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import mixinIPA from "@/mixins/ipa";
 
-export default {
+export default mixins(mixinIPA).extend({
   name: "ongletRéseau",
   mixins: [mixinIPA],
   data: function () {
     return {
-      connexions: [],
+      connexions: [] as { addr: string; peer: string }[],
     };
   },
   methods: {
@@ -45,7 +47,7 @@ export default {
       this.suivre([oublierConnexions]);
     },
   },
-};
+});
 </script>
 
 <style></style>

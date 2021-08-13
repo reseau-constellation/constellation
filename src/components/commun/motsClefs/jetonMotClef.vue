@@ -31,24 +31,27 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import { couper, traduireNom } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
-import boîteNoms from "@/components/commun/boîteNoms/boîte";
 
-export default {
+import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
+
+export default mixins(mixinIPA, mixinLangues).extend({
   name: "jetonMotClef",
   props: ["id", "permissionModifier"],
   mixins: [mixinLangues, mixinIPA],
   components: { boîteNoms },
   data: function () {
     return {
-      noms: {},
+      noms: {} as { [key: string]: string },
     };
   },
   computed: {
-    nom: function () {
+    nom: function (): string {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : this.id.slice(9);
@@ -56,18 +59,26 @@ export default {
   },
   methods: {
     couper,
-    sauvegarderNom({ langue, nom }) {
-      this.$ipa.motsClefs.sauvegarderNomMotClef(this.id, langue, nom);
+    sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
+      this.$ipa.motsClefs!.sauvegarderNomMotClef(this.id, langue, nom);
     },
-    changerLangueNom({ langueOriginale, langue, nom }) {
-      this.$ipa.motsClefs.effacerNomMotClef(this.id, langueOriginale);
-      this.$ipa.motsClefs.sauvegarderNomMotClef(this.id, langue, nom);
+    changerLangueNom({
+      langueOriginale,
+      langue,
+      nom,
+    }: {
+      langueOriginale: string;
+      langue: string;
+      nom: string;
+    }) {
+      this.$ipa.motsClefs!.effacerNomMotClef(this.id, langueOriginale);
+      this.$ipa.motsClefs!.sauvegarderNomMotClef(this.id, langue, nom);
     },
-    effacerNom({ langue }) {
-      this.$ipa.motsClefs.effacerNomMotClef(this.id, langue);
+    effacerNom({ langue }: { langue: string }) {
+      this.$ipa.motsClefs!.effacerNomMotClef(this.id, langue);
     },
     initialiserSuivi: async function () {
-      const oublierNoms = await this.$ipa.motsClefs.suivreNomsMotClef(
+      const oublierNoms = await this.$ipa.motsClefs!.suivreNomsMotClef(
         this.id,
         (noms) => {
           this.noms = noms;
@@ -77,7 +88,7 @@ export default {
       this.suivre([oublierNoms]);
     },
   },
-};
+});
 </script>
 
 <style></style>

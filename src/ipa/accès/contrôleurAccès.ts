@@ -29,11 +29,11 @@ export default class ContrôleurAccès extends EventEmitter {
     this._premierMod = options.premierMod;
   }
 
-  static get type() {
+  static get type(): string {
     return type;
   }
 
-  estUnModérateur(id: string) {
+  estUnModérateur(id: string): boolean {
     return this._accèsÉcriture.includes(id);
   }
 
@@ -46,14 +46,14 @@ export default class ContrôleurAccès extends EventEmitter {
     return this.estUnModérateur(id);
   }
 
-  get premierMod() {
+  get premierMod(): string {
     return this._premierMod;
   }
 
   async canAppend(
     entry: entréeBD<entréeBDAccès>,
     identityProvider: identityProvider
-  ) {
+  ): Promise<boolean> {
     const idÉlément = entry.identity.id;
     const { rôle, id: idAjout } = entry.payload.value;
     const estUnMod = this.estUnModérateurPatient(idÉlément);
@@ -82,11 +82,11 @@ export default class ContrôleurAccès extends EventEmitter {
     return false;
   }
 
-  async load() {
+  async load(): Promise<void> {
     // Rien à faire je crois
   }
 
-  async save() {
+  async save(): Promise<{ [key: string]: string }> {
     const manifest = { premierMod: this.premierMod };
     return manifest;
   }
@@ -94,7 +94,7 @@ export default class ContrôleurAccès extends EventEmitter {
   static async create(
     orbitdb: OrbitDB,
     options: OptionsContrôleurAccèsConstellation = {}
-  ) {
+  ): Promise<ContrôleurAccès> {
     const premierMod = options.premierMod;
     if (!premierMod)
       throw new Error("Contrôle d'accès: premier modérateur requis");

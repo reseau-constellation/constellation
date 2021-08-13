@@ -28,12 +28,14 @@
   </v-card>
 </template>
 
-<script>
-import mixinLangues from "@/mixins/langues";
-import itemNom from "./itemNom";
-import itemNouveauNom from "./itemNouveauNom";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
 
-export default {
+import mixinLangues from "@/mixins/langues";
+import itemNom from "./itemNom.vue";
+import itemNouveauNom from "./itemNouveauNom.vue";
+
+export default mixins(mixinLangues).extend({
   name: "BoîteNoms",
   components: { itemNom, itemNouveauNom },
   props: {
@@ -63,7 +65,7 @@ export default {
     };
   },
   computed: {
-    itemsLangues: function () {
+    itemsLangues: function (): { text: string; value: string }[] {
       return this.langues
         .filter((lng) => {
           return !Object.keys(this.noms).includes(lng);
@@ -76,7 +78,7 @@ export default {
         });
     },
   },
-};
+});
 </script>
 
 <style></style>

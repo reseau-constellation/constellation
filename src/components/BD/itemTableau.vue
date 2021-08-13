@@ -42,33 +42,40 @@
   </v-list-item>
 </template>
 
-<script>
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import { traduireNom, couper } from "@/utils";
-import jetonVariable from "@/components/commun/jetonVariable";
+
+import jetonVariable from "@/components/commun/jetonVariable.vue";
+
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 
-export default {
+export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemTableau",
-  props: ["id", "idBD"],
+  props: {
+    id: String,
+    idBd: String,
+  },
   components: { jetonVariable },
   mixins: [mixinLangues, mixinIPA],
   data: function () {
     return {
       permissionÉcrire: false,
       dialogue: false,
-      nomsTableau: {},
-      variables: [],
+      nomsTableau: {} as { [key: string]: string },
+      variables: [] as string[],
     };
   },
   computed: {
-    langues: function () {
-      return [this.$i18n.locale, ...this.$i18n.fallbackLocale];
+    langues: function (): string[] {
+      return [this.$i18n.locale, ...(this.$i18n.fallbackLocale as string)];
     },
-    idTableau: function () {
+    idTableau: function (): string {
       return decodeURIComponent(this.id);
     },
-    nom: function () {
+    nom: function (): string {
       return Object.keys(this.nomsTableau).length
         ? traduireNom(this.nomsTableau, this.langues)
         : this.idTableau;
@@ -77,26 +84,30 @@ export default {
   methods: {
     couper,
     effacerTableau: async function () {
-      await this.$ipa.bds.effacerTableauBD(this.idBD, this.idTableau);
+      await this.$ipa.bds!.effacerTableauBD(this.idBd, this.idTableau);
     },
     initialiserSuivi: async function () {
-      this.permissionÉcrire = await this.$ipa.permissionÉcrire(this.idTableau);
-      const oublierNoms = await this.$ipa.tableaux.suivreNomsTableau(
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
+        this.idTableau,
+        (permission) => (this.permissionÉcrire = permission)
+      );
+
+      const oublierNoms = await this.$ipa.tableaux!.suivreNomsTableau(
         this.idTableau,
         (noms) => {
           this.nomsTableau = noms;
         }
       );
-      const oublierVariables = await this.$ipa.tableaux.suivreVariables(
+      const oublierVariables = await this.$ipa.tableaux!.suivreVariables(
         this.idTableau,
         (variables) => {
           this.variables = variables;
         }
       );
-      this.suivre([oublierNoms, oublierVariables]);
+      this.suivre([oublierPermissionÉcrire, oublierNoms, oublierVariables]);
     },
   },
-};
+});
 </script>
 
 <style></style>

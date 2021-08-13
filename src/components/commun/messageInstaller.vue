@@ -21,11 +21,13 @@
   </v-snackbar>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import isElectron from "is-electron";
+
 import { ouvrirLien } from "@/utils";
 
-export default {
+export default Vue.extend({
   name: "messageInstaller",
   data: function () {
     return {
@@ -33,7 +35,7 @@ export default {
     };
   },
   methods: { ouvrirLien },
-};
+});
 </script>
 
 <style></style>
