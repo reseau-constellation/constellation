@@ -38,10 +38,10 @@ export default mixins(mixinLangues).extend({
       return this.suggestion.idBdAuteur;
     },
     traduction: function (): string {
-      return this.suggestion.élément.payload.value.traduction;
+      return this.suggestion.élément.données.ID_VAR_TRADUCTION;
     },
     date: function (): string {
-      const date = this.suggestion.élément.payload.value.date;
+      const date = this.suggestion.élément.données.ID_VAR_DATE;
       return this.formatterDate(date);
     },
   },

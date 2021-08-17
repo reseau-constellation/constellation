@@ -95,7 +95,7 @@
       <template v-for="c in entête" v-slot:[`item.${c.value}`]="{ item }">
         <span v-if="c.value === 'actions'" :key="c.value">
           <v-btn
-            v-if="item.premièreLigne"
+            v-if="item.empreinte === '-1'"
             color="success"
             icon
             small
@@ -117,40 +117,40 @@
           v-else-if="c.catégorie === 'date'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
-          :editer="éditer || item.premièreLigne"
+          :couleurActive="item.empreinte === '-1' ? 'success' : 'primary'"
+          :editer="éditer || item.empreinte === '-1'"
           @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleDateEtHeure
           v-else-if="c.catégorie === 'dateEtHeure'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
-          :editer="éditer || item.premièreLigne"
+          :couleurActive="item.empreinte === '-1' ? 'success' : 'primary'"
+          :editer="éditer || item.empreinte === '-1'"
           @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleHeure
           v-else-if="c.catégorie === 'heure'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
-          :editer="éditer || item.premièreLigne"
+          :couleurActive="item.empreinte === '-1' ? 'success' : 'primary'"
+          :editer="éditer || item.empreinte === '-1'"
           @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleNumérique
           v-else-if="c.catégorie === 'numérique'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
-          :editer="éditer || item.premièreLigne"
+          :couleurActive="item.empreinte === '-1' ? 'success' : 'primary'"
+          :editer="éditer || item.empreinte === '-1'"
           @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleBooléenne
           v-else-if="c.catégorie === 'booléen'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
-          :editer="éditer || item.premièreLigne"
+          :couleurActive="item.empreinte === '-1' ? 'success' : 'primary'"
+          :editer="éditer || item.empreinte === '-1'"
           @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleChaîne
@@ -158,24 +158,24 @@
           :key="c.value"
           :val="item[c.value]"
           :empreinte="item.empreinte"
-          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
-          :editer="éditer || item.premièreLigne"
+          :couleurActive="item.empreinte === '-1' ? 'success' : 'primary'"
+          :editer="éditer || item.empreinte === '-1'"
           @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleGéoJSON
           v-else-if="c.catégorie === 'géojson'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
-          :editer="éditer || item.premièreLigne"
+          :couleurActive="item.empreinte === '-1' ? 'success' : 'primary'"
+          :editer="éditer || item.empreinte === '-1'"
           @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleCatégorique
           v-else-if="c.catégorie === 'catégorique'"
           :key="c.value"
           :val="item[c.value]"
-          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
-          :editer="éditer || item.premièreLigne"
+          :couleurActive="item.empreinte === '-1' ? 'success' : 'primary'"
+          :editer="éditer || item.empreinte === '-1'"
           @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
         <celluleFichier
@@ -185,8 +185,8 @@
           :key="c.value"
           :val="item[c.value]"
           :type="c.catégorie"
-          :couleurActive="item.premièreLigne ? 'success' : 'primary'"
-          :editer="éditer || item.premièreLigne"
+          :couleurActive="item.empreinte === '-1' ? 'success' : 'primary'"
+          :editer="éditer || item.empreinte === '-1'"
           @edite="(e) => valÉditée(item.empreinte, c.value, e.val)"
         />
       </template>
@@ -270,18 +270,16 @@ export default mixins(mixinIPA, mixinLangues).extend({
       }
       return entêtes;
     },
-    éléments: function (): { [key: string]: élémentsBd }[] {
+    éléments: function (): élémentDonnées[] {
       const données = (this.données || []).sort((x, y) =>
-        x.id > y.id ? 1 : -1
+        x.empreinte > y.empreinte ? 1 : -1
       );
 
       if (this.nouvelleLigne) {
-        const premièreLigne = {};
-        Object.assign(
-          premièreLigne,
-          { premièreLigne: true, empreinte: -1 },
-          this.valsNouvelleLigne
-        );
+        const premièreLigne: élémentDonnées = {
+          données: { ...this.valsNouvelleLigne },
+          empreinte: "-1",
+        };
         return [premièreLigne, ...données];
       } else {
         return données;
@@ -309,12 +307,8 @@ export default mixins(mixinIPA, mixinLangues).extend({
       }
     },
 
-    valÉditée: function (
-      empreinte: string | -1,
-      variable: string,
-      val: élémentsBd
-    ) {
-      if (empreinte === -1) {
+    valÉditée: function (empreinte: string, variable: string, val: élémentsBd) {
+      if (empreinte === "-1") {
         this.valsNouvelleLigne = Object.assign({}, this.valsNouvelleLigne, {
           [variable]: val,
         });

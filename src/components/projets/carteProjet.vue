@@ -91,7 +91,10 @@ export default mixins().extend({
   props: ["projet"],
   computed: {
     nom: function (): string {
-      const lngs = [this.$i18n.locale, ...this.$i18n.fallbackLocale as string];
+      const lngs = [
+        this.$i18n.locale,
+        ...(this.$i18n.fallbackLocale as string),
+      ];
       return traduireNom(this.projet.nom, lngs);
     },
   },

@@ -128,7 +128,7 @@ import jetonCondition from "@/components/commun/licences/jetonCondition.vue";
 export default mixins(mixinLicences).extend({
   name: "dialogueLicence",
   props: {
-    licence: { type: String },
+    idLicence: { type: String },
     permissionModifier: { default: false, type: Boolean },
   },
   components: { jetonDroit, jetonCondition, jetonLimitation },
@@ -138,6 +138,11 @@ export default mixins(mixinLicences).extend({
       dialogue: false,
     };
   },
+  watch: {
+    idLicence: function(val) {
+      this.licence = val
+    }
+  }
 });
 </script>
 

@@ -1,7 +1,8 @@
 import { FeedStore, KeyValueStore } from "orbit-db";
-import { schémaBd } from "@/ipa/réseau";
-
+import Semaphore from "@chriscdn/promise-semaphore";
 import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
+
+import { schémaBd } from "@/ipa/réseau";
 
 import ClientConstellation, {
   schémaFonctionSuivi,
@@ -31,6 +32,8 @@ export interface infoScore {
   total: number;
 }
 
+const verrouDécouverteBd = new Semaphore();
+
 export default class BDs {
   client: ClientConstellation;
   idBd: string;
@@ -50,15 +53,17 @@ export default class BDs {
     return await this.client.suivreBdListe(idBdRacine, f);
   }
 
-  async créerBd(licence: string): Promise<string> {
+  async créerBd(licence: string, ajouter = true): Promise<string> {
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
-    const idBdBD = await this.client.créerBdIndépendante("kvstore", {
+    const idBdBd = await this.client.créerBdIndépendante("kvstore", {
       adresseBd: undefined,
       premierMod: this.client.bdRacine!.id,
     });
-    await bdRacine.add(idBdBD);
+    if (ajouter) {
+      await bdRacine.add(idBdBd);
+    }
 
-    const bdBD = (await this.client.ouvrirBd(idBdBD)) as KeyValueStore;
+    const bdBD = (await this.client.ouvrirBd(idBdBd)) as KeyValueStore;
     await bdBD.set("licence", licence);
 
     const accès = bdBD.access as unknown as ContrôleurConstellation;
@@ -90,7 +95,12 @@ export default class BDs {
 
     await bdBD.set("statut", { statut: STATUT.ACTIVE });
 
-    return idBdBD;
+    return idBdBd;
+  }
+
+  async ajouterÀMesBds(id: string): Promise<void> {
+    const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
+    await bdRacine.add(id);
   }
 
   async copierBd(id: string): Promise<string> {
@@ -196,39 +206,59 @@ export default class BDs {
   }
 
   async suivreTableauBdDeSchéma(
-    motsClefs: string[],
+    schéma: schémaBd,
     iTableau: number,
-    idsVars: string[],
     licence: string,
-    f: schémaFonctionSuivi<string>,
-    attente = 5000
+    f: schémaFonctionSuivi<string>
   ): Promise<schémaFonctionOublier> {
     let infoBd: { idBd: string; fOublier: schémaFonctionOublier };
+    const { motsClefs, tableaux } = schéma;
+    if (!motsClefs || !motsClefs.tous)
+      throw new Error("Mots clefs nécessaires");
+
+    const idVerrou = schéma.toString();
 
     const fFinale = async (bds: string[]) => {
+      await verrouDécouverteBd.acquire(idVerrou);
+
+      console.log("ici", {bds})
       if (bds.length === 0) {
-        const idBd = await this.créerBd(licence);
-        await this.ajouterMotsClefsBd(idBd, motsClefs);
-        const idTableau = await this.ajouterTableauBD(idBd);
+        const idBd = await this.créerBd(licence, false);
+        await this.ajouterMotsClefsBd(idBd, motsClefs.tous!);
+
         await Promise.all(
-          idsVars.map(async (idVar) => {
-            await this.client.tableaux!.ajouterColonneTableau(idTableau, idVar);
+          tableaux.map(async (tbl, i) => {
+            const idTableau = await this.ajouterTableauBD(idBd);
+            await Promise.all(
+              tbl.vars.map(async (idVar) => {
+                await this.client.tableaux!.ajouterColonneTableau(
+                  idTableau,
+                  idVar
+                );
+              })
+            );
+            if (i === iTableau) f(idTableau);
           })
         );
+        await this.ajouterÀMesBds(idBd);
       } else if (bds.length === 1) {
         const idBd = bds[0];
-        const fOublierBd = this.suivreTableauBdSelonÉtiquette(
+        const fOublierBd = await this.suivreTableauxBd(
           idBd,
-          étiquetteTableau,
-          f
+          (tblx: string[]) => {
+            const idTableau = tblx[iTableau];
+            f(idTableau);
+          }
         );
         infoBd = { idBd, fOublier: fOublierBd };
       } else {
         throw new Error("Pas implémenté");
       }
+
+      verrouDécouverteBd.release(idVerrou);
     };
     const fOublierRechercheBds = await this.rechercherBdsParMotsClefs(
-      motsClefs,
+      motsClefs.tous,
       fFinale
     );
     const fOublier = () => {
@@ -561,6 +591,7 @@ export default class BDs {
     ) => {
       return await this.client.suivreBdsDeBdListe(id, f, fBranche);
     };
+
     return await this.client.suivreBdDeClef(
       id,
       "tableaux",

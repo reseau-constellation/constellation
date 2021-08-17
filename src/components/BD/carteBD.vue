@@ -39,7 +39,7 @@
         </span>
       </v-chip>
       <dialogue-licence
-        :licence="licence"
+        :idLicence="licence"
         :permissionModifier="permissionÉcrire"
         @changerLicence="changerLicence"
       >

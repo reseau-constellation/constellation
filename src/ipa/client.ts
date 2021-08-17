@@ -1,5 +1,6 @@
 import IPFS from "ipfs";
 import { IDResult } from "ipfs-core-types/src/root";
+import { ImportCandidate } from "ipfs-core-types/src/utils";
 import { PeersResult } from "ipfs-core-types/src/swarm";
 
 import { EventEmitter, once } from "events";
@@ -63,11 +64,6 @@ export interface élémentBdListe<T = élémentsBd> {
     value: T;
   };
   hash: string;
-}
-
-export interface pairSFIP {
-  addr: Uint8Array;
-  peer: Uint8Array;
 }
 
 export type infoAccès = {
@@ -134,7 +130,7 @@ export default class ClientConstellation extends EventEmitter {
 
   async initialiser(): Promise<void> {
     this.sfip = await initSFIP(this._dir);
-    this.idNodeSFIP = (await this.sfip.id()) as unknown as IDResult;
+    this.idNodeSFIP = await this.sfip.id();
     for (const é of ["peer:connect", "peer:disconnect"]) {
       //@ts-ignore
       this.sfip.libp2p.connectionManager.on(é, () => {
@@ -236,7 +232,7 @@ export default class ClientConstellation extends EventEmitter {
   ): Promise<schémaFonctionOublier> {
     const dédoublerConnexions = (connexions: PeersResult[]): PeersResult[] => {
       const adrDéjàVues: string[] = [];
-      const dédupliquées: pairSFIP[] = [];
+      const dédupliquées: PeersResult[] = [];
       for (const c of connexions) {
         if (!adrDéjàVues.includes(c.addr.toString())) {
           adrDéjàVues.push(c.addr.toString());
@@ -408,7 +404,47 @@ export default class ClientConstellation extends EventEmitter {
     return oublier;
   }
 
-  async suivreBdDeClef<T extends Store>(
+  async suivreBdDeFonction<T>(
+    fRacine: (
+      fSuivreRacine: (nouvelIdBdCible: string) => Promise<void>
+    ) => Promise<schémaFonctionOublier>,
+    f: schémaFonctionSuivi<T | undefined>,
+    fSuivre?: (
+      id: string,
+      fSuivreBd: schémaFonctionSuivi<T>
+    ) => Promise<schémaFonctionOublier>
+  ): Promise<schémaFonctionOublier> {
+    if (!fSuivre) {
+      fSuivre = async (id, fSuivreBd: schémaFonctionSuivi<T>) =>
+        await this.suivreBd(
+          id,
+          fSuivreBd as unknown as schémaFonctionSuivi<KeyValueStore>
+        );
+    }
+
+    let oublierFSuivre: schémaFonctionOublier | undefined;
+    let idBdCible: string | undefined;
+
+    const oublierRacine = await fRacine(async (nouvelIdBdCible: string) => {
+      if (nouvelIdBdCible !== idBdCible) {
+        idBdCible = nouvelIdBdCible;
+        if (oublierFSuivre) oublierFSuivre();
+
+        if (idBdCible) {
+          oublierFSuivre = await fSuivre!(idBdCible, f);
+        } else {
+          f(undefined);
+          oublierFSuivre = undefined;
+        }
+      }
+    });
+    return () => {
+      oublierRacine();
+      if (oublierFSuivre) oublierFSuivre();
+    };
+  }
+
+  async suivreBdDeClef<T>(
     id: string,
     clef: string,
     f: schémaFonctionSuivi<T | undefined>,
@@ -417,33 +453,16 @@ export default class ClientConstellation extends EventEmitter {
       fSuivreBd: schémaFonctionSuivi<T>
     ) => Promise<schémaFonctionOublier>
   ): Promise<schémaFonctionOublier> {
-    if (!fSuivre) {
-      fSuivre = async (id, fSuivreBd) => await this.suivreBd(id, fSuivreBd);
-    }
-
-    let oublierFSuivre: schémaFonctionOublier | undefined;
-    let idBdCible: string | undefined;
-
-    const oublierBdRacine = await this.suivreBd(id, async (bd: Store) => {
-      const nouvelIdBdCible = await (bd as KeyValueStore).get(clef);
-
-      if (nouvelIdBdCible !== idBdCible) {
-        idBdCible = nouvelIdBdCible;
-        if (oublierFSuivre) oublierFSuivre();
-        if (idBdCible) {
-          oublierFSuivre = await fSuivre!(idBdCible, f);
-        } else {
-          f(undefined);
-          if (oublierFSuivre) oublierFSuivre();
-          oublierFSuivre = undefined;
-        }
-      }
-    });
-
-    return () => {
-      oublierBdRacine();
-      if (oublierFSuivre) oublierFSuivre();
+    const fRacine = async (
+      fSuivreRacine: (nouvelIdBdCible: string) => Promise<void>
+    ): Promise<schémaFonctionOublier> => {
+      const fSuivreBdRacine = async (bd: KeyValueStore) => {
+        const nouvelIdBdCible = await bd.get(clef);
+        fSuivreRacine(nouvelIdBdCible);
+      };
+      return await this.suivreBd(id, fSuivreBdRacine);
     };
+    return await this.suivreBdDeFonction(fRacine, f, fSuivre);
   }
 
   async suivreBdDicDeClef<T extends élémentsBd>(
@@ -735,7 +754,7 @@ export default class ClientConstellation extends EventEmitter {
     return flux;
   }
 
-  async ajouterÀSFIP(fichier: ArrayBuffer): Promise<string> {
+  async ajouterÀSFIP(fichier: ImportCandidate): Promise<string> {
     const résultat = await this.sfip!.add(fichier);
     return résultat.cid.toString();
   }

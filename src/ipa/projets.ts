@@ -269,7 +269,7 @@ export default class Projets {
     const entrée = bdBds
       .iterator({ limit: -1 })
       .collect()
-      .find((e: élémentBdListe<ßtring>) => e.payload.value === idBd);
+      .find((e: élémentBdListe<string>) => e.payload.value === idBd);
     await bdBds.remove(entrée.hash);
   }
 

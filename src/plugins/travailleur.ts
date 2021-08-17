@@ -15,12 +15,15 @@ const dicFOublier: { [key: string]: schémaFonctionOublier } = {};
 onmessage = async function ({ data }) {
   console.log("Message reçu par le travailleur", data);
 
-  const extraireFonctionIPA = (fonction: string[]) => {
+  const extraireFonctionIPA = (
+    fonction: string[]
+  ): ((...args: unknown[]) => Promise<unknown>) => {
     if (!ipa) throw Error("IPA non initialisé");
 
     const erreur = new Error(
       `Fonction ClientConstellation.${fonction.join(".")} n'existe pas.`
     );
+
     let fonctionIPA:
       | ClientConstellation
       | ClientConstellation[keyof ClientConstellation] = ipa;
@@ -28,17 +31,21 @@ onmessage = async function ({ data }) {
     for (const [i, attr] of fonction.entries()) {
       // Vive JavaScript et `this`!
       if (i === fonction.length - 1) {
+        //@ts-ignore
         if (!fonctionIPA[attr]) throw erreur;
+        //@ts-ignore
         fonctionIPA =
+          //@ts-ignore
           fonctionIPA[attr as keyof ClientConstellation].bind(fonctionIPA);
       } else {
+        //@ts-ignore
         fonctionIPA = fonctionIPA[attr as keyof ClientConstellation];
       }
 
       if (!fonctionIPA) throw erreur;
     }
 
-    return fonctionIPA;
+    return fonctionIPA as (...args: unknown[]) => Promise<unknown>;
   };
 
   const { type } = data;
@@ -72,7 +79,7 @@ onmessage = async function ({ data }) {
 
       args.splice(iArgFonction, 0, fFinale);
       console.log("suivre 2", { args });
-      const fSuivre: schémaFonctionOublier = await fonctionIPA(...args);
+      const fSuivre = (await fonctionIPA(...args)) as schémaFonctionOublier;
       console.log("suivre 3 (fini)", { fSuivre });
       dicFOublier[id] = fSuivre;
       const message: MessageSuivrePrêtDeTravailleur = {

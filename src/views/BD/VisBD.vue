@@ -188,7 +188,7 @@
             </v-card>
             <v-card flat width="200" class="mb-3">
               <dialogue-licence
-                :licence="licence"
+                :idLicence="licence"
                 :permissionModifier="permissionÉcrire"
                 @changerLicence="changerLicence"
               >

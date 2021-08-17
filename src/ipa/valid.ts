@@ -7,7 +7,7 @@ export type sourceRègle = "variable" | "tableau";
 
 export type règleVariable = {
   typeRègle: typeRègle;
-  détails: { [key: string]: unknown };
+  détails: { [key: string]: élémentsBd };
 };
 
 export type règleColonne = {
@@ -27,7 +27,7 @@ export interface règleBornes extends règleVariable {
 export interface règleValeurCatégorique extends règleVariable {
   typeRègle: "valeurCatégorique";
   détails: {
-    options: unknown[];
+    options: élémentsBd[];
   };
 }
 
@@ -47,30 +47,36 @@ export interface erreurValidation {
   erreur: Erreur;
 }
 
-export type schémaFonctionValidation = (
-  valeurs: élémentDonnées[]
+export type schémaFonctionValidation<T extends élémentBdListeDonnées> = (
+  valeurs: élémentDonnées<T>[]
 ) => erreurValidation[];
 
-export interface élémentDonnées {
+export type élémentBdListeDonnées = {
   [key: string]: élémentsBd;
+};
+
+export interface élémentDonnées<
+  T extends élémentBdListeDonnées = élémentBdListeDonnées
+> {
+  données: T;
   empreinte: string;
 }
-export function générerFonctionRègle(
+export function générerFonctionRègle<T extends élémentBdListeDonnées>(
   règle: règleColonne,
   varsÀColonnes: { [key: string]: string }
-): schémaFonctionValidation {
+): schémaFonctionValidation<T> {
   const règleVariable = règle.règle;
   const { colonne } = règle;
   const { typeRègle } = règleVariable;
 
   switch (typeRègle) {
     case "catégorie": {
-      return (vals: élémentDonnées[]) => {
+      return (vals: élémentDonnées<T>[]) => {
         const catégorie = (règleVariable as règleCatégorie).détails.catégorie;
         const nonValides = vals.filter(
-          (v) => !ValiderCatégorieVal(v[colonne], catégorie)
+          (v) => !ValiderCatégorieVal(v.données[colonne], catégorie)
         );
-        return nonValides.map((v: élémentDonnées) => {
+        return nonValides.map((v: élémentDonnées<T>) => {
           const { empreinte } = v;
           return {
             empreinte,
@@ -82,7 +88,7 @@ export function générerFonctionRègle(
     }
 
     case "bornes": {
-      let fComp: (v: élémentDonnées) => boolean;
+      let fComp: (v: élémentDonnées<T>) => boolean;
       let fOp: (v1: number, v2: number) => boolean;
 
       const { val, op } = (règleVariable as règleBornes).détails;
@@ -104,20 +110,23 @@ export function générerFonctionRègle(
 
       switch (typeof val) {
         case "string":
-          fComp = (v: élémentDonnées) =>
-            fOp(v[colonne] as number, v[varsÀColonnes[val]] as number);
+          fComp = (v: élémentDonnées<T>) =>
+            fOp(
+              v.données[colonne] as number,
+              v.données[varsÀColonnes[val]] as number
+            );
           break;
         case "number":
-          fComp = (v: élémentDonnées) =>
-            fOp(v[colonne] as number, val as number);
+          fComp = (v: élémentDonnées<T>) =>
+            fOp(v.données[colonne] as number, val as number);
           break;
         default:
           throw Error(`Borne de type ${typeof val} non reconnue.`);
       }
 
-      return (vals: élémentDonnées[]) => {
+      return (vals: élémentDonnées<T>[]) => {
         const nonValides = vals.filter((v) => fComp(v));
-        return nonValides.map((v: élémentDonnées) => {
+        return nonValides.map((v: élémentDonnées<T>) => {
           const { empreinte } = v;
           return {
             empreinte,
@@ -130,11 +139,11 @@ export function générerFonctionRègle(
 
     case "valeurCatégorique": {
       const options = (règleVariable as règleValeurCatégorique).détails.options;
-      return (vals: élémentDonnées[]) => {
-        const nonValides = vals.filter((v: élémentDonnées) =>
-          options.includes(v[colonne])
+      return (vals: élémentDonnées<T>[]) => {
+        const nonValides = vals.filter((v: élémentDonnées<T>) =>
+          options.includes(v.données[colonne])
         );
-        return nonValides.map((v: élémentDonnées) => {
+        return nonValides.map((v: élémentDonnées<T>) => {
           const { empreinte } = v;
           return {
             empreinte,

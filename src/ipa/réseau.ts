@@ -7,8 +7,10 @@ import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
   élémentBdListe,
-  élémentsBd,
 } from "./client";
+import { infoAuteur } from "./bds";
+
+import { élémentDonnées, élémentBdListeDonnées } from "./valid";
 
 import { InfoCol } from "@/ipa/tableaux";
 
@@ -46,9 +48,14 @@ export type infoDispositifEnLigne = {
   vuÀ: number;
 };
 
-export type élémentDeMembre<T = élémentsBd> = {
+export type élémentDeMembre<T extends élémentBdListeDonnées> = {
   idBdAuteur: string;
-  élément: élémentBdListe<T>;
+  élément: élémentDonnées<T>;
+};
+
+export type bdDeMembre = {
+  idBdAuteur: string;
+  bd: string;
 };
 
 const verrouAjouterMembre = new Semaphore();
@@ -292,15 +299,36 @@ export default class Réseau extends EventEmitter {
   }
 
   async suivreBdsMembre(
-    id: string,
+    idMembre: string,
     f: schémaFonctionSuivi<string[] | undefined>
   ): Promise<schémaFonctionOublier> {
+    const fCondition = async (
+      id: string,
+      fSuivreCondition: (état: boolean) => void
+    ): Promise<schémaFonctionOublier> => {
+      return await this.client.bds!.suivreAuteurs(idMembre, (auteurs: infoAuteur[]) => {
+        const estUnAuteur = auteurs.some(
+          (a) => a.idBdRacine === id && a.accepté
+        );
+        fSuivreCondition(estUnAuteur);
+      });
+    };
+
     return await this.client.suivreBdDeClef(
-      id,
+      idMembre,
       "bds",
       f,
-      async (id: string, f: schémaFonctionSuivi<string[]>) =>
-        await this.client.bds!.suivreBds(f, id)
+      async (id: string, f: schémaFonctionSuivi<string[]>) => {
+        return await this.client.suivreBdsSelonCondition(
+          async (
+            fSuivreRacine: (ids: string[]) => Promise<void>
+          ): Promise<schémaFonctionOublier> => {
+            return await this.client.bds!.suivreBds(fSuivreRacine, id)
+          },
+          fCondition,
+          f
+        )
+      }
     );
   }
 
@@ -423,17 +451,18 @@ export default class Réseau extends EventEmitter {
 
   async suivreBdsSelonSchéma(
     schéma: schémaBd,
-    f: schémaFonctionSuivi<string[]>,
-    stricte = false
+    f: schémaFonctionSuivi<string[]>
   ): Promise<schémaFonctionOublier> {
     const fListe = async (
       fSuivreRacine: (éléments: string[]) => Promise<void>
     ): Promise<schémaFonctionOublier> => {
-      return await this.suivreBds(fSuivreRacine);
+      return await this.suivreBds((bds: string[]) => {
+        fSuivreRacine(bds);
+      });
     };
 
     const fCondition = async (
-      id: string,
+      idBd: string,
       fSuivreCondition: (état: boolean) => void
     ): Promise<schémaFonctionOublier> => {
       const lFOublier: schémaFonctionOublier[] = [];
@@ -454,7 +483,7 @@ export default class Réseau extends EventEmitter {
           fFinale();
         };
         lFOublier.push(
-          await this.client.bds!.suivreMotsClefsBd(id, fSuivreMotsClefs)
+          await this.client.bds!.suivreMotsClefsBd(idBd, fSuivreMotsClefs)
         );
       } else {
         dicÉtat.motsClefs = true;
@@ -462,31 +491,41 @@ export default class Réseau extends EventEmitter {
       }
 
       if (schéma.tableaux) {
+        interface infoTableau {
+          id: string;
+          cols: InfoCol[];
+        }
         const fOublierTableaux = await this.client.suivreBdsDeFonctionListe(
           async (
             fSuivreRacine: (éléments: string[]) => Promise<void>
           ): Promise<schémaFonctionOublier> => {
-            return await this.client.bds!.suivreTableauxBd(id, fSuivreRacine);
+            return await this.client.bds!.suivreTableauxBd(idBd, fSuivreRacine);
           },
-          (tableaux: { id: string; cols: InfoCol[] }[]) => {
-            if (stricte && tableaux.length !== schéma.tableaux.length) {
+          (tableaux: infoTableau[]) => {
+            if (tableaux.length !== schéma.tableaux.length) {
               dicÉtat.tableaux = false;
               fFinale();
             } else {
               //S'assurer que les variables correspondent
-              const varsSchéma = schéma.tableaux.map((t) => t.vars);
-              dicÉtat.tableaux;
+              const varsCorrespondent = schéma.tableaux.every((t, i) => {
+                const varsSchémaTableau = new Set(t.vars);
+                const varsTableau = new Set(
+                  tableaux[i].cols.map((c) => c.variable)
+                );
+                return varsTableau === varsSchémaTableau;
+              });
+              dicÉtat.tableaux = varsCorrespondent;
               fFinale();
             }
           },
           async (
-            id: string,
-            f: schémaFonctionSuivi<{ id: string; cols: InfoCol[] }>
+            idTableau: string,
+            f: schémaFonctionSuivi<infoTableau>
           ): Promise<schémaFonctionOublier> => {
             return await this.client.tableaux!.suivreColonnes(
-              id,
+              idTableau,
               (cols: InfoCol[]) => {
-                f({ id, cols });
+                f({ id: idTableau, cols });
               }
             );
           }
@@ -503,43 +542,104 @@ export default class Réseau extends EventEmitter {
     return await this.client.suivreBdsSelonCondition(fListe, fCondition, f);
   }
 
-  async suivreÉlémentsBdsSelonSchéma<T extends élémentsBd>(
+  async suivreÉlémentsBdsSelonSchéma<T extends élémentBdListeDonnées>(
     schéma: schémaBd,
     iTableau: number,
     f: schémaFonctionSuivi<élémentDeMembre<T>[]>
   ): Promise<schémaFonctionOublier> {
     const fListe = async (
-      fSuivreRacine: (éléments: string[]) => Promise<void>
+      fSuivreRacine: (bds: bdDeMembre[]) => Promise<void>
     ): Promise<schémaFonctionOublier> => {
-      return await this.suivreBdsSelonSchéma(schéma, fSuivreRacine);
-    };
-
-    const fBranche = async (
-      id: string,
-      f: schémaFonctionSuivi<élémentBdListe<T>[]>
-    ): Promise<schémaFonctionOublier> => {
-      const fListeBranche = async (
-        fSuivreRacine: (éléments: string[]) => Promise<void>
+      const fListeListe = async (
+        fSuivreRacineListe: (bds: string[]) => Promise<void>
       ): Promise<schémaFonctionOublier> => {
-        return await this.client.bds!.suivreTableauxBd(id, fSuivreRacine);
+        return await this.suivreBdsSelonSchéma(schéma, fSuivreRacineListe);
       };
 
-      const fBrancheBranche = async (
-        fSuivreBranche: schémaFonctionSuivi<élémentsBd>
+      const fBrancheListe = async (
+        idBd: string,
+        f: schémaFonctionSuivi<bdDeMembre | undefined>
       ): Promise<schémaFonctionOublier> => {
-        return await this.client.tableaux!.suivreDonnées(
-          idTableau,
-          fSuivreRacine
+        return await this.client.bds!.suivreAuteurs(
+          idBd,
+          (auteurs: infoAuteur[]) => {
+            const idBdAuteur = auteurs.find((a) => a.accepté)?.idBdRacine;
+            const infoBdDeMembre: bdDeMembre | undefined = idBdAuteur
+              ? {
+                  bd: idBd,
+                  idBdAuteur,
+                }
+              : undefined;
+            f(infoBdDeMembre);
+          }
         );
       };
-
       return await this.client.suivreBdsDeFonctionListe(
-        fListeBranche,
-        f,
-        fBrancheBranche
+        fListeListe,
+        fSuivreRacine,
+        fBrancheListe
       );
     };
 
-    return await this.client.suivreBdsDeFonctionListe(fListe, f, fBranche);
+    const fBranche = async (
+      idBd: string,
+      f: schémaFonctionSuivi<élémentDeMembre<T>[]>,
+      branche?: bdDeMembre
+    ): Promise<schémaFonctionOublier> => {
+      const { idBdAuteur } = branche!;
+
+      const fSuivreTableaux = async (
+        fSuivreNouveauTableau: (nouvelIdBdCible: string) => Promise<void>
+      ): Promise<schémaFonctionOublier> => {
+        return await this.client.bds!.suivreTableauxBd(
+          idBd,
+          (tableaux: string[]) => {
+            const idTableau: string | undefined = tableaux[iTableau];
+            fSuivreNouveauTableau(idTableau);
+          }
+        );
+      };
+
+      const fSuivreDonnéesDeTableau = async (
+        idTableau: string,
+        fSuivreDonnées: schémaFonctionSuivi<élémentDeMembre<T>[]>
+      ) => {
+        const fSuivreDonnéesTableauFinale = (données: élémentDonnées<T>[]) => {
+          const donnéesMembre: élémentDeMembre<T>[] = données.map((d) => {
+            return {
+              idBdAuteur,
+              élément: d,
+            };
+          });
+          fSuivreDonnées(donnéesMembre);
+        };
+        return await this.client.tableaux!.suivreDonnées(
+          idTableau,
+          fSuivreDonnéesTableauFinale
+        );
+      };
+
+      const fFinale = (données?: élémentDeMembre<T>[]) => {
+        f(données || []);
+      };
+
+      return await this.client.suivreBdDeFonction(
+        fSuivreTableaux,
+        fFinale,
+        fSuivreDonnéesDeTableau
+      );
+    };
+
+    const fIdDeBranche = (b: bdDeMembre) => b.bd;
+    const fCode = (b: bdDeMembre) => b.bd;
+
+    return await this.client.suivreBdsDeFonctionListe(
+      fListe,
+      f,
+      fBranche,
+      fIdDeBranche,
+      undefined,
+      fCode
+    );
   }
 }

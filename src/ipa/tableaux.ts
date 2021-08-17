@@ -19,6 +19,7 @@ import {
   générerFonctionRègle,
   schémaFonctionValidation,
   élémentDonnées,
+  élémentBdListeDonnées,
 } from "./valid";
 
 export type InfoCol = {
@@ -110,22 +111,65 @@ export default class Tableaux {
     return idNouveauTableau;
   }
 
-  async suivreDonnées(
+  async suivreDonnées<T extends élémentBdListeDonnées>(
     idTableau: string,
-    f: schémaFonctionSuivi<élémentDonnées[]>
+    f: schémaFonctionSuivi<élémentDonnées<T>[]>,
+    clefsSelonVariables = false
   ): Promise<schémaFonctionOublier> {
-    const fFinale = (données: élémentBdListe<élémentDonnées>[]) => {
-      const donnéesFinales: élémentDonnées[] = données.map((x) => {
-        return { ...x.payload.value, empreinte: x.hash };
-      });
-      f(donnéesFinales);
+    const info: {
+      données?: élémentBdListe<T>[];
+      colonnes?: { [key: string]: string };
+    } = {};
+
+    const fFinale = () => {
+      const { données, colonnes } = info;
+
+      if (données && colonnes) {
+        const donnéesFinales: élémentDonnées<T>[] = données.map(
+          (x): élémentDonnées<T> => {
+            const empreinte = x.hash;
+            const élément = x.payload.value;
+
+            const données: T = clefsSelonVariables
+              ? Object.keys(élément).reduce((acc: T, elem: string) => {
+                  const idVar = colonnes[elem];
+                  (acc as élémentBdListeDonnées)[idVar] = élément[elem];
+                  return acc;
+                }, {} as T)
+              : élément;
+
+            return { données, empreinte };
+          }
+        );
+        f(donnéesFinales);
+      }
     };
-    return await this.client.suivreBdListeDeClef<élémentDonnées>(
+
+    const fSuivreColonnes = (colonnes: InfoColAvecCatégorie[]) => {
+      info.colonnes = Object.fromEntries(
+        colonnes.map((c) => [c.id, c.variable])
+      );
+      fFinale();
+    };
+    const oublierColonnes = await this.suivreColonnes(
+      idTableau,
+      fSuivreColonnes
+    );
+
+    const fSuivreDonnées = (données: élémentBdListe<T>[]) => {
+      info.données = données;
+    };
+    const oublierDonnées = await this.client.suivreBdListeDeClef<T>(
       idTableau,
       "données",
-      fFinale,
+      fSuivreDonnées,
       false
     );
+
+    return () => {
+      oublierDonnées();
+      oublierColonnes();
+    };
   }
 
   async ajouterÉlément(
@@ -168,7 +212,7 @@ export default class Tableaux {
     const précédent = this.client.obtÉlémentBdListeSelonEmpreinte(
       bdDonnées,
       empreintePrécédente
-    );
+    ) as { [key: string]: élémentsBd };
 
     let élément = Object.assign({}, précédent, vals);
 
@@ -340,7 +384,7 @@ export default class Tableaux {
     const fCode = (x: InfoCol) => x.id;
     const fSuivreBdColonnes = async (
       id: string,
-      f: schémaFonctionSuivi<InfoCol[]>
+      f: schémaFonctionSuivi<InfoColAvecCatégorie[]>
     ): Promise<schémaFonctionOublier> => {
       return await this.client.suivreBdsDeBdListe(
         id,
@@ -486,13 +530,13 @@ export default class Tableaux {
     return fOublier;
   }
 
-  async suivreValidDonnées(
+  async suivreValidDonnées<T extends élémentBdListeDonnées>(
     idTableau: string,
     f: schémaFonctionSuivi<erreurValidation[]>
   ): Promise<schémaFonctionOublier> {
     const info: {
-      données: élémentDonnées[];
-      règles: schémaFonctionValidation[];
+      données: élémentDonnées<T>[];
+      règles: schémaFonctionValidation<T>[];
       varsÀColonnes?: { [key: string]: string };
     } = {
       données: [],
@@ -514,7 +558,7 @@ export default class Tableaux {
         fFinale();
       }
     };
-    const fFinaleDonnées = (données: élémentDonnées[]) => {
+    const fFinaleDonnées = (données: élémentDonnées<T>[]) => {
       info.données = données;
       fFinale();
     };
