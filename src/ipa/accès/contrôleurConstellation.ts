@@ -257,6 +257,18 @@ export default class ContrôleurConstellation extends AccessController {
     return fOublier;
   }
 
+  async suivreIdsOrbiteAutoriséesÉcriture(f: schémaFonctionSuivi<string[]>): Promise<schémaFonctionOublier> {
+    const fFinale = () => {
+      f([...this.rôles.MEMBRE, ...this.rôles.MODÉRATEUR])
+    }
+    this.on("misÀJour", fFinale);
+    fFinale();
+    const fOublier = () => {
+      this.off("misÀJour", fFinale);
+    };
+    return fOublier;
+  }
+
   async canAppend(
     entry: entréeBD<entréeBDAccès>,
     identityProvider: identityProvider
@@ -295,9 +307,9 @@ export default class ContrôleurConstellation extends AccessController {
         }
       })
     );
-    this._miseÀJourEnCours = false;
     this._mettreRôlesÀJour();
 
+    this._miseÀJourEnCours = false;
     // Je ne sais pas si ceci est nécessaire mais je le laisse pour l'instant au cas où
     this.emit("misÀJour");
   }

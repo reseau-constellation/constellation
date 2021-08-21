@@ -47,6 +47,7 @@ declare module "orbit-db" {
     eventlog(string, options?: ?{ [key: string]: any }): Promise<Store>;
     counter(string, options?: ?{ [key: string]: any }): Promise<Store>;
     docstore(string, options?: ?{ [key: string]: any }): Promise<Store>;
+    stop(): Promise<void>;
   }
 
   export class Store {

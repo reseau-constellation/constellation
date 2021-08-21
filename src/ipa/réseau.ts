@@ -1,4 +1,6 @@
 import { FeedStore, élémentFeedStore, isValidAddress } from "orbit-db";
+import { PeersResult } from "ipfs-core-types/src/swarm";
+import { Message as MessagePubSub } from "ipfs-core-types/src/pubsub";
 import { EventEmitter } from "events";
 import Semaphore from "@chriscdn/promise-semaphore";
 import ContrôleurConstellation from "./accès/contrôleurConstellation";
@@ -7,6 +9,7 @@ import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
   élémentBdListe,
+  Signature,
 } from "./client";
 import { infoAuteur } from "./bds";
 
@@ -58,6 +61,33 @@ export type bdDeMembre = {
   bd: string;
 };
 
+interface Message {
+  signature: Signature;
+  valeur: ValeurMessage;
+}
+
+interface ValeurMessage {
+  type: string;
+  contenu: ContenuMessage;
+}
+
+interface ContenuMessage {
+  [key: string]: unknown;
+}
+
+interface ValeurMessageSalut extends ValeurMessage {
+  type: "Salut !";
+  contenu: ContenuMessageSalut;
+}
+
+interface ContenuMessageSalut extends ContenuMessage {
+  idSFIP: string;
+  idOrbite: string;
+  idBdRacine: string;
+  clefPublique: string;
+  signatures: { id: string; publicKey: string };
+}
+
 const verrouAjouterMembre = new Semaphore();
 const INTERVALE_SALUT = 1000 * 60;
 
@@ -68,6 +98,7 @@ export default class Réseau extends EventEmitter {
     [key: string]: infoDispositifEnLigne;
   };
   fOublierMembres: { [key: string]: schémaFonctionOublier };
+  oublierSalut?: schémaFonctionOublier;
 
   constructor(client: ClientConstellation, id: string) {
     super();
@@ -78,19 +109,124 @@ export default class Réseau extends EventEmitter {
     this.fOublierMembres = {};
 
     // N'oublions pas de nous ajouter nous-mêmes
-    const ajouterSoiMême = () => {
-      this.ajouterMembre({
+    this.ajouterMembre({
+      idSFIP: this.client.idNodeSFIP!.id,
+      idOrbite: this.client.orbite!.identity.id,
+      clefPublique: this.client.orbite!.identity.publicKey,
+      signatures: this.client.orbite!.identity.signatures,
+      idBdRacine: this.client.bdRacine!.id,
+    });
+    this._nettoyerListeMembres();
+  }
+
+  async initialiser(): Promise<void> {
+    const idSFIP = this.client.idNodeSFIP!.id;
+    await this.client.sfip!.pubsub.subscribe(
+      `${this.client.SUJET_RÉSEAU}-${idSFIP}`,
+      this.messageReçu.bind(this)
+    );
+    await this.client.sfip!.pubsub.subscribe(
+      this.client.SUJET_RÉSEAU,
+      this.messageReçu.bind(this)
+    );
+
+    for (const é of ["peer:connect", "peer:disconnect"]) {
+      //@ts-ignore
+      this.client.sfip!.libp2p.connectionManager.on(é, () => {
+        this.emit("changementConnexions");
+      });
+    }
+
+    const x = setInterval(() => {
+      this.direSalut();
+    }, INTERVALE_SALUT);
+
+    this.oublierSalut = () => clearInterval(x);
+  }
+
+  async envoyerMessage(msg: Message, idSFIP?: string): Promise<void> {
+    const sujet = idSFIP
+      ? `${this.client.SUJET_RÉSEAU}-${idSFIP}`
+      : this.client.SUJET_RÉSEAU;
+    const msgBinaire = Buffer.from(JSON.stringify(msg));
+    await this.client.sfip!.pubsub.publish(sujet, msgBinaire);
+  }
+
+  async direSalut(): Promise<void> {
+    const valeur: ValeurMessageSalut = {
+      type: "Salut !",
+      contenu: {
         idSFIP: this.client.idNodeSFIP!.id,
         idOrbite: this.client.orbite!.identity.id,
         clefPublique: this.client.orbite!.identity.publicKey,
         signatures: this.client.orbite!.identity.signatures,
         idBdRacine: this.client.bdRacine!.id,
-      });
+      },
     };
-    setInterval(ajouterSoiMême, INTERVALE_SALUT);
-    ajouterSoiMême();
+    const signature = await this.client.signer(JSON.stringify(valeur));
+    const message: Message = {
+      signature,
+      valeur,
+    };
+    await this.envoyerMessage(message);
+  }
 
-    this._nettoyerListeMembres();
+  async messageReçu(msg: MessagePubSub): Promise<void> {
+    const messageJSON = JSON.parse(msg.data.toString());
+
+    const { valeur, signature } = messageJSON;
+
+    // Assurer que la signature est valide (message envoyé par détenteur de idOrbite)
+    const signatureValide = await this.client.vérifierSignature(
+      signature,
+      JSON.stringify(valeur)
+    );
+    if (!signatureValide) return;
+
+    switch (valeur.type) {
+      case "Salut !": {
+        const contenu = valeur.contenu as ContenuMessageSalut;
+        const { clefPublique } = contenu;
+
+        // S'assurer que idOrbite est la même que celle sur la signature
+        if (clefPublique !== signature.clefPublique) return;
+        this.ajouterMembre(contenu);
+      }
+    }
+  }
+
+  async suivreConnexionsPostes(
+    f: schémaFonctionSuivi<{ addr: string; peer: string }[]>
+  ): Promise<schémaFonctionOublier> {
+    const dédoublerConnexions = (connexions: PeersResult[]): PeersResult[] => {
+      const adrDéjàVues: string[] = [];
+      const dédupliquées: PeersResult[] = [];
+      for (const c of connexions) {
+        if (!adrDéjàVues.includes(c.addr.toString())) {
+          adrDéjàVues.push(c.addr.toString());
+          dédupliquées.push(c);
+        }
+      }
+      return dédupliquées;
+    };
+    const fFinale = async () => {
+      const connexions = await this.client.sfip!.swarm.peers();
+      // Enlever les doublons (pas trop sûr ce qu'ils font ici)
+      const connexionsUniques = dédoublerConnexions(connexions);
+      f(
+        connexionsUniques.map((c) => {
+          return { addr: c.addr.toString(), peer: c.peer.toString() };
+        })
+      );
+    };
+
+    this.on("changementConnexions", fFinale);
+    fFinale();
+
+    const oublier = () => {
+      this.off("changementConnexions", fFinale);
+    };
+    return oublier;
   }
 
   async _nettoyerListeMembres(): Promise<void> {
@@ -306,12 +442,15 @@ export default class Réseau extends EventEmitter {
       id: string,
       fSuivreCondition: (état: boolean) => void
     ): Promise<schémaFonctionOublier> => {
-      return await this.client.bds!.suivreAuteurs(idMembre, (auteurs: infoAuteur[]) => {
-        const estUnAuteur = auteurs.some(
-          (a) => a.idBdRacine === id && a.accepté
-        );
-        fSuivreCondition(estUnAuteur);
-      });
+      return await this.client.bds!.suivreAuteurs(
+        idMembre,
+        (auteurs: infoAuteur[]) => {
+          const estUnAuteur = auteurs.some(
+            (a) => a.idBdRacine === id && a.accepté
+          );
+          fSuivreCondition(estUnAuteur);
+        }
+      );
     };
 
     return await this.client.suivreBdDeClef(
@@ -323,11 +462,11 @@ export default class Réseau extends EventEmitter {
           async (
             fSuivreRacine: (ids: string[]) => Promise<void>
           ): Promise<schémaFonctionOublier> => {
-            return await this.client.bds!.suivreBds(fSuivreRacine, id)
+            return await this.client.bds!.suivreBds(fSuivreRacine, id);
           },
           fCondition,
           f
-        )
+        );
       }
     );
   }
@@ -641,5 +780,10 @@ export default class Réseau extends EventEmitter {
       undefined,
       fCode
     );
+  }
+
+  async fermer(): Promise<void> {
+    if (this.oublierSalut) this.oublierSalut();
+    Object.values(this.fOublierMembres).forEach((f) => f());
   }
 }

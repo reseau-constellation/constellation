@@ -221,7 +221,7 @@ export default class BDs {
     const fFinale = async (bds: string[]) => {
       await verrouDécouverteBd.acquire(idVerrou);
 
-      console.log("ici", {bds})
+      console.log("ici", { bds });
       if (bds.length === 0) {
         const idBd = await this.créerBd(licence, false);
         await this.ajouterMotsClefsBd(idBd, motsClefs.tous!);
@@ -266,9 +266,6 @@ export default class BDs {
       if (infoBd) infoBd.fOublier();
     };
     return fOublier;
-    // Assurer que la BD avec les mots-clefs existe dans mes BDs
-    // Assurer que la BD a les bons tableaux
-    // Appeler f avec l'idTableau
   }
 
   async ajouterNomsBd(

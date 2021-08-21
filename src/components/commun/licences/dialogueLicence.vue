@@ -139,10 +139,10 @@ export default mixins(mixinLicences).extend({
     };
   },
   watch: {
-    idLicence: function(val) {
-      this.licence = val
-    }
-  }
+    idLicence: function (val) {
+      this.licence = val;
+    },
+  },
 });
 </script>
 
