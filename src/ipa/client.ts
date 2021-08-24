@@ -30,10 +30,10 @@ import MotsClefs from "./motsClefs";
 import { itérateurÀFlux } from "./utils";
 import ContrôleurConstellation, {
   OptionsContrôleurConstellation,
-  objRôles,
   nomType as nomTypeContrôleurConstellation,
-  infoUtilisateur,
 } from "./accès/contrôleurConstellation";
+
+import { objRôles, infoUtilisateur } from "./accès/types"
 import { MEMBRE, MODÉRATEUR, rôles } from "./accès/consts";
 
 export type schémaFonctionSuivi<T> = (x: T) => void;
@@ -185,7 +185,6 @@ export default class ClientConstellation extends EventEmitter {
     } else {
       this.sfip = await initSFIP(this._dir);
     }
-
     this.idNodeSFIP = await this.sfip!.id();
 
     if (!this.orbite) this.orbite = await initOrbite(this.sfip!);
@@ -291,7 +290,7 @@ export default class ClientConstellation extends EventEmitter {
       return faisRien;
     } else if (typeAccès === "controlleur-constellation") {
       const fFinale = () => {
-        const mods = (accès as unknown as ContrôleurConstellation).rôles[
+        const mods = (accès as unknown as ContrôleurConstellation).gestRôles._rôles[
           MODÉRATEUR
         ];
         f(mods);
@@ -349,12 +348,12 @@ export default class ClientConstellation extends EventEmitter {
     const bd = await this.ouvrirBd(id);
     const accès = bd.access as unknown as ContrôleurConstellation;
     const fFinale = () => {
-      const autorisés = accès.rôles;
+      const autorisés = accès.gestRôles._rôles;
       f(autorisés);
     };
-    accès.on("updated", fFinale);
+    accès.on("misÀJour", fFinale);
     return () => {
-      accès.off("updated", fFinale);
+      accès.off("misÀJour", fFinale);
     };
   }
 
@@ -643,13 +642,12 @@ export default class ClientConstellation extends EventEmitter {
         .map((x) => x.données)
         .filter((d) => d !== undefined) as U[];
       const réduits = fRéduction(listeDonnées);
-      console.log({ prêt, réduits });
       if (!prêt) return;
       f(réduits);
     };
 
     const fSuivreRacine = async (éléments: Array<T>) => {
-      console.log("suivreBdsSelonCondition", { éléments });
+
       if (éléments.some((x) => typeof fCode(x) !== "string"))
         throw "Définir fCode si les éléments ne sont pas en format texte (chaînes).";
       const dictÉléments = Object.fromEntries(
@@ -700,7 +698,7 @@ export default class ClientConstellation extends EventEmitter {
           arbre[n].fOublier = fOublier;
         })
       );
-      console.log("suivreBdsSelonCondition", "prêt");
+
       prêt = true;
       fFinale();
     };
@@ -730,7 +728,6 @@ export default class ClientConstellation extends EventEmitter {
     }
 
     const fFinale = (éléments: branche[]) => {
-      console.log("suivreBdsSelonCondition", { éléments });
       const bdsRecherchées = éléments
         .filter((él) => él.état)
         .map((él) => él.id);

@@ -4,7 +4,6 @@ import { expect } from "chai";
 import { v4 as uuidv4 } from "uuid";
 import { step } from "mocha-steps";
 import assert from "assert";
-import { once } from "events";
 import rmrf from "rimraf";
 import { connectPeers } from "orbit-db-test-utils";
 
@@ -19,7 +18,7 @@ import { peutÉcrire, fermerBd, attendreSync } from "../utils";
 
 const LOG = false;
 
-const racineDossierSFIP = "./constellation";
+const racineDossierSFIP = "./src/ipa/tests/temp";
 const dbPath1 = racineDossierSFIP + "/tests/sfip";
 const dbPath2 = racineDossierSFIP + "/tests/sfip2";
 const dbPath3 = racineDossierSFIP + "/tests/sfip3";
@@ -91,8 +90,9 @@ Object.keys(testAPIs).forEach((API) => {
         it("Quelqu'un d'autre ne peut pas écrire à la BD", async () => {
           const bdOrbite2 = (await orbitdb2.open(bd.id)) as KeyValueStore;
           await bdOrbite2.load();
+          await attendreSync(bdOrbite2);
 
-          const autorisé = await peutÉcrire(bdOrbite2, true);
+          const autorisé = await peutÉcrire(bdOrbite2);
 
           await fermerBd(bdOrbite2);
           expect(autorisé).to.be.false;
@@ -104,7 +104,7 @@ Object.keys(testAPIs).forEach((API) => {
           const bdOrbite2 = (await orbitdb2.open(bd.id)) as KeyValueStore;
           await bdOrbite2.load();
 
-          const autorisé = await peutÉcrire(bdOrbite2, true);
+          const autorisé = await peutÉcrire(bdOrbite2, orbitdb2);
 
           await fermerBd(bdOrbite2);
           expect(autorisé).to.be.true;
@@ -155,15 +155,16 @@ Object.keys(testAPIs).forEach((API) => {
         step("Quelqu'un d'autre ne peut pas écrire à la BD", async () => {
           bdOrbite2 = (await orbitdb2.open(bd.id)) as KeyValueStore;
           await bdOrbite2.load();
+          attendreSync(bdOrbite2)
 
-          const autorisé = await peutÉcrire(bdOrbite2, true);
+          const autorisé = await peutÉcrire(bdOrbite2);
           expect(autorisé).to.be.false;
         });
 
         step("...mais on peut toujours l'inviter !", async () => {
           await bd.access.grant(MEMBRE, bdRacine2.id);
 
-          const autorisé = await peutÉcrire(bdOrbite2, true);
+          const autorisé = await peutÉcrire(bdOrbite2, orbitdb2);
 
           expect(autorisé).to.be.true;
         });
@@ -173,31 +174,13 @@ Object.keys(testAPIs).forEach((API) => {
         });
 
         step("Mais un membre peut s'inviter lui-même", async () => {
+
           await bdRacine2.access.grant(MODÉRATEUR, orbitdb3.identity.id);
-          console.log("accèsBdRacine2", bdRacine2.access.gestRôles._rôlesIdOrbite)
-          console.log("idBdRacine2", bdRacine2.id)
-          console.log("idAccèsBdRacine2", bdRacine2.access.bd.id)
 
           const bdOrbite3 = (await orbitdb3.open(bd.id)) as KeyValueStore;
           await bdOrbite3.load()
 
-          const bdRacine2Orbite3 = await orbitdb3.open(bdRacine2.id) as KeyValueStore
-          await bdRacine2Orbite3.load()
-
-          // await attendreSync(bdRacine2Orbite3)
-          const dormir = (milliseconds: number) => {
-            return new Promise((resolve) => setTimeout(resolve, milliseconds));
-          };
-
-          await dormir(5000)
-          console.log("bdOrbite3", bdOrbite3.access.gestRôles._rôlesUtilisateurs)
-
-          console.log(bdOrbite3.access.gestRôles._rôles)
-          console.log("bdorbite1", orbitdb1.identity.id)
-          console.log("bdorbite2", orbitdb2.identity.id)
-          console.log("bdorbite3", orbitdb3.identity.id)
-
-          const autorisé = await peutÉcrire(bdOrbite3)
+          const autorisé = await peutÉcrire(bdOrbite3, orbitdb3)
 
           await fermerBd(bdOrbite3);
           expect(autorisé).to.be.true;
@@ -217,7 +200,7 @@ Object.keys(testAPIs).forEach((API) => {
           const bdOrbite4 = (await orbitdb4.open(bd.id)) as KeyValueStore;
           await bdOrbite4.load()
 
-          const autorisé = await peutÉcrire(bdOrbite4, true);
+          const autorisé = await peutÉcrire(bdOrbite4, orbitdb4);
 
           await fermerBd(bdOrbite4);
           expect(autorisé).to.be.true;
@@ -235,14 +218,12 @@ Object.keys(testAPIs).forEach((API) => {
           await fermerBd(bd);
           bd = await orbitdb1.open(bd.id) as KeyValueStore;
           await bd.load();
-          console.log("autorisés", bd.access.gestRôles._rôles)
 
           const accès = (bd.access as ContrôleurConstellation)
           for (const o of [orbitdb1, orbitdb2, orbitdb3, orbitdb4]) {
             const estAutorisé = await accès.estAutorisé(o.identity.id)
             expect(estAutorisé).to.be.true
           }
-
 
         });
 

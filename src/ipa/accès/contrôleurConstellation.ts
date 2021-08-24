@@ -75,6 +75,7 @@ export default class ContrôleurConstellation extends AccessController {
 
     this.idRequète = uuidv4();
     this.gestRôles = new GestionnaireAccès(this._orbitdb);
+    this.gestRôles.on("misÀJour", () => this.emit("misÀJour"));
   }
 
   static get type(): string {
@@ -103,7 +104,7 @@ export default class ContrôleurConstellation extends AccessController {
   ): Promise<schémaFonctionOublier> {
     const fFinale = () => {
       const mods: infoUtilisateur[] = Object.keys(
-        this._rôlesUtilisateurs[MODÉRATEUR]
+        this.gestRôles._rôlesUtilisateurs[MODÉRATEUR]
       ).map((m) => {
         return {
           idBdRacine: m,
@@ -111,7 +112,7 @@ export default class ContrôleurConstellation extends AccessController {
         };
       });
       const membres: infoUtilisateur[] = Object.keys(
-        this._rôlesUtilisateurs[MEMBRE]
+        this.gestRôles._rôlesUtilisateurs[MEMBRE]
       ).map((m) => {
         return {
           idBdRacine: m,
@@ -121,10 +122,10 @@ export default class ContrôleurConstellation extends AccessController {
       const utilisateurs: infoUtilisateur[] = [...mods, ...membres];
       f(utilisateurs);
     };
-    this.on("misÀJour", fFinale);
+    this.gestRôles.on("misÀJour", fFinale);
     fFinale();
     const fOublier = () => {
-      this.off("misÀJour", fFinale);
+      this.gestRôles.off("misÀJour", fFinale);
     };
     return fOublier;
   }
@@ -133,12 +134,12 @@ export default class ContrôleurConstellation extends AccessController {
     f: schémaFonctionSuivi<string[]>
   ): Promise<schémaFonctionOublier> {
     const fFinale = () => {
-      f([...this.rôles.MEMBRE, ...this.rôles.MODÉRATEUR]);
+      f([...this.gestRôles._rôles.MEMBRE, ...this.gestRôles._rôles.MODÉRATEUR]);
     };
-    this.on("misÀJour", fFinale);
+    this.gestRôles.on("misÀJour", fFinale);
     fFinale();
     const fOublier = () => {
-      this.off("misÀJour", fFinale);
+      this.gestRôles.off("misÀJour", fFinale);
     };
     return fOublier;
   }

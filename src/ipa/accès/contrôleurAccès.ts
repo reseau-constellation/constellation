@@ -41,7 +41,7 @@ export default class ContrôleurAccès extends EventEmitter {
     const dormir = (milliseconds: number) => {
       return new Promise((resolve) => setTimeout(resolve, milliseconds));
     };
-    await dormir(0);
+    await dormir(5000);
     return await this.gestAccès.estUnModérateur(id);
   }
 

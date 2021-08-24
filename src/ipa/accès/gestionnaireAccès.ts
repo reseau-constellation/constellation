@@ -9,11 +9,9 @@ import {
   élémentBdListe,
 } from "../client";
 import { MODÉRATEUR, MEMBRE, rôles } from "./consts";
-import { entréeBDAccès } from "./types";
+import { entréeBDAccès, objRôles } from "./types";
 
 import ContrôleurConstellation from "./contrôleurConstellation";
-
-export type objRôles = { [key in typeof rôles[number]]: string[] };
 
 const événementsSuiviBd = ["ready", "write", "replicate", "replicated"];
 
@@ -190,8 +188,6 @@ export default class GestionnaireAccès extends EventEmitter {
 
     this._rôles = _rôles;
   }
-
-  async obtRôles(): Promise<objRôles> {}
 
   async fermer(): Promise<void> {
     const utilisateurs = Object.values(this._rôlesUtilisateurs)

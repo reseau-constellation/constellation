@@ -17,7 +17,7 @@ import { startIpfs, stopIpfs, testAPIs, config } from "./sfipTest";
 
 const LOG = false;
 
-const racineDossierSFIP = "./constellation";
+const racineDossierSFIP = "./src/ipa/tests/temp";
 const dbPath1 = racineDossierSFIP + "/tests/sfip";
 const dbPath2 = racineDossierSFIP + "/tests/sfip2";
 
@@ -36,7 +36,8 @@ Object.keys(testAPIs).forEach((API) => {
       expect(valide).to.be.false;
     });
   });
-  describe.skip("client", function () {
+
+  describe("client", function () {
     this.timeout(config.timeout);
 
     let ipfsd1: Controller,
@@ -47,8 +48,7 @@ Object.keys(testAPIs).forEach((API) => {
       orbitdb2: OrbitDB;
 
     before(async () => {
-      rmrf.sync(dbPath1);
-      rmrf.sync(dbPath2);
+      rmrf.sync(racineDossierSFIP);
       ipfsd1 = await startIpfs(API, config.daemon1);
       ipfsd2 = await startIpfs(API, config.daemon2);
       ipfs1 = ipfsd1.api;
@@ -158,8 +158,33 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       describe("Suivre BD", function () {
-        it("Les données initiales sont détectées");
-        it("Les changements sont détectés");
+        let idBd: string;
+        let bd: KeyValueStore;
+        let fOublier: schémaFonctionOublier;
+        let données: {[key: string]: number};
+
+        before(async () => {
+          idBd = await client.créerBdIndépendante("kvstore");
+          bd = await client.ouvrirBd(idBd);
+          await bd.put("a", 1)
+          const fSuivre = (_bd: KeyValueStore) => {
+            const d = _bd.all
+            données = d
+          }
+          fOublier = await client.suivreBd(idBd, fSuivre);
+        })
+
+        after(async() => fOublier());
+
+        it("Les données initiales sont détectées", async () => {
+           expect(données["a"]).to.equal(1)
+        });
+
+        it("Les changements sont détectés", async () => {
+          await bd.put("b", 2);
+          expect(données["b"]).to.equal(2)
+        });
+
       });
 
       describe("Suivre BD de fonction", function () {

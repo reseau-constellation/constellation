@@ -1,6 +1,16 @@
 import { once } from "events";
-import { Store, KeyValueStore, FeedStore } from "orbit-db";
+import OrbitDB, { Store, KeyValueStore, FeedStore } from "orbit-db";
 import ContrôleurConstellation from "../accès/contrôleurConstellation";
+
+const attendreInvité = (bd: Store, idInvité: string) => new Promise<void>((resolve) => {
+  const interval = setInterval(async ()=>{
+    const autorisé = await (bd.access as ContrôleurConstellation).estAutorisé(idInvité)
+    if (autorisé) {
+      clearInterval(interval)
+      resolve()
+    }
+  }, 100)
+})
 
 export const attendreSync = async (bd: Store): Promise<void> => {
   const accès: ContrôleurConstellation = bd.access
@@ -9,10 +19,10 @@ export const attendreSync = async (bd: Store): Promise<void> => {
 
 export const peutÉcrire = async (
   bd: KeyValueStore | FeedStore,
-  attendreRéplication = false
+  attendre?: OrbitDB
 ): Promise<boolean> => {
-  if (attendreRéplication) {
-    await attendreSync(bd);
+  if (attendre) {
+    await attendreInvité(bd, attendre.identity.id);
   };
 
   try {
