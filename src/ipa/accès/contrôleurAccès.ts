@@ -1,7 +1,9 @@
 import { EventEmitter } from "events";
 import OrbitDB, { entréeBD, identityProvider } from "orbit-db";
+
+import GestionnaireAccès from "./gestionnaireAccès";
 import { MODÉRATEUR, rôles } from "./consts";
-import { entréeBDAccès } from "./contrôleurConstellation";
+import { entréeBDAccès } from "./types";
 
 const type = "controlleur-accès-constellation";
 
@@ -15,9 +17,9 @@ interface OptionsInitContrôleurAccèsConstellation
 }
 
 export default class ContrôleurAccès extends EventEmitter {
-  _accèsÉcriture: string[];
   _premierMod: string;
   orbitdb: OrbitDB;
+  gestAccès: GestionnaireAccès;
 
   constructor(
     orbitdb: OrbitDB,
@@ -25,25 +27,22 @@ export default class ContrôleurAccès extends EventEmitter {
   ) {
     super();
     this.orbitdb = orbitdb;
-    this._accèsÉcriture = [options.premierMod]; // Peut ajouter d'autres membres ou modératrices
     this._premierMod = options.premierMod;
+
+    this.gestAccès = new GestionnaireAccès(this.orbitdb);
   }
 
   static get type(): string {
     return type;
   }
 
-  estUnModérateur(id: string): boolean {
-    return this._accèsÉcriture.includes(id);
-  }
-
   async estUnModérateurPatient(id: string): Promise<boolean> {
-    if (this.estUnModérateur(id)) return true;
+    if (await this.gestAccès.estUnModérateur(id)) return true;
     const dormir = (milliseconds: number) => {
       return new Promise((resolve) => setTimeout(resolve, milliseconds));
     };
-    await dormir(5000);
-    return this.estUnModérateur(id);
+    await dormir(0);
+    return await this.gestAccès.estUnModérateur(id);
   }
 
   get premierMod(): string {
@@ -59,7 +58,7 @@ export default class ContrôleurAccès extends EventEmitter {
     const estUnMod = this.estUnModérateurPatient(idÉlément);
     const rôleValide = rôles.includes(rôle);
 
-    console.log({
+    /*console.log({
       estUnMod,
       rôleValide,
       rôle,
@@ -67,15 +66,13 @@ export default class ContrôleurAccès extends EventEmitter {
       idAjout,
       accèsÉcriture: [...this._accèsÉcriture],
       entry,
-    });
+    });*/
     const validSig = async () =>
       identityProvider.verifyIdentity(entry.identity);
 
     if (rôleValide && (await estUnMod) && (await validSig())) {
       if (rôle === MODÉRATEUR) {
-        if (idAjout === this._premierMod) return true;
-        if (!this._accèsÉcriture.includes(idAjout))
-          this._accèsÉcriture.push(idAjout);
+        await this.gestAccès.ajouterÉléments([{ id: idAjout, rôle: MODÉRATEUR }]);
       }
       return true;
     }
@@ -83,7 +80,10 @@ export default class ContrôleurAccès extends EventEmitter {
   }
 
   async load(): Promise<void> {
-    // Rien à faire je crois
+    // Ajouter le premier modérateur
+    await this.gestAccès.ajouterÉléments([
+      { id: this._premierMod, rôle: MODÉRATEUR },
+    ]);
   }
 
   async save(): Promise<{ [key: string]: string }> {

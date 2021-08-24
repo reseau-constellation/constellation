@@ -41,7 +41,7 @@ declare module "orbit-db" {
     );
     isValidAddress(address: string): boolean;
     open(address: string, options?: ?{ [key: string]: any }): Promise<Store>;
-    kvstore(string, options?: ?{ [key: string]: any }): Promise<Store>;
+    kvstore(string, options?: ?{ [key: string]: any }): Promise<KeyValueStore>;
     keyvalue(string, options?: ?{ [key: string]: any }): Promise<KeyValueStore>;
     feed(string, options?: ?{ [key: string]: any }): Promise<FeedStore>;
     eventlog(string, options?: ?{ [key: string]: any }): Promise<Store>;

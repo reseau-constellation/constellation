@@ -103,38 +103,42 @@ class ÉmetteurUneFois<T> extends EventEmitter {
   résultatPrêt: boolean;
   fOublier?: schémaFonctionOublier;
   résultat?: T;
-  f: (fSuivi: schémaFonctionSuivi<T>)=>Promise<schémaFonctionOublier>;
+  f: (fSuivi: schémaFonctionSuivi<T>) => Promise<schémaFonctionOublier>;
 
-  constructor(f: (fSuivi: schémaFonctionSuivi<T>)=>Promise<schémaFonctionOublier>) {
-    super()
-    this.résultatPrêt = false
+  constructor(
+    f: (fSuivi: schémaFonctionSuivi<T>) => Promise<schémaFonctionOublier>
+  ) {
+    super();
+    this.résultatPrêt = false;
     this.f = f;
-    this.initialiser()
+    this.initialiser();
   }
   async initialiser() {
     const fSuivre = async (résultat: T) => {
-      this.résultat = résultat
-      this.résultatPrêt = true
-      if (this.fOublier) this.lorsquePrêt()
+      this.résultat = résultat;
+      this.résultatPrêt = true;
+      if (this.fOublier) this.lorsquePrêt();
     };
 
-    this.fOublier = await this.f(fSuivre)
-    this.lorsquePrêt()
+    this.fOublier = await this.f(fSuivre);
+    this.lorsquePrêt();
   }
   lorsquePrêt() {
     if (this.résultatPrêt) {
-      if (!this.fOublier) throw new Error("Fuite !!")
+      if (!this.fOublier) throw new Error("Fuite !!");
       if (this.fOublier) this.fOublier();
       this.emit("fini", this.résultat);
     }
   }
 }
 
-const uneFois = async function <T>(f: (fSuivi: schémaFonctionSuivi<T>)=>Promise<schémaFonctionOublier>): Promise<T> {
-  const test = new ÉmetteurUneFois(f)
-  const résultat = await once(test, "fini") as [T];
-  return résultat[0]
-}
+const uneFois = async function <T>(
+  f: (fSuivi: schémaFonctionSuivi<T>) => Promise<schémaFonctionOublier>
+): Promise<T> {
+  const test = new ÉmetteurUneFois(f);
+  const résultat = (await once(test, "fini")) as [T];
+  return résultat[0];
+};
 
 const faisRien = () => {
   //Rien à faire
@@ -748,7 +752,7 @@ export default class ClientConstellation extends EventEmitter {
 
   async rechercherBdListe<T>(
     id: string,
-    f: (e: élémentFeedStore<T|undefined>) => boolean
+    f: (e: élémentFeedStore<T | undefined>) => boolean
   ): Promise<élémentFeedStore<T>> {
     const bd = (await this.ouvrirBd(id)) as FeedStore;
     const élément = bd
@@ -817,11 +821,12 @@ export default class ClientConstellation extends EventEmitter {
     }
 
     if (!idBd && type) {
-      const accès = bdRacine.access as ContrôleurConstellation
-      const permission = await uneFois(
-        (f: schémaFonctionSuivi<boolean>) => accès.suivreIdsOrbiteAutoriséesÉcriture(
-          (autorisés: string[]) => f(autorisés.includes(this.orbite!.identity.id)))
-      )
+      const accès = bdRacine.access as ContrôleurConstellation;
+      const permission = await uneFois((f: schémaFonctionSuivi<boolean>) =>
+        accès.suivreIdsOrbiteAutoriséesÉcriture((autorisés: string[]) =>
+          f(autorisés.includes(this.orbite!.identity.id))
+        )
+      );
 
       if (permission) {
         idBd = await this.créerBdIndépendante(type, optionsAccès);
