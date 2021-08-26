@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import Semaphore from "@chriscdn/promise-semaphore";
 import initOrbite from "./orbitdb";
 import initSFIP from "./ipfs";
+import { CID } from "multiformats/cid";
 
 import OrbitDB, {
   Store,
@@ -33,7 +34,7 @@ import ContrôleurConstellation, {
   nomType as nomTypeContrôleurConstellation,
 } from "./accès/contrôleurConstellation";
 
-import { objRôles, infoUtilisateur } from "./accès/types"
+import { objRôles, infoUtilisateur } from "./accès/types";
 import { MEMBRE, MODÉRATEUR, rôles } from "./accès/consts";
 
 export type schémaFonctionSuivi<T> = (x: T) => void;
@@ -99,6 +100,18 @@ export function adresseOrbiteValide(adresse: unknown): boolean {
   );
 }
 
+export function CIDvalid(cid: unknown): boolean {
+  if (typeof cid === "string") {
+    try {
+      CID.parse(cid);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
+
 class ÉmetteurUneFois<T> extends EventEmitter {
   résultatPrêt: boolean;
   fOublier?: schémaFonctionOublier;
@@ -140,7 +153,7 @@ const uneFois = async function <T>(
   return résultat[0];
 };
 
-const faisRien = () => {
+export const faisRien = () => {
   //Rien à faire
 };
 
@@ -209,7 +222,7 @@ export default class ClientConstellation extends EventEmitter {
 
     //On commence par épingler notre compte (de manière récursive)
     //afin de le rendre disponible
-    await this.épinglerBd(this.idBdRacine);
+    this.épinglerBd(this.idBdRacine);
   }
 
   async initialiserBds(): Promise<void> {
@@ -290,9 +303,8 @@ export default class ClientConstellation extends EventEmitter {
       return faisRien;
     } else if (typeAccès === "controlleur-constellation") {
       const fFinale = () => {
-        const mods = (accès as unknown as ContrôleurConstellation).gestRôles._rôles[
-          MODÉRATEUR
-        ];
+        const mods = (accès as unknown as ContrôleurConstellation).gestRôles
+          ._rôles[MODÉRATEUR];
         f(mods);
       };
       accès.on("updated", fFinale);
@@ -647,9 +659,10 @@ export default class ClientConstellation extends EventEmitter {
     };
 
     const fSuivreRacine = async (éléments: Array<T>) => {
-
       if (éléments.some((x) => typeof fCode(x) !== "string"))
-        throw "Définir fCode si les éléments ne sont pas en format texte (chaînes).";
+        throw new Error(
+          "Définir fCode si les éléments ne sont pas en format texte (chaînes)."
+        );
       const dictÉléments = Object.fromEntries(
         éléments.map((é) => [fCode(é), é])
       );
@@ -707,7 +720,9 @@ export default class ClientConstellation extends EventEmitter {
 
     const oublier = () => {
       oublierBdRacine();
-      Object.values(arbre).map((x) => (x.fOublier ? x.fOublier() : null));
+      Object.values(arbre).map((x) => {
+        if (x.fOublier) x.fOublier();
+      });
     };
     return oublier;
   }
@@ -747,9 +762,9 @@ export default class ClientConstellation extends EventEmitter {
     return await this.suivreBdsDeFonctionListe(fListe, fFinale, fBranche);
   }
 
-  async rechercherBdListe<T>(
+  async rechercherBdListe<T extends élémentsBd>(
     id: string,
-    f: (e: élémentFeedStore<T | undefined>) => boolean
+    f: (e: élémentFeedStore<T>) => boolean
   ): Promise<élémentFeedStore<T>> {
     const bd = (await this.ouvrirBd(id)) as FeedStore;
     const élément = bd
@@ -933,33 +948,37 @@ export default class ClientConstellation extends EventEmitter {
     if (déjàVus.includes(id)) return;
     const bd = await this.ouvrirBd(id);
     déjàVus.push(id);
-    const épinglerSiAdresseValide = (x: unknown) => {
+    const épinglerSiAdresseValide = async (x: unknown) => {
       if (adresseOrbiteValide(x)) {
-        this.épinglerBd(x as string, déjàVus);
+        await this.épinglerBd(x as string, déjàVus);
+      } else if (CIDvalid(x)) {
+        this.sfip!.pin.add(x as string); // pas async car le contenu correspondant au CID n'est peut-être pas disponible au moment
       }
     };
 
     //Cette fonction détectera les éléments d'une liste ou d'un dictionnaire
     //(à un niveau de profondeur) qui représentent une adresse de BD Orbit.
-    const analyserItem = (x: unknown) => {
+    const analyserItem = async (x: unknown) => {
       if (typeof x === "object") {
-        Object.values(x as { [key: string]: unknown }).forEach((y: unknown) =>
-          épinglerSiAdresseValide(y)
+        await Promise.all(
+          Object.values(x as { [key: string]: unknown }).map(
+            épinglerSiAdresseValide
+          )
         );
       } else if (Array.isArray(x)) {
-        x.forEach((y) => épinglerSiAdresseValide(y));
+        await Promise.all(x.map(épinglerSiAdresseValide));
       } else {
-        épinglerSiAdresseValide(x);
+        await épinglerSiAdresseValide(x);
       }
     };
     if (bd.type === "keyvalue") {
       const items = Object.values(
         ClientConstellation.obtObjetdeBdDic(bd as KeyValueStore)
       );
-      items.forEach(analyserItem);
+      await Promise.all(items.map(analyserItem));
     } else if (bd.type === "feed") {
       const items = ClientConstellation.obtÉlémentsDeBdListe(bd as FeedStore);
-      items.forEach(analyserItem);
+      await Promise.all(items.map(analyserItem));
     }
   }
 

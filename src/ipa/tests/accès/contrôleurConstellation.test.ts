@@ -67,9 +67,7 @@ Object.keys(testAPIs).forEach((API) => {
     });
 
     describe("Accès utilisateur", function () {
-
       describe("Accès par id Orbite", function () {
-
         let bd: KeyValueStore;
 
         before(async () => {
@@ -155,7 +153,7 @@ Object.keys(testAPIs).forEach((API) => {
         step("Quelqu'un d'autre ne peut pas écrire à la BD", async () => {
           bdOrbite2 = (await orbitdb2.open(bd.id)) as KeyValueStore;
           await bdOrbite2.load();
-          attendreSync(bdOrbite2)
+          attendreSync(bdOrbite2);
 
           const autorisé = await peutÉcrire(bdOrbite2);
           expect(autorisé).to.be.false;
@@ -170,35 +168,35 @@ Object.keys(testAPIs).forEach((API) => {
         });
 
         step("Un membre ne peut pas inviter d'autres personnes", async () => {
-          await assert.rejects(bdOrbite2.access.grant(MEMBRE, orbitdb3.identity.id))
+          await assert.rejects(
+            bdOrbite2.access.grant(MEMBRE, orbitdb3.identity.id)
+          );
         });
 
         step("Mais un membre peut s'inviter lui-même", async () => {
-
           await bdRacine2.access.grant(MODÉRATEUR, orbitdb3.identity.id);
 
           const bdOrbite3 = (await orbitdb3.open(bd.id)) as KeyValueStore;
-          await bdOrbite3.load()
+          await bdOrbite3.load();
 
-          const autorisé = await peutÉcrire(bdOrbite3, orbitdb3)
+          const autorisé = await peutÉcrire(bdOrbite3, orbitdb3);
 
           await fermerBd(bdOrbite3);
           expect(autorisé).to.be.true;
-
-        })
+        });
         step("On peut inviter un modérateur", async () => {
-          const accès = (bd.access as ContrôleurConstellation)
+          const accès = bd.access as ContrôleurConstellation;
           await accès.grant(MODÉRATEUR, bdRacine2.id);
           const estUnMod = await accès.estUnModérateur(orbitdb2.identity.id);
           expect(estUnMod).to.be.true;
         });
 
         step("Un modérateur peut inviter d'autres membres", async () => {
-          const accès = (bdOrbite2.access as ContrôleurConstellation)
-          await accès.grant(MEMBRE, orbitdb4.identity.id)
+          const accès = bdOrbite2.access as ContrôleurConstellation;
+          await accès.grant(MEMBRE, orbitdb4.identity.id);
 
           const bdOrbite4 = (await orbitdb4.open(bd.id)) as KeyValueStore;
-          await bdOrbite4.load()
+          await bdOrbite4.load();
 
           const autorisé = await peutÉcrire(bdOrbite4, orbitdb4);
 
@@ -207,8 +205,8 @@ Object.keys(testAPIs).forEach((API) => {
         });
 
         step("Un modérateur peut inviter d'autres modérateurs", async () => {
-          const accès = (bdOrbite2.access as ContrôleurConstellation)
-          await accès.grant(MODÉRATEUR, orbitdb4.identity.id)
+          const accès = bdOrbite2.access as ContrôleurConstellation;
+          await accès.grant(MODÉRATEUR, orbitdb4.identity.id);
 
           const estUnMod = await accès.estUnModérateur(orbitdb4.identity.id);
           expect(estUnMod).to.be.true;
@@ -216,15 +214,14 @@ Object.keys(testAPIs).forEach((API) => {
 
         step("Invitations transitives suite lors de bd.load()", async () => {
           await fermerBd(bd);
-          bd = await orbitdb1.open(bd.id) as KeyValueStore;
+          bd = (await orbitdb1.open(bd.id)) as KeyValueStore;
           await bd.load();
 
-          const accès = (bd.access as ContrôleurConstellation)
+          const accès = bd.access as ContrôleurConstellation;
           for (const o of [orbitdb1, orbitdb2, orbitdb3, orbitdb4]) {
-            const estAutorisé = await accès.estAutorisé(o.identity.id)
-            expect(estAutorisé).to.be.true
+            const estAutorisé = await accès.estAutorisé(o.identity.id);
+            expect(estAutorisé).to.be.true;
           }
-
         });
 
         after(async () => {

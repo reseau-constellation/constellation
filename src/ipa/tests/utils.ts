@@ -1,21 +1,41 @@
 import { once } from "events";
 import OrbitDB, { Store, KeyValueStore, FeedStore } from "orbit-db";
-import ContrôleurConstellation from "../accès/contrôleurConstellation";
+import ContrôleurConstellation from "../accès/contrôleurConstellation";
 
-const attendreInvité = (bd: Store, idInvité: string) => new Promise<void>((resolve) => {
-  const interval = setInterval(async ()=>{
-    const autorisé = await (bd.access as ContrôleurConstellation).estAutorisé(idInvité)
-    if (autorisé) {
-      clearInterval(interval)
-      resolve()
-    }
-  }, 100)
-})
+const attendreInvité = (bd: Store, idInvité: string) =>
+  new Promise<void>((resolve) => {
+    const interval = setInterval(async () => {
+      const autorisé = await (bd.access as ContrôleurConstellation).estAutorisé(
+        idInvité
+      );
+      if (autorisé) {
+        clearInterval(interval);
+        resolve();
+      }
+    }, 100);
+  });
 
 export const attendreSync = async (bd: Store): Promise<void> => {
-  const accès: ContrôleurConstellation = bd.access
+  const accès: ContrôleurConstellation = bd.access;
   await once(accès.bd!.events, "peer.exchanged");
-}
+};
+
+export const attendreRésultat = async (
+  dic: { [key: string]: unknown },
+  clef: string,
+  valDésirée?: unknown
+): Promise<void> => {
+  return new Promise((résoudre) => {
+    const interval = setInterval(() => {
+      const val = dic[clef];
+      const prêt = valDésirée ? val === valDésirée : val !== undefined;
+      if (prêt) {
+        clearInterval(interval);
+        résoudre();
+      }
+    }, 10);
+  });
+};
 
 export const peutÉcrire = async (
   bd: KeyValueStore | FeedStore,
@@ -23,7 +43,7 @@ export const peutÉcrire = async (
 ): Promise<boolean> => {
   if (attendre) {
     await attendreInvité(bd, attendre.identity.id);
-  };
+  }
 
   try {
     if (bd.type === "keyvalue") {

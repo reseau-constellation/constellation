@@ -111,14 +111,18 @@ export default class ContrôleurConstellation extends AccessController {
           rôle: MODÉRATEUR,
         };
       });
+      const idsMods = mods.map((m) => m.idBdRacine);
       const membres: infoUtilisateur[] = Object.keys(
         this.gestRôles._rôlesUtilisateurs[MEMBRE]
-      ).map((m) => {
-        return {
-          idBdRacine: m,
-          rôle: MEMBRE,
-        };
-      });
+      )
+        .map((m) => {
+          return {
+            idBdRacine: m,
+            rôle: MEMBRE,
+          } as infoUtilisateur;
+        })
+        .filter((m) => !idsMods.includes(m.idBdRacine));
+
       const utilisateurs: infoUtilisateur[] = [...mods, ...membres];
       f(utilisateurs);
     };
@@ -242,6 +246,7 @@ export default class ContrôleurConstellation extends AccessController {
       await this.bd!.add(entry);
       await this._miseÀJourBdAccès();
     } catch (e) {
+      console.error(e);
       if (e.toString().includes("not append entry"))
         throw new Error(
           `Erreur : Le rôle ${rôle} ne peut pas être octroyé à ${id}.`

@@ -72,7 +72,9 @@ export default class ContrôleurAccès extends EventEmitter {
 
     if (rôleValide && (await estUnMod) && (await validSig())) {
       if (rôle === MODÉRATEUR) {
-        await this.gestAccès.ajouterÉléments([{ id: idAjout, rôle: MODÉRATEUR }]);
+        await this.gestAccès.ajouterÉléments([
+          { id: idAjout, rôle: MODÉRATEUR },
+        ]);
       }
       return true;
     }

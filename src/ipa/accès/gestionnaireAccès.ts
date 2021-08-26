@@ -78,7 +78,7 @@ class AccèsUtilisateur extends EventEmitter {
         await this._miseÀJour(éléments);
       }
     );
-    this.prêt = true
+    this.prêt = true;
   }
 
   async _miseÀJour(éléments: entréeBDAccès[]) {
@@ -94,7 +94,7 @@ class AccèsUtilisateur extends EventEmitter {
       autorisés.push(é.id);
     });
     this.autorisés = autorisés;
-    this.emit("misÀJour")
+    this.emit("misÀJour");
   }
 
   async fermer() {
@@ -146,7 +146,6 @@ export default class GestionnaireAccès extends EventEmitter {
         const { rôle, id } = élément;
 
         if (isValidAddress(id)) {
-
           if (!this._rôlesUtilisateurs[rôle][id]) {
             const objAccèsUtilisateur = new AccèsUtilisateur(this.orbite, id);
             objAccèsUtilisateur.on("misÀJour", () => this._mettreRôlesÀJour());

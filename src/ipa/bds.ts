@@ -11,9 +11,9 @@ import ClientConstellation, {
   infoAccès,
 } from "./client";
 import ContrôleurConstellation, {
-  objRôles,
   nomType as nomTypeContrôleurConstellation,
 } from "./accès/contrôleurConstellation";
+import { objRôles } from "./accès/types";
 
 export const STATUT = {
   ACTIVE: "active",
