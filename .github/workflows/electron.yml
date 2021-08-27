@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: 14
 
+      - name: Vérifier les tests
+        run: yarn test:ipa
+
       - name: Installer Snapcraft
         uses: samuelmeuli/action-snapcraft@v1
         # Only install Snapcraft on Ubuntu
