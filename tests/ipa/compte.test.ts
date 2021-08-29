@@ -2,6 +2,7 @@ import log from "why-is-node-running";
 import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { step } from "mocha-steps";
+import { v4 as uuidv4 } from "uuid";
 
 import rmrf from "rimraf";
 import { connectPeers } from "orbit-db-test-utils";
@@ -23,7 +24,7 @@ import { attendreRésultat } from "./utils";
 
 const LOG = false;
 
-const racineDossierSFIP = "./src/ipa/tests/temp";
+const racineDossierSFIP = "./tests/ipa/temp/"+uuidv4();
 const dbPath1 = racineDossierSFIP + "/tests/sfip";
 const dbPath2 = racineDossierSFIP + "/tests/sfip2";
 

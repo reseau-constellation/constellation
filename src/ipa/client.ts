@@ -307,10 +307,10 @@ export default class ClientConstellation extends EventEmitter {
           ._rôles[MODÉRATEUR];
         f(mods);
       };
-      accès.on("updated", fFinale);
+      accès.on("misÀJour", fFinale);
       fFinale();
       return () => {
-        accès.off("updated", fFinale);
+        accès.off("misÀJour", fFinale);
       };
     } else {
       return faisRien;
