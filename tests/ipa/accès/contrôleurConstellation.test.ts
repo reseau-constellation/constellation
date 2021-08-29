@@ -18,7 +18,7 @@ import { peutÉcrire, fermerBd, attendreSync } from "../utils";
 
 const LOG = false;
 
-const racineDossierSFIP = "./src/ipa/tests/temp_"+uuidv4();
+const racineDossierSFIP = "./tests/ipa/temp/"+uuidv4();
 const dbPath1 = racineDossierSFIP + "/tests/sfip";
 const dbPath2 = racineDossierSFIP + "/tests/sfip2";
 const dbPath3 = racineDossierSFIP + "/tests/sfip3";
