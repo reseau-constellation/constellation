@@ -12,15 +12,12 @@ jobs:
 
     steps:
       - name: Ouvrir le projet
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Installer Node.js, NPM et Yarn
         uses: actions/setup-node@v1
         with:
           node-version: 14
-
-      - name: Vérifier les tests
-        run: yarn test:ipa
 
       - name: Installer Snapcraft
         uses: samuelmeuli/action-snapcraft@v1
