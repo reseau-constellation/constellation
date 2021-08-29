@@ -14,7 +14,7 @@ import ClientConstellation, {
 import ContrôleurConstellation from "./accès/contrôleurConstellation";
 import {
   erreurValidation,
-  règleVariable,
+  règleVariableAvecId,
   règleColonne,
   générerFonctionRègle,
   schémaFonctionValidation,
@@ -427,10 +427,10 @@ export default class Tableaux {
     );
   }
 
-  async ajouterRègleTableau(
+  async ajouterRèglesTableau(
     idTableau: string,
     idColonne: string,
-    règles: règleVariable[]
+    règles: règleVariableAvecId[]
   ): Promise<void> {
     const optionsAccès = await this.client.obtOpsAccès(idTableau);
     const idBdRègles = await this.client.obtIdBd(
@@ -494,7 +494,7 @@ export default class Tableaux {
       fSuivreBranche: schémaFonctionSuivi<règleColonne[]>,
       branche?: InfoCol
     ) => {
-      const fFinaleSuivreBranche = (règles: règleVariable[]) => {
+      const fFinaleSuivreBranche = (règles: règleVariableAvecId[]) => {
         const règlesColonnes: règleColonne[] = règles.map((r) => {
           return {
             règle: r,
@@ -585,7 +585,7 @@ export default class Tableaux {
   async effacerTableau(idTableau: string): Promise<void> {
     // Effacer toutes les composantes du tableau
     const optionsAccès = await this.client.obtOpsAccès(idTableau);
-    for (const clef in ["noms"]) {
+    for (const clef in ["noms", "données", "colonnes", "règles"]) {
       const idBd = await this.client.obtIdBd(
         clef,
         idTableau,

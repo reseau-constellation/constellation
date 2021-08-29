@@ -4,13 +4,13 @@ import AccessController from "orbit-db-access-controllers/src/access-controller-
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
-  élémentsBd,
   élémentBdListe,
 } from "./client";
 import ContrôleurConstellation, {
   nomType as typeContrôleurAccèsConst,
 } from "./accès/contrôleurConstellation";
-import { règleVariable, règleCatégorie } from "./valid";
+import { règleVariableAvecId, règleVariable, règleCatégorie } from "./valid";
+import { v4 as uuidv4 } from "uuid";
 
 import { STATUT } from "./bds";
 
@@ -90,6 +90,7 @@ export default class Variables {
     const catégorie = await bdBase.get("catégorie");
 
     const idNouvelleBd = await this.créerVariable(catégorie);
+    const bdNouvelle = await this.client.ouvrirBd(idNouvelleBd) as KeyValueStore;
 
     const idBdNoms = await bdBase.get("noms");
     const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
@@ -104,6 +105,9 @@ export default class Variables {
       [key: string]: string;
     };
     await this.ajouterDescriptionsVariable(idNouvelleBd, descriptions);
+
+    const unités = await bdBase.get("unités")
+    if (unités) await bdNouvelle.put("unités", unités)
 
     const idBdRègles = await bdBase.get("règles");
     const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
@@ -216,7 +220,7 @@ export default class Variables {
 
   async sauvegarderCatégorieVariable(
     id: string,
-    catégorie: string
+    catégorie: catégorieVariables
   ): Promise<void> {
     const bdVariable = (await this.client.ouvrirBd(id)) as KeyValueStore;
     await bdVariable.set("catégorie", catégorie);
@@ -232,12 +236,30 @@ export default class Variables {
     await bdVariable.set("unités", idUnité);
   }
 
-  async ajouterRègleVariable(id: string, règle: règleVariable): Promise<void> {
-    const idBdRègles = await this.client.obtIdBd("règles", id, "feed");
-    if (!idBdRègles) throw `Permission de modification refusée pour BD ${id}.`;
+  async ajouterRègleVariable(idVariable: string, règle: règleVariable): Promise<string> {
+    const idBdRègles = await this.client.obtIdBd("règles", idVariable, "feed");
+    if (!idBdRègles) throw `Permission de modification refusée pour variable ${idVariable}.`;
+
+    const id = uuidv4();
+    const règleAvecId: règleVariableAvecId = {
+      id, règle
+    }
 
     const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
-    bdRègles.add(règle);
+    await bdRègles.add(règleAvecId);
+    return id
+  }
+
+  async effacerRègleVariable(idVariable: string, idRègle: string): Promise<void> {
+    const idBdRègles = await this.client.obtIdBd("règles", idVariable, "feed");
+    if (!idBdRègles) throw `Permission de modification refusée pour variable ${idVariable}.`;
+    const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
+
+    const entrées = ClientConstellation.obtÉlémentsDeBdListe<règleVariableAvecId>(bdRègles, false);
+    const entrée = entrées.find(
+      e => e.payload.value.id === idRègle
+    );
+    if (entrée) await bdRègles.remove(entrée.hash);
   }
 
   async suivreNomsVariable(
@@ -276,9 +298,9 @@ export default class Variables {
 
   async suivreRèglesVariable(
     id: string,
-    f: schémaFonctionSuivi<règleVariable[]>
+    f: schémaFonctionSuivi<règleVariableAvecId[]>
   ): Promise<schémaFonctionOublier> {
-    const règles: { catégorie: règleVariable[]; propres: règleVariable[] } = {
+    const règles: { catégorie: règleVariableAvecId[]; propres: règleVariableAvecId[] } = {
       catégorie: [],
       propres: [],
     };
@@ -287,9 +309,12 @@ export default class Variables {
     };
 
     const fSuivreCatégorie = (catégorie: catégorieVariables) => {
-      const règleCat: règleCatégorie = {
-        typeRègle: "catégorie",
-        détails: { catégorie },
+      const règleCat: règleVariableAvecId<règleCatégorie> = {
+        id: uuidv4(),
+        règle: {
+          typeRègle: "catégorie",
+          détails: { catégorie },
+      }
       };
       règles.catégorie = [règleCat];
       fFinale();
@@ -299,14 +324,14 @@ export default class Variables {
       fSuivreCatégorie
     );
 
-    const fSuivreRèglesPropres = (rgls: règleVariable[]) => {
+    const fSuivreRèglesPropres = (rgls: règleVariableAvecId[]) => {
       règles.propres = rgls;
       fFinale();
     };
-    const fOublierRèglesPropres = await this.client.suivreBdListeDeClef(
+    const fOublierRèglesPropres = await this.client.suivreBdListeDeClef<règleVariableAvecId>(
       id,
       "règles",
-      fSuivreRèglesPropres as (rgls: élémentsBd[]) => void
+      fSuivreRèglesPropres
     );
 
     const fOublier = () => {

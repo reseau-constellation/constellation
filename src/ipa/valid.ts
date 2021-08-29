@@ -5,13 +5,18 @@ import { élémentsBd } from "./client";
 export type typeRègle = "catégorie" | "bornes" | "valeurCatégorique";
 export type sourceRègle = "variable" | "tableau";
 
+export type règleVariableAvecId<T extends règleVariable = règleVariable> = {
+  id: string;
+  règle: T
+}
+
 export type règleVariable = {
   typeRègle: typeRègle;
   détails: { [key: string]: élémentsBd };
 };
 
 export type règleColonne = {
-  règle: règleVariable;
+  règle: règleVariableAvecId;
   source: sourceRègle;
   colonne: string;
 };
@@ -67,14 +72,14 @@ export function générerFonctionRègle<T extends élémentBdListeDonnées>(
 ): schémaFonctionValidation<T> {
   const règleVariable = règle.règle;
   const { colonne } = règle;
-  const { typeRègle } = règleVariable;
+  const { typeRègle } = règleVariable.règle;
 
   switch (typeRègle) {
     case "catégorie": {
       return (vals: élémentDonnées<T>[]) => {
-        const catégorie = (règleVariable as règleCatégorie).détails.catégorie;
+        const catégorie = (règleVariable.règle as règleCatégorie).détails.catégorie;
         const nonValides = vals.filter(
-          (v) => !ValiderCatégorieVal(v.données[colonne], catégorie)
+          (v) => !validerCatégorieVal(v.données[colonne], catégorie)
         );
         return nonValides.map((v: élémentDonnées<T>) => {
           const { empreinte } = v;
@@ -91,7 +96,7 @@ export function générerFonctionRègle<T extends élémentBdListeDonnées>(
       let fComp: (v: élémentDonnées<T>) => boolean;
       let fOp: (v1: number, v2: number) => boolean;
 
-      const { val, op } = (règleVariable as règleBornes).détails;
+      const { val, op } = (règleVariable.règle as règleBornes).détails;
 
       switch (op) {
         case ">":
@@ -138,7 +143,7 @@ export function générerFonctionRègle<T extends élémentBdListeDonnées>(
     }
 
     case "valeurCatégorique": {
-      const options = (règleVariable as règleValeurCatégorique).détails.options;
+      const options = (règleVariable.règle as règleValeurCatégorique).détails.options;
       return (vals: élémentDonnées<T>[]) => {
         const nonValides = vals.filter((v: élémentDonnées<T>) =>
           options.includes(v.données[colonne])
@@ -187,21 +192,25 @@ function validFichier(val: unknown, exts?: string[]): boolean {
   return true;
 }
 
-export function ValiderCatégorieVal(
+export function validerCatégorieVal(
   val: unknown,
   catégorie: catégorieVariables
 ): boolean {
   if (val === undefined) return true; //Permettre les valeurs manquantes
 
+  const estUnChiffrePositif = (v: unknown): boolean => {
+    return typeof v === "number" && v > 0
+  }
+
   switch (catégorie) {
     case "numérique":
       return typeof val === "number";
     case "date":
-      return true;
+      return typeof val === "number";
     case "heure":
-      return true;
+      return estUnChiffrePositif(val);
     case "dateEtHeure":
-      return true;
+      return estUnChiffrePositif(val);
     case "chaîne":
       return typeof val === "string";
     case "catégorique":

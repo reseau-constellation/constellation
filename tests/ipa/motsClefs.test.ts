@@ -2,78 +2,35 @@ import log from "why-is-node-running";
 import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { step } from "mocha-steps";
-import { v4 as uuidv4 } from "uuid";
-
-import rmrf from "rimraf";
-import { connectPeers } from "orbit-db-test-utils";
-
-import OrbitDB from "orbit-db";
-import { Controller } from "ipfsd-ctl/src/types";
 
 chai.should();
 chai.use(chaiAsPromised);
 
 import { enregistrerContrôleurs } from "@/ipa/accès";
 import ClientConstellation, { schémaFonctionOublier } from "@/ipa/client";
-import { startIpfs, stopIpfs, testAPIs, config } from "./sfipTest";
-import { attendreRésultat } from "./utils";
+import { testAPIs, config } from "./sfipTest";
+import { attendreRésultat, générerClients } from "./utils";
 
 const LOG = false;
-
-const racineDossierSFIP = "./tests/ipa/temp/"+uuidv4();
-const dbPath1 = racineDossierSFIP + "/tests/sfip";
-const dbPath2 = racineDossierSFIP + "/tests/sfip2";
 
 Object.keys(testAPIs).forEach((API) => {
   describe("Mots-clefs", function () {
     this.timeout(config.timeout);
-    let ipfsd1: Controller,
-      ipfsd2: Controller,
-      ipfs1,
-      ipfs2,
-      orbitdb1: OrbitDB,
-      orbitdb2: OrbitDB;
 
-    let client: ClientConstellation;
-    let client2: ClientConstellation;
+    let fOublierClients: () => Promise<void>;
+    let clients: ClientConstellation[];
+    let client: ClientConstellation
 
     before(async () => {
-      rmrf.sync(racineDossierSFIP);
-
-      ipfsd1 = await startIpfs(API, config.daemon1);
-      ipfsd2 = await startIpfs(API, config.daemon2);
-      ipfs1 = ipfsd1.api;
-      ipfs2 = ipfsd2.api;
+      enregistrerContrôleurs();
+      ({ fOublier: fOublierClients, clients } = await générerClients(1, API));
+      client = clients[0];
 
       enregistrerContrôleurs();
-
-      orbitdb1 = await OrbitDB.createInstance(ipfs1, { directory: dbPath1 });
-      orbitdb2 = await OrbitDB.createInstance(ipfs2, { directory: dbPath2 });
-      await connectPeers(ipfs1, ipfs2);
-
-      client = await ClientConstellation.créer(
-        undefined,
-        undefined,
-        orbitdb1
-      );
-      client2 = await ClientConstellation.créer(
-        undefined,
-        undefined,
-        orbitdb2
-      );
     });
+
     after(async () => {
-      if (client) await client.fermer();
-      if (client2) await client2.fermer();
-      if (orbitdb1) await orbitdb1.stop();
-
-      if (orbitdb2) await orbitdb2.stop();
-
-      if (ipfsd1) await stopIpfs(ipfsd1);
-
-      if (ipfsd2) await stopIpfs(ipfsd2);
-
-      rmrf.sync(racineDossierSFIP);
+      if (fOublierClients) await fOublierClients();
     });
 
     describe("Création", function () {
@@ -146,17 +103,17 @@ Object.keys(testAPIs).forEach((API) => {
       let motsClefs: string[]
       let noms: {[key: string]: string}
 
-      let idMotClef: string;
+      let idMotClef2: string;
       let fOublier: schémaFonctionOublier;
       let fOublier2: schémaFonctionOublier;
 
       before(async () => {
         fOublier = await client.motsClefs!.suivreMotsClefs((x)=> motsClefs = x)
 
-        idMotClef = await client.motsClefs!.créerMotClef()
+        const idMotClef = await client.motsClefs!.créerMotClef()
         await client.motsClefs!.ajouterNomsMotClef(idMotClef, {"த": "நீரியல்", "हिं": "जल विज्ञान"})
 
-        const idMotClef2 = await client.motsClefs!.copierMotClef(idMotClef)
+        idMotClef2 = await client.motsClefs!.copierMotClef(idMotClef)
         fOublier2 = await client.motsClefs!.suivreNomsMotClef(idMotClef2, (x)=> noms = x)
 
       })
@@ -167,7 +124,7 @@ Object.keys(testAPIs).forEach((API) => {
       })
 
       it("Le mot-clef est copié", async () => {
-        expect(motsClefs).to.be.an("array").that.contains(idMotClef)
+        expect(motsClefs).to.be.an("array").that.contains(idMotClef2)
       });
 
       it("Les noms sont copiés", async () => {
