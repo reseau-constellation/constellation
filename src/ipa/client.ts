@@ -448,13 +448,13 @@ export default class ClientConstellation extends EventEmitter {
 
     let oublierFSuivre: schémaFonctionOublier | undefined;
     let idBdCible: string | undefined;
-    let premièreFois = true
+    let premièreFois = true;
 
     const oublierRacine = await fRacine(async (nouvelIdBdCible: string) => {
       if (nouvelIdBdCible === undefined && premièreFois) {
         premièreFois = false;
         f(undefined);
-      };
+      }
       if (nouvelIdBdCible !== idBdCible) {
         idBdCible = nouvelIdBdCible;
         if (oublierFSuivre) oublierFSuivre();

@@ -1,69 +1,37 @@
 import log from "why-is-node-running";
-import { Controller } from "ipfsd-ctl/src/types";
+
 import { expect } from "chai";
 import { v4 as uuidv4 } from "uuid";
 import { step } from "mocha-steps";
 import assert from "assert";
-import rmrf from "rimraf";
-import { connectPeers } from "orbit-db-test-utils";
 
-import { MEMBRE, MODÉRATEUR } from "@/ipa/accès/consts" // "../../src/ipa/accès/consts";
+import { MEMBRE, MODÉRATEUR } from "@/ipa/accès/consts"; // "../../src/ipa/accès/consts";
 import { enregistrerContrôleurs } from "@/ipa/accès";
 import ContrôleurConstellation from "@/ipa/accès/contrôleurConstellation";
 
 import OrbitDB, { KeyValueStore } from "orbit-db";
 
-import { startIpfs, stopIpfs, testAPIs, config } from "../sfipTest";
-import { peutÉcrire, fermerBd, attendreSync } from "../utils";
+import { testAPIs, config } from "../sfipTest";
+import { peutÉcrire, fermerBd, attendreSync, générerOrbites } from "../utils";
 
 const LOG = false;
-
-const racineDossierSFIP = "./tests/ipa/temp/"+uuidv4();
-const dbPath1 = racineDossierSFIP + "/tests/sfip";
-const dbPath2 = racineDossierSFIP + "/tests/sfip2";
-const dbPath3 = racineDossierSFIP + "/tests/sfip3";
-const dbPath4 = racineDossierSFIP + "/tests/sfip4";
 
 Object.keys(testAPIs).forEach((API) => {
   describe("Contrôleur Constellation", function () {
     this.timeout(config.timeout);
-    let ipfsd1: Controller,
-      ipfsd2: Controller,
-      ipfsd3: Controller,
-      ipfsd4: Controller,
-      ipfs1,
-      ipfs2,
-      ipfs3,
-      ipfs4,
-      orbitdb1: OrbitDB,
-      orbitdb2: OrbitDB,
-      orbitdb3: OrbitDB,
-      orbitdb4: OrbitDB;
+
+    let fOublierOrbites: () => Promise<void>
+    let orbites: OrbitDB[]
+    let orbitdb1: OrbitDB, orbitdb2: OrbitDB, orbitdb3: OrbitDB, orbitdb4: OrbitDB;
 
     before(async () => {
-      rmrf.sync(racineDossierSFIP);
-
-      ipfsd1 = await startIpfs(API, config.daemon1);
-      ipfsd2 = await startIpfs(API, config.daemon2);
-      ipfsd3 = await startIpfs(API, config.daemon2);
-      ipfsd4 = await startIpfs(API, config.daemon2);
-      ipfs1 = ipfsd1.api;
-      ipfs2 = ipfsd2.api;
-      ipfs3 = ipfsd3.api;
-      ipfs4 = ipfsd4.api;
-
+      ({ fOublier: fOublierOrbites, orbites } = await générerOrbites(4, API));
+      ([orbitdb1, orbitdb2, orbitdb3, orbitdb4] = orbites);
       enregistrerContrôleurs();
+    });
 
-      orbitdb1 = await OrbitDB.createInstance(ipfs1, { directory: dbPath1 });
-      orbitdb2 = await OrbitDB.createInstance(ipfs2, { directory: dbPath2 });
-      orbitdb3 = await OrbitDB.createInstance(ipfs3, { directory: dbPath3 });
-      orbitdb4 = await OrbitDB.createInstance(ipfs4, { directory: dbPath4 });
-      await connectPeers(ipfs1, ipfs2);
-      await connectPeers(ipfs1, ipfs3);
-      await connectPeers(ipfs3, ipfs2);
-      await connectPeers(ipfs1, ipfs4);
-      await connectPeers(ipfs2, ipfs4);
-      await connectPeers(ipfs3, ipfs4);
+    after(async () => {
+      if (fOublierOrbites) await fOublierOrbites();
     });
 
     describe("Accès utilisateur", function () {
@@ -229,24 +197,6 @@ Object.keys(testAPIs).forEach((API) => {
           if (bdOrbite2) await fermerBd(bdOrbite2);
         });
       });
-    });
-
-    after(async () => {
-      if (orbitdb1) await orbitdb1.stop();
-
-      if (orbitdb2) await orbitdb2.stop();
-
-      if (orbitdb3) await orbitdb3.stop();
-      if (orbitdb4) await orbitdb3.stop();
-
-      if (ipfsd1) await stopIpfs(ipfsd1);
-
-      if (ipfsd2) await stopIpfs(ipfsd2);
-
-      if (ipfsd3) await stopIpfs(ipfsd3);
-      if (ipfsd4) await stopIpfs(ipfsd3);
-
-      rmrf.sync(racineDossierSFIP);
     });
   });
 });

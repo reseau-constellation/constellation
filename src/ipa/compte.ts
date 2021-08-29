@@ -44,11 +44,7 @@ export default class Compte {
     idBdCompte?: string
   ): Promise<schémaFonctionOublier> {
     idBdCompte = idBdCompte || this.idBd;
-    return await this.client.suivreBdDicDeClef<string>(
-      idBdCompte,
-      "noms",
-      f
-    );
+    return await this.client.suivreBdDicDeClef<string>(idBdCompte, "noms", f);
   }
 
   async sauvegarderNom(langue: string, nom: string): Promise<void> {

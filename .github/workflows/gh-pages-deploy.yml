@@ -1,4 +1,4 @@
-name: Déployer sur pages GitHub
+name: Apli internet
 on:
   push:
     branches:

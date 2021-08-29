@@ -1,6 +1,13 @@
+import { Controller } from "ipfsd-ctl/src/types";
+import { startIpfs, stopIpfs, config } from "./sfipTest";
+import { connectPeers } from "orbit-db-test-utils";
+
 import { once } from "events";
+import rmrf from "rimraf";
+import { v4 as uuidv4 } from "uuid";
 import OrbitDB, { Store, KeyValueStore, FeedStore } from "orbit-db";
 import ContrôleurConstellation from "@/ipa/accès/contrôleurConstellation";
+import ClientConstellation from "@/ipa/client";
 
 const attendreInvité = (bd: Store, idInvité: string) =>
   new Promise<void>((resolve) => {
@@ -26,16 +33,16 @@ export const attendreRésultat = async (
   valDésirée?: unknown
 ): Promise<void> => {
   if (valDésirée === undefined) {
-    valDésirée = (x: unknown) => x !== undefined
+    valDésirée = (x: unknown) => x !== undefined;
   }
   return new Promise((résoudre) => {
     const interval = setInterval(() => {
       const val = dic[clef];
-      let prêt = false
-      if (typeof valDésirée === 'function') {
-        prêt = valDésirée(val)
+      let prêt = false;
+      if (typeof valDésirée === "function") {
+        prêt = valDésirée(val);
       } else {
-        prêt = val === valDésirée
+        prêt = val === valDésirée;
       }
       if (prêt) {
         clearInterval(interval);
@@ -86,3 +93,60 @@ export const fermerBd = async (bd: Store) => {
   await bd.close();
   await bd.access.close();
 };
+
+export const générerOrbites = async (n=1, API: string): Promise<{orbites: OrbitDB[], fOublier: () => Promise<void>}> => {
+  const ipfsds: Controller[] = []
+  const ipfss: Controller["api"][] = []
+  const orbites: OrbitDB[] = []
+
+  const racineDossierOrbite = "./tests/ipa/_temp/" + uuidv4();
+
+  rmrf.sync(racineDossierOrbite);
+
+  for (const i in [...Array(n).keys()]) {
+    const racineDossier = `${racineDossierOrbite}/sfip_${i}`
+    const ipfsd = await startIpfs(API, config.daemon1);
+    const ipfs = ipfsd.api;
+    const orbite = await OrbitDB.createInstance(ipfs, { directory: racineDossier });
+
+    for (const ip of ipfss) {
+      await connectPeers(ipfs, ip);
+    }
+
+    ipfsds.push(ipfsd);
+    ipfss.push(ipfs);
+    orbites.push(orbite);
+  }
+  const fOublier = async () => {
+    await Promise.all(orbites.map(async orbite=>{
+      await orbite.stop();
+    }))
+    await Promise.all(ipfsds.map(async ipfsd=>{
+      await stopIpfs(ipfsd)
+    }))
+    rmrf.sync(racineDossierOrbite);
+  }
+  return { orbites, fOublier }
+}
+
+export const générerClients = async (n=1, API: string): Promise<{clients: ClientConstellation[], fOublier: () => Promise<void>}> => {
+  const clients: ClientConstellation[] = []
+
+  const { orbites, fOublier: fOublierOrbites } = await générerOrbites(n, API);
+  for (const i in [...Array(n).keys()]) {
+    const client = await ClientConstellation.créer(
+      undefined,
+      undefined,
+      orbites[i]
+    );
+    clients.push(client);
+  }
+
+  const fOublier = async () => {
+    await Promise.all(clients.map(async client => {
+      await client.fermer()
+    }));
+    fOublierOrbites();
+  }
+  return { fOublier, clients }
+}

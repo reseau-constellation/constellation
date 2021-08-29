@@ -39,27 +39,25 @@ export default class ContrôleurAccès extends EventEmitter {
 
   async estUnModérateurPatient(id: string): Promise<boolean> {
     this.dernierAppel = Date.now();
-    const PATIENCE = 1000
+    const PATIENCE = 1000;
 
     if (await this.gestAccès.estUnModérateur(id)) return true;
 
     return new Promise((résoudre) => {
-      const interval = setInterval(
-        async () => {
-          const estAutorisé = await this.gestAccès.estUnModérateur(id);
-          if (estAutorisé) {
-            clearInterval(interval)
-            résoudre(true);
-          } else {
-            const maintenant = Date.now()
-            if ((maintenant - this.dernierAppel!) > PATIENCE) {
-              clearInterval(interval)
-              résoudre(false);
-            }
-          };
-        }, 10
-      )
-    })
+      const interval = setInterval(async () => {
+        const estAutorisé = await this.gestAccès.estUnModérateur(id);
+        if (estAutorisé) {
+          clearInterval(interval);
+          résoudre(true);
+        } else {
+          const maintenant = Date.now();
+          if (maintenant - this.dernierAppel! > PATIENCE) {
+            clearInterval(interval);
+            résoudre(false);
+          }
+        }
+      }, 10);
+    });
   }
 
   get premierMod(): string {
