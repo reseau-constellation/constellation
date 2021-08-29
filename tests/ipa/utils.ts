@@ -1,6 +1,6 @@
 import { once } from "events";
 import OrbitDB, { Store, KeyValueStore, FeedStore } from "orbit-db";
-import ContrôleurConstellation from "../accès/contrôleurConstellation";
+import ContrôleurConstellation from "@/ipa/accès/contrôleurConstellation";
 
 const attendreInvité = (bd: Store, idInvité: string) =>
   new Promise<void>((resolve) => {
@@ -25,10 +25,18 @@ export const attendreRésultat = async (
   clef: string,
   valDésirée?: unknown
 ): Promise<void> => {
+  if (valDésirée === undefined) {
+    valDésirée = (x: unknown) => x !== undefined
+  }
   return new Promise((résoudre) => {
     const interval = setInterval(() => {
       const val = dic[clef];
-      const prêt = valDésirée ? val === valDésirée : val !== undefined;
+      let prêt = false
+      if (typeof valDésirée === 'function') {
+        prêt = valDésirée(val)
+      } else {
+        prêt = val === valDésirée
+      }
       if (prêt) {
         clearInterval(interval);
         résoudre();

@@ -7,9 +7,9 @@ import assert from "assert";
 import rmrf from "rimraf";
 import { connectPeers } from "orbit-db-test-utils";
 
-import { MEMBRE, MODÉRATEUR } from "../../accès/consts";
-import { enregistrerContrôleurs } from "../../accès";
-import ContrôleurConstellation from "../../accès/contrôleurConstellation";
+import { MEMBRE, MODÉRATEUR } from "@/ipa/accès/consts" // "../../src/ipa/accès/consts";
+import { enregistrerContrôleurs } from "@/ipa/accès";
+import ContrôleurConstellation from "@/ipa/accès/contrôleurConstellation";
 
 import OrbitDB, { KeyValueStore } from "orbit-db";
 

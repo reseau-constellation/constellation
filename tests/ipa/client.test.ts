@@ -18,8 +18,8 @@ import ClientConstellation, {
   faisRien,
   infoAccès,
   élémentBdListe
-} from "../client";
-import { MEMBRE, MODÉRATEUR } from "../accès/consts";
+} from "@/ipa/client";
+import { MEMBRE, MODÉRATEUR } from "@/ipa/accès/consts";
 
 import OrbitDB, { KeyValueStore, FeedStore, élémentFeedStore } from "orbit-db";
 
@@ -323,8 +323,8 @@ Object.keys(testAPIs).forEach((API) => {
         after(async () => {
           if (bdBase) await fermerBd(bdBase);
         });
-        it("`undefined` est retourné si la clef n'existe pas", async () => {
-          expect(données).to.be.undefined;
+        it("`{}` est retourné si la clef n'existe pas", async () => {
+          expect(données).to.be.empty;
         });
         it("Les données sont retournés en format objet", async () => {
           await bdBase.put(CLEF, idBd);
@@ -360,9 +360,9 @@ Object.keys(testAPIs).forEach((API) => {
           if (bdBase) await fermerBd(bdBase);
           if (bd) await fermerBd(bd)
         });
-        step("`undefined` est retourné si la clef n'existe pas", async () => {
-          expect(donnéesValeur).to.be.undefined;
-          expect(données).to.be.undefined;
+        step("`[]` est retourné si la clef n'existe pas", async () => {
+          expect(donnéesValeur).to.be.an("array").that.is.empty;
+          expect(données).to.be.an("array").that.is.empty;
         });
         step("Avec renvoyer valeur", async () => {
           await bdBase.put(CLEF, idBd);
@@ -810,7 +810,11 @@ Object.keys(testAPIs).forEach((API) => {
           expect(adresseOrbiteValide(idBd)).to.be.true;
         });
         it("Avec l'accès de l'utilisateur");
-        it("Avec accès personalisé");
+        it("Avec accès personalisé", async () => {
+          const optionsAccès = { premierMod: client2.bdRacine!.access.adresseBd };
+          const idBd = await client.créerBdIndépendante("kvstore", optionsAccès);
+          client.suivreAccès(idBd, )
+        });
       });
 
       describe("Effacer BD", function () {

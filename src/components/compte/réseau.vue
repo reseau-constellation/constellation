@@ -38,7 +38,7 @@ export default mixins(mixinIPA).extend({
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierConnexions = await this.$ipa.suivreConnexionsPostes(
+      const oublierConnexions = await this.$ipa.réseau!.suivreConnexionsPostes(
         (connexions) => {
           this.connexions = connexions;
         }

@@ -20,10 +20,10 @@ export default class Compte {
 
   async suivreCourriel(
     f: schémaFonctionSuivi<string>,
-    idBdRacine?: string
+    idBdCompte?: string
   ): Promise<schémaFonctionOublier> {
-    idBdRacine = idBdRacine || this.idBd;
-    return await this.client.suivreBd(idBdRacine, async (bd) => {
+    idBdCompte = idBdCompte || this.idBd;
+    return await this.client.suivreBd(idBdCompte, async (bd) => {
       const courriel = await (bd as KeyValueStore).get("courriel");
       f(courriel);
     });
@@ -41,13 +41,13 @@ export default class Compte {
 
   async suivreNoms(
     f: schémaFonctionSuivi<{ [key: string]: string }>,
-    idBdRacine?: string
+    idBdCompte?: string
   ): Promise<schémaFonctionOublier> {
-    idBdRacine = idBdRacine || this.idBd;
-    return await this.client.suivreBdDicDeClef(
-      idBdRacine,
+    idBdCompte = idBdCompte || this.idBd;
+    return await this.client.suivreBdDicDeClef<string>(
+      idBdCompte,
       "noms",
-      f as schémaFonctionSuivi<{ [key: string]: unknown }>
+      f
     );
   }
 
@@ -71,7 +71,7 @@ export default class Compte {
 
   async sauvegarderImage(image: File): Promise<void> {
     if (image.size > MAX_TAILLE_IMAGE)
-      return Promise.reject("Taille maximale excédée");
+      throw new Error("Taille maximale excédée");
     const octets = await image.arrayBuffer();
     const idImage = await this.client.ajouterÀSFIP(octets);
     const bd = (await this.client.ouvrirBd(this.idBd)) as KeyValueStore;
@@ -85,10 +85,10 @@ export default class Compte {
 
   async suivreImage(
     f: schémaFonctionSuivi<Uint8Array | null>,
-    idBdRacine?: string
+    idBdCompte?: string
   ): Promise<schémaFonctionOublier> {
-    idBdRacine = idBdRacine || this.idBd;
-    return await this.client.suivreBd(idBdRacine, async (bd) => {
+    idBdCompte = idBdCompte || this.idBd;
+    return await this.client.suivreBd(idBdCompte, async (bd) => {
       const idImage = await (bd as KeyValueStore).get("image");
       if (!idImage) return f(null);
       const image = await this.client.obtFichierSFIP(

@@ -8,7 +8,7 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "test:ipa": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' ts-mocha \"src/ipa/tests/**/*.test.ts\" --exit --require mocha-steps",
+    "test:ipa": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' ts-mocha \"tests/ipa/**/*.test.ts\" --exit --require mocha-steps -r tsconfig-paths/register",
     "couverture": "nyc yarn test:ipa",
     "lint": "vue-cli-service lint",
     "déployer": "node ./scripts/gh-pages-deploy.js",
