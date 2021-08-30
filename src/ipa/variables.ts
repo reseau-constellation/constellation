@@ -113,10 +113,13 @@ export default class Variables {
     const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
     const règles = ClientConstellation.obtÉlémentsDeBdListe(
       bdRègles
-    ) as règleVariable[];
-    règles.forEach((r: règleVariable) => {
-      this.ajouterRègleVariable(idNouvelleBd, r);
-    });
+    ) as règleVariableAvecId[];
+
+    await Promise.all(
+      règles.map(async (r: règleVariableAvecId) => {
+        await this.ajouterRègleVariable(idNouvelleBd, r.règle);
+      })
+    );
 
     const statut = (await bdBase.get("statut")) || STATUT.ACTIVE;
     await this.établirStatut(idNouvelleBd, { statut });

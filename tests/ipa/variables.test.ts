@@ -9,7 +9,7 @@ chai.use(chaiAsPromised);
 import { enregistrerContrôleurs } from "@/ipa/accès";
 import ClientConstellation, { schémaFonctionOublier } from "@/ipa/client";
 import { catégorieVariables } from "@/ipa/variables"
-import { règleVariableAvecId, règleBornes } from "@/ipa/valid"
+import { règleVariableAvecId, règleBornes, règleCatégorie } from "@/ipa/valid"
 
 import { testAPIs, config } from "./sfipTest";
 import { générerClients } from "./utils";
@@ -223,6 +223,13 @@ Object.keys(testAPIs).forEach((API) => {
         expect(règles[0].id).to.equal(règleDeBase.id)
       })
 
+      step("On détecte le changement de catégorie", async () => {
+        await client.variables!.sauvegarderCatégorieVariable(idVariable, "dateEtHeure");
+        const règleCatégorie = règles.find(r=>r.règle.typeRègle === "catégorie");
+        expect(règleCatégorie).to.exist;
+        expect(règleCatégorie?.règle.détails.catégorie).to.equal("dateEtHeure");
+      })
+
     })
 
     describe("Copier variable", function () {
@@ -253,13 +260,13 @@ Object.keys(testAPIs).forEach((API) => {
         await client.variables!.ajouterRègleVariable(idVariable, règle)
         await client.variables!.sauvegarderUnitésVariable(idVariable, "mm")
 
-        idVariable2 = await client.variables!.copierVariable(idVariable)
+        idVariable2 = await client.variables!.copierVariable(idVariable);
 
-        fsOublier.push(await client.variables!.suivreNomsVariable(idVariable2, (x)=> noms = x))
-        fsOublier.push(await client.variables!.suivreDescrVariable(idVariable2, (x)=> descrs = x))
-        fsOublier.push(await client.variables!.suivreRèglesVariable(idVariable2, (r)=>règles = r))
-        fsOublier.push(await client.variables!.suivreCatégorieVariable(idVariable2, c=>catégorie = c))
-        fsOublier.push(await client.variables!.suivreUnitésVariable(idVariable2, u=>unités=u))
+        fsOublier.push(await client.variables!.suivreNomsVariable(idVariable2, (x)=> noms = x));
+        fsOublier.push(await client.variables!.suivreDescrVariable(idVariable2, (x)=> descrs = x));
+        fsOublier.push(await client.variables!.suivreRèglesVariable(idVariable2, (r)=>règles = r));
+        fsOublier.push(await client.variables!.suivreCatégorieVariable(idVariable2, c=>catégorie = c));
+        fsOublier.push(await client.variables!.suivreUnitésVariable(idVariable2, u=>unités=u));
       })
 
       after(async () => {
@@ -279,7 +286,13 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       it("Les règles sont copiés", async () => {
-        expect(règles).to.deep.equal([règle])
+        const règleCatégorie: règleCatégorie = {
+          typeRègle: "catégorie",
+          détails: {
+            catégorie: "numérique"
+          }
+        }
+        expect(règles.map(r=>r.règle)).to.have.deep.members([règle, règleCatégorie])
       });
 
       it("Les unités sont copiés", async () => {
