@@ -38,4 +38,4 @@ pnpm-debug.log*
 !.yarn/versions
 
 .nyc_output
-src/ipa/tests/temp
+tests/ipa/_temp
