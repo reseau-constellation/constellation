@@ -129,5 +129,12 @@ export default Vue.extend({
     formatterDate: function (val: number) {
       return new Date(val).toLocaleDateString(this.$i18n.locale);
     },
+    formatterHeure: function (val: number) {
+      return new Date(val).toLocaleDateString(this.$i18n.locale);
+    },
+    formatterHorodatage: function (val: number) {
+      // console.log(new Intl.DateTimeFormat("ta", {calendar: "indian", numberingSystem: "tamldec"}).format(date));
+      return new Date(val).toLocaleDateString(this.$i18n.locale);
+    },
   },
 });

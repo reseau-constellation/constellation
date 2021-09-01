@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from "uuid";
 import Semaphore from "@chriscdn/promise-semaphore";
 import initOrbite from "./orbitdb";
 import initSFIP from "./ipfs";
-import { CID } from "multiformats/cid";
 
 import OrbitDB, {
   Store,
@@ -28,7 +27,7 @@ import Favoris from "./favoris";
 import Projets from "./projets";
 import MotsClefs from "./motsClefs";
 
-import { itérateurÀFlux } from "./utils";
+import { itérateurÀFlux, CIDvalid } from "./utils";
 import ContrôleurConstellation, {
   OptionsContrôleurConstellation,
   nomType as nomTypeContrôleurConstellation,
@@ -55,6 +54,8 @@ export type élémentsBd =
   | number
   | boolean
   | string
+  | null
+  | undefined
   | { [key: string]: élémentsBd }
   | Array<élémentsBd>;
 
@@ -98,18 +99,6 @@ export function adresseOrbiteValide(adresse: unknown): boolean {
     adresse.startsWith("/orbitdb/") &&
     isValidAddress(adresse)
   );
-}
-
-export function CIDvalid(cid: unknown): boolean {
-  if (typeof cid === "string") {
-    try {
-      CID.parse(cid);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-  return false;
 }
 
 class ÉmetteurUneFois<T> extends EventEmitter {

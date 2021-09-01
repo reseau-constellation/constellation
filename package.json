@@ -23,7 +23,6 @@
     "abortable-iterator": "^3.0.0",
     "axios": "^0.21.1",
     "browser-readablestream-to-it": "^1.0.2",
-    "cids": "^1.1.7",
     "core-js": "^3.16.1",
     "crypto-js": "^4.1.1",
     "database-js": "^3.0.11",

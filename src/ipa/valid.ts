@@ -1,4 +1,4 @@
-import CID from "cids";
+import { CIDvalid } from "./utils";
 import { catégorieVariables } from "./variables";
 import { élémentsBd } from "./client";
 
@@ -15,17 +15,19 @@ export type règleVariable = {
   détails: { [key: string]: élémentsBd };
 };
 
-export type règleColonne = {
-  règle: règleVariableAvecId;
+export type règleColonne<T extends règleVariable = règleVariable> = {
+  règle: règleVariableAvecId<T>;
   source: sourceRègle;
   colonne: string;
 };
+
+export type typeOp = ">" | "<" | ">=" | "<="
 
 export interface règleBornes extends règleVariable {
   typeRègle: "bornes";
   détails: {
     val: number | string; //Peut être numérique ou bien le nom d'une autre variable
-    op: ">" | "<" | ">=" | "<=";
+    op: typeOp;
   };
 }
 
@@ -66,6 +68,7 @@ export interface élémentDonnées<
   données: T;
   empreinte: string;
 }
+
 export function générerFonctionRègle<T extends élémentBdListeDonnées>(
   règle: règleColonne,
   varsÀColonnes: { [key: string]: string }
@@ -98,18 +101,22 @@ export function générerFonctionRègle<T extends élémentBdListeDonnées>(
 
       const { val, op } = (règleVariable.règle as règleBornes).détails;
 
+      const manquantes = (v1?: number, v2?: number): boolean =>  {
+        return v1 === undefined || v2 === undefined
+      }
+
       switch (op) {
         case ">":
-          fOp = (v1: number, v2: number) => v1 > v2;
+          fOp = (v1?: number, v2?: number) => manquantes(v1, v2) || v1! > v2!;
           break;
         case "<":
-          fOp = (v1: number, v2: number) => v1 < v2;
+          fOp = (v1?: number, v2?: number) => manquantes(v1, v2) || v1! < v2!;
           break;
         case ">=":
-          fOp = (v1: number, v2: number) => v1 >= v2;
+          fOp = (v1?: number, v2?: number) => manquantes(v1, v2) || v1! >= v2!;
           break;
         case "<=":
-          fOp = (v1: number, v2: number) => v1 <= v2;
+          fOp = (v1?: number, v2?: number) => manquantes(v1, v2) || v1! <= v2!;
           break;
       }
 
@@ -130,7 +137,7 @@ export function générerFonctionRègle<T extends élémentBdListeDonnées>(
       }
 
       return (vals: élémentDonnées<T>[]) => {
-        const nonValides = vals.filter((v) => fComp(v));
+        const nonValides = vals.filter((v) => !fComp(v));
         return nonValides.map((v: élémentDonnées<T>) => {
           const { empreinte } = v;
           return {
@@ -146,7 +153,7 @@ export function générerFonctionRègle<T extends élémentBdListeDonnées>(
       const options = (règleVariable.règle as règleValeurCatégorique).détails.options;
       return (vals: élémentDonnées<T>[]) => {
         const nonValides = vals.filter((v: élémentDonnées<T>) =>
-          options.includes(v.données[colonne])
+          v.données[colonne] !== undefined && !options.includes(v.données[colonne])
         );
         return nonValides.map((v: élémentDonnées<T>) => {
           const { empreinte } = v;
@@ -184,10 +191,10 @@ export const formatsFichiers = {
 function validFichier(val: unknown, exts?: string[]): boolean {
   if (typeof val !== "object") return false;
   const { cid, ext } = val as { cid: string; ext: string };
-  if (!CID.isCID(cid)) return false;
+  if (!CIDvalid(cid)) return false;
   if (typeof ext !== "string") return false;
   if (exts) {
-    return exts.includes(ext);
+    return exts.includes(ext.replace(".", ""));
   }
   return true;
 }
@@ -206,7 +213,7 @@ export function validerCatégorieVal(
     case "numérique":
       return typeof val === "number";
     case "date":
-      return typeof val === "number";
+      return estUnChiffrePositif(val);
     case "heure":
       return estUnChiffrePositif(val);
     case "dateEtHeure":

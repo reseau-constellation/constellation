@@ -1,3 +1,5 @@
+import { CID } from "multiformats/cid";
+
 export function itérateurÀFlux(
   itérable: AsyncIterable<Uint8Array>
 ): ReadableStream<Uint8Array> {
@@ -14,4 +16,17 @@ export function itérateurÀFlux(
       }
     },
   });
+}
+
+
+export function CIDvalid(cid: unknown): boolean {
+  if (typeof cid === "string") {
+    try {
+      CID.parse(cid);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  return false;
 }

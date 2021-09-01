@@ -158,6 +158,7 @@ export default class Tableaux {
 
     const fSuivreDonnées = (données: élémentBdListe<T>[]) => {
       info.données = données;
+      fFinale();
     };
     const oublierDonnées = await this.client.suivreBdListeDeClef<T>(
       idTableau,
