@@ -165,7 +165,7 @@
               <dialogue-auteurs
                 :idBd="idBd"
                 :auteurs="auteurs"
-                :permissionModerateur="true || permissionModerateur"
+                :permissionModerateur="permissionModerateur"
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item v-bind="attrs" v-on="on">
