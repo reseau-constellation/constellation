@@ -2,13 +2,13 @@ import { CIDvalid } from "./utils";
 import { catégorieVariables } from "./variables";
 import { élémentsBd } from "./client";
 
-export type typeRègle = "catégorie" | "bornes" | "valeurCatégorique";
+export type typeRègle = "catégorie" | "bornes" | "valeurCatégorique" | "existe";
 export type sourceRègle = "variable" | "tableau";
 
 export type règleVariableAvecId<T extends règleVariable = règleVariable> = {
   id: string;
-  règle: T
-}
+  règle: T;
+};
 
 export type règleVariable = {
   typeRègle: typeRègle;
@@ -21,7 +21,12 @@ export type règleColonne<T extends règleVariable = règleVariable> = {
   colonne: string;
 };
 
-export type typeOp = ">" | "<" | ">=" | "<="
+export type typeOp = ">" | "<" | ">=" | "<=";
+
+export interface règleExiste extends règleVariable {
+  typeRègle: "existe";
+  détails: Record<string, never>;
+}
 
 export interface règleBornes extends règleVariable {
   typeRègle: "bornes";
@@ -78,9 +83,24 @@ export function générerFonctionRègle<T extends élémentBdListeDonnées>(
   const { typeRègle } = règleVariable.règle;
 
   switch (typeRègle) {
+    case "existe": {
+      return (vals: élémentDonnées<T>[]) => {
+        const nonValides = vals.filter((v) => v.données[colonne] === undefined);
+        return nonValides.map((v: élémentDonnées<T>) => {
+          const { empreinte } = v;
+          return {
+            empreinte,
+            colonne,
+            erreur: { règle },
+          };
+        });
+      };
+    }
+
     case "catégorie": {
       return (vals: élémentDonnées<T>[]) => {
-        const catégorie = (règleVariable.règle as règleCatégorie).détails.catégorie;
+        const catégorie = (règleVariable.règle as règleCatégorie).détails
+          .catégorie;
         const nonValides = vals.filter(
           (v) => !validerCatégorieVal(v.données[colonne], catégorie)
         );
@@ -101,9 +121,9 @@ export function générerFonctionRègle<T extends élémentBdListeDonnées>(
 
       const { val, op } = (règleVariable.règle as règleBornes).détails;
 
-      const manquantes = (v1?: number, v2?: number): boolean =>  {
-        return v1 === undefined || v2 === undefined
-      }
+      const manquantes = (v1?: number, v2?: number): boolean => {
+        return v1 === undefined || v2 === undefined;
+      };
 
       switch (op) {
         case ">":
@@ -150,10 +170,13 @@ export function générerFonctionRègle<T extends élémentBdListeDonnées>(
     }
 
     case "valeurCatégorique": {
-      const options = (règleVariable.règle as règleValeurCatégorique).détails.options;
+      const options = (règleVariable.règle as règleValeurCatégorique).détails
+        .options;
       return (vals: élémentDonnées<T>[]) => {
-        const nonValides = vals.filter((v: élémentDonnées<T>) =>
-          v.données[colonne] !== undefined && !options.includes(v.données[colonne])
+        const nonValides = vals.filter(
+          (v: élémentDonnées<T>) =>
+            v.données[colonne] !== undefined &&
+            !options.includes(v.données[colonne])
         );
         return nonValides.map((v: élémentDonnées<T>) => {
           const { empreinte } = v;
@@ -205,9 +228,9 @@ export function validerCatégorieVal(
 ): boolean {
   if (val === undefined) return true; //Permettre les valeurs manquantes
 
-  const estUnChiffrePositif = (v: unknown): boolean => {
-    return typeof v === "number" && v > 0
-  }
+  const estUnChiffrePositif = (v: unknown): boolean => {
+    return typeof v === "number" && v > 0;
+  };
 
   switch (catégorie) {
     case "numérique":

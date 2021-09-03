@@ -76,6 +76,8 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
+import { catégorieVariables } from "@/ipa/variables"
+
 import {
   couper,
   traduireNom,
@@ -176,7 +178,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
         [langue]: nom,
       });
     },
-    sauvegarderCategorie: async function (catégorie: string) {
+    sauvegarderCategorie: async function (catégorie: catégorieVariables) {
       await this.$ipa.variables!.sauvegarderCatégorieVariable(
         this.id,
         catégorie

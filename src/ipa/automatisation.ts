@@ -1,24 +1,24 @@
 export type formatTélécharger = "ods" | "xls" | "xlsx";
-export interface SpécificationAutomation {}
-export interface SpécificationTélécharger extends SpécificationAutomation {
+export interface SpécificationAutomatisation {}
+export interface SpécificationTélécharger extends SpécificationAutomatisation {
   id: string;
   format: formatTélécharger;
 }
-export interface SpécificationTéléverser extends SpécificationAutomation {
+export interface SpécificationTéléverser extends SpécificationAutomatisation {
   idTableau: string;
 }
-interface Automation {}
-export default class Automations {
-  automations: Automation[];
+interface Automatisation {}
+export default class Automatisations {
+  automatisations: Automatisation[];
   constructor() {
-    this.automations = [];
+    this.automatisations = [];
   }
 
-  async ajouterAutomationTéléCharger() {}
+  async ajouterAutomatisationTéléCharger() {}
 
-  async ajouterAutomationTéléVerser() {}
+  async ajouterAutomatisationTéléVerser() {}
 
-  async annulerAutomation() {}
+  async annulerAutomatisation() {}
 
-  async suivreAutomations() {}
+  async suivreAutomatisations() {}
 }

@@ -18,7 +18,6 @@ export function itérateurÀFlux(
   });
 }
 
-
 export function CIDvalid(cid: unknown): boolean {
   if (typeof cid === "string") {
     try {

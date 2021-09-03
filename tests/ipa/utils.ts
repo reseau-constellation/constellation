@@ -94,20 +94,25 @@ export const fermerBd = async (bd: Store) => {
   await bd.access.close();
 };
 
-export const générerOrbites = async (n=1, API: string): Promise<{orbites: OrbitDB[], fOublier: () => Promise<void>}> => {
-  const ipfsds: Controller[] = []
-  const ipfss: Controller["api"][] = []
-  const orbites: OrbitDB[] = []
+export const générerOrbites = async (
+  n = 1,
+  API: string
+): Promise<{ orbites: OrbitDB[]; fOublier: () => Promise<void> }> => {
+  const ipfsds: Controller[] = [];
+  const ipfss: Controller["api"][] = [];
+  const orbites: OrbitDB[] = [];
 
   const racineDossierOrbite = "./tests/ipa/_temp/" + uuidv4();
 
   rmrf.sync(racineDossierOrbite);
 
   for (const i in [...Array(n).keys()]) {
-    const racineDossier = `${racineDossierOrbite}/sfip_${i}`
+    const racineDossier = `${racineDossierOrbite}/sfip_${i}`;
     const ipfsd = await startIpfs(API, config.daemon1);
     const ipfs = ipfsd.api;
-    const orbite = await OrbitDB.createInstance(ipfs, { directory: racineDossier });
+    const orbite = await OrbitDB.createInstance(ipfs, {
+      directory: racineDossier,
+    });
 
     for (const ip of ipfss) {
       await connectPeers(ipfs, ip);
@@ -117,20 +122,30 @@ export const générerOrbites = async (n=1, API: string): Promise<{orbites: Orbi
     ipfss.push(ipfs);
     orbites.push(orbite);
   }
-  const fOublier = async () => {
-    await Promise.all(orbites.map(async orbite=>{
-      await orbite.stop();
-    }))
-    await Promise.all(ipfsds.map(async ipfsd=>{
-      await stopIpfs(ipfsd)
-    }))
+  const fOublier = async () => {
+    await Promise.all(
+      orbites.map(async (orbite) => {
+        await orbite.stop();
+      })
+    );
+    await Promise.all(
+      ipfsds.map(async (ipfsd) => {
+        await stopIpfs(ipfsd);
+      })
+    );
     rmrf.sync(racineDossierOrbite);
-  }
-  return { orbites, fOublier }
-}
+  };
+  return { orbites, fOublier };
+};
 
-export const générerClients = async (n=1, API: string): Promise<{clients: ClientConstellation[], fOublier: () => Promise<void>}> => {
-  const clients: ClientConstellation[] = []
+export const générerClients = async (
+  n = 1,
+  API: string
+): Promise<{
+  clients: ClientConstellation[];
+  fOublier: () => Promise<void>;
+}> => {
+  const clients: ClientConstellation[] = [];
 
   const { orbites, fOublier: fOublierOrbites } = await générerOrbites(n, API);
   for (const i in [...Array(n).keys()]) {
@@ -143,10 +158,12 @@ export const générerClients = async (n=1, API: string): Promise<{clients: Clie
   }
 
   const fOublier = async () => {
-    await Promise.all(clients.map(async client => {
-      await client.fermer()
-    }));
+    await Promise.all(
+      clients.map(async (client) => {
+        await client.fermer();
+      })
+    );
     fOublierOrbites();
-  }
-  return { fOublier, clients }
-}
+  };
+  return { fOublier, clients };
+};

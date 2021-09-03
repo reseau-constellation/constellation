@@ -20,7 +20,12 @@ import { MEMBRE, MODÉRATEUR } from "@/ipa/accès/consts";
 import { KeyValueStore, FeedStore, élémentFeedStore } from "orbit-db";
 
 import { testAPIs, config } from "./sfipTest";
-import { générerClients, peutÉcrire, fermerBd, attendreRésultat } from "./utils";
+import {
+  générerClients,
+  peutÉcrire,
+  fermerBd,
+  attendreRésultat,
+} from "./utils";
 
 const LOG = false;
 
@@ -48,13 +53,15 @@ Object.keys(testAPIs).forEach((API) => {
   describe("Client Constellation", function () {
     this.timeout(config.timeout);
 
-    let fOublierClients: () => Promise<void>
-    let clients: ClientConstellation[]
-    let client: ClientConstellation, client2: ClientConstellation, client3: ClientConstellation;
+    let fOublierClients: () => Promise<void>;
+    let clients: ClientConstellation[];
+    let client: ClientConstellation,
+      client2: ClientConstellation,
+      client3: ClientConstellation;
 
     before(async () => {
       ({ fOublier: fOublierClients, clients } = await générerClients(3, API));
-      ([client, client2, client3] = clients);
+      [client, client2, client3] = clients;
     });
 
     after(async () => {
@@ -76,10 +83,7 @@ Object.keys(testAPIs).forEach((API) => {
         const message = "Je suis un message";
         const autreMessage = "Je suis un message!";
         const signature = await client.signer(message);
-        const valide = await client.vérifierSignature(
-          signature,
-          autreMessage
-        );
+        const valide = await client.vérifierSignature(signature, autreMessage);
         expect(valide).to.be.false;
       });
     });
@@ -359,9 +363,7 @@ Object.keys(testAPIs).forEach((API) => {
       });
       step("Sans renvoyer valeur", async () => {
         expect(données).to.have.lengthOf(2);
-        expect(données.map((d) => d.payload.value)).to.include.members([
-          1, 2,
-        ]);
+        expect(données.map((d) => d.payload.value)).to.include.members([1, 2]);
       });
     });
 
@@ -392,9 +394,7 @@ Object.keys(testAPIs).forEach((API) => {
       });
       it("Sans renvoyer valeur", async () => {
         expect(données).to.have.lengthOf(2);
-        expect(données.map((d) => d.payload.value)).to.include.members([
-          1, 2,
-        ]);
+        expect(données.map((d) => d.payload.value)).to.include.members([1, 2]);
       });
     });
 
@@ -444,18 +444,12 @@ Object.keys(testAPIs).forEach((API) => {
           id: string,
           f: schémaFonctionSuivi<branche>
         ) => {
-          return await client.suivreBd(id, (_bd: KeyValueStore) =>
-            f(_bd.all)
-          );
+          return await client.suivreBd(id, (_bd: KeyValueStore) => f(_bd.all));
         };
         const fSuivi = (x: branche[]) => {
           données = x;
         };
-        fOublier = await client.suivreBdsDeBdListe(
-          idBdListe,
-          fSuivi,
-          fBranche
-        );
+        fOublier = await client.suivreBdsDeBdListe(idBdListe, fSuivi, fBranche);
 
         idBd1 = await client.créerBdIndépendante("kvstore");
         idBd2 = await client.créerBdIndépendante("kvstore");
@@ -517,11 +511,7 @@ Object.keys(testAPIs).forEach((API) => {
               f(vals);
             });
           };
-          fOublier = await client.suivreBdsDeFonctionListe(
-            fListe,
-            f,
-            fBranche
-          );
+          fOublier = await client.suivreBdsDeFonctionListe(fListe, f, fBranche);
         });
         after(async () => {
           if (fOublier) fOublier();
@@ -775,11 +765,7 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       it("Avec mauvais type spécifié", async () => {
-        const idBdRetrouvée = await client.obtIdBd(
-          "clef",
-          bdRacine,
-          "kvstore"
-        );
+        const idBdRetrouvée = await client.obtIdBd("clef", bdRacine, "kvstore");
         expect(idBdRetrouvée).to.be.undefined;
       });
 
@@ -812,10 +798,7 @@ Object.keys(testAPIs).forEach((API) => {
           adresseBd: undefined,
           premierMod: client.bdRacine!.id,
         };
-        const idBd = await client.créerBdIndépendante(
-          "kvstore",
-          optionsAccès
-        );
+        const idBd = await client.créerBdIndépendante("kvstore", optionsAccès);
 
         const bd = (await client.ouvrirBd(idBd)) as KeyValueStore;
         const autorisé = await peutÉcrire(bd, client.orbite);
@@ -823,10 +806,7 @@ Object.keys(testAPIs).forEach((API) => {
       });
       it("Avec accès personalisé", async () => {
         const optionsAccès = { premierMod: client2.orbite!.identity.id };
-        const idBd = await client.créerBdIndépendante(
-          "kvstore",
-          optionsAccès
-        );
+        const idBd = await client.créerBdIndépendante("kvstore", optionsAccès);
 
         const bd_orbite2 = (await client2.ouvrirBd(idBd)) as KeyValueStore;
         const autorisé = await peutÉcrire(bd_orbite2, client2.orbite);
@@ -902,10 +882,7 @@ Object.keys(testAPIs).forEach((API) => {
       let lAccès: infoAccès[];
       let idBd: string;
       const résultatPermission = {
-        permission: undefined as
-          | typeof MODÉRATEUR
-          | typeof MEMBRE
-          | undefined,
+        permission: undefined as typeof MODÉRATEUR | typeof MEMBRE | undefined,
       };
       let permissionÉcrire = false;
 
@@ -927,10 +904,7 @@ Object.keys(testAPIs).forEach((API) => {
         const fPermission = (accès?: typeof MODÉRATEUR | typeof MEMBRE) => {
           résultatPermission["permission"] = accès;
         };
-        fOublierPermission = await client2.suivrePermission(
-          idBd,
-          fPermission
-        );
+        fOublierPermission = await client2.suivrePermission(idBd, fPermission);
       });
       after(async () => {
         if (fOublier) fOublier();

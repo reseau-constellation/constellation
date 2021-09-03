@@ -80,7 +80,7 @@ export default mixins(mixinIPA).extend({
           icône: "mdi-pin",
         },
         {
-          page: "automation",
+          page: "automatisation",
           icône: "mdi-sync",
         },
         {

@@ -19,7 +19,7 @@
         <template v-slot:append-outer>
           <v-btn
             icon
-            :disabled="valsÉgales || !règles.numérique()"
+            :disabled="valsÉgales || !règles.numérique(valÉditée)"
             color="success"
             @click="() => actionModifié()"
           >
@@ -58,13 +58,15 @@ export default mixins(mixinLangues).extend({
   },
   computed: {
     valsÉgales: function (): boolean {
+      console.log("valsÉgales", this.val === this.valNumérique(this.valÉditée));
       return this.val === this.valNumérique(this.valÉditée);
     },
     règles: function () {
       return {
-        règles: {
-          numérique: (val: string) => this.valNumérique(val),
-        },
+        numérique:
+          (val: string) => {
+            return val !== undefined ? (!this.valNumérique(val) ? "Val erronée" : true) : false
+          },
       };
     },
   },
@@ -79,11 +81,14 @@ export default mixins(mixinLangues).extend({
       }
     },
     valNumérique: function (val: string) {
-      if (!val.length) return;
-
+      console.log(1, typeof val)
+      if (!val || !val.length) return;
+      //@ts-ignore
+      console.log(2, "ici", !isNaN(val), !isNaN(parseFloat(val)))
       // De https://stackoverflow.com/questions/175739/built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number
       //@ts-ignore
       if (!isNaN(val) && !isNaN(parseFloat(val))) {
+        console.log(3, val, Number(val))
         return Number(val);
       } else {
         const convertie = this.texteÀChiffre(val, this.systèmeNumération);

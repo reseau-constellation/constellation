@@ -21,7 +21,7 @@ const imagesThème: { [key: string]: { [key: string]: string } } = {
     unDraw: require("@/assets/undraw/undraw_male_avatar_323b.svg"),
     வவவ: require("@/assets/வவவ/தஞ்சாவூர்_பொம்மை_ஆண்.svg"),
   },
-  automation: {
+  automatisation: {
     unDraw: require("@/assets/undraw/undraw_real-time_sync_o57k.svg"),
     // வவவ: require("@/assets/வவவ/பொங்கல்_வண்டி.svg"),
   },

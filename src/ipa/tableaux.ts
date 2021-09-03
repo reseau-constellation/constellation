@@ -10,10 +10,12 @@ import ClientConstellation, {
   schémaFonctionOublier,
   élémentsBd,
   élémentBdListe,
+  faisRien,
 } from "./client";
 import ContrôleurConstellation from "./accès/contrôleurConstellation";
 import {
   erreurValidation,
+  règleVariable,
   règleVariableAvecId,
   règleColonne,
   générerFonctionRègle,
@@ -372,6 +374,8 @@ export default class Tableaux {
       fSuivi: schémaFonctionSuivi<InfoColAvecCatégorie>,
       branche?: InfoCol
     ): Promise<schémaFonctionOublier> => {
+      if (!id) return faisRien;
+
       return await this.client.variables!.suivreCatégorieVariable(
         id,
         async (catégorie: string) => {
@@ -428,11 +432,11 @@ export default class Tableaux {
     );
   }
 
-  async ajouterRèglesTableau(
+  async ajouterRègleTableau(
     idTableau: string,
     idColonne: string,
-    règles: règleVariableAvecId[]
-  ): Promise<void> {
+    règle: règleVariable
+  ): Promise<string> {
     const optionsAccès = await this.client.obtOpsAccès(idTableau);
     const idBdRègles = await this.client.obtIdBd(
       "règles",
@@ -443,15 +447,44 @@ export default class Tableaux {
     if (!idBdRègles)
       throw `Permission de modification refusée pour tableau ${idTableau}.`;
 
-    const bdColonnes = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
+    const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
 
-    for (const règle of règles) {
-      const entrée: règleColonne = {
-        règle,
-        source: "tableau",
-        colonne: idColonne,
-      };
-      await bdColonnes.add(entrée);
+    const id = uuidv4();
+    const règleAvecId: règleVariableAvecId = {
+      id,
+      règle,
+    };
+
+    const entrée: règleColonne = {
+      règle: règleAvecId,
+      source: "tableau",
+      colonne: idColonne,
+    };
+    await bdRègles.add(entrée);
+
+    return id;
+  }
+
+  async effacerRègleTableau(idTableau: string, idRègle: string): Promise<void> {
+    const optionsAccès = await this.client.obtOpsAccès(idTableau);
+    const idBdRègles = await this.client.obtIdBd(
+      "règles",
+      idTableau,
+      "feed",
+      optionsAccès
+    );
+
+    if (!idBdRègles)
+      throw `Permission de modification refusée pour tableau ${idTableau}.`;
+
+    const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
+
+    const règle = await this.client.rechercherBdListe<règleColonne>(
+      idBdRègles,
+      (r) => r.payload.value.règle.id === idRègle
+    );
+    if (règle) {
+      await bdRègles.remove(règle.hash);
     }
   }
 
@@ -459,11 +492,12 @@ export default class Tableaux {
     idTableau: string,
     f: schémaFonctionSuivi<règleColonne[]>
   ): Promise<schémaFonctionOublier> {
-    const dicRègles: { tableau: règleColonne[]; variable: règleColonne[] } = {
-      tableau: [],
-      variable: [],
+    const dicRègles: { tableau?: règleColonne[]; variable?: règleColonne[] } =
+      {};
+    const fFinale = () => {
+      if (!dicRègles.tableau || !dicRègles.variable) return;
+      return f([...dicRègles.tableau, ...dicRègles.variable]);
     };
-    const fFinale = () => f([...dicRègles.tableau, ...dicRègles.variable]);
 
     //Suivre les règles spécifiées dans le tableau
     const fFinaleRèglesTableau = (règles: règleColonne[]) => {
@@ -536,14 +570,13 @@ export default class Tableaux {
     f: schémaFonctionSuivi<erreurValidation[]>
   ): Promise<schémaFonctionOublier> {
     const info: {
-      données: élémentDonnées<T>[];
-      règles: schémaFonctionValidation<T>[];
+      données?: élémentDonnées<T>[];
+      règles?: schémaFonctionValidation<T>[];
       varsÀColonnes?: { [key: string]: string };
-    } = {
-      données: [],
-      règles: [],
-    };
+    } = {};
     const fFinale = () => {
+      if (!info.données || !info.règles) return;
+
       let erreurs: erreurValidation[] = [];
       for (const r of info.règles) {
         const nouvellesErreurs = r(info.données);

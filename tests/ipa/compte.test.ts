@@ -29,7 +29,7 @@ Object.keys(testAPIs).forEach((API) => {
 
     before(async () => {
       ({ fOublier: fOublierClients, clients } = await générerClients(2, API));
-      ([client, client2] = clients);
+      [client, client2] = clients;
 
       enregistrerContrôleurs();
     });

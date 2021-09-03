@@ -1,9 +1,9 @@
 <template>
   <v-container class="text-center">
     <titre
-      :entête="$t('automation.entête')"
-      :image="image('automation')"
-      :soustitre="$t('automation.soustitre')"
+      :entête="$t('automatisation.entête')"
+      :image="image('automatisation')"
+      :soustitre="$t('automatisation.soustitre')"
     />
   </v-container>
 </template>

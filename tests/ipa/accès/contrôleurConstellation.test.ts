@@ -20,13 +20,16 @@ Object.keys(testAPIs).forEach((API) => {
   describe("Contrôleur Constellation", function () {
     this.timeout(config.timeout);
 
-    let fOublierOrbites: () => Promise<void>
-    let orbites: OrbitDB[]
-    let orbitdb1: OrbitDB, orbitdb2: OrbitDB, orbitdb3: OrbitDB, orbitdb4: OrbitDB;
+    let fOublierOrbites: () => Promise<void>;
+    let orbites: OrbitDB[];
+    let orbitdb1: OrbitDB,
+      orbitdb2: OrbitDB,
+      orbitdb3: OrbitDB,
+      orbitdb4: OrbitDB;
 
     before(async () => {
       ({ fOublier: fOublierOrbites, orbites } = await générerOrbites(4, API));
-      ([orbitdb1, orbitdb2, orbitdb3, orbitdb4] = orbites);
+      [orbitdb1, orbitdb2, orbitdb3, orbitdb4] = orbites;
       enregistrerContrôleurs();
     });
 

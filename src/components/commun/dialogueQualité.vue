@@ -124,7 +124,7 @@ export default mixins(mixinLangues).extend({
           return "qualité.titres.couverture";
         }
         case 4: {
-          return "qualité.titres.passe";
+          return "qualité.titres.valide";
         }
         default:
           return "";
@@ -142,7 +142,7 @@ export default mixins(mixinLangues).extend({
           return "qualité.sousTitres.couverture";
         }
         case 4: {
-          return "qualité.sousTitres.passe";
+          return "qualité.sousTitres.valide";
         }
         default:
           return "";
@@ -160,7 +160,7 @@ export default mixins(mixinLangues).extend({
           return this.score ? this.score.couverture : 0;
         }
         case 4: {
-          return this.score ? this.score.passe : 0;
+          return this.score ? this.score.valide : 0;
         }
         default:
           return undefined;
@@ -169,11 +169,11 @@ export default mixins(mixinLangues).extend({
   },
   methods: {
     couleurScore,
-    avancer: function (section: "accès" | "couverture" | "passe") {
-      const pages: { accès: number; couverture: number; passe: number } = {
+    avancer: function (section: "accès" | "couverture" | "valide") {
+      const pages: { accès: number; couverture: number; valide: number } = {
         accès: 2,
         couverture: 3,
-        passe: 4,
+        valide: 4,
       };
       this.étape = pages[section];
     },

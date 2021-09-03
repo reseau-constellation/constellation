@@ -9,6 +9,7 @@ import ClientConstellation, {
   schémaFonctionOublier,
   élémentBdListe,
   infoAccès,
+  faisRien,
 } from "./client";
 import ContrôleurConstellation, {
   nomType as nomTypeContrôleurConstellation,
@@ -26,10 +27,10 @@ export interface infoAuteur {
 }
 
 export interface infoScore {
-  accès: number;
-  couverture: number;
-  passe: number;
-  total: number;
+  accès?: number;
+  couverture?: number;
+  valide?: number;
+  total?: number;
 }
 
 const verrouDécouverteBd = new Semaphore();
@@ -552,21 +553,69 @@ export default class BDs {
     return await this.client.suivreBdListeDeClef(id, "tableaux", f);
   }
 
+  async suivreScoreAccèsBd(
+    id: string,
+    f: schémaFonctionSuivi<number | undefined>
+  ): Promise<schémaFonctionOublier> {
+    f(undefined);
+    return faisRien;
+  }
+
+  async suivreScoreCouvertureBd(
+    id: string,
+    f: schémaFonctionSuivi<number | undefined>
+  ): Promise<schémaFonctionOublier> {
+    f(undefined);
+    return faisRien;
+  }
+
+  async suivreScoreValideBd(
+    id: string,
+    f: schémaFonctionSuivi<number | undefined>
+  ): Promise<schémaFonctionOublier> {
+    f(undefined);
+    return faisRien;
+  }
+
   async suivreScoreBd(
     id: string,
     f: schémaFonctionSuivi<infoScore>
   ): Promise<schémaFonctionOublier> {
-    return await this.client.suivreBd(id, () => {
-      const accès = Math.floor(Math.random() * 100);
-      const couv = Math.floor(Math.random() * 100);
-      const passe = Math.floor(Math.random() * 100);
-      f({
-        total: Math.floor((accès + couv + passe) / 3),
-        accès: accès,
-        couverture: couv,
-        passe: passe,
-      });
+    const info: { accès?: number; couverture?: number; valide?: number } = {};
+
+    const fFinale = () => {
+      const { accès, couverture, valide } = info;
+      const score: infoScore = {
+        total: Math.floor(
+          ((accès || 0) + (couverture || 0) + (valide || 0)) / 3
+        ),
+        accès,
+        couverture,
+        valide,
+      };
+      f(score);
+    };
+
+    const oublierAccès = await this.suivreScoreAccèsBd(id, (accès) => {
+      info.accès = accès;
+      fFinale();
     });
+    const oublierCouverture = await this.suivreScoreCouvertureBd(
+      id,
+      (couverture) => {
+        info.couverture = couverture;
+        fFinale();
+      }
+    );
+    const oublierValide = await this.suivreScoreValideBd(id, (valide) => {
+      info.valide = valide;
+      fFinale();
+    });
+    return () => {
+      oublierAccès();
+      oublierCouverture();
+      oublierValide();
+    };
   }
 
   async suivreVariablesBd(

@@ -90,7 +90,9 @@ export default class Variables {
     const catégorie = await bdBase.get("catégorie");
 
     const idNouvelleBd = await this.créerVariable(catégorie);
-    const bdNouvelle = await this.client.ouvrirBd(idNouvelleBd) as KeyValueStore;
+    const bdNouvelle = (await this.client.ouvrirBd(
+      idNouvelleBd
+    )) as KeyValueStore;
 
     const idBdNoms = await bdBase.get("noms");
     const bdNoms = (await this.client.ouvrirBd(idBdNoms)) as KeyValueStore;
@@ -106,8 +108,8 @@ export default class Variables {
     };
     await this.ajouterDescriptionsVariable(idNouvelleBd, descriptions);
 
-    const unités = await bdBase.get("unités")
-    if (unités) await bdNouvelle.put("unités", unités)
+    const unités = await bdBase.get("unités");
+    if (unités) await bdNouvelle.put("unités", unités);
 
     const idBdRègles = await bdBase.get("règles");
     const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
@@ -239,29 +241,39 @@ export default class Variables {
     await bdVariable.set("unités", idUnité);
   }
 
-  async ajouterRègleVariable(idVariable: string, règle: règleVariable): Promise<string> {
+  async ajouterRègleVariable(
+    idVariable: string,
+    règle: règleVariable
+  ): Promise<string> {
     const idBdRègles = await this.client.obtIdBd("règles", idVariable, "feed");
-    if (!idBdRègles) throw `Permission de modification refusée pour variable ${idVariable}.`;
+    if (!idBdRègles)
+      throw `Permission de modification refusée pour variable ${idVariable}.`;
 
     const id = uuidv4();
     const règleAvecId: règleVariableAvecId = {
-      id, règle
+      id,
+      règle,
     }
-
     const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
     await bdRègles.add(règleAvecId);
-    return id
+    return id;
   }
 
-  async effacerRègleVariable(idVariable: string, idRègle: string): Promise<void> {
+  async effacerRègleVariable(
+    idVariable: string,
+    idRègle: string
+  ): Promise<void> {
     const idBdRègles = await this.client.obtIdBd("règles", idVariable, "feed");
-    if (!idBdRègles) throw `Permission de modification refusée pour variable ${idVariable}.`;
+    if (!idBdRègles)
+      throw `Permission de modification refusée pour variable ${idVariable}.`;
     const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
 
-    const entrées = ClientConstellation.obtÉlémentsDeBdListe<règleVariableAvecId>(bdRègles, false);
-    const entrée = entrées.find(
-      e => e.payload.value.id === idRègle
-    );
+    const entrées =
+      ClientConstellation.obtÉlémentsDeBdListe<règleVariableAvecId>(
+        bdRègles,
+        false
+      );
+    const entrée = entrées.find((e) => e.payload.value.id === idRègle);
     if (entrée) await bdRègles.remove(entrée.hash);
   }
 
@@ -303,7 +315,10 @@ export default class Variables {
     id: string,
     f: schémaFonctionSuivi<règleVariableAvecId[]>
   ): Promise<schémaFonctionOublier> {
-    const règles: { catégorie: règleVariableAvecId[]; propres: règleVariableAvecId[] } = {
+    const règles: {
+      catégorie: règleVariableAvecId[];
+      propres: règleVariableAvecId[];
+    } = {
       catégorie: [],
       propres: [],
     };
@@ -317,7 +332,7 @@ export default class Variables {
         règle: {
           typeRègle: "catégorie",
           détails: { catégorie },
-      }
+        },
       };
       règles.catégorie = [règleCat];
       fFinale();
@@ -331,11 +346,12 @@ export default class Variables {
       règles.propres = rgls;
       fFinale();
     };
-    const fOublierRèglesPropres = await this.client.suivreBdListeDeClef<règleVariableAvecId>(
-      id,
-      "règles",
-      fSuivreRèglesPropres
-    );
+    const fOublierRèglesPropres =
+      await this.client.suivreBdListeDeClef<règleVariableAvecId>(
+        id,
+        "règles",
+        fSuivreRèglesPropres
+      );
 
     const fOublier = () => {
       fOublierCatégorie();

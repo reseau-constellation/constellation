@@ -48,9 +48,9 @@ const routes: Array<RouteConfig> = [
     component: () => import("@/views/Favoris.vue"),
   },
   {
-    path: "/automation",
-    name: "Automation",
-    component: () => import("@/views/Automation.vue"),
+    path: "/automatisation",
+    name: "Automatisation",
+    component: () => import("@/views/Automatisation.vue"),
   },
   {
     path: "/signalements",

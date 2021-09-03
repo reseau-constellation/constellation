@@ -75,7 +75,7 @@
               class="mx-2"
               outlined
               text
-              @click="nouvelleLigne === true"
+              @click="nouvelleLigne = true"
             >
               <v-icon left>mdi-table-row-plus-after</v-icon>
               Ajouter une rangée
@@ -214,7 +214,7 @@ import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
 import { InfoColAvecCatégorie } from "@/ipa/tableaux";
-import { règleVariable, élémentDonnées } from "@/ipa/valid";
+import { règleVariable, élémentDonnées, élémentBdListeDonnées } from "@/ipa/valid";
 import { élémentsBd } from "@/ipa/client";
 
 type typeEntête = {
@@ -270,14 +270,16 @@ export default mixins(mixinIPA, mixinLangues).extend({
       }
       return entêtes;
     },
-    éléments: function (): élémentDonnées[] {
+    éléments: function (): élémentBdListeDonnées[] {
       const données = (this.données || []).sort((x, y) =>
         x.empreinte > y.empreinte ? 1 : -1
-      );
+      ).map(d=>{
+        return { ...d.données, empreinte: d.empreinte}
+      });
 
       if (this.nouvelleLigne) {
-        const premièreLigne: élémentDonnées = {
-          données: { ...this.valsNouvelleLigne },
+        const premièreLigne: élémentBdListeDonnées = {
+          ...this.valsNouvelleLigne,
           empreinte: "-1",
         };
         return [premièreLigne, ...données];
@@ -298,16 +300,17 @@ export default mixins(mixinIPA, mixinLangues).extend({
         this.idTableau,
         idVariable
       );
-      if (règles.length) {
+      for (const règle of règles) {
         await this.$ipa.tableaux!.ajouterRègleTableau(
           this.idTableau,
           idColonne,
-          règles
+          règle
         );
       }
     },
 
     valÉditée: function (empreinte: string, variable: string, val: élémentsBd) {
+      console.log("valÉditée", {empreinte, variable, val})
       if (empreinte === "-1") {
         this.valsNouvelleLigne = Object.assign({}, this.valsNouvelleLigne, {
           [variable]: val,
@@ -345,6 +348,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
           this.colonnes = cols;
         }
       );
+
       const oublierDonnées = await this.$ipa.tableaux!.suivreDonnées(
         this.idTableau,
         (données) => {

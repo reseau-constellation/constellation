@@ -26,12 +26,12 @@
       "titres": {
         "accès": "Accessibilité",
         "couverture": "Couverture tests",
-        "passe": "Qualité données"
+        "valide": "Qualité données"
       },
       "sousTitres": {
         "accès": "Cette section mesure l'accessibilité de votre base de données. Le plus elle est disponible dans les langues parlées là d'où proviennent vous données, le plus fort votre score.",
         "couverture": "Cette section mesure le pourcentage de vos colonnes qui sont couvertes par des tests de contrôle de la qualité. Vous pouvez ajouter ou modifier les tests ci-dessous.",
-        "passe": "Cette section mesure le pourcentage des données qui passent les tests de contrôle de la qualité. Vous pouvez voir ci-dessous les données problématiques, s'il y en a."
+        "valide": "Cette section mesure le pourcentage des données qui passent les tests de contrôle de la qualité. Vous pouvez voir ci-dessous les données problématiques, s'il y en a."
       }
     },
     "nav": {
@@ -40,7 +40,7 @@
       "bd": "Mes bases de données",
       "recherche": "Explorer",
       "favoris": "Mes favoris",
-      "automation": "Automation",
+      "automatisation": "Automatisation",
       "signalements": "Signaler un problème"
     },
     "acceuil": {
@@ -119,8 +119,8 @@
     "favoris": {
       "entête": "Mes favoris"
     },
-    "automation": {
-      "entête": "Automation",
+    "automatisation": {
+      "entête": "Automatisation",
       "soustitre": "Automatisez la mise à jour de vos bases de données"
     },
     "signalements": {
@@ -410,7 +410,7 @@
       "bd": "என் தரவுத்தளங்கள்",
       "recherche": "ஆராயுங்கள்",
       "favoris": "எனக்கு பிடித்தவை",
-      "automation": "தானியங்கல்",
+      "automatisation": "தானியங்கல்",
       "signalements": "சிக்கலைப் புகாரளிக்க"
     },
     "acceuil": {
@@ -521,7 +521,7 @@
       "bd": "Meine Datenbanken",
       "recherche": "Entdecken",
       "favoris": "Meine Favoriten",
-      "automation": "Automatisierung",
+      "automatisation": "Automatisierung",
       "signalements": "Problem melden"
     },
     "acceuil": {
@@ -599,7 +599,7 @@
     "favoris": {
       "entête": "Meine Favorieten"
     },
-    "automation": {
+    "automatisation": {
       "entête": "Automatisierung",
       "soustitre": "Automatisieren Sie die Aktualisierung Ihrer Datenbanken"
     },
