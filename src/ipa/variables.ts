@@ -253,7 +253,7 @@ export default class Variables {
     const règleAvecId: règleVariableAvecId = {
       id,
       règle,
-    }
+    };
     const bdRègles = (await this.client.ouvrirBd(idBdRègles)) as FeedStore;
     await bdRègles.add(règleAvecId);
     return id;

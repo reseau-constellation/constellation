@@ -8,7 +8,8 @@
       "annuler": "Annuler",
       "sauvegarder": "Sauvegarder",
       "confirmer": "Confirmer",
-      "retour": "Retour"
+      "retour": "Retour",
+      "télécharger": "Télécharger"
     },
     "alerteConditions": {
       "texte": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
@@ -19,6 +20,10 @@
       "sousTitre": "Spécifiez autant que langues que vous voudrez.",
       "étiquetteLangue": "Langue",
       "étiquetteNom": "Nom"
+    },
+    "exporter": {
+      "titre": "Exporter une copie des données",
+      "formatFichier": "Format du fichier"
     },
     "qualité": {
       "titre": "Composition du score",

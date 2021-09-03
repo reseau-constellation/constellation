@@ -2,6 +2,8 @@ import { FeedStore, KeyValueStore } from "orbit-db";
 import Semaphore from "@chriscdn/promise-semaphore";
 import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
 
+import XLSX from "xlsx";
+
 import { schémaBd } from "@/ipa/réseau";
 
 import ClientConstellation, {
@@ -9,6 +11,7 @@ import ClientConstellation, {
   schémaFonctionOublier,
   élémentBdListe,
   infoAccès,
+  uneFois,
   faisRien,
 } from "./client";
 import ContrôleurConstellation, {
@@ -644,6 +647,23 @@ export default class BDs {
       fFinale,
       fSuivreTableaux
     );
+  }
+
+  async exporterDonnées(
+    id: string,
+    langues?: string[]
+  ): Promise<XLSX.WorkBook> {
+    const doc = XLSX.utils.book_new();
+
+    const idsTableaux = await uneFois((f: schémaFonctionSuivi<string[]>) =>
+      this.suivreTableauxBd(id, f)
+    );
+
+    for (const idTableau of idsTableaux) {
+      await this.client.tableaux!.exporterDonnées(idTableau, langues, doc);
+    }
+
+    return doc;
   }
 
   async effacerBd(id: string): Promise<void> {

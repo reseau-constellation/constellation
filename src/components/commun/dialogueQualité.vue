@@ -13,7 +13,9 @@
           :size="25"
           :indeterminate="!score"
           :value="scoreTitre ? scoreTitre : 0"
-          :color="scoreTitre ? couleurScore(scoreTitre).couleur : 'primary'"
+          :color="
+            scoreTitre ? couleurScore(scoreTitre).couleur : 'grey lighten-2'
+          "
         />
         {{ $t(titre) }}
         <v-spacer />

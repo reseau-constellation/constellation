@@ -214,7 +214,11 @@ import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
 import { InfoColAvecCatégorie } from "@/ipa/tableaux";
-import { règleVariable, élémentDonnées, élémentBdListeDonnées } from "@/ipa/valid";
+import {
+  règleVariable,
+  élémentDonnées,
+  élémentBdListeDonnées,
+} from "@/ipa/valid";
 import { élémentsBd } from "@/ipa/client";
 
 type typeEntête = {
@@ -271,11 +275,11 @@ export default mixins(mixinIPA, mixinLangues).extend({
       return entêtes;
     },
     éléments: function (): élémentBdListeDonnées[] {
-      const données = (this.données || []).sort((x, y) =>
-        x.empreinte > y.empreinte ? 1 : -1
-      ).map(d=>{
-        return { ...d.données, empreinte: d.empreinte}
-      });
+      const données = (this.données || [])
+        .sort((x, y) => (x.empreinte > y.empreinte ? 1 : -1))
+        .map((d) => {
+          return { ...d.données, empreinte: d.empreinte };
+        });
 
       if (this.nouvelleLigne) {
         const premièreLigne: élémentBdListeDonnées = {
@@ -310,7 +314,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
 
     valÉditée: function (empreinte: string, variable: string, val: élémentsBd) {
-      console.log("valÉditée", {empreinte, variable, val})
+      console.log("valÉditée", { empreinte, variable, val });
       if (empreinte === "-1") {
         this.valsNouvelleLigne = Object.assign({}, this.valsNouvelleLigne, {
           [variable]: val,

@@ -63,10 +63,13 @@ export default mixins(mixinLangues).extend({
     },
     règles: function () {
       return {
-        numérique:
-          (val: string) => {
-            return val !== undefined ? (!this.valNumérique(val) ? "Val erronée" : true) : false
-          },
+        numérique: (val: string) => {
+          return val !== undefined
+            ? !this.valNumérique(val)
+              ? "Val erronée"
+              : true
+            : false;
+        },
       };
     },
   },
@@ -81,14 +84,14 @@ export default mixins(mixinLangues).extend({
       }
     },
     valNumérique: function (val: string) {
-      console.log(1, typeof val)
+      console.log(1, typeof val);
       if (!val || !val.length) return;
       //@ts-ignore
-      console.log(2, "ici", !isNaN(val), !isNaN(parseFloat(val)))
+      console.log(2, "ici", !isNaN(val), !isNaN(parseFloat(val)));
       // De https://stackoverflow.com/questions/175739/built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number
       //@ts-ignore
       if (!isNaN(val) && !isNaN(parseFloat(val))) {
-        console.log(3, val, Number(val))
+        console.log(3, val, Number(val));
         return Number(val);
       } else {
         const convertie = this.texteÀChiffre(val, this.systèmeNumération);

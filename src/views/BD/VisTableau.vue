@@ -48,7 +48,13 @@
         <lien-orbite :lien="idBd" />
 
         <v-spacer />
-        <lienTélécharger :lien="idBd" />
+        <dialogue-exporter :id="idTableau" type="tableau">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-bind="attrs" v-on="on" icon>
+              <v-icon>mdi-download</v-icon>
+            </v-btn>
+          </template>
+        </dialogue-exporter>
       </v-card-title>
       <v-divider />
 
@@ -68,7 +74,7 @@ import tableau from "@/components/tableaux/tableau.vue";
 
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
-import lienTélécharger from "@/components/commun/lienTélécharger.vue";
+import dialogueExporter from "@/components/commun/dialogueExporter.vue";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
@@ -77,7 +83,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   name: "visTableau",
   components: {
     lienOrbite,
-    lienTélécharger,
+    dialogueExporter,
     boîteNoms,
     tableau,
   },

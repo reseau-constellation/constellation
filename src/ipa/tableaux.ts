@@ -1,4 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
+import XLSX from "xlsx";
+
 import {
   FeedStore,
   KeyValueStore,
@@ -10,6 +12,7 @@ import ClientConstellation, {
   schémaFonctionOublier,
   élémentsBd,
   élémentBdListe,
+  uneFois,
   faisRien,
 } from "./client";
 import ContrôleurConstellation from "./accès/contrôleurConstellation";
@@ -23,6 +26,8 @@ import {
   élémentDonnées,
   élémentBdListeDonnées,
 } from "./valid";
+import { catégorieVariables } from "./variables";
+import { traduire } from "./utils";
 
 export type InfoCol = {
   id: string;
@@ -30,7 +35,7 @@ export type InfoCol = {
 };
 
 export type InfoColAvecCatégorie = InfoCol & {
-  catégorie: string;
+  catégorie: catégorieVariables;
 };
 
 export function élémentsÉgaux(
@@ -173,6 +178,110 @@ export default class Tableaux {
       oublierDonnées();
       oublierColonnes();
     };
+  }
+
+  async exporterDonnées(
+    idTableau: string,
+    langues?: string[],
+    doc?: XLSX.WorkBook
+  ): Promise<XLSX.WorkBook> {
+    /* Créer le document si nécessaire */
+    doc = doc || XLSX.utils.book_new();
+
+    let nomTableau: string;
+    if (langues) {
+      const noms = await uneFois(
+        (f: schémaFonctionSuivi<{ [key: string]: string }>) =>
+          this.suivreNomsTableau(idTableau, f)
+      );
+
+      nomTableau = traduire(noms, langues) || idTableau;
+    } else {
+      nomTableau = idTableau;
+    }
+
+    const colonnes = await uneFois(
+      (f: schémaFonctionSuivi<InfoColAvecCatégorie[]>) =>
+        this.suivreColonnes(idTableau, f)
+    );
+
+    const données = await uneFois(
+      (f: schémaFonctionSuivi<élémentDonnées<élémentBdListeDonnées>[]>) =>
+        this.suivreDonnées(idTableau, f)
+    );
+
+    const formaterÉlément = (
+      é: élémentBdListeDonnées
+    ): élémentBdListeDonnées => {
+      const élémentFinal: élémentBdListeDonnées = {};
+
+      for (const col of Object.keys(é)) {
+        const colonne = colonnes.find((c) => c.id === col);
+        if (!colonne) continue;
+
+        const { variable, catégorie } = colonne;
+
+        let val: string | number;
+        switch (typeof é[col]) {
+          case "object":
+            if (["audio", "photo", "vidéo", "fichier"].includes(catégorie)) {
+              const { cid, ext } = é[col] as {cid: string, ext: string};
+              if (!cid||!ext) continue
+              val = `${cid}.${ext}`;
+            } else {
+              val = JSON.stringify(é[col]);
+            }
+
+            break;
+          case "boolean":
+            val = (é[col] as boolean).toString();
+            break;
+          case "number":
+            val = é[col] as number;
+            break;
+          case "string":
+            val = é[col] as string;
+            break;
+          default:
+            continue;
+        }
+        if (val !== undefined) élémentFinal[langues ? variable : col] = val;
+      }
+
+      return élémentFinal;
+    };
+
+    let donnéesPourXLSX = données.map((d) => formaterÉlément(d.données));
+
+    if (langues) {
+      const variables = await uneFois((f: schémaFonctionSuivi<string[]>) =>
+        this.suivreVariables(idTableau, f)
+      );
+      const nomsVariables: { [key: string]: string } = {};
+      for (const idVar of variables) {
+        const nomsDisponibles = await uneFois(
+          (f: schémaFonctionSuivi<{ [key: string]: string }>) =>
+            this.client.variables!.suivreNomsVariable(idVar, f)
+        );
+        nomsVariables[idVar] = traduire(nomsDisponibles, langues) || idVar;
+      }
+      donnéesPourXLSX = donnéesPourXLSX.map((d) =>
+        Object.keys(d).reduce((acc: élémentBdListeDonnées, elem: string) => {
+          const nomVar = nomsVariables[elem];
+          acc[nomVar] = d[elem];
+          return acc;
+        }, {})
+      );
+    }
+    console.log({ donnéesPourXLSX });
+
+    /* créer le tableau */
+    const tableau = XLSX.utils.json_to_sheet(donnéesPourXLSX);
+
+    /* Ajouter la feuille au document */
+    XLSX.utils.book_append_sheet(doc, tableau, nomTableau);
+
+    return doc;
   }
 
   async ajouterÉlément(
@@ -378,7 +487,7 @@ export default class Tableaux {
 
       return await this.client.variables!.suivreCatégorieVariable(
         id,
-        async (catégorie: string) => {
+        async (catégorie) => {
           const col = Object.assign({ catégorie }, branche!);
           fSuivi(col);
         }

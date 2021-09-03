@@ -19,25 +19,41 @@
     <v-divider />
     <v-card-subtitle>{{ détails }}</v-card-subtitle>
     <v-card-text>
-      <v-chip outlined label small class="me-1 my-1" @click.stop>
-        <v-progress-circular
-          :rotate="score ? 270 : undefined"
-          :value="score && score.total ? score.total : 0"
-          :indeterminate="!score"
-          :color="score ? couleurScore(score.total).couleur : ''"
-          :size="15"
-          :width="3"
-        />
-        <span class="ms-2">
-          Qualité :
-          <span
-            :style="`color:${couleurScore(score ? score.total : null).couleur}`"
-            class="font-weight-bold"
+      <dialogueQualité :score="score" :permissionModifier="permissionÉcrire">
+        <template v-slot:activator="{ on, attrs }">
+          <v-chip
+            outlined
+            label
+            small
+            class="me-1 my-1"
+            v-bind="attrs"
+            v-on="on"
           >
-            {{ score ? couleurScore(score.total).note : "?" }}
-          </span>
-        </span>
-      </v-chip>
+            <v-progress-circular
+              :rotate="score ? 270 : undefined"
+              :value="score && score.total ? score.total : 0"
+              :indeterminate="!score"
+              :color="
+                score ? couleurScore(score.total).couleur : 'grey lighten-2'
+              "
+              :size="15"
+              :width="3"
+            />
+            <span class="ms-2">
+              Qualité :
+              <span
+                :style="`color:${
+                  couleurScore(score ? score.total : null).couleur
+                }`"
+                class="font-weight-bold"
+              >
+                {{ score ? couleurScore(score.total).note : "?" }}
+              </span>
+            </span>
+          </v-chip>
+        </template>
+      </dialogueQualité>
+
       <dialogue-licence
         :idLicence="licence"
         :permissionModifier="permissionÉcrire"
@@ -100,13 +116,14 @@ import { traduireNom, couper, couleurScore } from "@/utils";
 
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
+import dialogueQualité from "@/components/commun/dialogueQualité.vue";
 import mixinIPA from "@/mixins/ipa";
 import mixinLicences from "@/mixins/licences";
 
 export default mixins(mixinIPA, mixinLicences).extend({
   name: "carteBD",
   props: ["bd"],
-  components: { lienOrbite, dialogueLicence },
+  components: { lienOrbite, dialogueLicence, dialogueQualité },
   mixins: [mixinIPA, mixinLicences],
   data: function () {
     return {

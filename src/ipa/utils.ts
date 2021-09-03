@@ -29,3 +29,12 @@ export function CIDvalid(cid: unknown): boolean {
   }
   return false;
 }
+
+export function traduire(
+  trads: { [key: string]: string },
+  langues: string[]
+): string | undefined {
+  const langueTrouvée = langues.find((l) => trads[l] !== undefined);
+  const trad = langueTrouvée ? trads[langueTrouvée] : undefined;
+  return trad;
+}

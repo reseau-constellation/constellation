@@ -51,7 +51,13 @@
         </span>
         <v-spacer />
         <span>
-          <lienTélécharger :lien="idBd" />
+          <dialogue-exporter :id="idBd" type="bd">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-bind="attrs" v-on="on" icon>
+                <v-icon>mdi-download</v-icon>
+              </v-btn>
+            </template>
+          </dialogue-exporter>
         </span>
 
         <v-dialog
@@ -381,6 +387,7 @@ import { infoRéplication } from "@/ipa/réseau";
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 
 import dialogueQualité from "@/components/commun/dialogueQualité.vue";
+import dialogueExporter from "@/components/commun/dialogueExporter.vue";
 import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
 import dialogueMotsClefs from "@/components/commun/motsClefs/dialogueMotsClefs.vue";
 import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications.vue";
@@ -388,7 +395,6 @@ import dialogueAuteurs from "@/components/BD/auteurs/dialogueAuteurs.vue";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import itemTableau from "@/components/BD/itemTableau.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
-import lienTélécharger from "@/components/commun/lienTélécharger.vue";
 import jetonVariable from "@/components/commun/jetonVariable.vue";
 import jetonMotClef from "@/components/commun/motsClefs/jetonMotClef.vue";
 
@@ -403,10 +409,10 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
     components: {
       itemTableau,
       lienOrbite,
-      lienTélécharger,
       jetonVariable,
       jetonMotClef,
       dialogueQualité,
+      dialogueExporter,
       dialogueLicence,
       dialogueAuteurs,
       dialogueMotsClefs,

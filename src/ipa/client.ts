@@ -134,7 +134,7 @@ class ÉmetteurUneFois<T> extends EventEmitter {
   }
 }
 
-const uneFois = async function <T>(
+export const uneFois = async function <T>(
   f: (fSuivi: schémaFonctionSuivi<T>) => Promise<schémaFonctionOublier>
 ): Promise<T> {
   const test = new ÉmetteurUneFois(f);
