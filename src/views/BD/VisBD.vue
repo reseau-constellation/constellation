@@ -361,7 +361,7 @@
               v-for="t in tableaux"
               :key="t"
               :id="t"
-              :idBD="idBd"
+              :idBd="idBd"
               @click="
                 $router.push(
                   `/bd/visualiser/${encodeURIComponent(
@@ -482,7 +482,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       couleurScore,
       ouvrirLien,
       ajouterTableau: async function (): Promise<void> {
-        await this.$ipa.bds!.ajouterTableauBD(this.idBd);
+        await this.$ipa.bds!.ajouterTableauBd(this.idBd);
       },
       ajouterMotClef: async function (idMotClef: string): Promise<void> {
         await this.$ipa.bds!.ajouterMotsClefsBd(this.idBd, idMotClef);

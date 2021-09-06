@@ -13,7 +13,7 @@ import { entréeBDAccès, objRôles } from "./types";
 
 import ContrôleurConstellation from "./contrôleurConstellation";
 
-const événementsSuiviBd = ["ready", "write", "replicate", "replicated"];
+const événementsSuiviBd = ["ready", "write", "replicated"];
 
 export const suivreBdAccès = async (
   bd: FeedStore,

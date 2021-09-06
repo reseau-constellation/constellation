@@ -32,7 +32,7 @@
         />
       </v-list>
       <v-divider />
-      <dialogue-traductions-interface v-if="false">
+      <dialogue-traductions-interface>
         <template v-slot:activator="{ on, attrs }">
           <v-list-item v-bind="attrs" v-on="on">
             <v-list-item-icon>

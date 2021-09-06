@@ -7,7 +7,7 @@ export const ID_VAR_LANGUE_SOURCE =
 export const ID_VAR_LANGUE_CIBLE =
   "/orbitdb/zdpuAsV9tm4QSa5nrcmzFGHjfuv1hGmfC9PTPTHFnWRTajNcs/3d0616b1-99f5-4041-95c1-94b30cd0472b";
 export const ID_VAR_TEXTE_ORIGINAL =
-  "/orbitdb/zdpuAshZMdYeDD7PfJzjGrfwfCSFSJdTAVh72sFByYUuUoFbh/a6b7359e-3661-46af-965b-06023ed39d15";
+  "/orbitdb/zdpuAr8AqnQhqWsATnZTThsCK41wNLtRheXHqR81jSS8q9Dck/bfea0d03-5ee2-4e4c-8ad9-21a783012f7e";
 export const ID_VAR_TRADUCTION =
   "/orbitdb/zdpuB2aXkMVoPxyG9xpfDdCUhJpD8jWHe49BjY3JmddVAHXQ7/ac313db8-f5c0-4d57-ba5b-e4d6fe119b6d";
 export const ID_VAR_DATE =

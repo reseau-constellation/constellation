@@ -45,8 +45,6 @@ export default class BDs {
   constructor(client: ClientConstellation, id: string) {
     this.client = client;
     this.idBd = id;
-
-    this.migrerBds();
   }
 
   async suivreBds(
@@ -107,10 +105,10 @@ export default class BDs {
     await bdRacine.add(id);
   }
 
-  async copierBd(id: string): Promise<string> {
+  async copierBd(id: string, ajouter = true): Promise<string> {
     const bdBase = (await this.client.ouvrirBd(id)) as KeyValueStore;
     const licence = await bdBase.get("licence");
-    const idNouvelleBd = await this.créerBd(licence);
+    const idNouvelleBd = await this.créerBd(licence, ajouter);
     const nouvelleBd = (await this.client.ouvrirBd(
       idNouvelleBd
     )) as KeyValueStore;
@@ -157,34 +155,6 @@ export default class BDs {
     return idNouvelleBd;
   }
 
-  async migrerBds(): Promise<void> {
-    // Fonction pour migrer les BDs qui n'ont pas le bon contrôleur d'accès
-    const migrerBdSiNécessaire = async (id: string): Promise<string> => {
-      const bd = await this.client.ouvrirBd(id);
-      bd.access.type;
-      const accès = (bd.access.constructor as unknown as AccessController).type;
-      if (accès !== nomTypeContrôleurConstellation) {
-        const idNouvelleBd = await this.copierBd(id);
-        await this.marquerObsolète(id, idNouvelleBd);
-        return idNouvelleBd;
-      }
-      return id;
-    };
-
-    const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
-    const bdsExistantes = ClientConstellation.obtÉlémentsDeBdListe(
-      bdRacine
-    ) as string[];
-
-    // Migrer les BDs si nécessaire
-    bdsExistantes.forEach(async (idBd: string) => {
-      const idNouvelle = await migrerBdSiNécessaire(idBd);
-      if (idBd !== idNouvelle) {
-        await bdRacine.add(idNouvelle);
-      }
-    });
-  }
-
   async rechercherBdsParMotsClefs(
     motsClefs: string[],
     f: schémaFonctionSuivi<string[]>,
@@ -211,28 +181,30 @@ export default class BDs {
 
   async suivreTableauBdDeSchéma(
     schéma: schémaBd,
+    motClef: string,
     iTableau: number,
     licence: string,
     f: schémaFonctionSuivi<string>
   ): Promise<schémaFonctionOublier> {
     let infoBd: { idBd: string; fOublier: schémaFonctionOublier };
-    const { motsClefs, tableaux } = schéma;
-    if (!motsClefs || !motsClefs.tous)
-      throw new Error("Mots clefs nécessaires");
 
-    const idVerrou = schéma.toString();
+    const idVerrou = motClef;
 
     const fFinale = async (bds: string[]) => {
+
       await verrouDécouverteBd.acquire(idVerrou);
+      console.log({bds})
 
-      console.log("ici", { bds });
       if (bds.length === 0) {
+        console.log(0)
         const idBd = await this.créerBd(licence, false);
-        await this.ajouterMotsClefsBd(idBd, motsClefs.tous!);
-
+        const { motsClefs, tableaux } = schéma;
+        console.log(1)
+        await this.ajouterMotsClefsBd(idBd, [...new Set([...motsClefs || [], motClef])]);
+        console.log(2)
         await Promise.all(
           tableaux.map(async (tbl, i) => {
-            const idTableau = await this.ajouterTableauBD(idBd);
+            const idTableau = await this.ajouterTableauBd(idBd);
             await Promise.all(
               tbl.vars.map(async (idVar) => {
                 await this.client.tableaux!.ajouterColonneTableau(
@@ -244,25 +216,33 @@ export default class BDs {
             if (i === iTableau) f(idTableau);
           })
         );
+        console.log(5)
         await this.ajouterÀMesBds(idBd);
-      } else if (bds.length === 1) {
-        const idBd = bds[0];
-        const fOublierBd = await this.suivreTableauxBd(
-          idBd,
-          (tblx: string[]) => {
-            const idTableau = tblx[iTableau];
-            f(idTableau);
-          }
-        );
-        infoBd = { idBd, fOublier: fOublierBd };
-      } else {
-        throw new Error("Pas implémenté");
-      }
 
+      } else {
+        const idBd = bds[0];
+        if (!infoBd || (idBd !== infoBd.idBd)) {
+          if (infoBd) infoBd.fOublier();
+
+          const fOublierBd = await this.suivreTableauxBd(
+            idBd,
+            (tblx: string[]) => {
+              const idTableau = tblx[iTableau];
+              f(idTableau);
+            }
+          );
+          infoBd = { idBd, fOublier: fOublierBd };
+        }
+        for (const bd of bds.slice(1)) {
+          console.log("on efface", bd)
+          await this.effacerBd(bd);
+        }
+      }
+      console.log("relâcher")
       verrouDécouverteBd.release(idVerrou);
     };
     const fOublierRechercheBds = await this.rechercherBdsParMotsClefs(
-      motsClefs.tous,
+      [motClef],
       fFinale
     );
     const fOublier = () => {
@@ -398,11 +378,11 @@ export default class BDs {
     const bdMotsClefs = (await this.client.ouvrirBd(
       idBdMotsClefs
     )) as FeedStore;
-    idsMotsClefs.forEach(async (id: string) => {
+    await Promise.all(idsMotsClefs.map(async (id: string) => {
       const motsClefsExistants =
         ClientConstellation.obtÉlémentsDeBdListe<string>(bdMotsClefs);
       if (!motsClefsExistants.includes(id)) await bdMotsClefs.add(id);
-    });
+    }));
   }
 
   async effacerMotClefBd(idBd: string, idMotClef: string): Promise<void> {
@@ -430,7 +410,7 @@ export default class BDs {
     if (entrée) await bdMotsClefs.remove(entrée.hash);
   }
 
-  async ajouterTableauBD(id: string): Promise<string> {
+  async ajouterTableauBd(id: string): Promise<string> {
     const optionsAccès = await this.client.obtOpsAccès(id);
     const idBdTableaux = await this.client.obtIdBd(
       "tableaux",
@@ -447,7 +427,7 @@ export default class BDs {
     return idTableau;
   }
 
-  async effacerTableauBD(id: string, idTableau: string): Promise<void> {
+  async effacerTableauBd(id: string, idTableau: string): Promise<void> {
     const optionsAccès = await this.client.obtOpsAccès(id);
     // D'abord effacer l'entrée dans notre liste de tableaux
     const idBdTableaux = await this.client.obtIdBd(
@@ -669,11 +649,12 @@ export default class BDs {
   async effacerBd(id: string): Promise<void> {
     // Dabord effacer l'entrée dans notre liste de BDs
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
-    const entrée = bdRacine
+    const élément = bdRacine
       .iterator({ limit: -1 })
       .collect()
       .find((e: élémentBdListe<string>) => e.payload.value === id);
-    await bdRacine.remove(entrée.hash);
+
+    if (élément) await bdRacine.remove(élément.hash);
 
     // Et puis maintenant aussi effacer les données et la BD elle-même
     const optionsAccès = await this.client.obtOpsAccès(id);

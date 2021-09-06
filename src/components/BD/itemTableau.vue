@@ -84,11 +84,11 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     effacerTableau: async function () {
-      await this.$ipa.bds!.effacerTableauBD(this.idBd, this.idTableau);
+      await this.$ipa.bds!.effacerTableauBd(this.idBd, this.idTableau);
     },
     initialiserSuivi: async function () {
       const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
-        this.idTableau,
+        this.idBd,
         (permission) => (this.permissionÉcrire = permission)
       );
 

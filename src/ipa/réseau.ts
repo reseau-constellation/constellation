@@ -26,10 +26,7 @@ export type infoMembre = {
 };
 
 export interface schémaBd {
-  motsClefs?: {
-    tous?: string[];
-    auMoinsUn?: string[];
-  };
+  motsClefs?: string[];
   tableaux: {
     vars: string[];
   }[];
@@ -614,10 +611,8 @@ export default class Réseau extends EventEmitter {
 
       if (schéma.motsClefs) {
         const fSuivreMotsClefs = (motsClefsBd: string[]) => {
-          const { tous, auMoinsUn } = schéma.motsClefs!;
           const étatMotsClefs =
-            (tous || []).every((m) => motsClefsBd.includes(m)) &&
-            (auMoinsUn || []).some((m) => motsClefsBd.includes(m));
+            (schéma.motsClefs || []).every((m) => motsClefsBd.includes(m))
           dicÉtat.motsClefs = étatMotsClefs;
           fFinale();
         };

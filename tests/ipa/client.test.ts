@@ -786,6 +786,29 @@ Object.keys(testAPIs).forEach((API) => {
         );
         expect(idBdRetrouvée).to.be.undefined;
       });
+
+      it("On ne perd pas les données en cas de concurrence entre dispositifs", async () => {
+        // Créons une nouvelle BD avec des données
+        const NOUVELLE_CLEF = "nouvelle clef";
+        const idNouvelleBd = await client.obtIdBd(NOUVELLE_CLEF, idRacine, "feed");
+        expect(idNouvelleBd).to.exist;
+
+        const bd = await client.ouvrirBd(idNouvelleBd!) as FeedStore;
+        await bd.add("Salut !");
+        await bd.add("வணக்கம்!");
+
+        // Simulons un autre dispositif qui écrit à la même clef de manière concurrente
+        const idBdConcurrente = await client.créerBdIndépendante("feed");
+        const bdConcurrent = await client.ouvrirBd(idBdConcurrente) as FeedStore;
+        await bdConcurrent.add("કેમ છો");
+        await bdRacine.put(NOUVELLE_CLEF, idBdConcurrente);
+
+        // Il ne devrait tout de même pas y avoir perte de données
+        const idBdRetrouvée = await client.obtIdBd(NOUVELLE_CLEF, idRacine, "feed");
+        const bdRetrouvée = await client.ouvrirBd(idBdRetrouvée!) as FeedStore;
+        const éléments = ClientConstellation.obtÉlémentsDeBdListe(bdRetrouvée);
+        expect(éléments).to.include.members(["Salut !", "வணக்கம்!", "કેમ છો"])
+      })
     });
 
     describe("Créer BD indépendante", function () {
@@ -812,6 +835,127 @@ Object.keys(testAPIs).forEach((API) => {
         const autorisé = await peutÉcrire(bd_orbite2, client2.orbite);
         expect(autorisé).to.be.true;
       });
+    });
+
+    describe("Combiner BDs", function () {
+
+      it("Combiner BD dic", async () => {
+        const idBdDic1 = await client.créerBdIndépendante("kvstore");
+        const idBdDic2 = await client.créerBdIndépendante("kvstore");
+
+        const bdDic1 = await client.ouvrirBd(idBdDic1) as KeyValueStore;
+        const bdDic2 = await client.ouvrirBd(idBdDic2) as KeyValueStore;
+
+        await bdDic1.put("clef 1", 1)
+        await bdDic1.put("clef 2", 2)
+        await bdDic2.put("clef 1", -1)
+        await bdDic2.put("clef 3", 3)
+
+        await client.combinerBdsDict(bdDic1, bdDic2);
+        const données = bdDic1.all
+        expect(données).to.deep.equal({"clef 1": 1, "clef 2": 2, "clef 3": 3})
+      });
+
+      it("Combiner BD liste", async () => {
+        const idBdListe1 = await client.créerBdIndépendante("feed");
+        const idBdListe2 = await client.créerBdIndépendante("feed");
+
+        const bdListe1 = await client.ouvrirBd(idBdListe1) as FeedStore;
+        const bdListe2 = await client.ouvrirBd(idBdListe2) as FeedStore;
+
+        await bdListe1.add(1)
+        await bdListe1.add(2)
+        await bdListe2.add(1)
+        await bdListe2.add(3)
+
+        await client.combinerBdsListe(bdListe1, bdListe2);
+        const données = ClientConstellation.obtÉlémentsDeBdListe(bdListe1)
+
+        expect(données).to.be.an("array").with.lengthOf(3);
+        expect(données).to.include.members([1,2,3])
+      });
+
+      it("Combiner BD liste avec indexe", async () => {
+        const idBdListe1 = await client.créerBdIndépendante("feed");
+        const idBdListe2 = await client.créerBdIndépendante("feed");
+
+        const bdListe1 = await client.ouvrirBd(idBdListe1) as FeedStore;
+        const bdListe2 = await client.ouvrirBd(idBdListe2) as FeedStore;
+
+        await bdListe1.add({"temps": 1, "val": 1})
+        await bdListe1.add({"temps": 2, "val": 2})
+        await bdListe2.add({"temps": 1, "val": 2})
+        await bdListe2.add({"temps": 3, "val": 3})
+
+        await client.combinerBdsListe(bdListe1, bdListe2, ["temps"]);
+        const données = ClientConstellation.obtÉlémentsDeBdListe(bdListe1)
+
+        expect(données).to.be.an("array").with.lengthOf(3);
+        expect(données).to.deep.include.members([{"temps": 1, "val": 1}, {"temps": 2, "val": 2}, {"temps": 3, "val": 3}])
+      });
+
+      it("Combiner BD dic récursif", async () => {
+        const idBdDic1 = await client.créerBdIndépendante("kvstore");
+        const idBdDic2 = await client.créerBdIndépendante("kvstore");
+
+        const bdDic1 = await client.ouvrirBd(idBdDic1) as KeyValueStore;
+        const bdDic2 = await client.ouvrirBd(idBdDic2) as KeyValueStore;
+
+        const idBdListe1 = await client.créerBdIndépendante("feed");
+        const idBdListe2 = await client.créerBdIndépendante("feed");
+
+        const bdListe1 = await client.ouvrirBd(idBdListe1) as FeedStore;
+        const bdListe2 = await client.ouvrirBd(idBdListe2) as FeedStore;
+        await bdListe1.add(1);
+        await bdListe2.add(1);
+        await bdListe2.add(2);
+
+        await bdDic1.put("clef", idBdListe1)
+        await bdDic2.put("clef", idBdListe2)
+
+        await client.combinerBdsDict(bdDic1, bdDic2);
+
+        const idBdListeFinale = await bdDic1.get("clef");
+        const bdListeFinale = await client.ouvrirBd(idBdListeFinale) as FeedStore;
+        const données = ClientConstellation.obtÉlémentsDeBdListe(bdListeFinale)
+
+        expect(données).to.be.an("array").with.lengthOf(2);
+        expect(données).to.deep.include.members([1, 2])
+      })
+
+      it("Combiner BD liste récursif", async () => {
+        const idBdListe1 = await client.créerBdIndépendante("feed");
+        const idBdListe2 = await client.créerBdIndépendante("feed");
+
+        const bdListe1 = await client.ouvrirBd(idBdListe1) as FeedStore;
+        const bdListe2 = await client.ouvrirBd(idBdListe2) as FeedStore;
+
+        const idSubBd1 = await client.créerBdIndépendante("feed");
+        const idSubBd2 = await client.créerBdIndépendante("feed");
+
+        const subBd1 = await client.ouvrirBd(idSubBd1) as FeedStore;
+        const subBd2 = await client.ouvrirBd(idSubBd2) as FeedStore;
+        await subBd1.add(1);
+        await subBd2.add(1);
+        await subBd2.add(2);
+
+        type élément = {indexe: number, idBd: string};
+        await bdListe1.add({"indexe": 1, "idBd": idSubBd1})
+        await bdListe2.add({"indexe": 1, "idBd": idSubBd2})
+
+        await client.combinerBdsListe(bdListe1, bdListe2, ["indexe"]);
+
+        const donnéesBdListe: élément[] = ClientConstellation.obtÉlémentsDeBdListe(bdListe1);
+        expect(donnéesBdListe).to.be.an("array").with.lengthOf(1);
+
+        const idBdListeFinale = donnéesBdListe[0]!.idBd
+        const subBdFinale = await client.ouvrirBd(idBdListeFinale) as FeedStore;
+        const données = ClientConstellation.obtÉlémentsDeBdListe(subBdFinale)
+
+        expect(données).to.be.an("array").with.lengthOf(2);
+        expect(données).to.deep.include.members([1, 2])
+      })
+
     });
 
     describe("Effacer BD", function () {

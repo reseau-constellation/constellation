@@ -1,13 +1,8 @@
 import IPFS from "ipfs";
 import { IDResult } from "ipfs-core-types/src/root";
 import { ImportCandidate } from "ipfs-core-types/src/utils";
-
-import { EventEmitter, once } from "events";
-import { v4 as uuidv4 } from "uuid";
-import Semaphore from "@chriscdn/promise-semaphore";
-import initOrbite from "./orbitdb";
-import initSFIP from "./ipfs";
-
+import deepEqual from "deep-equal";
+import uint8ArrayConcat from "uint8arrays/concat";
 import OrbitDB, {
   Store,
   FeedStore,
@@ -16,8 +11,12 @@ import OrbitDB, {
   élémentFeedStore,
 } from "orbit-db";
 import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
-import uint8ArrayConcat from "uint8arrays/concat";
+import { EventEmitter, once } from "events";
+import { v4 as uuidv4 } from "uuid";
+import Semaphore from "@chriscdn/promise-semaphore";
 
+import initOrbite from "./orbitdb";
+import initSFIP from "./ipfs";
 import Compte from "./compte";
 import BDs from "./bds";
 import Tableaux from "./tableaux";
@@ -28,11 +27,11 @@ import Projets from "./projets";
 import MotsClefs from "./motsClefs";
 
 import { itérateurÀFlux, CIDvalid } from "./utils";
+import localStorage from "./stockageLocal";
 import ContrôleurConstellation, {
   OptionsContrôleurConstellation,
   nomType as nomTypeContrôleurConstellation,
 } from "./accès/contrôleurConstellation";
-
 import { objRôles, infoUtilisateur } from "./accès/types";
 import { MEMBRE, MODÉRATEUR, rôles } from "./accès/consts";
 
@@ -395,6 +394,92 @@ export default class ClientConstellation extends EventEmitter {
     données.forEach(async (d) => {
       await nouvelleBdListe.add(d);
     });
+  }
+
+  async combinerBds(
+    idBdBase: string,
+    idBd2: string
+  ): Promise<void> {
+    const bdBase = await this.ouvrirBd(idBdBase);
+    const bd2 = await this.ouvrirBd(idBd2)
+    if (bd2.type !== bdBase.type) throw new Error("Les BDs doivent être du même type");
+
+    switch (bdBase.type) {
+      case "keyvalue":
+        return await this.combinerBdsDict(bdBase as KeyValueStore, bd2 as KeyValueStore);
+
+      case "feed":
+        return await this.combinerBdsListe(bdBase as FeedStore, bd2 as FeedStore);
+
+      default:
+        throw new Error(`Type de BD ${bdBase.type} non supporté.`);
+    }
+  }
+
+  async combinerBdsDict(
+    bdBase: KeyValueStore,
+    bd2: KeyValueStore
+  ): Promise<void> {
+    const contenuBd2 = ClientConstellation.obtObjetdeBdDic(bd2)
+
+    for (const [c, v] of Object.entries(contenuBd2)) {
+      const valBdBase = await bdBase.get(c)
+      if (valBdBase === v) {
+        continue
+      } else if (valBdBase === undefined) {
+        await bdBase.put(c, v)
+      } else if (adresseOrbiteValide(valBdBase) && adresseOrbiteValide(v)) {
+        await this.combinerBds(valBdBase as string, v as string)
+      }
+    }
+  }
+
+  async combinerBdsListe(
+    bdBase: FeedStore,
+    bd2: FeedStore,
+    indexe?: string[]
+  ): Promise<void> {
+    const contenuBdBase = ClientConstellation.obtÉlémentsDeBdListe(bdBase, false);
+    const contenuBd2 = ClientConstellation.obtÉlémentsDeBdListe(bd2, false);
+    type élémentBdObjet = {[key: string]: élémentsBd}
+
+    for (const é of contenuBd2) {
+      const valBd2 = é.payload.value
+
+      if (indexe) {
+        if (typeof valBd2 !== "object") throw new Error();
+        const existant = contenuBdBase.find(
+          (x)=>typeof x.payload.value === "object" && indexe.every(i=>(x as élémentBdListe<élémentBdObjet>).payload.value[i] === (valBd2 as élémentBdObjet)[i]))
+
+        if (!existant) {
+          // Si pas d'existant, ajouter le nouvel élément
+          await bdBase.add(valBd2)
+        } else{
+          const valExistant = existant.payload.value as élémentBdObjet
+
+          // Si existant, combiner et mettre à jour seulement si différents
+          if (!deepEqual(valExistant, valBd2)) {
+            const combiné = Object.assign({}, valExistant)
+            for (const [c, v] of Object.entries(valBd2 as élémentBdObjet)) {
+              if (combiné[c] === undefined) {
+                combiné[c] = v
+              } else if (!deepEqual(combiné[c], v)) {
+                if (adresseOrbiteValide(combiné[c]) && adresseOrbiteValide(v)) {
+                  await this.combinerBds(combiné[c] as string, v as string)
+                }
+              }
+            }
+            await bdBase.remove(existant.hash)
+            await bdBase.add(combiné)
+          }
+        }
+
+      } else {
+        if (!contenuBdBase.some(x=>deepEqual(x.payload.value, valBd2))) {
+          await bdBase.add(valBd2)
+        }
+      }
+    }
   }
 
   async suivreBd<T extends Store>(
@@ -814,7 +899,20 @@ export default class ClientConstellation extends EventEmitter {
     } else {
       bdRacine = racine;
     }
+    const idBdRacine = bdRacine.id;
+
     let idBd = await bdRacine.get(nom);
+
+    const clefLocale = idBdRacine + nom;
+    const idBdPrécédente = localStorage.getItem(clefLocale);
+
+    if (idBd && idBdPrécédente && idBd !== idBdPrécédente) {
+      try {
+        await this.combinerBds(idBd, idBdPrécédente);
+      } catch {
+        // Rien à faire
+      }
+    }
 
     // Nous devons confirmer que la base de données spécifiée était du bon genre
     if (idBd && type) {
@@ -839,6 +937,8 @@ export default class ClientConstellation extends EventEmitter {
         await bdRacine.set(nom, idBd);
       }
     }
+
+    if (idBd) localStorage.setItem(clefLocale, idBd);
     return idBd;
   }
 
