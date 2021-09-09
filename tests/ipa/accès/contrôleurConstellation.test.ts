@@ -7,7 +7,7 @@ import assert from "assert";
 
 import { MEMBRE, MODÉRATEUR } from "@/ipa/accès/consts"; // "../../src/ipa/accès/consts";
 import { enregistrerContrôleurs } from "@/ipa/accès";
-import ContrôleurConstellation from "@/ipa/accès/contrôleurConstellation";
+import ContrôleurConstellation from "@/ipa/accès/cntrlConstellation";
 
 import OrbitDB, { KeyValueStore } from "orbit-db";
 

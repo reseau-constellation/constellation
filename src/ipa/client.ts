@@ -21,7 +21,7 @@ import Compte from "./compte";
 import BDs from "./bds";
 import Tableaux from "./tableaux";
 import Variables from "./variables";
-import Réseau from "./réseau";
+import Réseau from "./reseau";
 import Favoris from "./favoris";
 import Projets from "./projets";
 import MotsClefs from "./motsClefs";
@@ -31,7 +31,7 @@ import localStorage from "./stockageLocal";
 import ContrôleurConstellation, {
   OptionsContrôleurConstellation,
   nomType as nomTypeContrôleurConstellation,
-} from "./accès/contrôleurConstellation";
+} from "./accès/cntrlConstellation";
 import { objRôles, infoUtilisateur } from "./accès/types";
 import { MEMBRE, MODÉRATEUR, rôles } from "./accès/consts";
 
@@ -238,7 +238,7 @@ export default class ClientConstellation extends EventEmitter {
     );
     this.variables = new Variables(this, idBdVariables!);
 
-    const idBdRéseau = await this.obtIdBd("réseau", this.bdRacine, "feed");
+    const idBdRéseau = await this.obtIdBd("reseau", this.bdRacine, "feed");
     this.réseau = new Réseau(this, idBdRéseau!);
     await this.réseau.initialiser();
 
@@ -341,22 +341,6 @@ export default class ClientConstellation extends EventEmitter {
     }
   }
 
-  async suivreAccès(
-    id: string,
-    f: schémaFonctionSuivi<objRôles>
-  ): Promise<schémaFonctionOublier> {
-    const bd = await this.ouvrirBd(id);
-    const accès = bd.access as unknown as ContrôleurConstellation;
-    const fFinale = () => {
-      const autorisés = accès.gestRôles._rôles;
-      f(autorisés);
-    };
-    accès.on("misÀJour", fFinale);
-    return () => {
-      accès.off("misÀJour", fFinale);
-    };
-  }
-
   async suivreIdBdRacine(
     f: schémaFonctionSuivi<string | undefined>
   ): Promise<schémaFonctionOublier> {
@@ -391,25 +375,31 @@ export default class ClientConstellation extends EventEmitter {
     )) as FeedStore;
 
     const données = ClientConstellation.obtÉlémentsDeBdListe(bdListeInit);
-    données.forEach(async (d) => {
-      await nouvelleBdListe.add(d);
-    });
+    await Promise.all(
+      données.map(async (d) => {
+        await nouvelleBdListe.add(d);
+      })
+    );
   }
 
-  async combinerBds(
-    idBdBase: string,
-    idBd2: string
-  ): Promise<void> {
+  async combinerBds(idBdBase: string, idBd2: string): Promise<void> {
     const bdBase = await this.ouvrirBd(idBdBase);
-    const bd2 = await this.ouvrirBd(idBd2)
-    if (bd2.type !== bdBase.type) throw new Error("Les BDs doivent être du même type");
+    const bd2 = await this.ouvrirBd(idBd2);
+    if (bd2.type !== bdBase.type)
+      throw new Error("Les BDs doivent être du même type");
 
     switch (bdBase.type) {
       case "keyvalue":
-        return await this.combinerBdsDict(bdBase as KeyValueStore, bd2 as KeyValueStore);
+        return await this.combinerBdsDict(
+          bdBase as KeyValueStore,
+          bd2 as KeyValueStore
+        );
 
       case "feed":
-        return await this.combinerBdsListe(bdBase as FeedStore, bd2 as FeedStore);
+        return await this.combinerBdsListe(
+          bdBase as FeedStore,
+          bd2 as FeedStore
+        );
 
       default:
         throw new Error(`Type de BD ${bdBase.type} non supporté.`);
@@ -420,16 +410,16 @@ export default class ClientConstellation extends EventEmitter {
     bdBase: KeyValueStore,
     bd2: KeyValueStore
   ): Promise<void> {
-    const contenuBd2 = ClientConstellation.obtObjetdeBdDic(bd2)
+    const contenuBd2 = ClientConstellation.obtObjetdeBdDic(bd2);
 
     for (const [c, v] of Object.entries(contenuBd2)) {
-      const valBdBase = await bdBase.get(c)
+      const valBdBase = await bdBase.get(c);
       if (valBdBase === v) {
-        continue
+        continue;
       } else if (valBdBase === undefined) {
-        await bdBase.put(c, v)
+        await bdBase.put(c, v);
       } else if (adresseOrbiteValide(valBdBase) && adresseOrbiteValide(v)) {
-        await this.combinerBds(valBdBase as string, v as string)
+        await this.combinerBds(valBdBase as string, v as string);
       }
     }
   }
@@ -439,44 +429,53 @@ export default class ClientConstellation extends EventEmitter {
     bd2: FeedStore,
     indexe?: string[]
   ): Promise<void> {
-    const contenuBdBase = ClientConstellation.obtÉlémentsDeBdListe(bdBase, false);
+    const contenuBdBase = ClientConstellation.obtÉlémentsDeBdListe(
+      bdBase,
+      false
+    );
     const contenuBd2 = ClientConstellation.obtÉlémentsDeBdListe(bd2, false);
-    type élémentBdObjet = {[key: string]: élémentsBd}
+    type élémentBdObjet = { [key: string]: élémentsBd };
 
     for (const é of contenuBd2) {
-      const valBd2 = é.payload.value
+      const valBd2 = é.payload.value;
 
       if (indexe) {
         if (typeof valBd2 !== "object") throw new Error();
         const existant = contenuBdBase.find(
-          (x)=>typeof x.payload.value === "object" && indexe.every(i=>(x as élémentBdListe<élémentBdObjet>).payload.value[i] === (valBd2 as élémentBdObjet)[i]))
+          (x) =>
+            typeof x.payload.value === "object" &&
+            indexe.every(
+              (i) =>
+                (x as élémentBdListe<élémentBdObjet>).payload.value[i] ===
+                (valBd2 as élémentBdObjet)[i]
+            )
+        );
 
         if (!existant) {
           // Si pas d'existant, ajouter le nouvel élément
-          await bdBase.add(valBd2)
-        } else{
-          const valExistant = existant.payload.value as élémentBdObjet
+          await bdBase.add(valBd2);
+        } else {
+          const valExistant = existant.payload.value as élémentBdObjet;
 
           // Si existant, combiner et mettre à jour seulement si différents
           if (!deepEqual(valExistant, valBd2)) {
-            const combiné = Object.assign({}, valExistant)
+            const combiné = Object.assign({}, valExistant);
             for (const [c, v] of Object.entries(valBd2 as élémentBdObjet)) {
               if (combiné[c] === undefined) {
-                combiné[c] = v
+                combiné[c] = v;
               } else if (!deepEqual(combiné[c], v)) {
                 if (adresseOrbiteValide(combiné[c]) && adresseOrbiteValide(v)) {
-                  await this.combinerBds(combiné[c] as string, v as string)
+                  await this.combinerBds(combiné[c] as string, v as string);
                 }
               }
             }
-            await bdBase.remove(existant.hash)
-            await bdBase.add(combiné)
+            await bdBase.remove(existant.hash);
+            await bdBase.add(combiné);
           }
         }
-
       } else {
-        if (!contenuBdBase.some(x=>deepEqual(x.payload.value, valBd2))) {
-          await bdBase.add(valBd2)
+        if (!contenuBdBase.some((x) => deepEqual(x.payload.value, valBd2))) {
+          await bdBase.add(valBd2);
         }
       }
     }

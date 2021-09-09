@@ -4,7 +4,7 @@ import ClientConstellation, {
   schémaFonctionOublier,
   élémentBdListe,
 } from "./client";
-import ContrôleurConstellation from "./accès/contrôleurConstellation";
+import ContrôleurConstellation from "./accès/cntrlConstellation";
 
 export default class MotsClefs {
   client: ClientConstellation;

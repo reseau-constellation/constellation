@@ -15,7 +15,7 @@ import ClientConstellation, {
   uneFois,
   faisRien,
 } from "./client";
-import ContrôleurConstellation from "./accès/contrôleurConstellation";
+import ContrôleurConstellation from "./accès/cntrlConstellation";
 import {
   erreurValidation,
   règleVariable,
@@ -32,6 +32,7 @@ import { traduire } from "./utils";
 export type InfoCol = {
   id: string;
   variable: string;
+  indexe?: boolean;
 };
 
 export type InfoColAvecCatégorie = InfoCol & {
@@ -42,10 +43,19 @@ export function élémentsÉgaux(
   élément1: { [key: string]: élémentsBd },
   élément2: { [key: string]: élémentsBd }
 ): boolean {
-  const clefs1 = Object.keys(élément1);
-  const clefs2 = Object.keys(élément2);
+  const clefs1 = Object.keys(élément1).filter(x=>x!=="id");
+  const clefs2 = Object.keys(élément2).filter(x=>x!=="id");
   if (!clefs1.every((x) => élément1[x] === élément2[x])) return false;
   if (!clefs2.every((x) => élément1[x] === élément2[x])) return false;
+  return true;
+}
+
+export function indexeÉlémentsÉgaux(
+  élément1: { [key: string]: élémentsBd },
+  élément2: { [key: string]: élémentsBd },
+  indexe: string[]
+): boolean {
+  if (!indexe.every((x) => élément1[x] === élément2[x])) return false;
   return true;
 }
 
@@ -102,6 +112,11 @@ export default class Tableaux {
       idNouveauTableau
     )) as KeyValueStore;
 
+    //Copier l'id unique s'il y a lieu
+    const idUnique = await bdBase.get("idUnique");
+    if (idUnique) await nouvelleBd.put("idUnique", idUnique);
+
+    //Copier les noms
     const idBdNoms = await bdBase.get("noms");
     const noms = ((await this.client.ouvrirBd(idBdNoms)) as KeyValueStore).all;
     await this.ajouterNomsTableau(idNouveauTableau, noms);
@@ -116,6 +131,66 @@ export default class Tableaux {
     await this.client.copierContenuBdListe(bdBase, nouvelleBd, "règles");
 
     return idNouveauTableau;
+  }
+
+  async spécifierIdUniqueTableau(
+    idTableau: string,
+    idUnique: string
+  ): Promise<void> {
+    const bdTableau = (await this.client.ouvrirBd(idTableau)) as KeyValueStore;
+    await bdTableau.put("idUnique", idUnique);
+  }
+
+  async suivreIdUnique(
+    idTableau: string,
+    f: schémaFonctionSuivi<string | undefined>
+  ): Promise<schémaFonctionOublier> {
+    const fFinale = async (bd: KeyValueStore) => {
+      const idUnique = await bd.get("idUnique");
+      f(idUnique);
+    };
+    return await this.client.suivreBd(idTableau, fFinale);
+  }
+
+  async changerColIndexe(
+    idTableau: string,
+    idColonne: string,
+    val: boolean
+  ): Promise<void> {
+    const optionsAccès = await this.client.obtOpsAccès(idTableau);
+    const idBdColonnes = await this.client.obtIdBd(
+      "colonnes",
+      idTableau,
+      "feed",
+      optionsAccès
+    );
+    if (!idBdColonnes)
+      throw `Permission de modification refusée pour BD ${idTableau}.`;
+
+    const bdColonnes = (await this.client.ouvrirBd(idBdColonnes)) as FeedStore;
+    const éléments = ClientConstellation.obtÉlémentsDeBdListe<InfoCol>(
+      bdColonnes,
+      false
+    )
+    const élémentCol = éléments.find((x) => x.payload.value.id === idColonne);
+
+    if (élémentCol && Boolean(élémentCol.payload.value.indexe) !== val) {
+      const { value } = élémentCol.payload;
+      const nouvelÉlément: InfoCol = Object.assign(value, { indexe: val });
+      await bdColonnes.remove(élémentCol.hash);
+      await bdColonnes.add(nouvelÉlément);
+    }
+  }
+
+  async suivreIndexe(
+    idTableau: string,
+    f: schémaFonctionSuivi<string[]>
+  ): Promise<schémaFonctionOublier> {
+    const fFinale = (cols: InfoColAvecCatégorie[]) => {
+      const indexes = cols.filter((c) => c.indexe).map((c) => c.id);
+      f(indexes);
+    };
+    return await this.suivreColonnes(idTableau, fFinale);
   }
 
   async suivreDonnées<T extends élémentBdListeDonnées>(
@@ -184,20 +259,22 @@ export default class Tableaux {
     idTableau: string,
     langues?: string[],
     doc?: XLSX.WorkBook
-  ): Promise<XLSX.WorkBook> {
+  ): Promise<{doc: XLSX.WorkBook, fichiersSFIP: Set<string>}> {
     /* Créer le document si nécessaire */
     doc = doc || XLSX.utils.book_new();
+    const fichiersSFIP: Set<string> = new Set()
 
     let nomTableau: string;
+    const idCourtTableau = idTableau.split("/").pop()!
     if (langues) {
       const noms = await uneFois(
         (f: schémaFonctionSuivi<{ [key: string]: string }>) =>
           this.suivreNomsTableau(idTableau, f)
       );
 
-      nomTableau = traduire(noms, langues) || idTableau;
+      nomTableau = traduire(noms, langues) || idCourtTableau;
     } else {
-      nomTableau = idTableau;
+      nomTableau = idCourtTableau;
     }
 
     const colonnes = await uneFois(
@@ -225,9 +302,11 @@ export default class Tableaux {
         switch (typeof é[col]) {
           case "object":
             if (["audio", "photo", "vidéo", "fichier"].includes(catégorie)) {
-              const { cid, ext } = é[col] as {cid: string, ext: string};
-              if (!cid||!ext) continue
+              const { cid, ext } = é[col] as { cid: string; ext: string };
+              if (!cid || !ext) continue;
               val = `${cid}.${ext}`;
+
+              fichiersSFIP.add(cid);
             } else {
               val = JSON.stringify(é[col]);
             }
@@ -263,7 +342,8 @@ export default class Tableaux {
           (f: schémaFonctionSuivi<{ [key: string]: string }>) =>
             this.client.variables!.suivreNomsVariable(idVar, f)
         );
-        nomsVariables[idVar] = traduire(nomsDisponibles, langues) || idVar;
+        const idCol = colonnes.find((c) => c.variable === idVar)?.id!;
+        nomsVariables[idVar] = traduire(nomsDisponibles, langues) || idCol;
       }
       donnéesPourXLSX = donnéesPourXLSX.map((d) =>
         Object.keys(d).reduce((acc: élémentBdListeDonnées, elem: string) => {
@@ -273,15 +353,14 @@ export default class Tableaux {
         }, {})
       );
     }
-    console.log({ donnéesPourXLSX });
 
     /* créer le tableau */
     const tableau = XLSX.utils.json_to_sheet(donnéesPourXLSX);
 
-    /* Ajouter la feuille au document */
-    XLSX.utils.book_append_sheet(doc, tableau, nomTableau);
+    /* Ajouter la feuille au document. XLSX n'accepte pas les noms de colonne > 31 caractères */
+    XLSX.utils.book_append_sheet(doc, tableau, nomTableau.slice(0, 30));
 
-    return doc;
+    return { doc, fichiersSFIP };
   }
 
   async ajouterÉlément(
@@ -387,6 +466,55 @@ export default class Tableaux {
     await bdDonnées.remove(empreinteÉlément);
   }
 
+  async combinerDonnées(
+    idTableauBase: string,
+    idTableau2: string
+  ): Promise<void> {
+    const colsTableauBase = await uneFois(
+      async (fSuivi: schémaFonctionSuivi<InfoColAvecCatégorie[]>) => {
+        return await this.suivreColonnes(idTableauBase, fSuivi);
+      }
+    );
+
+    const donnéesTableauBase = await uneFois(
+      async (
+        fSuivi: schémaFonctionSuivi<élémentDonnées<élémentBdListeDonnées>[]>
+      ) => {
+        return await this.suivreDonnées(idTableauBase, fSuivi);
+      }
+    );
+
+    const donnéesTableau2 = await uneFois(
+      async (
+        fSuivi: schémaFonctionSuivi<élémentDonnées<élémentBdListeDonnées>[]>
+      ) => {
+        return await this.suivreDonnées(idTableau2, fSuivi);
+      }
+    );
+
+    const indexes = colsTableauBase.filter((c) => c.indexe).map((c) => c.id);
+    for (const nouvelÉlément of donnéesTableau2) {
+      const existant = donnéesTableauBase.find(
+        d=>indexeÉlémentsÉgaux(d.données, nouvelÉlément.données, indexes)
+      );
+      if (existant) {
+        const àAjouter: {[key: string]: élémentsBd} = {};
+        for (const col of colsTableauBase) {
+          if (existant.données[col.id] === undefined && nouvelÉlément.données[col.id] !== undefined) {
+            àAjouter[col.id] = nouvelÉlément.données[col.id]
+          }
+        }
+        if (Object.keys(àAjouter).length) {
+          await this.effacerÉlément(idTableauBase, existant.empreinte)
+          await this.ajouterÉlément(idTableauBase, Object.assign({}, existant.données, àAjouter))
+        }
+
+      } else {
+        await this.ajouterÉlément(idTableauBase, nouvelÉlément.données);
+      }
+    }
+  }
+
   async ajouterNomsTableau(
     idTableau: string,
     noms: { [key: string]: string }
@@ -450,7 +578,8 @@ export default class Tableaux {
 
   async ajouterColonneTableau(
     idTableau: string,
-    idVariable: string
+    idVariable: string,
+    idColonne?: string
   ): Promise<string> {
     const optionsAccès = await this.client.obtOpsAccès(idTableau);
     const idBdColonnes = await this.client.obtIdBd(
@@ -464,11 +593,34 @@ export default class Tableaux {
 
     const bdColonnes = (await this.client.ouvrirBd(idBdColonnes)) as FeedStore;
     const entrée: InfoCol = {
-      id: uuidv4(),
+      id: idColonne || uuidv4(),
       variable: idVariable,
     };
     await bdColonnes.add(entrée);
     return entrée.id;
+  }
+
+  async effacerColonneTableau(
+    idTableau: string,
+    idColonne: string
+  ): Promise<void> {
+    const optionsAccès = await this.client.obtOpsAccès(idTableau);
+    const idBdColonnes = await this.client.obtIdBd(
+      "colonnes",
+      idTableau,
+      "feed",
+      optionsAccès
+    );
+    if (!idBdColonnes)
+      throw `Permission de modification refusée pour BD ${idTableau}.`;
+
+    const bdColonnes = (await this.client.ouvrirBd(idBdColonnes)) as FeedStore;
+    const élément = await this.client.rechercherBdListe(
+      idBdColonnes,
+      (x: élémentFeedStore<InfoCol>) => x.payload.value.id === idColonne
+    );
+
+    await bdColonnes.remove(élément.hash);
   }
 
   async suivreColonnes(
@@ -487,15 +639,15 @@ export default class Tableaux {
 
       return await this.client.variables!.suivreCatégorieVariable(
         id,
-        async (catégorie) => {
+        (catégorie) => {
           const col = Object.assign({ catégorie }, branche!);
           fSuivi(col);
         }
       );
     };
-    const fIdBdDeBranche = (x: InfoCol) => x.variable;
+    const fIdBdDeBranche = (x: InfoColAvecCatégorie) => x.variable;
 
-    const fCode = (x: InfoCol) => x.id;
+    const fCode = (x: InfoColAvecCatégorie) => x.id;
     const fSuivreBdColonnes = async (
       id: string,
       f: schémaFonctionSuivi<InfoColAvecCatégorie[]>

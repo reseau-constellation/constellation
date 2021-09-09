@@ -50,7 +50,7 @@
     },
     "acceuil": {
       "entête": "Bienvenue à Constellation",
-      "soustitre": "Le système distribué et ouvert pour le partage de données scientifiques.",
+      "soustitre": "Le système distribué et ouvert pour le partage des données scientifiques.",
       "orientation": "Un peu perdu.e ?",
       "liens": {
         "docs": "Lire la documentation",

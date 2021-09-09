@@ -27,17 +27,13 @@ const catégories: {
     valides: ["abc", "வணக்கம்", ""],
     invalides: [123, null, ["abc"]],
   },
-  date: {
-    valides: [],
-    invalides: [],
-  },
-  heure: {
-    valides: [],
-    invalides: [],
-  },
-  dateEtHeure: {
-    valides: [Date.now()],
+  horoDatage: {
+    valides: [(new Date(Date.now())).toISOString(), Date.now(), "1947-08-15"],
     invalides: ["15-08-1947"],
+  },
+  intervaleTemps: {
+    valides: [["01-01-2021", "01-02-2021"]],
+    invalides: ["01-01-2021"],
   },
   catégorique: {
     valides: ["abc", 1, null, true, false, { a: 1 }], // Tout dépend des options...rien à vérifier pour l'instant
@@ -48,8 +44,45 @@ const catégories: {
     invalides: [1, 0, null],
   },
   géojson: {
-    valides: [],
-    invalides: [],
+    valides: [{
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+          "properties": {"prop0": "value0"}
+        },
+        {
+          "type": "Feature",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+            ]
+          },
+          "properties": {
+            "prop0": "value0",
+            "prop1": 0.0
+          }
+        }
+      ]
+    }],
+    invalides: [
+      {"Je suis": "invalide"},
+      {
+        "type": "feature",
+        "geometry": {
+            "type": "LineString",
+            "coordinates": [
+                [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+            ]
+        },
+        "properties": {
+            "prop0": "value0",
+            "prop1": 0.0
+        }
+    }
+    ],
   },
   fichier: {
     valides: [

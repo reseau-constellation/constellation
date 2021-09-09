@@ -19,13 +19,13 @@ export default class Compte {
   }
 
   async suivreCourriel(
-    f: schémaFonctionSuivi<string>,
+    f: schémaFonctionSuivi<string | null>,
     idBdCompte?: string
   ): Promise<schémaFonctionOublier> {
     idBdCompte = idBdCompte || this.idBd;
     return await this.client.suivreBd(idBdCompte, async (bd) => {
       const courriel = await (bd as KeyValueStore).get("courriel");
-      f(courriel);
+      f(courriel || null);
     });
   }
 

@@ -8,7 +8,7 @@ import ClientConstellation, {
 } from "./client";
 import ContrôleurConstellation, {
   nomType as typeContrôleurAccèsConst,
-} from "./accès/contrôleurConstellation";
+} from "./accès/cntrlConstellation";
 import { règleVariableAvecId, règleVariable, règleCatégorie } from "./valid";
 import { v4 as uuidv4 } from "uuid";
 
@@ -16,9 +16,8 @@ import { STATUT } from "./bds";
 
 export type catégorieVariables =
   | "numérique"
-  | "date"
-  | "heure"
-  | "dateEtHeure"
+  | "horoDatage"
+  | "intervaleTemps"
   | "chaîne"
   | "catégorique"
   | "booléen"

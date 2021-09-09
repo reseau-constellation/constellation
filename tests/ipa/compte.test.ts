@@ -39,8 +39,8 @@ Object.keys(testAPIs).forEach((API) => {
     });
 
     describe("Courriels", function () {
-      let courriel: string;
-      const rés: { ultat: string | undefined } = { ultat: undefined };
+      let courriel: string | null;
+      const rés: { ultat: string | undefined | null } = { ultat: undefined };
       let fOublier: schémaFonctionOublier;
       let fOublier2: schémaFonctionOublier;
 
@@ -55,7 +55,7 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Pas de courriel pour commencer", async () => {
-        expect(courriel).to.be.undefined;
+        expect(courriel).to.be.null;
       });
 
       step("Ajouter un courriel", async () => {
@@ -64,13 +64,13 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Lire le courriel d'un autre membre", async () => {
-        await attendreRésultat(rés, "ultat");
+        await attendreRésultat(rés, "ultat", (x: null|undefined|string)=>x);
         expect(rés["ultat"]).to.equal(COURRIEL);
       });
 
       step("Effacer le courriel", async () => {
         await client.compte!.effacerCourriel();
-        expect(courriel).to.be.undefined;
+        expect(courriel).to.be.null;
       });
 
       after(async () => {

@@ -14,7 +14,7 @@ import {
   schémaFonctionOublier,
   élémentBdListe,
 } from "../client";
-import GestionnaireAccès, { suivreBdAccès } from "./gestionnaireAccès";
+import GestionnaireAccès, { suivreBdAccès } from "./gestionnaireUtilisateurs";
 import accesseurBdOrbite from "./accesseurBdOrbite";
 import { MODÉRATEUR, MEMBRE, rôles } from "./consts";
 import { entréeBDAccès, infoUtilisateur } from "./types";

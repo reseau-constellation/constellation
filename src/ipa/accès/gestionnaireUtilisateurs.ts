@@ -11,7 +11,7 @@ import {
 import { MODÉRATEUR, MEMBRE, rôles } from "./consts";
 import { entréeBDAccès, objRôles } from "./types";
 
-import ContrôleurConstellation from "./contrôleurConstellation";
+import ContrôleurConstellation from "./cntrlConstellation";
 
 const événementsSuiviBd = ["ready", "write", "replicated"];
 
@@ -26,6 +26,7 @@ export const suivreBdAccès = async (
       .map((e: élémentBdListe<entréeBDAccès>) => e.payload.value);
     f(éléments);
   };
+
   bd.events.setMaxListeners(100);
   for (const é of événementsSuiviBd) {
     bd.events.on(é, fFinale);

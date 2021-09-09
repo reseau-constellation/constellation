@@ -7,9 +7,8 @@ import rmrf from "rimraf";
 import { v4 as uuidv4 } from "uuid";
 import OrbitDB, { Store, KeyValueStore, FeedStore } from "orbit-db";
 
-import ContrôleurConstellation from "@/ipa/accès/contrôleurConstellation";
+import ContrôleurConstellation from "@/ipa/accès/cntrlConstellation";
 import ClientConstellation from "@/ipa/client";
-import { DOSSIER_STOCKAGE_LOCAL } from "@/ipa/stockageLocal";
 
 const attendreInvité = (bd: Store, idInvité: string) =>
   new Promise<void>((resolve) => {
@@ -166,7 +165,6 @@ export const générerClients = async (
       })
     );
     fOublierOrbites();
-    rmrf.sync(DOSSIER_STOCKAGE_LOCAL)
   };
   return { fOublier, clients };
 };

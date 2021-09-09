@@ -4,7 +4,7 @@ enum conditions {
   INCL = "inclureDroitDauteur",
   CHNG = "indiquerChangements",
   SRCE = "partagerCodeSource",
-  USGR = "usageRéseau",
+  USGR = "usagereseau",
 }
 
 enum droits {

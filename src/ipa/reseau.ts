@@ -3,7 +3,7 @@ import { PeersResult } from "ipfs-core-types/src/swarm";
 import { Message as MessagePubSub } from "ipfs-core-types/src/pubsub";
 import { EventEmitter } from "events";
 import Semaphore from "@chriscdn/promise-semaphore";
-import ContrôleurConstellation from "./accès/contrôleurConstellation";
+import ContrôleurConstellation from "./accès/cntrlConstellation";
 
 import ClientConstellation, {
   schémaFonctionSuivi,
@@ -26,9 +26,15 @@ export type infoMembre = {
 };
 
 export interface schémaBd {
+  licence: string;
   motsClefs?: string[];
   tableaux: {
-    vars: string[];
+    cols: {
+      idVariable: string;
+      idColonne: string;
+      indexe?: boolean;
+    }[];
+    idUnique?: string;
   }[];
 }
 
@@ -299,7 +305,7 @@ export default class Réseau extends EventEmitter {
         };
         const fOublier = await this.client.suivreBdListeDeClef<infoMembre>(
           idBdRacine,
-          "réseau",
+          "reseau",
           f
         );
         this.fOublierMembres[idBdRacine] = fOublier;
@@ -399,13 +405,13 @@ export default class Réseau extends EventEmitter {
 
   async suivreCourrielMembre(
     idMembre: string,
-    f: schémaFonctionSuivi<string | undefined>
+    f: schémaFonctionSuivi<string | null | undefined>
   ): Promise<schémaFonctionOublier> {
     return await this.client.suivreBdDeClef(
       idMembre,
       "compte",
       f,
-      async (id: string, f: schémaFonctionSuivi<string>) =>
+      async (id: string, f: schémaFonctionSuivi<string | null>) =>
         await this.client.compte!.suivreCourriel(f, id)
     );
   }
@@ -433,39 +439,49 @@ export default class Réseau extends EventEmitter {
 
   async suivreBdsMembre(
     idMembre: string,
-    f: schémaFonctionSuivi<string[] | undefined>
+    f: schémaFonctionSuivi<string[] | undefined>,
+    vérifierAutorisation = true
   ): Promise<schémaFonctionOublier> {
     const fCondition = async (
       id: string,
       fSuivreCondition: (état: boolean) => void
     ): Promise<schémaFonctionOublier> => {
       return await this.client.bds!.suivreAuteurs(
-        idMembre,
+        id,
         (auteurs: infoAuteur[]) => {
           const estUnAuteur = auteurs.some(
-            (a) => a.idBdRacine === id && a.accepté
+            (a) => a.idBdRacine === idMembre && a.accepté
           );
           fSuivreCondition(estUnAuteur);
         }
       );
     };
 
-    return await this.client.suivreBdDeClef(
-      idMembre,
-      "bds",
-      f,
-      async (id: string, f: schémaFonctionSuivi<string[]>) => {
-        return await this.client.suivreBdsSelonCondition(
-          async (
-            fSuivreRacine: (ids: string[]) => Promise<void>
-          ): Promise<schémaFonctionOublier> => {
-            return await this.client.bds!.suivreBds(fSuivreRacine, id);
-          },
-          fCondition,
-          f
-        );
-      }
-    );
+    const fSuivreAvecAutorisation = async (
+      id: string,
+      f: schémaFonctionSuivi<string[]>
+    ) => {
+      return await this.client.suivreBdsSelonCondition(
+        async (
+          fSuivreRacine: (ids: string[]) => Promise<void>
+        ): Promise<schémaFonctionOublier> => {
+          return await this.client.bds!.suivreBds(fSuivreRacine, id);
+        },
+        fCondition,
+        f
+      );
+    };
+
+    const fSuivreSansAutorisation = async (
+      id: string,
+      f: schémaFonctionSuivi<string[]>
+    ) => await this.client.bds!.suivreBds(f, id);
+
+    const fSuivreBd = vérifierAutorisation
+      ? fSuivreAvecAutorisation
+      : fSuivreSansAutorisation;
+
+    return await this.client.suivreBdDeClef(idMembre, "bds", f, fSuivreBd);
   }
 
   async suivreProjetsMembre(
@@ -611,8 +627,9 @@ export default class Réseau extends EventEmitter {
 
       if (schéma.motsClefs) {
         const fSuivreMotsClefs = (motsClefsBd: string[]) => {
-          const étatMotsClefs =
-            (schéma.motsClefs || []).every((m) => motsClefsBd.includes(m))
+          const étatMotsClefs = (schéma.motsClefs || []).every((m) =>
+            motsClefsBd.includes(m)
+          );
           dicÉtat.motsClefs = étatMotsClefs;
           fFinale();
         };

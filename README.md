@@ -1,13 +1,9 @@
 # Constellation
-![Logo Constellation](https://raw.githubusercontent.com/julienmalard/constellation/master/src/assets/logo.png)
+![Logo Constellation](https://raw.githubusercontent.com/julienmalard/constellation/master/src/assets/logo.png)  
 [![Électron](https://github.com/julienmalard/constellation/actions/workflows/electron.yml/badge.svg)](https://github.com/julienmalard/constellation/actions/workflows/electron.yml)
 [![Apli Internet](https://github.com/julienmalard/constellation/actions/workflows/gh-pages-deploy.yml/badge.svg)](https://github.com/julienmalard/constellation/actions/workflows/gh-pages-deploy.yml)
-## Installation
 
-### Installation du client
-```
-npm install constallation -g
-```
+## Installation
 
 ## Développement
 Nous utilisons `Électron` afin de générer et l'application Internet,
@@ -33,26 +29,6 @@ yarn build
 Pour compiler en mode production Électron, utilisez:
 ```
 yarn electron:build
-```
-
-### Publication du site internet
-```
-yarn deploy
-```
-
-### Exécution des tests d'unité
-```
-yarn test:unit
-```
-
-### Exécution des tests complets
-```
-yarn test:e2e
-```
-
-### Pour reformatter le code
-```
-yarn lint
 ```
 
 ### Customize configuration

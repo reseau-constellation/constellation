@@ -1,14 +1,14 @@
 import { FeedStore, KeyValueStore } from "orbit-db";
 import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
 
-import { nomType as typeContrôleurAccèsConst } from "./accès/contrôleurConstellation";
+import { nomType as typeContrôleurAccèsConst } from "./accès/cntrlConstellation";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
   élémentBdListe,
 } from "./client";
 import { STATUT } from "./bds";
-import ContrôleurConstellation from "./accès/contrôleurConstellation";
+import ContrôleurConstellation from "./accès/cntrlConstellation";
 
 export default class Projets {
   client: ClientConstellation;

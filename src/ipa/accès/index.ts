@@ -1,6 +1,6 @@
 import { AccessControllers } from "orbit-db";
-import ContrôleurConstellation from "./contrôleurConstellation";
-import ContrôleurAccès from "./contrôleurAccès";
+import ContrôleurConstellation from "./cntrlConstellation";
+import ContrôleurAccès from "./cntrlMod";
 
 export const enregistrerContrôleurs = () => {
   AccessControllers.addAccessController({

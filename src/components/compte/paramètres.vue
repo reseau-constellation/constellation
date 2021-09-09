@@ -51,8 +51,8 @@
           dense
           hide-details
           prepend-icon="mdi-email"
-          :loading="!courrielOrig"
-          :disabled="!courrielOrig"
+          :loading="courrielOrig === undefined"
+          :disabled="courrielOrig === undefined"
           :label="$t('compte.onglets.compte.courriel')"
           @blur="sauvegarderCourriel"
         />
@@ -138,7 +138,7 @@ export default mixins(mixinIPA, mixinImages).extend({
   data: function () {
     return {
       imageProfil: undefined as undefined | string,
-      courrielOrig: undefined as undefined | string,
+      courrielOrig: undefined as undefined | null | string,
       courriel: "",
 
       noms: null as null | { [key: string]: string },

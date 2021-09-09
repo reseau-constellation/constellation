@@ -1,3 +1,5 @@
+import gjv from "geojson-validation";
+
 import { CIDvalid } from "./utils";
 import { catégorieVariables } from "./variables";
 import { élémentsBd } from "./client";
@@ -228,19 +230,23 @@ export function validerCatégorieVal(
 ): boolean {
   if (val === undefined) return true; //Permettre les valeurs manquantes
 
-  const estUnChiffrePositif = (v: unknown): boolean => {
-    return typeof v === "number" && v > 0;
+  const estUnHoroDatage = (v: unknown): boolean => {
+    if (!["number", "string"].includes(typeof v)) return false;
+
+    const date = new Date(v as string|number);
+    console.log(date, date.valueOf())
+    return !isNaN(date.valueOf())
   };
 
   switch (catégorie) {
     case "numérique":
       return typeof val === "number";
-    case "date":
-      return estUnChiffrePositif(val);
-    case "heure":
-      return estUnChiffrePositif(val);
-    case "dateEtHeure":
-      return estUnChiffrePositif(val);
+    case "horoDatage": {
+      return estUnHoroDatage(val);
+    };
+    case "intervaleTemps":
+      if (!Array.isArray(val)) return false;
+      return (val as unknown[]).every(d=>estUnHoroDatage(d));
     case "chaîne":
       return typeof val === "string";
     case "catégorique":
@@ -248,7 +254,8 @@ export function validerCatégorieVal(
     case "booléen":
       return typeof val === "boolean";
     case "géojson":
-      return typeof val === "object";
+      if (!(typeof val === "object")) return false;
+      return gjv.valid(val)
     case "vidéo":
       return validFichier(val, formatsFichiers.vidéo);
     case "audio":

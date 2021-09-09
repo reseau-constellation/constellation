@@ -108,7 +108,7 @@ export default mixins(mixinIPA).extend({
       if (!this.auteurSélectionné) return;
 
       this.enCours = true;
-      await this.$ipa.donnerAccès(
+      await this.$ipa.bds!.inviterAuteur(
         this.idBd,
         this.auteurSélectionné,
         this.donnerPermissionModérateur ? MODÉRATEUR : MEMBRE

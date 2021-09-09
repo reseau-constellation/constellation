@@ -8,13 +8,13 @@ export default Vue.extend({
       crochetIPA: () => {
         //Fonction vide pour l'instant
       },
-      ipaPrèt: false
+      ipaPrèt: false,
     };
   },
   methods: {
     async initialiserSuivi(): Promise<void> {
       // À implémenter dans le composant
-      this.ipaPrèt = true
+      this.ipaPrèt = true;
     },
     suivre(crochet: schémaFonctionOublier | schémaFonctionOublier[]): void {
       if (!Array.isArray(crochet)) {

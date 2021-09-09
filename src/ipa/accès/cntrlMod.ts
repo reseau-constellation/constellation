@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import OrbitDB, { entréeBD, identityProvider } from "orbit-db";
 
-import GestionnaireAccès from "./gestionnaireAccès";
+import GestionnaireAccès from "./gestionnaireUtilisateurs";
 import { MODÉRATEUR, rôles } from "./consts";
 import { entréeBDAccès } from "./types";
 

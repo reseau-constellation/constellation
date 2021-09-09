@@ -34,6 +34,7 @@
     "electron-updater": "^4.4.5",
     "ennikkai": "^1.2.7",
     "fibers": "^5.0.0",
+    "geojson-validation": "^1.0.2",
     "go-ipfs": "^0.9.1",
     "hyperswarm-web": "^2.1.1",
     "ipfs": "^0.55.4",
