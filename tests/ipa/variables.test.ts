@@ -284,13 +284,13 @@ Object.keys(testAPIs).forEach((API) => {
       step("On détecte le changement de catégorie", async () => {
         await client.variables!.sauvegarderCatégorieVariable(
           idVariable,
-          "dateEtHeure"
+          "horoDatage"
         );
         const règleCatégorie = règles.find(
           (r) => r.règle.typeRègle === "catégorie"
         );
         expect(règleCatégorie).to.exist;
-        expect(règleCatégorie?.règle.détails.catégorie).to.equal("dateEtHeure");
+        expect(règleCatégorie?.règle.détails.catégorie).to.equal("horoDatage");
       });
     });
 

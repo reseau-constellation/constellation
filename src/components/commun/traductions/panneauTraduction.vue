@@ -68,7 +68,7 @@ import mixins from "vue-typed-mixins";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
-import { schémaBd } from "@/ipa/réseau";
+import { schémaBd } from "@/ipa/reseau";
 
 import itemTradCommunauté from "@/components/commun/traductions/itemTradCommunauté.vue";
 
@@ -88,20 +88,38 @@ const ID_MOTCLEF_TRAD =
 const ID_MOTCLEF_TRADS_CONSTELLATION =
   "/orbitdb/zdpuAuk6kRoPQKfwuWi5qMYMSyUMeiTjtcFE23AaHy9MQsXcs/93c94a56-f681-4512-8c4b-5c213119ab4b";
 
-const idsVars = [
-  ID_VAR_CLEF,
-  ID_VAR_LANGUE_SOURCE,
-  ID_VAR_LANGUE_CIBLE,
-  ID_VAR_TEXTE_ORIGINAL,
-  ID_VAR_TRADUCTION,
-  ID_VAR_DATE,
-];
 
 const schémaBdTrads: schémaBd = {
   motsClefs: [ID_MOTCLEF_TRAD],
+  licence: "ODbl-1_0",
   tableaux: [
     {
-      vars: idsVars,
+      cols: [
+        {
+          idVariable: ID_VAR_CLEF,
+          idColonne: "clef",
+        },
+        {
+          idVariable: ID_VAR_LANGUE_SOURCE,
+          idColonne: "langue source",
+        },
+        {
+          idVariable: ID_VAR_LANGUE_CIBLE,
+          idColonne: "langue cible",
+        },
+        {
+          idVariable: ID_VAR_TEXTE_ORIGINAL,
+          idColonne: "texte original",
+        },
+        {
+          idVariable: ID_VAR_TRADUCTION,
+          idColonne: "traduction",
+        },
+        {
+          idVariable: ID_VAR_DATE,
+          idColonne: "date",
+        }
+      ],
     },
   ],
 };
@@ -193,11 +211,10 @@ export default mixins(mixinLangues, mixinIPA).extend({
       );
 
       const oublierTableauBdTrads =
-        await this.$ipa.bds!.suivreTableauBdDeSchéma(
+        await this.$ipa.bds!.suivreTableauUniqueDeBdUnique(
           schémaBdTrads,
           ID_MOTCLEF_TRADS_CONSTELLATION,
-          0,
-          "ODbl-1_0",
+          "trads",
           (idTableau) => (this.idTableau = idTableau)
         );
       const oublierSuggestionsTrads =

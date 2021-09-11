@@ -28,7 +28,7 @@ const catégories: {
     invalides: [123, null, ["abc"]],
   },
   horoDatage: {
-    valides: [(new Date(Date.now())).toISOString(), Date.now(), "1947-08-15"],
+    valides: [new Date(Date.now()).toISOString(), Date.now(), "1947-08-15"],
     invalides: ["15-08-1947"],
   },
   intervaleTemps: {
@@ -44,44 +44,52 @@ const catégories: {
     invalides: [1, 0, null],
   },
   géojson: {
-    valides: [{
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
-          "properties": {"prop0": "value0"}
-        },
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "LineString",
-            "coordinates": [
-              [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
-            ]
-          },
-          "properties": {
-            "prop0": "value0",
-            "prop1": 0.0
-          }
-        }
-      ]
-    }],
-    invalides: [
-      {"Je suis": "invalide"},
+    valides: [
       {
-        "type": "feature",
-        "geometry": {
-            "type": "LineString",
-            "coordinates": [
-                [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
-            ]
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: { type: "Point", coordinates: [102.0, 0.5] },
+            properties: { prop0: "value0" },
+          },
+          {
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [102.0, 0.0],
+                [103.0, 1.0],
+                [104.0, 0.0],
+                [105.0, 1.0],
+              ],
+            },
+            properties: {
+              prop0: "value0",
+              prop1: 0.0,
+            },
+          },
+        ],
+      },
+    ],
+    invalides: [
+      { "Je suis": "invalide" },
+      {
+        type: "feature",
+        geometry: {
+          type: "LineString",
+          coordinates: [
+            [102.0, 0.0],
+            [103.0, 1.0],
+            [104.0, 0.0],
+            [105.0, 1.0],
+          ],
         },
-        "properties": {
-            "prop0": "value0",
-            "prop1": 0.0
-        }
-    }
+        properties: {
+          prop0: "value0",
+          prop1: 0.0,
+        },
+      },
     ],
   },
   fichier: {

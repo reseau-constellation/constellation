@@ -43,8 +43,8 @@ export function élémentsÉgaux(
   élément1: { [key: string]: élémentsBd },
   élément2: { [key: string]: élémentsBd }
 ): boolean {
-  const clefs1 = Object.keys(élément1).filter(x=>x!=="id");
-  const clefs2 = Object.keys(élément2).filter(x=>x!=="id");
+  const clefs1 = Object.keys(élément1).filter((x) => x !== "id");
+  const clefs2 = Object.keys(élément2).filter((x) => x !== "id");
   if (!clefs1.every((x) => élément1[x] === élément2[x])) return false;
   if (!clefs2.every((x) => élément1[x] === élément2[x])) return false;
   return true;
@@ -171,7 +171,7 @@ export default class Tableaux {
     const éléments = ClientConstellation.obtÉlémentsDeBdListe<InfoCol>(
       bdColonnes,
       false
-    )
+    );
     const élémentCol = éléments.find((x) => x.payload.value.id === idColonne);
 
     if (élémentCol && Boolean(élémentCol.payload.value.indexe) !== val) {
@@ -214,7 +214,7 @@ export default class Tableaux {
 
             const données: T = clefsSelonVariables
               ? Object.keys(élément).reduce((acc: T, elem: string) => {
-                  const idVar = colonnes[elem];
+                  const idVar = elem === "id" ? "id" : colonnes[elem];
                   (acc as élémentBdListeDonnées)[idVar] = élément[elem];
                   return acc;
                 }, {} as T)
@@ -259,13 +259,13 @@ export default class Tableaux {
     idTableau: string,
     langues?: string[],
     doc?: XLSX.WorkBook
-  ): Promise<{doc: XLSX.WorkBook, fichiersSFIP: Set<string>}> {
+  ): Promise<{ doc: XLSX.WorkBook; fichiersSFIP: Set<string> }> {
     /* Créer le document si nécessaire */
     doc = doc || XLSX.utils.book_new();
-    const fichiersSFIP: Set<string> = new Set()
+    const fichiersSFIP: Set<string> = new Set();
 
     let nomTableau: string;
-    const idCourtTableau = idTableau.split("/").pop()!
+    const idCourtTableau = idTableau.split("/").pop()!;
     if (langues) {
       const noms = await uneFois(
         (f: schémaFonctionSuivi<{ [key: string]: string }>) =>
@@ -342,7 +342,7 @@ export default class Tableaux {
           (f: schémaFonctionSuivi<{ [key: string]: string }>) =>
             this.client.variables!.suivreNomsVariable(idVar, f)
         );
-        const idCol = colonnes.find((c) => c.variable === idVar)?.id!;
+        const idCol = colonnes.find((c) => c.variable === idVar)!.id!;
         nomsVariables[idVar] = traduire(nomsDisponibles, langues) || idCol;
       }
       donnéesPourXLSX = donnéesPourXLSX.map((d) =>
@@ -494,21 +494,26 @@ export default class Tableaux {
 
     const indexes = colsTableauBase.filter((c) => c.indexe).map((c) => c.id);
     for (const nouvelÉlément of donnéesTableau2) {
-      const existant = donnéesTableauBase.find(
-        d=>indexeÉlémentsÉgaux(d.données, nouvelÉlément.données, indexes)
+      const existant = donnéesTableauBase.find((d) =>
+        indexeÉlémentsÉgaux(d.données, nouvelÉlément.données, indexes)
       );
       if (existant) {
-        const àAjouter: {[key: string]: élémentsBd} = {};
+        const àAjouter: { [key: string]: élémentsBd } = {};
         for (const col of colsTableauBase) {
-          if (existant.données[col.id] === undefined && nouvelÉlément.données[col.id] !== undefined) {
-            àAjouter[col.id] = nouvelÉlément.données[col.id]
+          if (
+            existant.données[col.id] === undefined &&
+            nouvelÉlément.données[col.id] !== undefined
+          ) {
+            àAjouter[col.id] = nouvelÉlément.données[col.id];
           }
         }
         if (Object.keys(àAjouter).length) {
-          await this.effacerÉlément(idTableauBase, existant.empreinte)
-          await this.ajouterÉlément(idTableauBase, Object.assign({}, existant.données, àAjouter))
+          await this.effacerÉlément(idTableauBase, existant.empreinte);
+          await this.ajouterÉlément(
+            idTableauBase,
+            Object.assign({}, existant.données, àAjouter)
+          );
         }
-
       } else {
         await this.ajouterÉlément(idTableauBase, nouvelÉlément.données);
       }

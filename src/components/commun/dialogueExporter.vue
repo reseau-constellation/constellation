@@ -79,17 +79,17 @@ export default mixins(mixinLangues).extend({
       try {
         switch (this.type) {
           case "bd":
-            doc = await this.$ipa.bds!.exporterDonnées(
+            ({ doc } = await this.$ipa.bds!.exporterDonnées(
               this.id,
               this.languesPréférées
-            );
+            ));
             break;
 
           case "tableau":
-            doc = await this.$ipa.tableaux!.exporterDonnées(
+            ({ doc } = await this.$ipa.tableaux!.exporterDonnées(
               this.id,
               this.languesPréférées
-            );
+            ));
             break;
 
           default:

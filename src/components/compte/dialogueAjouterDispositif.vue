@@ -238,7 +238,7 @@ import avatarProfil from "@/components/commun/avatarProfil.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 
 import { adresseOrbiteValide, schémaFonctionOublier } from "@/ipa/client";
-import { infoDispositifEnLigne } from "@/ipa/réseau";
+import { infoDispositifEnLigne } from "@/ipa/reseau";
 
 export default mixins(mixinIPA, mixinLangues).extend({
   name: "dialogueAjouterDispositif",

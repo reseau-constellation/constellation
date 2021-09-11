@@ -163,7 +163,7 @@ export default class BDs {
     return idNouvelleBd;
   }
 
-  async créerBdDeSchéma(schéma: schémaBd): Promise<string> {
+  async créerBdDeSchéma(schéma: schémaBd, ajouter = true): Promise<string> {
     const { tableaux, motsClefs, licence } = schéma;
 
     // On n'ajoutera la BD que lorsqu'elle sera prête
@@ -199,7 +199,7 @@ export default class BDs {
     }
 
     //Maintenant on peut l'annoncer !
-    await this.ajouterÀMesBds(idBd);
+    if (ajouter) await this.ajouterÀMesBds(idBd);
 
     return idBd;
   }
@@ -228,7 +228,7 @@ export default class BDs {
     return await this.client.suivreBdsSelonCondition(fListe, fCondition, f);
   }
 
-  async combinerBds(idBdBase: string, idBd2: string) {
+  async combinerBds(idBdBase: string, idBd2: string): Promise<void> {
     const obtTableauxEtIdsUniques = async (
       idBd: string
     ): Promise<{ idTableau: string; idUnique: string }[]> => {
@@ -261,13 +261,14 @@ export default class BDs {
 
     for (const info of tableauxBd2) {
       const { idTableau, idUnique } = info;
-      const idTableauCorresp = tableauxBase.find(
+      const idTableauBaseCorresp = tableauxBase.find(
         (t) => t.idUnique === idUnique
       )?.idTableau;
-      if (idTableauCorresp) {
+
+      if (idTableauBaseCorresp) {
         await this.client.tableaux!.combinerDonnées(
-          idTableau,
-          idTableauCorresp
+          idTableauBaseCorresp,
+          idTableau
         );
       }
     }
@@ -355,6 +356,35 @@ export default class BDs {
     );
 
     return fOublier;
+  }
+
+  async suivreTableauUniqueDeBdUnique(
+    schémaBd: schémaBd,
+    motClefUnique: string,
+    idTableauUnique: string,
+    f: schémaFonctionSuivi<string | undefined>
+  ): Promise<schémaFonctionOublier> {
+    const fRacine = async (
+      fSuivreRacine: (nouvelIdBdCible: string) => Promise<void>
+    ): Promise<schémaFonctionOublier> => {
+      return await this.suivreBdUnique(schémaBd, motClefUnique, fSuivreRacine);
+    };
+
+    const fSuivre = async (
+      id: string,
+      fSuivreBd: schémaFonctionSuivi<string | undefined>
+    ): Promise<schémaFonctionOublier> => {
+      return await this.suivreTableauParIdUnique(
+        id,
+        idTableauUnique,
+        fSuivreBd
+      );
+    };
+    return await this.client.suivreBdDeFonction<string | undefined>(
+      fRacine,
+      f,
+      fSuivre
+    );
   }
 
   async ajouterNomsBd(
@@ -675,7 +705,7 @@ export default class BDs {
         (a: number, b: scoreTableau) => a + b.dénominateur,
         0
       );
-      f(dénominateur === 0 ? 0 : numérateur / dénominateur);
+      f(dénominateur === 0 ? undefined : numérateur / dénominateur);
     };
 
     const fBranche = async (
@@ -687,11 +717,16 @@ export default class BDs {
 
       const fFinaleBranche = () => {
         const { cols, règles } = info;
+
         if (cols !== undefined && règles !== undefined) {
-          const dénominateur = cols.length;
-          const numérateur = cols
+          const colsÉligibles = cols
             .filter((c) => ["numérique", "catégorique"].includes(c.catégorie))
-            .filter((c) => règles.some((r) => r.colonne === c.id)).length;
+
+          const dénominateur = colsÉligibles.length;
+          const numérateur = colsÉligibles
+            .filter((c) => règles.some(
+              (r) => r.règle.règle.typeRègle !== "catégorie" && r.colonne === c.id
+            )).length;
           f({ numérateur, dénominateur });
         }
       };
@@ -746,7 +781,7 @@ export default class BDs {
         (a: number, b: scoreTableau) => a + b.dénominateur,
         0
       );
-      f(dénominateur === 0 ? 0 : numérateur / dénominateur);
+      f(dénominateur === 0 ? undefined : numérateur / dénominateur);
     };
 
     const fBranche = async (
@@ -766,8 +801,11 @@ export default class BDs {
           erreurs !== undefined &&
           cols !== undefined
         ) {
+          const colsÉligibles = cols
+            .filter((c) => ["numérique", "catégorique"].includes(c.catégorie))
+
           const déjàVus: { empreinte: string; idColonne: string }[] = [];
-          const numérateur = erreurs
+          const nCellulesÉrronnées = erreurs
             .map((e) => {
               return {
                 empreinte: e.empreinte,
@@ -779,11 +817,16 @@ export default class BDs {
                 (y) =>
                   y.empreinte === x.empreinte && y.idColonne === x.idColonne
               );
-              if (!déjàVu) déjàVus.push(x);
-              return déjàVu;
+              if (déjàVu) {
+                return false;
+              } else {
+                déjàVus.push(x);
+                return true;
+              };
             }).length;
 
-          const dénominateur = données.length * cols.length;
+          const dénominateur = données.length * colsÉligibles.length;
+          const numérateur = dénominateur - nCellulesÉrronnées
 
           f({ numérateur, dénominateur });
         }
@@ -842,9 +885,7 @@ export default class BDs {
     const fFinale = () => {
       const { accès, couverture, valide } = info;
       const score: infoScore = {
-        total: Math.floor(
-          ((accès || 0) + (couverture || 0) + (valide || 0)) / 3
-        ),
+        total: ((accès || 0) + (couverture || 0) + (valide || 0)) / 3,
         accès,
         couverture,
         valide,
@@ -905,17 +946,18 @@ export default class BDs {
   async exporterDonnées(
     id: string,
     langues?: string[]
-  ): Promise<{doc: XLSX.WorkBook, fichiersSFIP: Set<string>}> {
+  ): Promise<{ doc: XLSX.WorkBook; fichiersSFIP: Set<string> }> {
     const doc = XLSX.utils.book_new();
-    const fichiersSFIP: Set<string> = new Set()
+    const fichiersSFIP: Set<string> = new Set();
 
     const idsTableaux = await uneFois((f: schémaFonctionSuivi<string[]>) =>
       this.suivreTableauxBd(id, f)
     );
 
     for (const idTableau of idsTableaux) {
-      const { fichiersSFIP: fichiersSFIPTableau } = await this.client.tableaux!.exporterDonnées(idTableau, langues, doc);
-      fichiersSFIPTableau.forEach(cid=>fichiersSFIP.add(cid));
+      const { fichiersSFIP: fichiersSFIPTableau } =
+        await this.client.tableaux!.exporterDonnées(idTableau, langues, doc);
+      fichiersSFIPTableau.forEach((cid) => fichiersSFIP.add(cid));
     }
 
     return { doc, fichiersSFIP };

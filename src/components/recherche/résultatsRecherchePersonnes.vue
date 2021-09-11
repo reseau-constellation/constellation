@@ -18,7 +18,7 @@ import mixinIPA from "@/mixins/ipa";
 
 import carteMembre from "@/components/commun/carteMembre.vue";
 
-import { infoMembreEnLigne } from "@/ipa/réseau";
+import { infoMembreEnLigne } from "@/ipa/reseau";
 
 export default mixins(mixinIPA).extend({
   name: "résultatsRecherchePersonnes",

@@ -59,7 +59,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
   data: function () {
     return {
       noms: {} as { [key: string]: string },
-      courriel: undefined as undefined | string,
+      courriel: undefined as undefined | string | null,
       bds: [] as string[],
       projets: [] as string[],
       monIdBdRacine: undefined as undefined | string,

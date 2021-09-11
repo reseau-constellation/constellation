@@ -233,9 +233,8 @@ export function validerCatégorieVal(
   const estUnHoroDatage = (v: unknown): boolean => {
     if (!["number", "string"].includes(typeof v)) return false;
 
-    const date = new Date(v as string|number);
-    console.log(date, date.valueOf())
-    return !isNaN(date.valueOf())
+    const date = new Date(v as string | number);
+    return !isNaN(date.valueOf());
   };
 
   switch (catégorie) {
@@ -243,10 +242,10 @@ export function validerCatégorieVal(
       return typeof val === "number";
     case "horoDatage": {
       return estUnHoroDatage(val);
-    };
+    }
     case "intervaleTemps":
       if (!Array.isArray(val)) return false;
-      return (val as unknown[]).every(d=>estUnHoroDatage(d));
+      return (val as unknown[]).every((d) => estUnHoroDatage(d));
     case "chaîne":
       return typeof val === "string";
     case "catégorique":
@@ -255,7 +254,7 @@ export function validerCatégorieVal(
       return typeof val === "boolean";
     case "géojson":
       if (!(typeof val === "object")) return false;
-      return gjv.valid(val)
+      return gjv.valid(val);
     case "vidéo":
       return validFichier(val, formatsFichiers.vidéo);
     case "audio":

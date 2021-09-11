@@ -659,7 +659,7 @@ export default class Réseau extends EventEmitter {
             } else {
               //S'assurer que les variables correspondent
               const varsCorrespondent = schéma.tableaux.every((t, i) => {
-                const varsSchémaTableau = new Set(t.vars);
+                const varsSchémaTableau = new Set(t.cols.map(c=>c.idVariable));
                 const varsTableau = new Set(
                   tableaux[i].cols.map((c) => c.variable)
                 );

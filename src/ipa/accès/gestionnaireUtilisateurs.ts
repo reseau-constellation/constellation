@@ -140,7 +140,7 @@ export default class GestionnaireAccès extends EventEmitter {
     return (await this.estUnModérateur(id)) || (await this.estUnMembre(id));
   }
 
-  async ajouterÉléments(éléments: entréeBDAccès[]) {
+  async ajouterÉléments(éléments: entréeBDAccès[]): Promise<void> {
     this._miseÀJourEnCours = true;
     await Promise.all(
       éléments.map(async (élément) => {

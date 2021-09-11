@@ -382,7 +382,7 @@ import mixins from "vue-typed-mixins";
 
 import { MODÉRATEUR } from "@/ipa/accès/consts";
 import { infoAuteur, infoScore } from "@/ipa/bds";
-import { infoRéplication } from "@/ipa/réseau";
+import { infoRéplication } from "@/ipa/reseau";
 
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 

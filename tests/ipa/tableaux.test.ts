@@ -266,7 +266,6 @@ Object.keys(testAPIs).forEach((API) => {
           .have.lengthOf(1)
           .and.to.have.members([idsVariables[1]]);
       });
-
     });
 
     describe("Colonnes indexe", function () {
@@ -294,7 +293,9 @@ Object.keys(testAPIs).forEach((API) => {
           colonnes[0].id,
           true
         );
-        expect(indexes).to.have.lengthOf(1).and.to.have.members([colonnes[0].id]);
+        expect(indexes)
+          .to.have.lengthOf(1)
+          .and.to.have.members([colonnes[0].id]);
       });
 
       step("Effacer l'indexe", async () => {
@@ -667,11 +668,7 @@ Object.keys(testAPIs).forEach((API) => {
           idTableau,
           idVariable
         );
-        await client.tableaux!.changerColIndexe(
-          idTableau,
-          idColonne,
-          true
-        )
+        await client.tableaux!.changerColIndexe(idTableau, idColonne, true);
 
         await client.tableaux!.ajouterÉlément(idTableau, { [idColonne]: 123 });
 
@@ -738,7 +735,7 @@ Object.keys(testAPIs).forEach((API) => {
         expect(colonnes[0].variable).to.equal(idVariable);
       });
 
-      it("Les indexes sont copiés", async () => {
+      it("Les indexes sont copiés", async () => {
         expect(colsIndexe).to.be.an("array").with.lengthOf(1);
         expect(colsIndexe[0]).to.equal(idColonne);
       });
@@ -773,7 +770,7 @@ Object.keys(testAPIs).forEach((API) => {
       let données: élémentDonnées<élémentBdListeDonnées>[];
       let fOublier: schémaFonctionOublier;
 
-      const idsCols: {[key: string]: string} = {}
+      const idsCols: { [key: string]: string } = {};
 
       before(async () => {
         idTableauBase = await client.tableaux!.créerTableau();
@@ -784,65 +781,128 @@ Object.keys(testAPIs).forEach((API) => {
         idVarTempMin = await client.variables!.créerVariable("numérique");
         idVarTempMax = await client.variables!.créerVariable("numérique");
 
-        for (const idVar of [idVarDate, idVarEndroit, idVarTempMin, idVarTempMax]) {
-          const idCol = await client.tableaux!.ajouterColonneTableau(idTableauBase, idVar);
+        for (const idVar of [
+          idVarDate,
+          idVarEndroit,
+          idVarTempMin,
+          idVarTempMax,
+        ]) {
+          const idCol = await client.tableaux!.ajouterColonneTableau(
+            idTableauBase,
+            idVar
+          );
 
-          idsCols[idVar] = idCol
-          await client.tableaux!.ajouterColonneTableau(idTableau2, idVar, idCol);
-        };
+          idsCols[idVar] = idCol;
+          await client.tableaux!.ajouterColonneTableau(
+            idTableau2,
+            idVar,
+            idCol
+          );
+        }
         for (const idVar of [idVarDate, idVarEndroit]) {
-          await client.tableaux!.changerColIndexe(idTableauBase, idsCols[idVar], true);
-          await client.tableaux!.changerColIndexe(idTableau2, idsCols[idVar], true);
-        };
+          await client.tableaux!.changerColIndexe(
+            idTableauBase,
+            idsCols[idVar],
+            true
+          );
+          await client.tableaux!.changerColIndexe(
+            idTableau2,
+            idsCols[idVar],
+            true
+          );
+        }
 
-        fOublier = await client.tableaux!.suivreDonnées(idTableauBase,
-          (d) => données = d
+        fOublier = await client.tableaux!.suivreDonnées(
+          idTableauBase,
+          (d) => (données = d)
         );
 
         const élémentsBase = [
-          {[idsCols[idVarEndroit]]: "ici", [idsCols[idVarDate]]: "2021-01-01", [idsCols[idVarTempMin]]: 25},
-          {[idsCols[idVarEndroit]]: "ici", [idsCols[idVarDate]]: "2021-01-02", [idsCols[idVarTempMin]]: 25},
-          {[idsCols[idVarEndroit]]: "là-bas", [idsCols[idVarDate]]: "2021-01-01", [idsCols[idVarTempMin]]: 25}
-        ]
+          {
+            [idsCols[idVarEndroit]]: "ici",
+            [idsCols[idVarDate]]: "2021-01-01",
+            [idsCols[idVarTempMin]]: 25,
+          },
+          {
+            [idsCols[idVarEndroit]]: "ici",
+            [idsCols[idVarDate]]: "2021-01-02",
+            [idsCols[idVarTempMin]]: 25,
+          },
+          {
+            [idsCols[idVarEndroit]]: "là-bas",
+            [idsCols[idVarDate]]: "2021-01-01",
+            [idsCols[idVarTempMin]]: 25,
+          },
+        ];
         for (const élément of élémentsBase) {
-          await client.tableaux!.ajouterÉlément(
-            idTableauBase, élément
-          )
+          await client.tableaux!.ajouterÉlément(idTableauBase, élément);
         }
 
         const éléments2 = [
-          {[idsCols[idVarEndroit]]: "ici", [idsCols[idVarDate]]: "2021-01-01", [idsCols[idVarTempMin]]: 27, [idsCols[idVarTempMax]]: 30},
-          {[idsCols[idVarEndroit]]: "ici", [idsCols[idVarDate]]: "2021-01-02", [idsCols[idVarTempMin]]: 27},
-          {[idsCols[idVarEndroit]]: "là-bas", [idsCols[idVarDate]]: "2021-01-02", [idsCols[idVarTempMin]]: 27}
-        ]
+          {
+            [idsCols[idVarEndroit]]: "ici",
+            [idsCols[idVarDate]]: "2021-01-01",
+            [idsCols[idVarTempMin]]: 27,
+            [idsCols[idVarTempMax]]: 30,
+          },
+          {
+            [idsCols[idVarEndroit]]: "ici",
+            [idsCols[idVarDate]]: "2021-01-02",
+            [idsCols[idVarTempMin]]: 27,
+          },
+          {
+            [idsCols[idVarEndroit]]: "là-bas",
+            [idsCols[idVarDate]]: "2021-01-02",
+            [idsCols[idVarTempMin]]: 27,
+          },
+        ];
         for (const élément of éléments2) {
-          await client.tableaux!.ajouterÉlément(
-            idTableau2, élément
-          )
+          await client.tableaux!.ajouterÉlément(idTableau2, élément);
         }
 
         await client.tableaux!.combinerDonnées(idTableauBase, idTableau2);
       });
 
-      after(async () => {
+      after(async () => {
         if (fOublier) fOublier();
-      })
+      });
 
-      step("Données manquantes ajoutées", async () => {
-        expect(données).to.be.an("array").with.lengthOf(4)
-        expect(données.map(d=>d.données).map(d=>{
-          delete d["id"]
-          return d
-        })).to.have.deep.members([
-          {[idsCols[idVarEndroit]]: "ici", [idsCols[idVarDate]]: "2021-01-01", [idsCols[idVarTempMin]]: 25, [idsCols[idVarTempMax]]: 30},
-          {[idsCols[idVarEndroit]]: "ici", [idsCols[idVarDate]]: "2021-01-02", [idsCols[idVarTempMin]]: 25},
-          {[idsCols[idVarEndroit]]: "là-bas", [idsCols[idVarDate]]: "2021-01-01", [idsCols[idVarTempMin]]: 25},
-          {[idsCols[idVarEndroit]]: "là-bas", [idsCols[idVarDate]]: "2021-01-02", [idsCols[idVarTempMin]]: 27}
-        ])
+      step("Données manquantes ajoutées", async () => {
+        expect(données).to.be.an("array").with.lengthOf(4);
+        expect(
+          données
+            .map((d) => d.données)
+            .map((d) => {
+              delete d["id"];
+              return d;
+            })
+        ).to.have.deep.members([
+          {
+            [idsCols[idVarEndroit]]: "ici",
+            [idsCols[idVarDate]]: "2021-01-01",
+            [idsCols[idVarTempMin]]: 25,
+            [idsCols[idVarTempMax]]: 30,
+          },
+          {
+            [idsCols[idVarEndroit]]: "ici",
+            [idsCols[idVarDate]]: "2021-01-02",
+            [idsCols[idVarTempMin]]: 25,
+          },
+          {
+            [idsCols[idVarEndroit]]: "là-bas",
+            [idsCols[idVarDate]]: "2021-01-01",
+            [idsCols[idVarTempMin]]: 25,
+          },
+          {
+            [idsCols[idVarEndroit]]: "là-bas",
+            [idsCols[idVarDate]]: "2021-01-02",
+            [idsCols[idVarTempMin]]: 27,
+          },
+        ]);
       });
     });
 
-    describe("Exporter données", function() {
+    describe("Exporter données", function () {
       let idTableau: string;
       let idVarNumérique: string;
       let idVarChaîne: string;
@@ -859,121 +919,140 @@ Object.keys(testAPIs).forEach((API) => {
 
       let fOublier: schémaFonctionOublier;
 
-      const nomTableauFr = "Tableau test"
+      const nomTableauFr = "Tableau test";
 
       before(async () => {
         idTableau = await client.tableaux!.créerTableau();
-        idVarNumérique = await client.variables!.créerVariable("numérique")
-        idVarChaîne = await client.variables!.créerVariable("chaîne")
-        idVarFichier = await client.variables!.créerVariable("fichier")
-        idVarBooléenne = await client.variables!.créerVariable("booléen")
+        idVarNumérique = await client.variables!.créerVariable("numérique");
+        idVarChaîne = await client.variables!.créerVariable("chaîne");
+        idVarFichier = await client.variables!.créerVariable("fichier");
+        idVarBooléenne = await client.variables!.créerVariable("booléen");
 
         idColNumérique = await client.tableaux!.ajouterColonneTableau(
-          idTableau, idVarNumérique
+          idTableau,
+          idVarNumérique
         );
         idColChaîne = await client.tableaux!.ajouterColonneTableau(
-          idTableau, idVarChaîne
+          idTableau,
+          idVarChaîne
         );
         idColBooléenne = await client.tableaux!.ajouterColonneTableau(
-          idTableau, idVarBooléenne
+          idTableau,
+          idVarBooléenne
         );
         idColFichier = await client.tableaux!.ajouterColonneTableau(
-          idTableau, idVarFichier
+          idTableau,
+          idVarFichier
         );
 
-        await client.tableaux!.ajouterNomsTableau(
-          idTableau, {"fr": nomTableauFr}
-        )
+        await client.tableaux!.ajouterNomsTableau(idTableau, {
+          fr: nomTableauFr,
+        });
 
-        await client.variables!.ajouterNomsVariable(
-          idVarNumérique, {"fr": "Numérique", "हिं": "यह है संख्या"}
-        )
+        await client.variables!.ajouterNomsVariable(idVarNumérique, {
+          fr: "Numérique",
+          हिं: "यह है संख्या",
+        });
 
-        await client.variables!.ajouterNomsVariable(
-          idVarChaîne, {"fr": "Numérique", "த": "இது உரை ஆகும்"}
-        )
+        await client.variables!.ajouterNomsVariable(idVarChaîne, {
+          fr: "Numérique",
+          த: "இது உரை ஆகும்",
+        });
 
-        const éléments: {[key: string]: élémentsBd}[] = [
+        const éléments: { [key: string]: élémentsBd }[] = [
           {
-            [idColNumérique]: 123, [idColChaîne]: "வணக்கம்",
+            [idColNumérique]: 123,
+            [idColChaîne]: "வணக்கம்",
             [idColBooléenne]: true,
-            [idColFichier]: {cid: "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ", ext: "mp4"},
+            [idColFichier]: {
+              cid: "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ",
+              ext: "mp4",
+            },
           },
           {
-            [idColNumérique]: 456
-          }
-        ]
+            [idColNumérique]: 456,
+          },
+        ];
         for (const élément of éléments) {
-          await client.tableaux!.ajouterÉlément(
-            idTableau, élément
-          )
+          await client.tableaux!.ajouterÉlément(idTableau, élément);
         }
         ({ doc, fichiersSFIP } = await client.tableaux!.exporterDonnées(
-          idTableau, ["த", "fr"]
-        ))
+          idTableau,
+          ["த", "fr"]
+        ));
       });
 
-      after(async () => {
+      after(async () => {
         if (fOublier) fOublier();
       });
 
-      it("Langue appropriée pour le nom du tableau", () => {
-        expect(doc.SheetNames[0]).to.equal(nomTableauFr)
+      it("Langue appropriée pour le nom du tableau", () => {
+        expect(doc.SheetNames[0]).to.equal(nomTableauFr);
       });
 
-      it("Langue appropriée pour les noms des colonnes", () => {
-        for (const {cellule, val} of [
-          {cellule: "A1", val: "Numérique"},
-          {cellule: "B1", val: "இது உரை ஆகும்"},
-          {cellule: "C1", val: idColBooléenne},
-          {cellule: "D1", val: idColFichier}
+      it("Langue appropriée pour les noms des colonnes", () => {
+        for (const { cellule, val } of [
+          { cellule: "A1", val: "Numérique" },
+          { cellule: "B1", val: "இது உரை ஆகும்" },
+          { cellule: "C1", val: idColBooléenne },
+          { cellule: "D1", val: idColFichier },
         ]) {
-          expect((doc.Sheets[nomTableauFr][cellule] as XLSX.CellObject).v).to.equal(val);
+          expect(
+            (doc.Sheets[nomTableauFr][cellule] as XLSX.CellObject).v
+          ).to.equal(val);
         }
       });
 
-      it("Données numériques exportées", async () => {
-        const val = doc.Sheets[nomTableauFr]["A2"].v
+      it("Données numériques exportées", async () => {
+        const val = doc.Sheets[nomTableauFr]["A2"].v;
         expect(val).to.equal(123);
 
-        const val2 = doc.Sheets[nomTableauFr]["A3"].v
+        const val2 = doc.Sheets[nomTableauFr]["A3"].v;
         expect(val2).to.equal(456);
       });
 
-      it("Données chaîne exportées", async () => {
-        const val = doc.Sheets[nomTableauFr]["B2"].v
+      it("Données chaîne exportées", async () => {
+        const val = doc.Sheets[nomTableauFr]["B2"].v;
         expect(val).to.equal("வணக்கம்");
       });
 
-      it("Données booléennes exportées", async () => {
-        const val = doc.Sheets[nomTableauFr]["C2"].v
+      it("Données booléennes exportées", async () => {
+        const val = doc.Sheets[nomTableauFr]["C2"].v;
         expect(val).to.equal("true");
       });
 
-      it("Données fichier exportées", async() => {
+      it("Données fichier exportées", async () => {
         const val = doc.Sheets[nomTableauFr]["D2"].v;
-        expect(val).to.equal("QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ.mp4");
+        expect(val).to.equal(
+          "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ.mp4"
+        );
       });
 
-      it("Les fichiers SFIP sont détectés", async () => {
-        expect(fichiersSFIP.size).equal(1)
-        expect(fichiersSFIP).to.have.keys(["QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ"])
+      it("Les fichiers SFIP sont détectés", async () => {
+        expect(fichiersSFIP.size).equal(1);
+        expect(fichiersSFIP).to.have.keys([
+          "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ",
+        ]);
       });
 
-      it("Exporter avec ids des colonnes et du tableau", async () => {
-        ({doc, fichiersSFIP} = await client.tableaux!.exporterDonnées(idTableau));
-        const idTableauCourt = idTableau.split("/").pop()!.slice(0, 30)
-        expect(doc.SheetNames[0]).to.equal(idTableauCourt)
-        for (const {cellule, val} of [
-          {cellule: "A1", val: idColNumérique}, {cellule: "B1", val: idColChaîne},
-          {cellule: "C1", val: idColBooléenne},
-          {cellule: "D1", val: idColFichier}
+      it("Exporter avec ids des colonnes et du tableau", async () => {
+        ({ doc, fichiersSFIP } = await client.tableaux!.exporterDonnées(
+          idTableau
+        ));
+        const idTableauCourt = idTableau.split("/").pop()!.slice(0, 30);
+        expect(doc.SheetNames[0]).to.equal(idTableauCourt);
+        for (const { cellule, val } of [
+          { cellule: "A1", val: idColNumérique },
+          { cellule: "B1", val: idColChaîne },
+          { cellule: "C1", val: idColBooléenne },
+          { cellule: "D1", val: idColFichier },
         ]) {
-          expect((doc.Sheets[idTableauCourt][cellule] as XLSX.CellObject).v).to.equal(val);
-        };
+          expect(
+            (doc.Sheets[idTableauCourt][cellule] as XLSX.CellObject).v
+          ).to.equal(val);
+        }
       });
     });
-
   });
 });
 

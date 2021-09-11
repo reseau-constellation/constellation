@@ -1,4 +1,4 @@
-import { élémentDeMembre } from "@/ipa/réseau";
+import { élémentDeMembre } from "@/ipa/reseau";
 
 export const ID_VAR_CLEF =
   "/orbitdb/zdpuAximNmZyUWXGCaLmwSEGDeWmuqfgaoogA7KNSa1B2DAAF/dd77aec3-e7b8-4695-b068-49ce4227b360";

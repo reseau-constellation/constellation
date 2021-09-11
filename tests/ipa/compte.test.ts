@@ -64,7 +64,11 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Lire le courriel d'un autre membre", async () => {
-        await attendreRésultat(rés, "ultat", (x: null|undefined|string)=>x);
+        await attendreRésultat(
+          rés,
+          "ultat",
+          (x: null | undefined | string) => x
+        );
         expect(rés["ultat"]).to.equal(COURRIEL);
       });
 

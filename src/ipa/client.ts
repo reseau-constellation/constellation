@@ -141,7 +141,7 @@ export const uneFois = async function <T>(
   return résultat[0];
 };
 
-export const faisRien = () => {
+export const faisRien = (): void => {
   //Rien à faire
 };
 

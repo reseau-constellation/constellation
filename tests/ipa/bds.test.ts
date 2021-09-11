@@ -16,10 +16,10 @@ import ClientConstellation, {
   uneFois,
 } from "@/ipa/client";
 import { InfoColAvecCatégorie } from "@/ipa/tableaux";
-import { infoAuteur } from "@/ipa/bds";
+import { infoAuteur, infoScore } from "@/ipa/bds";
 import { schémaBd } from "@/ipa/reseau";
 import { MODÉRATEUR, MEMBRE } from "@/ipa/accès/consts";
-import { élémentDonnées, élémentBdListeDonnées } from "@/ipa/valid";
+import { élémentDonnées, élémentBdListeDonnées, règleBornes } from "@/ipa/valid";
 
 import { testAPIs, config } from "./sfipTest";
 import { générerClients, attendreRésultat } from "./utils";
@@ -472,7 +472,7 @@ Object.keys(testAPIs).forEach((API) => {
       });
     });
 
-    describe.only("Combiner BDs", function () {
+    describe("Combiner BDs", function () {
       let idVarClef: string;
       let idVarTrad: string;
 
@@ -483,11 +483,10 @@ Object.keys(testAPIs).forEach((API) => {
       let idTableau2: string;
 
       let données1: élémentDonnées<élémentBdListeDonnées>[];
-      let données2: élémentDonnées<élémentBdListeDonnées>[];
 
-      const fsOublier: schémaFonctionOublier[] = []
+      const fsOublier: schémaFonctionOublier[] = [];
 
-      before(async () => {
+      before(async () => {
         idVarClef = await client.variables!.créerVariable("chaîne");
         idVarTrad = await client.variables!.créerVariable("chaîne");
 
@@ -499,91 +498,102 @@ Object.keys(testAPIs).forEach((API) => {
                 {
                   idVariable: idVarClef,
                   idColonne: "clef",
-                  indexe: true
+                  indexe: true,
                 },
                 {
                   idVariable: idVarTrad,
-                  idColonne: "trad"
-                }
+                  idColonne: "trad",
+                },
               ],
-              idUnique: "tableau trads"
+              idUnique: "tableau trads",
+            },
+          ],
+        };
+
+        idBd1 = await client.bds!.créerBdDeSchéma(schéma);
+        idBd2 = await client.bds!.créerBdDeSchéma(schéma);
+
+        idTableau1 = (
+          await uneFois(
+            async (
+              fSuivi: schémaFonctionSuivi<string[]>
+            ): Promise<schémaFonctionOublier> => {
+              return await client.bds!.suivreTableauxBd(idBd1, fSuivi);
             }
-          ]
-        }
-
-        idBd1 = await client.bds!.créerBdDeSchéma(schéma)
-        idBd2 = await client.bds!.créerBdDeSchéma(schéma)
-
-        idTableau1 = (await uneFois(
-          async (fSuivi: schémaFonctionSuivi<string[]>): Promise<schémaFonctionOublier> => {
-            return await client.bds!.suivreTableauxBd(idBd1, fSuivi)
-          }
-        ))[0];
-        idTableau2 = (await uneFois(
-          async (fSuivi: schémaFonctionSuivi<string[]>): Promise<schémaFonctionOublier> => {
-            return await client.bds!.suivreTableauxBd(idBd2, fSuivi)
-          }
-        ))[0];
+          )
+        )[0];
+        idTableau2 = (
+          await uneFois(
+            async (
+              fSuivi: schémaFonctionSuivi<string[]>
+            ): Promise<schémaFonctionOublier> => {
+              return await client.bds!.suivreTableauxBd(idBd2, fSuivi);
+            }
+          )
+        )[0];
 
         const éléments1 = [
           {
-            clef: "fr", trad: "Constellation"
+            clef: "fr",
+            trad: "Constellation",
           },
           {
-            clef: "kaq"  //Une trad vide, par erreur disons
-          }
-        ]
+            clef: "kaq", //Une trad vide, par erreur disons
+          },
+        ];
         for (const élément of éléments1) {
-          await client.tableaux!.ajouterÉlément(
-            idTableau1, élément
-          )
+          await client.tableaux!.ajouterÉlément(idTableau1, élément);
         }
 
         const éléments2 = [
           {
-            clef: "fr", trad: "Constellation!"  //Une erreur ici, disons
+            clef: "fr",
+            trad: "Constellation!", //Une erreur ici, disons
           },
           {
-            clef: "kaq", trad: "Ch'umil"
+            clef: "kaq",
+            trad: "Ch'umil",
           },
           {
-            clef: "हिं", trad: "तारामंडल"
-          }
-        ]
+            clef: "हिं",
+            trad: "तारामंडल",
+          },
+        ];
         for (const élément of éléments2) {
-          await client.tableaux!.ajouterÉlément(
-            idTableau2, élément
-          )
+          await client.tableaux!.ajouterÉlément(idTableau2, élément);
         }
 
         fsOublier.push(
           await client.tableaux!.suivreDonnées(
             idTableau1,
-            d=>données1 = d,
+            (d) => (données1 = d),
             true
           )
         );
 
         await client.bds!.combinerBds(idBd1, idBd2);
-      })
+      });
 
-      after(async () => {
-        fsOublier.forEach(f=>f());
+      after(async () => {
+        fsOublier.forEach((f) => f());
       });
 
       it("Les données sont copiées", async () => {
-        const donnéesCombinées = données1.map(d=>d.données);
-        console.log({donnéesCombinées})
-        expect(donnéesCombinées.map(d=>{
-          delete d["id"]
-          return d
-        })).to.be.an("array").with.lengthOf(3).and.deep.members(
-          [
-            {[idVarClef]: "fr", [idVarTrad]: "Constellation"},
-            {[idVarClef]: "kaq", [idVarTrad]: "Ch'umil"},
-            {[idVarClef]: "हिं", [idVarTrad]: "तारामंडल"}
-          ]
+        const donnéesCombinées = données1.map((d) => d.données);
+
+        expect(
+          donnéesCombinées.map((d) => {
+            delete d["id"];
+            return d;
+          })
         )
+          .to.be.an("array")
+          .with.lengthOf(3)
+          .and.deep.members([
+            { [idVarClef]: "fr", [idVarTrad]: "Constellation" },
+            { [idVarClef]: "kaq", [idVarTrad]: "Ch'umil" },
+            { [idVarClef]: "हिं", [idVarTrad]: "तारामंडल" },
+          ]);
       });
     });
 
@@ -592,131 +602,387 @@ Object.keys(testAPIs).forEach((API) => {
       let idVarTrad: string;
       let idVarLangue: string;
 
+      let idMotClef: string;
+
       let idBd: string;
 
       let tableaux: string[];
-      let tableauUnique: string|undefined;
+      let tableauUnique: string | undefined;
 
-      const fsOublier: schémaFonctionOublier[] = []
+      const fsOublier: schémaFonctionOublier[] = [];
 
-      before(async () => {
+      before(async () => {
         idVarClef = await client.variables!.créerVariable("chaîne");
         idVarTrad = await client.variables!.créerVariable("chaîne");
         idVarLangue = await client.variables!.créerVariable("chaîne");
 
+        idMotClef = await client.motsClefs!.créerMotClef();
+
         const schéma: schémaBd = {
           licence: "ODbl-1_0",
+          motsClefs: [idMotClef],
           tableaux: [
             {
               cols: [
                 {
                   idVariable: idVarClef,
                   idColonne: "clef",
-                  indexe: true
+                  indexe: true,
                 },
                 {
                   idVariable: idVarTrad,
-                  idColonne: "trad"
-                }
+                  idColonne: "trad",
+                },
               ],
-              idUnique: "tableau trads"
+              idUnique: "tableau trads",
             },
             {
               cols: [
                 {
                   idVariable: idVarLangue,
                   idColonne: "langue",
-                  indexe: true
-                }
+                  indexe: true,
+                },
               ],
-              idUnique: "tableau langues"
-            }
-          ]
-        }
+              idUnique: "tableau langues",
+            },
+          ],
+        };
 
-        idBd = await client.bds!.créerBdDeSchéma(schéma)
+        idBd = await client.bds!.créerBdDeSchéma(schéma);
         fsOublier.push(
-          await client.bds!.suivreTableauxBd(idBd, t=>tableaux = t)
-        )
+          await client.bds!.suivreTableauxBd(idBd, (t) => (tableaux = t))
+        );
         fsOublier.push(
           await client.bds!.suivreTableauParIdUnique(
             idBd,
             "tableau trads",
-            t=>tableauUnique = t)
-        )
-      })
-
-      after(async () => {
-        fsOublier.forEach(f=>f());
+            (t) => (tableauUnique = t)
+          )
+        );
       });
 
-      step("Les tableaux sont créés", async () => {
+      after(async () => {
+        fsOublier.forEach((f) => f());
+      });
+
+      step("Les tableaux sont créés", async () => {
         expect(tableaux).to.be.an("array").with.lengthOf(2);
       });
 
-      step("Colonnes", async () => {
+      step("Colonnes", async () => {
         const colonnes = await uneFois(
-          async (fSuivi: schémaFonctionSuivi<InfoColAvecCatégorie[]>): Promise<schémaFonctionOublier> => {
-            return await client.tableaux!.suivreColonnes(tableaux[0], fSuivi)
+          async (
+            fSuivi: schémaFonctionSuivi<InfoColAvecCatégorie[]>
+          ): Promise<schémaFonctionOublier> => {
+            return await client.tableaux!.suivreColonnes(tableaux[0], fSuivi);
           }
-        )
-        expect(colonnes.map(c=>c.id)).to.be.an("array").with.lengthOf(2).and.members(["clef", "trad"]);
+        );
+        expect(colonnes.map((c) => c.id))
+          .to.be.an("array")
+          .with.lengthOf(2)
+          .and.members(["clef", "trad"]);
       });
 
-      step("Indexe colonne", async () => {
+      step("Mots clefs", async () => {
+        const motsClefs = await uneFois(
+          async (
+            fSuivi: schémaFonctionSuivi<string[]>
+          ): Promise<schémaFonctionOublier> => {
+            return await client.bds!.suivreMotsClefsBd(idBd, fSuivi);
+          }
+        );
+        expect(motsClefs)
+          .to.be.an("array")
+          .with.lengthOf(1)
+          .and.members([idMotClef]);
+      });
+
+      step("Indexe colonne", async () => {
         const indexes = await uneFois(
-          async (fSuivi: schémaFonctionSuivi<string[]>): Promise<schémaFonctionOublier> => {
-            return await client.tableaux!.suivreIndexe(tableaux[0], fSuivi)
+          async (
+            fSuivi: schémaFonctionSuivi<string[]>
+          ): Promise<schémaFonctionOublier> => {
+            return await client.tableaux!.suivreIndexe(tableaux[0], fSuivi);
           }
-        )
-        expect(indexes).to.be.an("array").with.lengthOf(1).and.members(["clef"]);
+        );
+        expect(indexes)
+          .to.be.an("array")
+          .with.lengthOf(1)
+          .and.members(["clef"]);
       });
 
-      step("Tableaux unique détectable", async () => {
+      step("Tableaux unique détectable", async () => {
         expect(adresseOrbiteValide(tableauUnique)).to.be.true;
       });
-
-
-    })
+    });
 
     describe("Suivre BD unique", function () {
-      it("La BD est créée lorsqu'elle n'existe pas");
+      let idVarClef: string;
+      let idVarTrad: string;
+      let idVarLangue: string;
+
+      let fOublier: schémaFonctionOublier;
+
+      const rés: { ultat?: string } = {};
+
+      before(async () => {
+        idVarClef = await client.variables!.créerVariable("chaîne");
+        idVarTrad = await client.variables!.créerVariable("chaîne");
+        idVarLangue = await client.variables!.créerVariable("chaîne");
+
+        const motClefUnique = await client.motsClefs!.créerMotClef();
+
+        const schéma: schémaBd = {
+          licence: "ODbl-1_0",
+          motsClefs: [motClefUnique],
+          tableaux: [
+            {
+              cols: [
+                {
+                  idVariable: idVarClef,
+                  idColonne: "clef",
+                  indexe: true,
+                },
+                {
+                  idVariable: idVarTrad,
+                  idColonne: "trad",
+                },
+              ],
+              idUnique: "tableau trads",
+            },
+            {
+              cols: [
+                {
+                  idVariable: idVarLangue,
+                  idColonne: "langue",
+                  indexe: true,
+                },
+              ],
+              idUnique: "tableau langues",
+            },
+          ],
+        };
+
+        fOublier = await client.bds!.suivreBdUnique(
+          schéma,
+          motClefUnique,
+          (id) => (rés.ultat = id)
+        );
+      });
+      after(() => {
+        if (fOublier) fOublier();
+      });
+      it("La BD est créée lorsqu'elle n'existe pas", async () => {
+        await attendreRésultat(rés, "ultat");
+        expect(adresseOrbiteValide(rés.ultat)).to.be.true;
+      });
       it("Gestion de la concurrence entre dispositifs");
       it("Gestion de concurrence entre 2+ BDs");
     });
 
     describe("Suivre tableau unique", function () {
-      it("Rien pour commencer");
-      it("Ajour d'id unique détecté");
+      let idBd: string;
+      let idTableau: string;
+
+      let fOublier: schémaFonctionOublier;
+
+      const rés: { ultat?: string } = {};
+
+      before(async () => {
+        idBd = await client.bds!.créerBd("ODbl-1_0");
+
+        idTableau = await client.bds!.ajouterTableauBd(idBd);
+
+        fOublier = await client.bds!.suivreTableauParIdUnique(
+          idBd,
+          "clefUnique",
+          (id) => (rés.ultat = id)
+        );
+      });
+
+      after(() => {
+        if (fOublier) fOublier();
+      });
+      it("Rien pour commencer", async () => {
+        expect(rés.ultat).to.be.undefined;
+      });
+      it("Ajour d'id unique détecté", async () => {
+        await client.tableaux!.spécifierIdUniqueTableau(
+          idTableau,
+          "clefUnique"
+        );
+        await attendreRésultat(rés, "ultat");
+        expect(rés.ultat).to.equal(idTableau);
+      });
     });
 
-    describe("Score", function () {
+    describe("Suivre tableau unique de BD unique", function () {
+      let idVarClef: string;
+      let idVarTrad: string;
+
+      let fOublier: schémaFonctionOublier;
+
+      const rés: { ultat?: string } = {};
+
+      before(async () => {
+        idVarClef = await client.variables!.créerVariable("chaîne");
+        idVarTrad = await client.variables!.créerVariable("chaîne");
+
+        const motClefUnique = await client.motsClefs!.créerMotClef();
+
+        const schéma: schémaBd = {
+          licence: "ODbl-1_0",
+          motsClefs: [motClefUnique],
+          tableaux: [
+            {
+              cols: [
+                {
+                  idVariable: idVarClef,
+                  idColonne: "clef",
+                  indexe: true,
+                },
+                {
+                  idVariable: idVarTrad,
+                  idColonne: "trad",
+                },
+              ],
+              idUnique: "id tableau unique",
+            },
+          ],
+        };
+
+        fOublier = await client.bds!.suivreTableauUniqueDeBdUnique(
+          schéma,
+          motClefUnique,
+          "id tableau unique",
+          (id) => (rés.ultat = id)
+        );
+      });
+      after(() => {
+        if (fOublier) fOublier();
+      });
+
+      it("Tableau unique détecté", async () => {
+        await attendreRésultat(rés, "ultat");
+        expect(adresseOrbiteValide(rés.ultat)).to.be.true;
+      });
+    });
+
+    describe.only("Score", function () {
+      let idBd: string;
+      let idTableau: string;
+      let idVarNumérique: string;
+      let idVarChaîne: string;
+      let idVarNumérique2: string;
+
+      let idColNumérique: string;
+      let idColNumérique2: string;
+
+      let score: infoScore
+
+      let fOublier: schémaFonctionOublier;
+
+      before(async () => {
+        idBd = await client.bds!.créerBd("ODbl-1_0");
+        idTableau = await client.bds!.ajouterTableauBd(idBd);
+
+        idVarNumérique = await client.variables!.créerVariable("numérique");
+        idVarNumérique2 = await client.variables!.créerVariable("numérique");
+        idVarChaîne = await client.variables!.créerVariable("chaîne");
+
+        fOublier = await client.bds!.suivreScoreBd(idBd, (s)=>score = s);
+      });
+
+      after(async () => {
+        if (fOublier) fOublier();
+      });
+
       describe("Score accessibilité", function () {
         step("À faire");
       });
 
-      describe("Score tests", function () {
-        step("À faire");
+      describe("Score couverture tests", function () {
+        step("`undefined` lorsque aucune colonne", async () => {
+          expect(score.couverture).to.be.undefined;
+        });
+
+        step("Ajout de colonnes", async () => {
+          idColNumérique = await client.tableaux!.ajouterColonneTableau(
+            idTableau, idVarNumérique
+          )
+          idColNumérique2 = await client.tableaux!.ajouterColonneTableau(
+            idTableau, idVarNumérique2
+          )
+          await client.tableaux!.ajouterColonneTableau(
+            idTableau, idVarChaîne
+          )
+          expect(score.couverture).to.equal(0);
+        });
+
+        step("Ajout de règles", async () => {
+          const règleNumérique: règleBornes = {
+            typeRègle: "bornes",
+            détails: { val: 0, op: ">=" }
+          }
+          await client.tableaux!.ajouterRègleTableau(
+            idTableau, idColNumérique, règleNumérique
+          )
+          expect(score.couverture).to.equal(0.5);
+
+          await client.tableaux!.ajouterRègleTableau(
+            idTableau, idColNumérique2, règleNumérique
+          )
+          expect(score.couverture).to.equal(1);
+        });
+
       });
 
       describe("Score validité", function () {
-        step("À faire");
+        let empreinteÉlément: string;
+
+        step("`undefined` pour commencer", async () => {
+          expect(score.valide).to.be.undefined;
+        });
+
+        step("Ajout d'éléments", async () => {
+          empreinteÉlément = await client.tableaux!.ajouterÉlément(
+            idTableau, {[idColNumérique]: -1, [idColNumérique2]: 1}
+          )
+          expect(score.valide).to.equal(0.5)
+          await client.tableaux!.ajouterÉlément(
+            idTableau, {[idColNumérique]: 1}
+          )
+          expect(score.valide).to.equal(2/3)
+        });
+
+        step("Correction des éléments", async () => {
+          await client.tableaux!.modifierÉlément(
+            idTableau,
+            {[idColNumérique]: 12},
+            empreinteÉlément
+          );
+          expect(score.valide).to.equal(1)
+        });
       });
 
       describe("Score total", function () {
-        step("À faire");
+        step("Calcul du score total", async () => {
+          const total = ((score.accès || 0) + (score.couverture || 0) + (score.valide || 0)) / 3
+          expect(score.total).to.equal(total)
+        });
       });
     });
 
     describe("Exporter données", function () {
       let idBd: string;
-      let doc: XLSX.WorkBook
-      let fichiersSFIP: Set<string>
+      let doc: XLSX.WorkBook;
+      let fichiersSFIP: Set<string>;
 
-      const nomTableau1 = "Tableau 1"
-      const nomTableau2 = "Tableau 2"
+      const nomTableau1 = "Tableau 1";
+      const nomTableau2 = "Tableau 2";
 
-      before(async () => {
+      before(async () => {
         idBd = await client.bds!.créerBd("ODbl-1_0");
 
         const idTableau1 = await client.bds!.ajouterTableauBd(idBd);
@@ -724,31 +990,41 @@ Object.keys(testAPIs).forEach((API) => {
 
         const idVarNum = await client.variables!.créerVariable("numérique");
         const idVarFichier = await client.variables!.créerVariable("fichier");
-        await client.tableaux!.ajouterColonneTableau(
-          idTableau1, idVarNum
-        );
+        await client.tableaux!.ajouterColonneTableau(idTableau1, idVarNum);
         const idColFichier = await client.tableaux!.ajouterColonneTableau(
-          idTableau2, idVarFichier
+          idTableau2,
+          idVarFichier
         );
 
-        await client.tableaux!.ajouterÉlément(
-          idTableau2, {
-            [idColFichier]: {cid: "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ", ext: "mp4"},
-          }
-        )
+        await client.tableaux!.ajouterÉlément(idTableau2, {
+          [idColFichier]: {
+            cid: "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ",
+            ext: "mp4",
+          },
+        });
 
-        await client.tableaux!.ajouterNomsTableau(idTableau1, {"fr": nomTableau1});
-        await client.tableaux!.ajouterNomsTableau(idTableau2, {"fr": nomTableau2});
+        await client.tableaux!.ajouterNomsTableau(idTableau1, {
+          fr: nomTableau1,
+        });
+        await client.tableaux!.ajouterNomsTableau(idTableau2, {
+          fr: nomTableau2,
+        });
 
-        ({doc, fichiersSFIP} = await client.bds!.exporterDonnées(idBd, ["fr"]))
+        ({ doc, fichiersSFIP } = await client.bds!.exporterDonnées(idBd, [
+          "fr",
+        ]));
       });
 
-      step("Doc créé avec tous les tableaux", () => {
-        expect(doc.SheetNames).to.be.an("array").with.members([nomTableau1, nomTableau2])
+      step("Doc créé avec tous les tableaux", () => {
+        expect(doc.SheetNames)
+          .to.be.an("array")
+          .with.members([nomTableau1, nomTableau2]);
       });
-      step("Fichiers SFIP retrouvés de tous les tableaux", () => {
+      step("Fichiers SFIP retrouvés de tous les tableaux", () => {
         expect(fichiersSFIP.size).equal(1);
-        expect(fichiersSFIP).to.have.keys(["QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ"]);
+        expect(fichiersSFIP).to.have.keys([
+          "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ",
+        ]);
       });
     });
 
@@ -783,54 +1059,6 @@ Object.keys(testAPIs).forEach((API) => {
         ]);
         expect(résultats).to.be.an("array").of.length(1);
         expect(résultats[0]).to.equal(idBdRechercheMotsClefs);
-      });
-    });
-
-
-    describe("Suivre tableaux bds de schéma", async () => {
-      let résultat: string;
-      let idPremièreBd: string;
-
-      let fOublier: schémaFonctionOublier;
-      let idMotClef: string;
-      let idVariable: string;
-
-      before(async () => {
-        idMotClef = await client.motsClefs!.créerMotClef();
-        idVariable = await client.variables!.créerVariable("numérique");
-
-        const schéma: schémaBd = {
-          tableaux: [{ vars: [idVariable] }],
-        };
-
-        fOublier = await client.bds!.suivreTableauBdDeSchéma(
-          schéma,
-          idMotClef,
-          0,
-          "ODbl-1_0",
-          (r) => (résultat = r)
-        );
-      });
-
-      after(async () => {
-        if (fOublier) fOublier();
-      });
-
-      step("Un seul résultat pour commencer", async () => {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        expect(résultat).to.exist;
-        expect(adresseOrbiteValide(résultat)).to.be.true;
-        idPremièreBd = résultat;
-      });
-
-      step("Ajoutons une nouvelle BD", async () => {
-        const idDédoublée = await client.bds!.créerBd("ODbl-1_0");
-        const idTableau = await client.bds!.ajouterTableauBd(idDédoublée);
-        await client.tableaux!.ajouterColonneTableau(idTableau, idVariable);
-        await client.bds!.ajouterMotsClefsBd(idDédoublée, [idMotClef]);
-
-        expect(résultat).to.exist;
-        expect(résultat).to.equal(idPremièreBd);
       });
     });
   });

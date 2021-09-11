@@ -67,7 +67,7 @@ import itemMembre from "@/components/commun/itemMembre.vue";
 import mixinIPA from "@/mixins/ipa";
 
 import { MODÉRATEUR, MEMBRE } from "@/ipa/accès/consts";
-import { infoMembreEnLigne } from "@/ipa/réseau";
+import { infoMembreEnLigne } from "@/ipa/reseau";
 
 interface Membre extends infoMembreEnLigne {
   value: string;
