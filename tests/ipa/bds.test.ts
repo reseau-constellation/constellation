@@ -27,7 +27,7 @@ import { générerClients, attendreRésultat } from "./utils";
 const LOG = false;
 
 Object.keys(testAPIs).forEach((API) => {
-  describe.only("BDs", function () {
+  describe("BDs", function () {
     this.timeout(config.timeout);
 
     let fOublierClients: () => Promise<void>;
@@ -869,7 +869,7 @@ Object.keys(testAPIs).forEach((API) => {
       });
     });
 
-    describe.only("Score", function () {
+    describe("Score", function () {
       let idBd: string;
       let idTableau: string;
       let idVarNumérique: string;

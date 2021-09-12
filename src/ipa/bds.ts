@@ -825,7 +825,8 @@ export default class BDs {
               };
             }).length;
 
-          const dénominateur = données.length * colsÉligibles.length;
+          const dénominateur = données.map(d=>colsÉligibles.filter(c=>d.données[c.id] !== undefined).length).reduce((a,b) => a+b, 0)
+
           const numérateur = dénominateur - nCellulesÉrronnées
 
           f({ numérateur, dénominateur });
