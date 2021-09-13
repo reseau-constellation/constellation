@@ -20,7 +20,10 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Vérifier les tests
-        run: yarn test:ipa
+        run: yarn couverture
+
+      - name: Envoyer couverure à Codecov
+        uses: codecov/codecov-action@v2
 
       - name: Déployer
         run: |
