@@ -738,11 +738,13 @@ export default class ClientConstellation extends EventEmitter {
 
     const fSuivreRacine = async (éléments: Array<T>) => {
       if (éléments.some((x) => typeof fCode(x) !== "string")) {
-        console.error("Définir fCode si les éléments ne sont pas en format texte (chaînes).")
+        console.error(
+          "Définir fCode si les éléments ne sont pas en format texte (chaînes)."
+        );
         throw new Error(
           "Définir fCode si les éléments ne sont pas en format texte (chaînes)."
-        )
-      };
+        );
+      }
       const dictÉléments = Object.fromEntries(
         éléments.map((é) => [fCode(é), é])
       );

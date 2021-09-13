@@ -719,14 +719,17 @@ export default class BDs {
         const { cols, règles } = info;
 
         if (cols !== undefined && règles !== undefined) {
-          const colsÉligibles = cols
-            .filter((c) => ["numérique", "catégorique"].includes(c.catégorie))
+          const colsÉligibles = cols.filter((c) =>
+            ["numérique", "catégorique"].includes(c.catégorie)
+          );
 
           const dénominateur = colsÉligibles.length;
-          const numérateur = colsÉligibles
-            .filter((c) => règles.some(
-              (r) => r.règle.règle.typeRègle !== "catégorie" && r.colonne === c.id
-            )).length;
+          const numérateur = colsÉligibles.filter((c) =>
+            règles.some(
+              (r) =>
+                r.règle.règle.typeRègle !== "catégorie" && r.colonne === c.id
+            )
+          ).length;
           f({ numérateur, dénominateur });
         }
       };
@@ -801,8 +804,9 @@ export default class BDs {
           erreurs !== undefined &&
           cols !== undefined
         ) {
-          const colsÉligibles = cols
-            .filter((c) => ["numérique", "catégorique"].includes(c.catégorie))
+          const colsÉligibles = cols.filter((c) =>
+            ["numérique", "catégorique"].includes(c.catégorie)
+          );
 
           const déjàVus: { empreinte: string; idColonne: string }[] = [];
           const nCellulesÉrronnées = erreurs
@@ -822,12 +826,18 @@ export default class BDs {
               } else {
                 déjàVus.push(x);
                 return true;
-              };
+              }
             }).length;
 
-          const dénominateur = données.map(d=>colsÉligibles.filter(c=>d.données[c.id] !== undefined).length).reduce((a,b) => a+b, 0)
+          const dénominateur = données
+            .map(
+              (d) =>
+                colsÉligibles.filter((c) => d.données[c.id] !== undefined)
+                  .length
+            )
+            .reduce((a, b) => a + b, 0);
 
-          const numérateur = dénominateur - nCellulesÉrronnées
+          const numérateur = dénominateur - nCellulesÉrronnées;
 
           f({ numérateur, dénominateur });
         }

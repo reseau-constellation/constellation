@@ -44,7 +44,9 @@ Object.keys(testAPIs).forEach((API) => {
     });
 
     describe("Suivre membres", function () {
-      const rés: { ultat: infoMembreEnLigne[]|undefined } = { ultat: undefined };
+      const rés: { ultat: infoMembreEnLigne[] | undefined } = {
+        ultat: undefined,
+      };
       let fOublier: schémaFonctionOublier;
 
       before(async () => {
@@ -57,19 +59,23 @@ Object.keys(testAPIs).forEach((API) => {
 
       step("Autres membres détectés", async () => {
         expect(rés.ultat).to.be.an("array").with.lengthOf(2);
-        expect(rés.ultat!.map(r=>r.idBdRacine)).to.include.members([
+        expect(rés.ultat!.map((r) => r.idBdRacine)).to.include.members([
           client.idBdRacine,
-          client2.idBdRacine
-        ])
+          client2.idBdRacine,
+        ]);
       });
     });
 
     describe("Suivre postes", function () {
-      const rés: { ultat: { addr: string; peer: string; }[]|undefined } = { ultat: undefined };
+      const rés: { ultat: { addr: string; peer: string }[] | undefined } = {
+        ultat: undefined,
+      };
       let fOublier: schémaFonctionOublier;
 
       before(async () => {
-        fOublier = await client.réseau!.suivreConnexionsPostes((c) => (rés.ultat = c));
+        fOublier = await client.réseau!.suivreConnexionsPostes(
+          (c) => (rés.ultat = c)
+        );
       });
 
       after(async () => {
@@ -77,15 +83,16 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Autres postes détectés", async () => {
-        expect(rés.ultat!.map(r=>r.peer)).to.include.members([
-          client2.idNodeSFIP!.id
+        expect(rés.ultat!.map((r) => r.peer)).to.include.members([
+          client2.idNodeSFIP!.id,
         ]);
       });
-
     });
 
     describe("Suivre noms membre", function () {
-      const rés: { ultat: {[key: string]: string}|undefined } = { ultat: undefined };
+      const rés: { ultat: { [key: string]: string } | undefined } = {
+        ultat: undefined,
+      };
       let fOublier: schémaFonctionOublier;
 
       before(async () => {
@@ -97,9 +104,13 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Noms détectés", async () => {
-        await attendreRésultat(rés, "ultat", (x: {[key: string]: string})=>x.fr)
+        await attendreRésultat(
+          rés,
+          "ultat",
+          (x: { [key: string]: string }) => x.fr
+        );
         expect(rés.ultat?.fr).to.exist;
-        expect(rés.ultat?.fr).to.equal("Julien")
+        expect(rés.ultat?.fr).to.equal("Julien");
       });
 
       after(async () => {
@@ -108,7 +119,7 @@ Object.keys(testAPIs).forEach((API) => {
     });
 
     describe("Suivre courriel membre", function () {
-      const rés: { ultat: string|null|undefined } = { ultat: undefined };
+      const rés: { ultat: string | null | undefined } = { ultat: undefined };
       let fOublier: schémaFonctionOublier;
 
       before(async () => {
@@ -120,8 +131,10 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Courriel détecté", async () => {
-        await attendreRésultat(rés, "ultat", (x: string|null|undefined)=>Boolean(x))
-        expect(rés.ultat).to.equal("தொடர்பு@லஸ்ஸி.இந்தியா")
+        await attendreRésultat(rés, "ultat", (x: string | null | undefined) =>
+          Boolean(x)
+        );
+        expect(rés.ultat).to.equal("தொடர்பு@லஸ்ஸி.இந்தியா");
       });
 
       after(async () => {
@@ -130,7 +143,9 @@ Object.keys(testAPIs).forEach((API) => {
     });
 
     describe("Suivre image membre", function () {
-      const rés: { ultat: Uint8Array | undefined | null } = { ultat: undefined };
+      const rés: { ultat: Uint8Array | undefined | null } = {
+        ultat: undefined,
+      };
       let fOublier: schémaFonctionOublier;
 
       const OCTETS = fs.readFileSync(
@@ -161,7 +176,11 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Image détectée", async () => {
-        await attendreRésultat(rés, "ultat", (x: Uint8Array | undefined | null)=>Boolean(x))
+        await attendreRésultat(
+          rés,
+          "ultat",
+          (x: Uint8Array | undefined | null) => Boolean(x)
+        );
         expect(rés.ultat).to.deep.equal(new Uint8Array(OCTETS));
       });
     });
@@ -170,36 +189,49 @@ Object.keys(testAPIs).forEach((API) => {
       let idBd: string;
       let idBd2: string;
 
-      const rés: { ultat?: string[], ultat_2?: string[] } = {
-        ultat: undefined, ultat_2: undefined
+      const rés: { ultat?: string[]; ultat_2?: string[] } = {
+        ultat: undefined,
+        ultat_2: undefined,
       };
-      let fsOublier: schémaFonctionOublier[] = [];
+      const fsOublier: schémaFonctionOublier[] = [];
 
       before(async () => {
-        fsOublier.push(await client2.réseau!.suivreBdsMembre(
-          client.idBdRacine!,
-          (bds) => (rés.ultat = bds)
-        ));
-        fsOublier.push(await client2.réseau!.suivreBds(
-          (bds) => (rés.ultat_2 = bds)
-        ));
+        fsOublier.push(
+          await client2.réseau!.suivreBdsMembre(
+            client.idBdRacine!,
+            (bds) => (rés.ultat = bds)
+          )
+        );
+        fsOublier.push(
+          await client2.réseau!.suivreBds((bds) => (rés.ultat_2 = bds))
+        );
 
         idBd = await client.bds!.créerBd("ODbl-1_0");
       });
 
       after(async () => {
-        fsOublier.forEach(f=>f());
+        fsOublier.forEach((f) => f());
       });
 
       step("BD d'un autre membre détectée", async () => {
-        await attendreRésultat(rés, "ultat", (x?: string[])=>x && x.length);
-        expect(rés.ultat).to.be.an("array").with.lengthOf(1).and.members([idBd]);
+        await attendreRésultat(rés, "ultat", (x?: string[]) => x && x.length);
+        expect(rés.ultat)
+          .to.be.an("array")
+          .with.lengthOf(1)
+          .and.members([idBd]);
       });
 
       step("BDs du réseau détectées", async () => {
         idBd2 = await client2.bds!.créerBd("ODbl-1_0");
-        await attendreRésultat(rés, "ultat_2", (x?: string[])=>x && x.length === 2);
-        expect(rés.ultat_2).to.be.an("array").with.lengthOf(2).and.members([idBd, idBd2]);
+        await attendreRésultat(
+          rés,
+          "ultat_2",
+          (x?: string[]) => x && x.length === 2
+        );
+        expect(rés.ultat_2)
+          .to.be.an("array")
+          .with.lengthOf(2)
+          .and.members([idBd, idBd2]);
       });
     });
 
@@ -207,36 +239,47 @@ Object.keys(testAPIs).forEach((API) => {
       let idBd: string;
 
       const rés: { ultat?: infoRéplication[] } = {
-        ultat: undefined
+        ultat: undefined,
       };
-      let fsOublier: schémaFonctionOublier[] = [];
+      const fsOublier: schémaFonctionOublier[] = [];
 
       before(async () => {
         idBd = await client.bds!.créerBd("ODbl-1_0");
-        fsOublier.push(await client.réseau!.suivreRéplications(
-          idBd,
-          (bds) => (rés.ultat = bds)
-        ));
+        fsOublier.push(
+          await client.réseau!.suivreRéplications(
+            idBd,
+            (bds) => (rés.ultat = bds)
+          )
+        );
       });
 
       after(async () => {
-        fsOublier.forEach(f=>f());
+        fsOublier.forEach((f) => f());
       });
 
       step("Auteur de la BD pour commencer", async () => {
         await client.favoris!.épinglerFavori(idBd);
-        await attendreRésultat(rés, "ultat", (x?: infoRéplication[])=>x && x.length)
-        expect(rés.ultat).to.be.an("array").with.lengthOf(1)
-        expect(rés.ultat!.map(r=>r.idOrbite)).to.have.members([client.orbite!.identity.id]);
+        await attendreRésultat(
+          rés,
+          "ultat",
+          (x?: infoRéplication[]) => x && x.length
+        );
+        expect(rés.ultat).to.be.an("array").with.lengthOf(1);
+        expect(rés.ultat!.map((r) => r.idOrbite)).to.have.members([
+          client.orbite!.identity.id,
+        ]);
       });
 
       step("Ajout d'une réplication détectée", async () => {
-
         await client2.favoris!.épinglerFavori(idBd);
 
-        await attendreRésultat(rés, "ultat", (x?: infoRéplication[])=>x && x.length === 2);
-        expect(rés.ultat).to.be.an("array").with.lengthOf(2)
-        expect(rés.ultat!.map(r=>r.idOrbite)).to.have.members([
+        await attendreRésultat(
+          rés,
+          "ultat",
+          (x?: infoRéplication[]) => x && x.length === 2
+        );
+        expect(rés.ultat).to.be.an("array").with.lengthOf(2);
+        expect(rés.ultat!.map((r) => r.idOrbite)).to.have.members([
           client.orbite!.identity.id,
           client2.orbite!.identity.id,
         ]);
@@ -247,25 +290,25 @@ Object.keys(testAPIs).forEach((API) => {
       let motClef: string;
       let idBd1: string;
       let idBd2: string;
-      let idTableau1: string|undefined;
-      let idTableau2: string|undefined;
+      let idTableau1: string | undefined;
+      let idTableau2: string | undefined;
 
       let empreinte1: string;
       let empreinte2: string;
       let empreinte3: string;
 
       const idUniqueTableau = "tableau trads";
-      const données1 = {clef: "titre", langue: "fr", trad: "Constellation"}
-      const données2 = {clef: "titre", langue: "हिं", trad: "तारामंडल"}
-      const données3 = {clef: "titre", langue: "kaq", trad: "Ch'umil"}
+      const données1 = { clef: "titre", langue: "fr", trad: "Constellation" };
+      const données2 = { clef: "titre", langue: "हिं", trad: "तारामंडल" };
+      const données3 = { clef: "titre", langue: "kaq", trad: "Ch'umil" };
 
       const rés: {
-        ultat?: string[],
-        ultat2?: élémentDeMembre<élémentBdListeDonnées>[]
-      } = { ultat: undefined, ultat2: undefined }
-      const fsOublier: schémaFonctionOublier[] = []
+        ultat?: string[];
+        ultat2?: élémentDeMembre<élémentBdListeDonnées>[];
+      } = { ultat: undefined, ultat2: undefined };
+      const fsOublier: schémaFonctionOublier[] = [];
 
-      before(async ()=> {
+      before(async () => {
         const idVarClef = await client.variables!.créerVariable("chaîne");
         const idVarLangue = await client.variables!.créerVariable("chaîne");
         const idVarTrad = await client.variables!.créerVariable("chaîne");
@@ -280,105 +323,127 @@ Object.keys(testAPIs).forEach((API) => {
               cols: [
                 {
                   idVariable: idVarClef,
-                  idColonne: "clef"
+                  idColonne: "clef",
                 },
                 {
                   idVariable: idVarLangue,
-                  idColonne: "langue"
+                  idColonne: "langue",
                 },
                 {
                   idVariable: idVarTrad,
-                  idColonne: "trad"
-                }
+                  idColonne: "trad",
+                },
               ],
-              idUnique: idUniqueTableau
-            }
-          ]
-        }
+              idUnique: idUniqueTableau,
+            },
+          ],
+        };
 
         idBd1 = await client.bds!.créerBdDeSchéma(schéma);
         idBd2 = await client2.bds!.créerBdDeSchéma(schéma);
 
-        idTableau1 = (await uneFois(
-          async (fSuivi: schémaFonctionSuivi<string[]>): Promise<schémaFonctionOublier> => {
-            return await client.bds!.suivreTableauxBd(idBd1, fSuivi)
-          }
-        ))[0]
+        idTableau1 = (
+          await uneFois(
+            async (
+              fSuivi: schémaFonctionSuivi<string[]>
+            ): Promise<schémaFonctionOublier> => {
+              return await client.bds!.suivreTableauxBd(idBd1, fSuivi);
+            }
+          )
+        )[0];
 
-        idTableau2 = (await uneFois(
-          async (fSuivi: schémaFonctionSuivi<string[]>): Promise<schémaFonctionOublier> => {
-            return await client2.bds!.suivreTableauxBd(idBd2, fSuivi)
-          }
-        ))[0]
+        idTableau2 = (
+          await uneFois(
+            async (
+              fSuivi: schémaFonctionSuivi<string[]>
+            ): Promise<schémaFonctionOublier> => {
+              return await client2.bds!.suivreTableauxBd(idBd2, fSuivi);
+            }
+          )
+        )[0];
 
         fsOublier.push(
           await client.réseau!.suivreBdsDeMotClefUnique(
-            motClef, (bds) => rés.ultat = bds
+            motClef,
+            (bds) => (rés.ultat = bds)
           )
         );
         fsOublier.push(
           await client.réseau!.suivreÉlémentsDeTableauxUniques(
             motClef,
             idUniqueTableau,
-            (éléments) => rés.ultat2 = éléments
+            (éléments) => (rés.ultat2 = éléments)
           )
         );
 
         empreinte1 = await client.tableaux!.ajouterÉlément(
-          idTableau1, données1
+          idTableau1,
+          données1
         );
         empreinte2 = await client.tableaux!.ajouterÉlément(
-          idTableau1, données2
+          idTableau1,
+          données2
         );
         empreinte3 = await client2.tableaux!.ajouterÉlément(
-          idTableau2, données3
+          idTableau2,
+          données3
         );
-
       });
 
-      after(async () => {
-        fsOublier.forEach(f=>f());
+      after(async () => {
+        fsOublier.forEach((f) => f());
       });
 
-      step("Suivre BDs du réseau", async () => {
-        await attendreRésultat(rés, "ultat", (x?: string[])=>x && x.length === 2)
-        expect(rés.ultat).to.be.an("array").with.lengthOf(2).and.members([
-          idBd1, idBd2
-        ])
+      step("Suivre BDs du réseau", async () => {
+        await attendreRésultat(
+          rés,
+          "ultat",
+          (x?: string[]) => x && x.length === 2
+        );
+        expect(rés.ultat)
+          .to.be.an("array")
+          .with.lengthOf(2)
+          .and.members([idBd1, idBd2]);
       });
-      step("Suivre éléments des BDs", async () => {
-        await attendreRésultat(rés, "ultat2", (x?: string[])=>x && x.length === 3)
+      step("Suivre éléments des BDs", async () => {
+        await attendreRésultat(
+          rés,
+          "ultat2",
+          (x?: string[]) => x && x.length === 3
+        );
         expect(
-          rés.ultat2!.map(r=>{
-            delete r.élément.données["id"]
-            return r
+          rés.ultat2!.map((r) => {
+            delete r.élément.données["id"];
+            return r;
           })
-        ).to.be.an("array").with.lengthOf(3).and.deep.members([
-          {
-            idBdAuteur: client.idBdRacine,
-            élément: {
-              empreinte: empreinte1,
-              données: données1
-            }
-          },
-          {
-            idBdAuteur: client.idBdRacine,
-            élément: {
-              empreinte: empreinte2,
-              données: données2
-            }
-          },
-          {
-            idBdAuteur: client2.idBdRacine,
-            élément: {
-              empreinte: empreinte3,
-              données: données3
-            }
-          },
-        ])
+        )
+          .to.be.an("array")
+          .with.lengthOf(3)
+          .and.deep.members([
+            {
+              idBdAuteur: client.idBdRacine,
+              élément: {
+                empreinte: empreinte1,
+                données: données1,
+              },
+            },
+            {
+              idBdAuteur: client.idBdRacine,
+              élément: {
+                empreinte: empreinte2,
+                données: données2,
+              },
+            },
+            {
+              idBdAuteur: client2.idBdRacine,
+              élément: {
+                empreinte: empreinte3,
+                données: données3,
+              },
+            },
+          ]);
       });
-    })
-
+    });
   });
 });
 

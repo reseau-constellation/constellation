@@ -124,12 +124,12 @@ export default class Réseau extends EventEmitter {
     const idSFIP = this.client.idNodeSFIP!.id;
     await this.client.sfip!.pubsub.subscribe(
       `${this.client.SUJET_RÉSEAU}-${idSFIP}`,
-      (msg: MessagePubSub) => this.messageReçu(msg, true)
+      (msg: MessagePubSub) => this.messageReçu(msg, true)
     );
 
     await this.client.sfip!.pubsub.subscribe(
       this.client.SUJET_RÉSEAU,
-      (msg: MessagePubSub) => this.messageReçu(msg, false)
+      (msg: MessagePubSub) => this.messageReçu(msg, false)
     );
 
     for (const é of ["peer:connect", "peer:disconnect"]) {
@@ -180,7 +180,8 @@ export default class Réseau extends EventEmitter {
     const { valeur, signature } = messageJSON;
 
     // Ignorer les messages de nous-mêmes
-    if (signature.clefPublique === this.client.orbite!.identity.publicKey) return
+    if (signature.clefPublique === this.client.orbite!.identity.publicKey)
+      return;
 
     // Assurer que la signature est valide (message envoyé par détenteur de idOrbite)
     const signatureValide = await this.client.vérifierSignature(
@@ -205,7 +206,9 @@ export default class Réseau extends EventEmitter {
   async suivreConnexionsPostes(
     f: schémaFonctionSuivi<{ addr: string; peer: string }[]>
   ): Promise<schémaFonctionOublier> {
-    const dédédoublerConnexions = (connexions: PeersResult[]): PeersResult[] => {
+    const dédédoublerConnexions = (
+      connexions: PeersResult[]
+    ): PeersResult[] => {
       const adrDéjàVues: string[] = [];
       const dédupliquées: PeersResult[] = [];
       for (const c of connexions) {
@@ -302,7 +305,7 @@ export default class Réseau extends EventEmitter {
       if (!existante) {
         const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
         await bdRacine.add(info);
-      };
+      }
       if (!this.fOublierMembres[idBdRacine] && !récursif) {
         const f = async (membres: infoMembre[]) => {
           membres.forEach((m: infoMembre) => _ajouterMembre(m));
@@ -313,7 +316,7 @@ export default class Réseau extends EventEmitter {
           f
         );
         this.fOublierMembres[idBdRacine] = fOublier;
-      };
+      }
       verrouAjouterMembre.release(idOrbite);
     };
 
@@ -510,7 +513,12 @@ export default class Réseau extends EventEmitter {
     ) => {
       return await this.client.favoris!.suivreFavoris(f, id);
     };
-    return await this.client.suivreBdDeClef(idMembre, "favoris", f, fSuivreFavoris);
+    return await this.client.suivreBdDeClef(
+      idMembre,
+      "favoris",
+      f,
+      fSuivreFavoris
+    );
   }
 
   async suivreBds(
@@ -530,13 +538,10 @@ export default class Réseau extends EventEmitter {
         f(toutes);
       };
 
-      const oublierBdsPropres = await this.suivreBdsMembre(
-        id,
-        (propres) => {
-          bds.propres = propres || [];
-          fFinale();
-        }
-      );
+      const oublierBdsPropres = await this.suivreBdsMembre(id, (propres) => {
+        bds.propres = propres || [];
+        fFinale();
+      });
 
       const oublierBdsFavoris = await this.suivreFavorisMembre(
         id,
@@ -556,8 +561,8 @@ export default class Réseau extends EventEmitter {
     const fListe = async (
       fSuivreRacine: (éléments: infoMembre[]) => Promise<void>
     ): Promise<schémaFonctionOublier> => {
-      return await this.suivreMembres(
-        (membres: infoMembreEnLigne[]) => fSuivreRacine(membres)
+      return await this.suivreMembres((membres: infoMembreEnLigne[]) =>
+        fSuivreRacine(membres)
       );
     };
 
@@ -616,7 +621,7 @@ export default class Réseau extends EventEmitter {
     );
 
     return oublierRéplications;
-  };
+  }
 
   async suivreBdsDeMotClefUnique(
     motClefUnique: string,
@@ -630,17 +635,16 @@ export default class Réseau extends EventEmitter {
         idMembre,
         "bds",
         (bds?: string[]) => {
-          f(bds || [])
+          f(bds || []);
         },
         async (idBdBds: string) => {
           return await this.client.bds!.rechercherBdsParMotsClefs(
             [motClefUnique],
             f,
             idBdBds
-          )
+          );
         }
-      )
-
+      );
     };
     const fIdBdDeBranche = (x: unknown) => (x as infoMembre).idBdRacine;
     const fCode = (x: unknown) => (x as infoMembre).idOrbite;
@@ -648,8 +652,8 @@ export default class Réseau extends EventEmitter {
     const fListe = async (
       fSuivreRacine: (éléments: infoMembre[]) => Promise<void>
     ): Promise<schémaFonctionOublier> => {
-      return await this.suivreMembres(
-        (membres: infoMembreEnLigne[]) => fSuivreRacine(membres)
+      return await this.suivreMembres((membres: infoMembreEnLigne[]) =>
+        fSuivreRacine(membres)
       );
     };
 
@@ -674,7 +678,10 @@ export default class Réseau extends EventEmitter {
       const fListeListe = async (
         fSuivreRacineListe: (bds: string[]) => Promise<void>
       ): Promise<schémaFonctionOublier> => {
-        return await this.suivreBdsDeMotClefUnique(motClefUnique, fSuivreRacineListe);
+        return await this.suivreBdsDeMotClefUnique(
+          motClefUnique,
+          fSuivreRacineListe
+        );
       };
 
       const fBrancheListe = async (

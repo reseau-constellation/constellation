@@ -19,7 +19,11 @@ import { InfoColAvecCatégorie } from "@/ipa/tableaux";
 import { infoAuteur, infoScore } from "@/ipa/bds";
 import { schémaBd } from "@/ipa/reseau";
 import { MODÉRATEUR, MEMBRE } from "@/ipa/accès/consts";
-import { élémentDonnées, élémentBdListeDonnées, règleBornes } from "@/ipa/valid";
+import {
+  élémentDonnées,
+  élémentBdListeDonnées,
+  règleBornes,
+} from "@/ipa/valid";
 
 import { testAPIs, config } from "./sfipTest";
 import { générerClients, attendreRésultat } from "./utils";
@@ -879,7 +883,7 @@ Object.keys(testAPIs).forEach((API) => {
       let idColNumérique: string;
       let idColNumérique2: string;
 
-      let score: infoScore
+      let score: infoScore;
 
       let fOublier: schémaFonctionOublier;
 
@@ -891,10 +895,10 @@ Object.keys(testAPIs).forEach((API) => {
         idVarNumérique2 = await client.variables!.créerVariable("numérique");
         idVarChaîne = await client.variables!.créerVariable("chaîne");
 
-        fOublier = await client.bds!.suivreScoreBd(idBd, (s)=>score = s);
+        fOublier = await client.bds!.suivreScoreBd(idBd, (s) => (score = s));
       });
 
-      after(async () => {
+      after(async () => {
         if (fOublier) fOublier();
       });
 
@@ -903,73 +907,81 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       describe("Score couverture tests", function () {
-        step("`undefined` lorsque aucune colonne", async () => {
+        step("`undefined` lorsque aucune colonne", async () => {
           expect(score.couverture).to.be.undefined;
         });
 
-        step("Ajout de colonnes", async () => {
+        step("Ajout de colonnes", async () => {
           idColNumérique = await client.tableaux!.ajouterColonneTableau(
-            idTableau, idVarNumérique
-          )
+            idTableau,
+            idVarNumérique
+          );
           idColNumérique2 = await client.tableaux!.ajouterColonneTableau(
-            idTableau, idVarNumérique2
-          )
-          await client.tableaux!.ajouterColonneTableau(
-            idTableau, idVarChaîne
-          )
+            idTableau,
+            idVarNumérique2
+          );
+          await client.tableaux!.ajouterColonneTableau(idTableau, idVarChaîne);
           expect(score.couverture).to.equal(0);
         });
 
-        step("Ajout de règles", async () => {
+        step("Ajout de règles", async () => {
           const règleNumérique: règleBornes = {
             typeRègle: "bornes",
-            détails: { val: 0, op: ">=" }
-          }
+            détails: { val: 0, op: ">=" },
+          };
           await client.tableaux!.ajouterRègleTableau(
-            idTableau, idColNumérique, règleNumérique
-          )
+            idTableau,
+            idColNumérique,
+            règleNumérique
+          );
           expect(score.couverture).to.equal(0.5);
 
           await client.tableaux!.ajouterRègleTableau(
-            idTableau, idColNumérique2, règleNumérique
-          )
+            idTableau,
+            idColNumérique2,
+            règleNumérique
+          );
           expect(score.couverture).to.equal(1);
         });
-
       });
 
       describe("Score validité", function () {
         let empreinteÉlément: string;
 
-        step("`undefined` pour commencer", async () => {
+        step("`undefined` pour commencer", async () => {
           expect(score.valide).to.be.undefined;
         });
 
-        step("Ajout d'éléments", async () => {
-          empreinteÉlément = await client.tableaux!.ajouterÉlément(
-            idTableau, {[idColNumérique]: -1, [idColNumérique2]: 1}
-          )
-          expect(score.valide).to.equal(0.5)
-          await client.tableaux!.ajouterÉlément(
-            idTableau, {[idColNumérique]: 1}
-          )
-          expect(score.valide).to.equal(2/3)
+        step("Ajout d'éléments", async () => {
+          empreinteÉlément = await client.tableaux!.ajouterÉlément(idTableau, {
+            [idColNumérique]: -1,
+            [idColNumérique2]: 1,
+          });
+          expect(score.valide).to.equal(0.5);
+          await client.tableaux!.ajouterÉlément(idTableau, {
+            [idColNumérique]: 1,
+          });
+          expect(score.valide).to.equal(2 / 3);
         });
 
-        step("Correction des éléments", async () => {
+        step("Correction des éléments", async () => {
           await client.tableaux!.modifierÉlément(
             idTableau,
-            {[idColNumérique]: 12},
+            { [idColNumérique]: 12 },
             empreinteÉlément
           );
-          expect(score.valide).to.equal(1)
+          expect(score.valide).to.equal(1);
         });
       });
 
       describe("Score total", function () {
-        step("Calcul du score total", async () => {
-          const total = ((score.accès || 0) + (score.couverture || 0) + (score.valide || 0)) / 3
-          expect(score.total).to.equal(total)
+        step("Calcul du score total", async () => {
+          const total =
+            ((score.accès || 0) +
+              (score.couverture || 0) +
+              (score.valide || 0)) /
+            3;
+          expect(score.total).to.equal(total);
         });
       });
     });

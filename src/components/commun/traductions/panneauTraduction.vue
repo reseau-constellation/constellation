@@ -88,7 +88,6 @@ const ID_MOTCLEF_TRAD =
 const ID_MOTCLEF_TRADS_CONSTELLATION =
   "/orbitdb/zdpuAuk6kRoPQKfwuWi5qMYMSyUMeiTjtcFE23AaHy9MQsXcs/93c94a56-f681-4512-8c4b-5c213119ab4b";
 
-
 const schémaBdTrads: schémaBd = {
   motsClefs: [ID_MOTCLEF_TRAD],
   licence: "ODbl-1_0",
@@ -118,7 +117,7 @@ const schémaBdTrads: schémaBd = {
         {
           idVariable: ID_VAR_DATE,
           idColonne: "date",
-        }
+        },
       ],
     },
   ],
@@ -218,9 +217,9 @@ export default mixins(mixinLangues, mixinIPA).extend({
           (idTableau) => (this.idTableau = idTableau)
         );
       const oublierSuggestionsTrads =
-        await this.$ipa.réseau!.suivreÉlémentsBdsSelonSchéma<élémentBdTraduction>(
-          schémaBdTrads,
-          0,
+        await this.$ipa.réseau!.suivreÉlémentsDeTableauxUniques<élémentBdTraduction>(
+          ID_MOTCLEF_TRADS_CONSTELLATION,
+          "trads",
           (suggestions) => (this.suggestions = suggestions)
         );
       this.suivre([
