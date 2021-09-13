@@ -3,5 +3,6 @@
     "all": true,
     "include": [
       "src/ipa/**/*.ts"
-    ]
+    ],
+    "reporter": ["text", "json"]
 }
