@@ -39,6 +39,11 @@ export interface infoScore {
   total?: number;
 }
 
+export interface donnéesBdExportées { 
+  doc: XLSX.WorkBook;
+  fichiersSFIP: Set<string>;
+}
+
 export default class BDs {
   client: ClientConstellation;
   idBd: string;
@@ -957,7 +962,7 @@ export default class BDs {
   async exporterDonnées(
     id: string,
     langues?: string[]
-  ): Promise<{ doc: XLSX.WorkBook; fichiersSFIP: Set<string> }> {
+  ): Promise<donnéesBdExportées> {
     const doc = XLSX.utils.book_new();
     const fichiersSFIP: Set<string> = new Set();
 

@@ -258,13 +258,13 @@ export default mixins(
     };
   },
   computed: {
-    petitPousset: function () {
+    petitPousset: function () : {text: string, href?: string, disabled?: boolean}[] {
       return [
         { text: "Données", href: "/bd" },
-        { text: this.$t("bd.nouvelle.petitPousset"), disabled: true },
+        { text: this.$t("bd.nouvelle.petitPousset") as string, disabled: true },
       ];
     },
-    titrePrésent: function () {
+    titrePrésent: function (): string {
       switch (this.étape) {
         case 1:
           return "Choisissez un nom";
@@ -407,6 +407,10 @@ export default mixins(
       if (Object.keys(this.descriptions).length) {
         await this.$ipa.bds!.ajouterDescriptionsBd(id, this.descriptions);
       }
+
+      //On ajoute la nouvelle BD aux favoris automatiquement
+      await this.$ipa.favoris!.épinglerFavori(id);
+
       this.enCréation = false;
       this.$router.push(`/bd/visualiser/${encodeURIComponent(id)}`);
     },

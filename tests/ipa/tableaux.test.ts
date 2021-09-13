@@ -607,26 +607,26 @@ Object.keys(testAPIs).forEach((API) => {
           idVariableTempMax
         );
       });
-      step("Ajout itèmes colonne réf détectée");
-      step("Ajout itèmes valides");
-      step("Ajout itèmes invalides");
+      step("Ajout éléments colonne réf détecté");
+      step("Ajout éléments valides");
+      step("Ajout éléments invalides");
     });
 
     describe("Règle valeur catégorique", function () {
       describe("Dans le même tableau", function () {
         it("Erreur si colonne n'existe pas");
         it("Ajout colonne réf détectée");
-        it("Ajout itèmes colonne réf détectée");
-        it("Ajout itèmes valides");
-        it("Ajout itèmes invalides");
+        it("Ajout éléments colonne réf détecté");
+        it("Ajout éléments valides");
+        it("Ajout éléments invalides");
       });
       describe("Inter-tableau", function () {
         it("Erreur si tableau n'existe pas");
         it("Erreur si colonne n'existe pas");
         it("Ajout colonne réf détectée");
-        it("Ajout itèmes colonne réf détectée");
-        it("Ajout itèmes valides");
-        it("Ajout itèmes invalides");
+        it("Ajout éléments colonne réf détectée");
+        it("Ajout éléments valides");
+        it("Ajout éléments invalides");
       });
     });
 

@@ -1,14 +1,21 @@
 import { FeedStore, KeyValueStore } from "orbit-db";
-import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
+import XLSX from "xlsx";
 
-import { nomType as typeContrôleurAccèsConst } from "./accès/cntrlConstellation";
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
   élémentBdListe,
+  infoAccès,
+  uneFois,
 } from "./client";
-import { STATUT } from "./bds";
+import { STATUT, infoAuteur } from "./bds";
+import { objRôles } from "./accès/types";
 import ContrôleurConstellation from "./accès/cntrlConstellation";
+import { traduire } from "./utils";
+
+export interface donnéesProjetExportées {
+  docs: {doc: XLSX.WorkBook, nom: string}[], fichiersSFIP: Set<string>
+}
 
 export default class Projets {
   client: ClientConstellation;
@@ -17,8 +24,6 @@ export default class Projets {
   constructor(client: ClientConstellation, id: string) {
     this.client = client;
     this.idBd = id;
-
-    this.migrerProjets();
   }
 
   async suivreProjetsMembre(
@@ -35,7 +40,6 @@ export default class Projets {
       adresseBd: undefined,
       premierMod: this.client.bdRacine!.id,
     });
-    await bdRacine.add(idBdProjet);
 
     const bdProjet = (await this.client.ouvrirBd(idBdProjet)) as KeyValueStore;
 
@@ -65,6 +69,7 @@ export default class Projets {
 
     await bdProjet.set("statut", { statut: STATUT.ACTIVE });
 
+    await bdRacine.add(idBdProjet);
     return idBdProjet;
   }
 
@@ -96,16 +101,16 @@ export default class Projets {
     const motsClefs = ClientConstellation.obtÉlémentsDeBdListe(
       bdMotsClefs
     ) as string[];
-    motsClefs.forEach(async (m: string) => {
-      await this.ajouterMotClefProjet(idNouveauProjet, m);
-    });
+    await this.ajouterMotsClefsProjet(idNouveauProjet, motsClefs);
 
     const idBdBds = await bdBase.get("bds");
     const bdBds = (await this.client.ouvrirBd(idBdBds)) as FeedStore;
     const bds = ClientConstellation.obtÉlémentsDeBdListe(bdBds) as string[];
-    bds.forEach(async (idBd: string) => {
-      await this.ajouterBdProjet(idNouveauProjet, idBd);
-    });
+    await Promise.all(
+      bds.map(async (idBd: string) => {
+        await this.ajouterBdProjet(idNouveauProjet, idBd);
+      })
+    );
 
     const statut = (await bdBase.get("statut")) || STATUT.ACTIVE;
     await nouvelleBd.set("statut", { statut });
@@ -113,33 +118,61 @@ export default class Projets {
     return idNouveauProjet;
   }
 
-  async migrerProjets(): Promise<void> {
-    // Fonction pour migrer les BDs qui n'ont pas le bon contrôleur d'accès
-    const migrerProjetSiNécessaire = async (id: string): Promise<string> => {
-      const bd = await this.client.ouvrirBd(id);
-
-      const typeAccès = (bd.access.constructor as unknown as AccessController)
-        .type;
-      if (typeAccès !== typeContrôleurAccèsConst) {
-        const idNouvelleBd = await this.copierProjet(id);
-        await this.marquerObsolète(id, idNouvelleBd);
-        return idNouvelleBd;
-      }
-      return id;
-    };
-
+  async ajouterÀMesProjets(id: string): Promise<void> {
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
-    const projetsExistants = ClientConstellation.obtÉlémentsDeBdListe(
-      bdRacine
-    ) as string[];
+    await bdRacine.add(id);
+  }
 
-    // Migrer les BDs si nécessaire
-    projetsExistants.forEach(async (idBd: string) => {
-      const idNouvelle = await migrerProjetSiNécessaire(idBd);
-      if (idBd !== idNouvelle) {
-        await bdRacine.add(idNouvelle);
-      }
-    });
+  async inviterAuteur(
+    idBd: string,
+    idBdRacineAuteur: string,
+    rôle: keyof objRôles
+  ): Promise<void> {
+    await this.client.donnerAccès(idBd, idBdRacineAuteur, rôle);
+  }
+
+  async suivreAuteurs(
+    id: string,
+    f: schémaFonctionSuivi<infoAuteur[]>
+  ): Promise<schémaFonctionOublier> {
+    const fListe = async (
+      fSuivreRacine: (éléments: infoAccès[]) => Promise<void>
+    ): Promise<schémaFonctionOublier> => {
+      return await this.client.suivreAccèsBd(id, fSuivreRacine);
+    };
+    const fBranche = async (
+      idBdRacine: string,
+      fSuivreBranche: schémaFonctionSuivi<infoAuteur[]>,
+      branche?: infoAccès
+    ) => {
+      const fFinaleSuivreBranche = (projetsMembre?: string[]) => {
+        projetsMembre = projetsMembre || [];
+        return fSuivreBranche([
+          {
+            idBdRacine: branche!.idBdRacine,
+            rôle: branche!.rôle,
+            accepté: projetsMembre.includes(id),
+          },
+        ]);
+      };
+      return await this.client.réseau!.suivreProjetsMembre(
+        idBdRacine,
+        fFinaleSuivreBranche,
+        false
+      );
+    };
+    const fIdBdDeBranche = (x: infoAccès) => x.idBdRacine;
+    const fCode = (x: infoAccès) => x.idBdRacine;
+
+    const fOublier = this.client.suivreBdsDeFonctionListe(
+      fListe,
+      f,
+      fBranche,
+      fIdBdDeBranche,
+      undefined,
+      fCode
+    );
+    return fOublier;
   }
 
   async _obtBdNoms(id: string): Promise<KeyValueStore> {
@@ -229,7 +262,7 @@ export default class Projets {
       optionsAccès
     );
     if (!idBdMotsClefs)
-      throw `Permission de modification refusée pour Projet ${id}.`;
+      throw `Permission de modification refusée pour projet ${id}.`;
 
     const bdMotsClefs = (await this.client.ouvrirBd(
       idBdMotsClefs
@@ -237,15 +270,33 @@ export default class Projets {
     return bdMotsClefs;
   }
 
-  async ajouterMotClefProjet(
+  async ajouterMotsClefsProjet(
     idProjet: string,
-    idMotClef: string
+    idsMotsClefs: string|string[]
   ): Promise<void> {
+    if (!Array.isArray(idsMotsClefs)) idsMotsClefs = [idsMotsClefs];
     const bdMotsClefs = await this._obtBdMotsClefs(idProjet);
-    const motsClefsExistants =
-      ClientConstellation.obtÉlémentsDeBdListe(bdMotsClefs);
-    if (!motsClefsExistants.includes(idMotClef))
-      await bdMotsClefs.add(idMotClef);
+
+    await Promise.all(
+      idsMotsClefs.map(async (id: string) => {
+        const motsClefsExistants =
+          ClientConstellation.obtÉlémentsDeBdListe<string>(bdMotsClefs);
+        if (!motsClefsExistants.includes(id)) await bdMotsClefs.add(id);
+      })
+    );
+  }
+
+  async effacerMotClefProjet(idProjet: string, idMotClef: string): Promise<void> {
+    const bdMotsClefs = await this._obtBdMotsClefs(idProjet);
+
+    const entrées = ClientConstellation.obtÉlémentsDeBdListe(
+      bdMotsClefs,
+      false
+    );
+    const entrée = entrées.find(
+      (e: élémentBdListe) => e.payload.value === idMotClef
+    );
+    if (entrée) await bdMotsClefs.remove(entrée.hash);
   }
 
   async _obtBdBds(id: string): Promise<FeedStore> {
@@ -292,6 +343,49 @@ export default class Projets {
     return await this.client.suivreBdDicDeClef<string>(id, "descriptions", f);
   }
 
+  async suivreMotsClefsProjet(
+    idProjet: string,
+    f: schémaFonctionSuivi<string[]>
+  ): Promise<schémaFonctionOublier> {
+    const motsClefs: { propres?: string[], bds?: string[] } = {}
+    const fFinale = () => {
+      if (motsClefs.propres && motsClefs.bds) {
+        const motsClefsFinaux = [...new Set([...motsClefs.propres, ...motsClefs.bds])];
+        f(motsClefsFinaux);
+      }
+    }
+
+    const fFinalePropres = (mots: string[]) => {
+      motsClefs.propres = mots
+      fFinale();
+    }
+    const fOublierMotsClefsPropres = await this.client.suivreBdListeDeClef(idProjet, "motsClefs", fFinalePropres);
+
+    const fFinaleBds = (mots: string[]) => {
+      motsClefs.bds = mots
+      fFinale();
+    }
+    const fListe = async (fSuivreRacine: (éléments: string[]) => Promise<void>): Promise<schémaFonctionOublier> => {
+      return await this.suivreBdsProjet(idProjet, fSuivreRacine)
+    }
+    const fBranche = async (
+      idBd: string,
+      fSuivi: schémaFonctionSuivi<string[]>
+    ): Promise<schémaFonctionOublier> => {
+      return await this.client.bds!.suivreMotsClefsBd(idBd, fSuivi)
+    }
+    const fOublierMotsClefsBds = await this.client.suivreBdsDeFonctionListe(
+      fListe,
+      fFinaleBds,
+      fBranche
+    )
+
+    return () => {
+      fOublierMotsClefsPropres();
+      fOublierMotsClefsBds();
+    }
+  }
+
   async suivreBdsProjet(
     id: string,
     f: schémaFonctionSuivi<string[]>
@@ -319,6 +413,42 @@ export default class Projets {
       return await this.client.suivreBdsDeBdListe(idBdBds, f, fBranche);
     };
     return await this.client.suivreBdDeClef(id, "bds", fFinale, fSuivreBds);
+  }
+
+  async exporterDonnées(
+    id: string,
+    langues?: string[]
+  ): Promise<donnéesProjetExportées> {
+    const données: donnéesProjetExportées = {
+      docs: [], fichiersSFIP: new Set
+    };
+    const idsBds = await uneFois((f: schémaFonctionSuivi<string[]>) =>
+      this.suivreBdsProjet(id, f)
+    );
+    for (const idBd of idsBds) {
+      const { doc, fichiersSFIP } = await this.client.bds!.exporterDonnées(
+        idBd, langues
+      );
+
+      let nom: string;
+      const idCourtBd = idBd.split("/").pop()!;
+      if (langues) {
+        const noms = await uneFois(
+          (f: schémaFonctionSuivi<{ [key: string]: string }>) =>
+            this.client.bds!.suivreNomsBd(idBd, f)
+        );
+
+        nom = traduire(noms, langues) || idCourtBd;
+      } else {
+        nom = idCourtBd;
+      }
+      données.docs.push({doc, nom});
+
+      for (const fichier of fichiersSFIP) {
+        données.fichiersSFIP.add(fichier)
+      }
+    }
+    return données
   }
 
   async effacerProjet(id: string): Promise<void> {

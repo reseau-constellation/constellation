@@ -49,7 +49,7 @@
       "signalements": "Signaler un problème"
     },
     "acceuil": {
-      "entête": "Bienvenue à Constellation",
+      "entête": "Constellation",
       "soustitre": "Le système distribué et ouvert pour le partage des données scientifiques.",
       "orientation": "Un peu perdu.e ?",
       "liens": {
@@ -405,7 +405,7 @@
   },
   "kaq": {
     "acceuil": {
-      "entête": "Ütz ipetik pa Ch'umil"
+      "entête": "Ch'umil"
     }
   },
   "த": {
@@ -419,7 +419,7 @@
       "signalements": "சிக்கலைப் புகாரளிக்க"
     },
     "acceuil": {
-      "entête": "குழாமுக்கு உங்களை வரவேற்கிறோம்",
+      "entête": "குழாம்",
       "soustitre": "திறந்த அறிவியல் தகவல்களுக்காக ஒரு விநியோகிக்கப்பட்ட வலை."
     },
     "compte": {
@@ -444,12 +444,12 @@
   },
   "हिं": {
     "acceuil": {
-      "entête": "तारामंडल पर आपका स्वागत हो"
+      "entête": "तारामंडल"
     }
   },
   "বাং": {
     "acceuil": {
-      "entête": "তারামণ্ডলে আপনাকে স্বাগতম"
+      "entête": "তারামণ্ডলে"
     }
   },
   "తె": {
@@ -471,7 +471,7 @@
       "signalements": "Report a bug"
     },
     "acceuil": {
-      "entête": "Welcome to Constellation",
+      "entête": "Constellation",
       "soustitre": "The distributed and open system for scientific data sharing.",
       "orientation": "Feeling lost ?",
       "liens": {
@@ -530,7 +530,7 @@
       "signalements": "Problem melden"
     },
     "acceuil": {
-      "entête": "Willkommen bei Konstellation",
+      "entête": "Konstellation",
       "soustitre": "Das dezentralisierte und freie System für den Austausch Wissenschaftlicher Daten.",
       "orientation": "Haben Sie sich verirrt?",
       "liens": {
@@ -671,7 +671,7 @@
   },
   "Ch'orti'": {
      "acceuil": {
-       "entête": "Inb'utz iyo'pa'r tama Ek'"
+       "entête": "Ek'"
      }
   }
 }
