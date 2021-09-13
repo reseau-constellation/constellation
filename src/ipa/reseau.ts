@@ -15,8 +15,6 @@ import { infoAuteur } from "./bds";
 
 import { élémentDonnées, élémentBdListeDonnées } from "./valid";
 
-import { InfoCol } from "@/ipa/tableaux";
-
 export type infoMembre = {
   idSFIP: string;
   idOrbite: string;

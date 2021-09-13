@@ -1,19 +1,23 @@
 import log from "why-is-node-running";
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import { step } from "mocha-steps";
 
 import fs from "fs";
 import path from "path";
 
-chai.should();
-chai.use(chaiAsPromised);
-
-const assert = chai.assert;
-
 import { enregistrerContrôleurs } from "@/ipa/accès";
-import ClientConstellation, { schémaFonctionOublier } from "@/ipa/client";
-import { infoMembreEnLigne, infoRéplication } from "@/ipa/reseau";
+import ClientConstellation, {
+  schémaFonctionSuivi,
+  schémaFonctionOublier,
+  uneFois,
+} from "@/ipa/client";
+import {
+  infoMembreEnLigne,
+  infoRéplication,
+  schémaBd,
+  élémentDeMembre,
+} from "@/ipa/reseau";
+import { élémentBdListeDonnées } from "@/ipa/valid";
 
 import { testAPIs, config } from "./sfipTest";
 import { attendreRésultat, générerClients } from "./utils";
@@ -239,9 +243,140 @@ Object.keys(testAPIs).forEach((API) => {
       });
     });
 
-    describe.only("Suivre BD par mot-clef unique", function () {
-      step("Suivre BDs du réseau");
-      step("Suivre éléments des BDs");
+    describe("Suivre BD par mot-clef unique", function () {
+      let motClef: string;
+      let idBd1: string;
+      let idBd2: string;
+      let idTableau1: string|undefined;
+      let idTableau2: string|undefined;
+
+      let empreinte1: string;
+      let empreinte2: string;
+      let empreinte3: string;
+
+      const idUniqueTableau = "tableau trads";
+      const données1 = {clef: "titre", langue: "fr", trad: "Constellation"}
+      const données2 = {clef: "titre", langue: "हिं", trad: "तारामंडल"}
+      const données3 = {clef: "titre", langue: "kaq", trad: "Ch'umil"}
+
+      const rés: {
+        ultat?: string[],
+        ultat2?: élémentDeMembre<élémentBdListeDonnées>[]
+      } = { ultat: undefined, ultat2: undefined }
+      const fsOublier: schémaFonctionOublier[] = []
+
+      before(async ()=> {
+        const idVarClef = await client.variables!.créerVariable("chaîne");
+        const idVarLangue = await client.variables!.créerVariable("chaîne");
+        const idVarTrad = await client.variables!.créerVariable("chaîne");
+
+        motClef = await client.motsClefs!.créerMotClef();
+
+        const schéma: schémaBd = {
+          licence: "ODbl-1_0",
+          motsClefs: [motClef],
+          tableaux: [
+            {
+              cols: [
+                {
+                  idVariable: idVarClef,
+                  idColonne: "clef"
+                },
+                {
+                  idVariable: idVarLangue,
+                  idColonne: "langue"
+                },
+                {
+                  idVariable: idVarTrad,
+                  idColonne: "trad"
+                }
+              ],
+              idUnique: idUniqueTableau
+            }
+          ]
+        }
+
+        idBd1 = await client.bds!.créerBdDeSchéma(schéma);
+        idBd2 = await client2.bds!.créerBdDeSchéma(schéma);
+
+        idTableau1 = (await uneFois(
+          async (fSuivi: schémaFonctionSuivi<string[]>): Promise<schémaFonctionOublier> => {
+            return await client.bds!.suivreTableauxBd(idBd1, fSuivi)
+          }
+        ))[0]
+
+        idTableau2 = (await uneFois(
+          async (fSuivi: schémaFonctionSuivi<string[]>): Promise<schémaFonctionOublier> => {
+            return await client2.bds!.suivreTableauxBd(idBd2, fSuivi)
+          }
+        ))[0]
+
+        fsOublier.push(
+          await client.réseau!.suivreBdsDeMotClefUnique(
+            motClef, (bds) => rés.ultat = bds
+          )
+        );
+        fsOublier.push(
+          await client.réseau!.suivreÉlémentsDeTableauxUniques(
+            motClef,
+            idUniqueTableau,
+            (éléments) => rés.ultat2 = éléments
+          )
+        );
+
+        empreinte1 = await client.tableaux!.ajouterÉlément(
+          idTableau1, données1
+        );
+        empreinte2 = await client.tableaux!.ajouterÉlément(
+          idTableau1, données2
+        );
+        empreinte3 = await client2.tableaux!.ajouterÉlément(
+          idTableau2, données3
+        );
+
+      });
+
+      after(async () => {
+        fsOublier.forEach(f=>f());
+      });
+
+      step("Suivre BDs du réseau", async () => {
+        await attendreRésultat(rés, "ultat", (x?: string[])=>x && x.length === 2)
+        expect(rés.ultat).to.be.an("array").with.lengthOf(2).and.members([
+          idBd1, idBd2
+        ])
+      });
+      step("Suivre éléments des BDs", async () => {
+        await attendreRésultat(rés, "ultat2", (x?: string[])=>x && x.length === 3)
+        expect(
+          rés.ultat2!.map(r=>{
+            delete r.élément.données["id"]
+            return r
+          })
+        ).to.be.an("array").with.lengthOf(3).and.deep.members([
+          {
+            idBdAuteur: client.idBdRacine,
+            élément: {
+              empreinte: empreinte1,
+              données: données1
+            }
+          },
+          {
+            idBdAuteur: client.idBdRacine,
+            élément: {
+              empreinte: empreinte2,
+              données: données2
+            }
+          },
+          {
+            idBdAuteur: client2.idBdRacine,
+            élément: {
+              empreinte: empreinte3,
+              données: données3
+            }
+          },
+        ])
+      });
     })
 
   });
