@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import XLSX from "xlsx";
-
 import {
   FeedStore,
   KeyValueStore,
   élémentFeedStore,
   isValidAddress,
 } from "orbit-db";
+
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -16,6 +16,7 @@ import ClientConstellation, {
   faisRien,
 } from "./client";
 import ContrôleurConstellation from "./accès/cntrlConstellation";
+import { donnéesBdExportées } from "./bds";
 import {
   erreurValidation,
   règleVariable,
@@ -258,11 +259,12 @@ export default class Tableaux {
   async exporterDonnées(
     idTableau: string,
     langues?: string[],
-    doc?: XLSX.WorkBook
-  ): Promise<{ doc: XLSX.WorkBook; fichiersSFIP: Set<string> }> {
+    doc?: XLSX.WorkBook,
+    nomFichier?: string
+  ): Promise<donnéesBdExportées> {
     /* Créer le document si nécessaire */
     doc = doc || XLSX.utils.book_new();
-    const fichiersSFIP: Set<string> = new Set();
+    const fichiersSFIP: Set<{ cid: string; ext: string }> = new Set();
 
     let nomTableau: string;
     const idCourtTableau = idTableau.split("/").pop()!;
@@ -306,7 +308,7 @@ export default class Tableaux {
               if (!cid || !ext) continue;
               val = `${cid}.${ext}`;
 
-              fichiersSFIP.add(cid);
+              fichiersSFIP.add({ cid, ext });
             } else {
               val = JSON.stringify(é[col]);
             }
@@ -360,7 +362,8 @@ export default class Tableaux {
     /* Ajouter la feuille au document. XLSX n'accepte pas les noms de colonne > 31 caractères */
     XLSX.utils.book_append_sheet(doc, tableau, nomTableau.slice(0, 30));
 
-    return { doc, fichiersSFIP };
+    nomFichier = nomFichier || nomTableau;
+    return { doc, fichiersSFIP, nomFichier };
   }
 
   async ajouterÉlément(

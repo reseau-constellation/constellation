@@ -1,22 +1,7 @@
 import { CID } from "multiformats/cid";
-
-export function itérateurÀFlux(
-  itérable: AsyncIterable<Uint8Array>
-): ReadableStream<Uint8Array> {
-  const itérateur = itérable[Symbol.asyncIterator]();
-
-  return new ReadableStream({
-    async pull(controller) {
-      const { value, done } = await itérateur.next();
-
-      if (done) {
-        controller.close();
-      } else {
-        controller.enqueue(value);
-      }
-    },
-  });
-}
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+import fs from "fs";
 
 export function CIDvalid(cid: unknown): boolean {
   if (typeof cid === "string") {
@@ -37,4 +22,32 @@ export function traduire(
   const langueTrouvée = langues.find((l) => trads[l] !== undefined);
   const trad = langueTrouvée ? trads[langueTrouvée] : undefined;
   return trad;
+}
+
+export async function zipper(
+  fichiersDocs: { nom: string; octets: Uint8Array }[],
+  fichiersSFIP: { nom: string; octets: Uint8Array }[],
+  nomFichier: string
+): Promise<void> {
+  const fichierZip = new JSZip();
+  for (const doc of fichiersDocs) {
+    fichierZip.file(doc.nom, doc.octets);
+  }
+
+  const dossierFichiersSFIP = fichierZip.folder("sfip")!;
+  for (const fichier of fichiersSFIP) {
+    dossierFichiersSFIP.file(fichier.nom, fichier.octets);
+  }
+
+  if (navigator) {
+    const contenu = await fichierZip.generateAsync({ type: "blob" });
+    saveAs(contenu, `${nomFichier}.zip`);
+  } else {
+    const contenu = await fichierZip.generateAsync({ type: "arraybuffer" });
+    await fs.promises.writeFile(
+      `${nomFichier}.zip`,
+      Buffer.from(contenu),
+      "binary"
+    );
+  }
 }

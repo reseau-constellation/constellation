@@ -94,7 +94,12 @@
 import mixins from "vue-typed-mixins";
 
 import { formatsFichiers as formats } from "@/ipa/valid";
-import { téléchargerFlux, téléchargerURL, couper } from "@/utils";
+import {
+  itérableÀFlux,
+  téléchargerFlux,
+  téléchargerURL,
+  couper,
+} from "@/utils";
 
 import mixinImage from "@/mixins/images";
 
@@ -153,15 +158,18 @@ export default mixins(mixinImage).extend({
       }
     },
   },
+
   methods: {
     couper,
     choisirFichier() {
       //@ts-ignore
       this.$refs.fileInput.click();
     },
+
     effacerFichier() {
       this.$emit("edite", { val: undefined });
     },
+
     async fichierChoisi(e: { target: { files: FileList } }) {
       this.téléversementEnProgrès = true;
       const fichier = e.target.files[0];
@@ -170,6 +178,7 @@ export default mixins(mixinImage).extend({
       this.téléversementEnProgrès = false;
       this.$emit("edite", { val: { cid: idDoc, ext: extention } });
     },
+
     async obtURL(): Promise<string | undefined> {
       const { cid } = this.val;
       const octets = await this.$ipa.obtFichierSFIP(cid);
@@ -178,6 +187,7 @@ export default mixins(mixinImage).extend({
       this.url = url;
       return url;
     },
+
     async télécharger() {
       this.téléchargementEnProgrès = true;
       const { cid } = this.val;
@@ -185,7 +195,8 @@ export default mixins(mixinImage).extend({
         const url = (await this.obtURL()) as string;
         téléchargerURL(url, this.nomFichier);
       } else {
-        const flux = this.$ipa.obtFluxSFIP(cid);
+        const itérable = this.$ipa.obtItérableAsyncSFIP(cid);
+        const flux = itérableÀFlux(itérable);
         téléchargerFlux(flux, this.nomFichier);
       }
       this.téléchargementEnProgrès = false;

@@ -1,5 +1,6 @@
 import { FeedStore, KeyValueStore } from "orbit-db";
 import XLSX from "xlsx";
+import toBuffer from "it-to-buffer";
 
 import ClientConstellation, {
   schémaFonctionSuivi,
@@ -11,10 +12,12 @@ import ClientConstellation, {
 import { STATUT, infoAuteur } from "./bds";
 import { objRôles } from "./accès/types";
 import ContrôleurConstellation from "./accès/cntrlConstellation";
-import { traduire } from "./utils";
+import { traduire, zipper } from "./utils";
 
 export interface donnéesProjetExportées {
-  docs: {doc: XLSX.WorkBook, nom: string}[], fichiersSFIP: Set<string>
+  docs: { doc: XLSX.WorkBook; nom: string }[];
+  fichiersSFIP: Set<{ cid: string; ext: string }>;
+  nomFichier: string;
 }
 
 export default class Projets {
@@ -272,7 +275,7 @@ export default class Projets {
 
   async ajouterMotsClefsProjet(
     idProjet: string,
-    idsMotsClefs: string|string[]
+    idsMotsClefs: string | string[]
   ): Promise<void> {
     if (!Array.isArray(idsMotsClefs)) idsMotsClefs = [idsMotsClefs];
     const bdMotsClefs = await this._obtBdMotsClefs(idProjet);
@@ -286,7 +289,10 @@ export default class Projets {
     );
   }
 
-  async effacerMotClefProjet(idProjet: string, idMotClef: string): Promise<void> {
+  async effacerMotClefProjet(
+    idProjet: string,
+    idMotClef: string
+  ): Promise<void> {
     const bdMotsClefs = await this._obtBdMotsClefs(idProjet);
 
     const entrées = ClientConstellation.obtÉlémentsDeBdListe(
@@ -347,43 +353,51 @@ export default class Projets {
     idProjet: string,
     f: schémaFonctionSuivi<string[]>
   ): Promise<schémaFonctionOublier> {
-    const motsClefs: { propres?: string[], bds?: string[] } = {}
-    const fFinale = () => {
+    const motsClefs: { propres?: string[]; bds?: string[] } = {};
+    const fFinale = () => {
       if (motsClefs.propres && motsClefs.bds) {
-        const motsClefsFinaux = [...new Set([...motsClefs.propres, ...motsClefs.bds])];
+        const motsClefsFinaux = [
+          ...new Set([...motsClefs.propres, ...motsClefs.bds]),
+        ];
         f(motsClefsFinaux);
       }
-    }
+    };
 
-    const fFinalePropres = (mots: string[]) => {
-      motsClefs.propres = mots
+    const fFinalePropres = (mots: string[]) => {
+      motsClefs.propres = mots;
       fFinale();
-    }
-    const fOublierMotsClefsPropres = await this.client.suivreBdListeDeClef(idProjet, "motsClefs", fFinalePropres);
+    };
+    const fOublierMotsClefsPropres = await this.client.suivreBdListeDeClef(
+      idProjet,
+      "motsClefs",
+      fFinalePropres
+    );
 
-    const fFinaleBds = (mots: string[]) => {
-      motsClefs.bds = mots
+    const fFinaleBds = (mots: string[]) => {
+      motsClefs.bds = mots;
       fFinale();
-    }
-    const fListe = async (fSuivreRacine: (éléments: string[]) => Promise<void>): Promise<schémaFonctionOublier> => {
-      return await this.suivreBdsProjet(idProjet, fSuivreRacine)
-    }
+    };
+    const fListe = async (
+      fSuivreRacine: (éléments: string[]) => Promise<void>
+    ): Promise<schémaFonctionOublier> => {
+      return await this.suivreBdsProjet(idProjet, fSuivreRacine);
+    };
     const fBranche = async (
       idBd: string,
       fSuivi: schémaFonctionSuivi<string[]>
-    ): Promise<schémaFonctionOublier> => {
-      return await this.client.bds!.suivreMotsClefsBd(idBd, fSuivi)
-    }
+    ): Promise<schémaFonctionOublier> => {
+      return await this.client.bds!.suivreMotsClefsBd(idBd, fSuivi);
+    };
     const fOublierMotsClefsBds = await this.client.suivreBdsDeFonctionListe(
       fListe,
       fFinaleBds,
       fBranche
-    )
+    );
 
-    return () => {
+    return () => {
       fOublierMotsClefsPropres();
       fOublierMotsClefsBds();
-    }
+    };
   }
 
   async suivreBdsProjet(
@@ -417,17 +431,30 @@ export default class Projets {
 
   async exporterDonnées(
     id: string,
-    langues?: string[]
+    langues?: string[],
+    nomFichier?: string
   ): Promise<donnéesProjetExportées> {
+    if (!nomFichier) {
+      const nomsBd = await uneFois(
+        (f: schémaFonctionSuivi<{ [key: string]: string }>) =>
+          this.suivreNomsProjet(id, f)
+      );
+      const idCourt = id.split("/").pop()!;
+
+      nomFichier = langues ? traduire(nomsBd, langues) || idCourt : idCourt;
+    }
     const données: donnéesProjetExportées = {
-      docs: [], fichiersSFIP: new Set
+      docs: [],
+      fichiersSFIP: new Set(),
+      nomFichier,
     };
     const idsBds = await uneFois((f: schémaFonctionSuivi<string[]>) =>
       this.suivreBdsProjet(id, f)
     );
     for (const idBd of idsBds) {
       const { doc, fichiersSFIP } = await this.client.bds!.exporterDonnées(
-        idBd, langues
+        idBd,
+        langues
       );
 
       let nom: string;
@@ -442,13 +469,43 @@ export default class Projets {
       } else {
         nom = idCourtBd;
       }
-      données.docs.push({doc, nom});
+      données.docs.push({ doc, nom });
 
       for (const fichier of fichiersSFIP) {
-        données.fichiersSFIP.add(fichier)
+        données.fichiersSFIP.add(fichier);
       }
     }
-    return données
+    return données;
+  }
+
+  async exporterDocumentDonnées(
+    données: donnéesProjetExportées,
+    formatDoc: string,
+    inclureFichiersSFIP = true
+  ): Promise<void> {
+    const { docs, fichiersSFIP, nomFichier } = données;
+
+    const conversionsTypes: { [key: string]: XLSX.BookType } = {
+      xls: "biff8",
+    };
+    const bookType: XLSX.BookType = conversionsTypes[formatDoc] || formatDoc;
+
+    const fichiersDocs = docs.map((d) => {
+      return {
+        nom: `${d.nom}.${formatDoc}`,
+        octets: XLSX.write(d.doc, { bookType }),
+      };
+    });
+    const fichiersDeSFIP = [];
+    if (inclureFichiersSFIP) {
+      for (const fichier of fichiersSFIP) {
+        fichiersDeSFIP.push({
+          nom: `${fichier.cid}.${fichier.ext}`,
+          octets: await toBuffer(this.client.obtItérableAsyncSFIP(fichier.cid)),
+        });
+      }
+    }
+    await zipper(fichiersDocs, fichiersDeSFIP, nomFichier);
   }
 
   async effacerProjet(id: string): Promise<void> {

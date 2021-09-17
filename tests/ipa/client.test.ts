@@ -5,7 +5,7 @@ import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 
 import all from "it-all";
-import toIt from "browser-readablestream-to-it";
+import toBuffer from "it-to-buffer";
 
 import ClientConstellation, {
   adresseOrbiteValide,
@@ -714,9 +714,11 @@ Object.keys(testAPIs).forEach((API) => {
         expect(données).to.not.be.null;
         expect(new TextDecoder().decode(données!)).to.equal(texte);
       });
-      it.skip("On télécharge le fichier en tant que flux", async () => {
-        const flux = client.obtFluxSFIP(cid);
-        expect(await all(toIt(flux))).to.equal(texte);
+      step("On télécharge le fichier en tant qu'itérable", async () => {
+        const flux = client.obtItérableAsyncSFIP(cid);
+        const données = await toBuffer(flux);
+        expect(données).to.not.be.null;
+        expect(new TextDecoder().decode(données!)).to.equal(texte);
       });
     });
 

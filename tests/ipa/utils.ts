@@ -10,7 +10,7 @@ import OrbitDB, { Store, KeyValueStore, FeedStore } from "orbit-db";
 import ContrôleurConstellation from "@/ipa/accès/cntrlConstellation";
 import ClientConstellation from "@/ipa/client";
 
-const attendreInvité = (bd: Store, idInvité: string) =>
+const attendreInvité = (bd: Store, idInvité: string): Promise<void> =>
   new Promise<void>((resolve) => {
     const interval = setInterval(async () => {
       const autorisé = await (bd.access as ContrôleurConstellation).estAutorisé(
@@ -90,7 +90,7 @@ export const peutÉcrire = async (
   }
 };
 
-export const fermerBd = async (bd: Store) => {
+export const fermerBd = async (bd: Store): Promise<void> => {
   await bd.close();
   await bd.access.close();
 };

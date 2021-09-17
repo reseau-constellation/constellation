@@ -915,7 +915,7 @@ Object.keys(testAPIs).forEach((API) => {
       let idColBooléenne: string;
 
       let doc: XLSX.WorkBook;
-      let fichiersSFIP: Set<string>;
+      let fichiersSFIP: Set<{ cid: string; ext: string }>;
 
       let fOublier: schémaFonctionOublier;
 
@@ -1030,15 +1030,13 @@ Object.keys(testAPIs).forEach((API) => {
 
       it("Les fichiers SFIP sont détectés", async () => {
         expect(fichiersSFIP.size).equal(1);
-        expect(fichiersSFIP).to.have.keys([
-          "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ",
+        expect(fichiersSFIP).to.have.deep.keys([
+          { cid: "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ", ext: "mp4" },
         ]);
       });
 
       it("Exporter avec ids des colonnes et du tableau", async () => {
-        ({ doc, fichiersSFIP } = await client.tableaux!.exporterDonnées(
-          idTableau
-        ));
+        ({ doc } = await client.tableaux!.exporterDonnées(idTableau));
         const idTableauCourt = idTableau.split("/").pop()!.slice(0, 30);
         expect(doc.SheetNames[0]).to.equal(idTableauCourt);
         for (const { cellule, val } of [

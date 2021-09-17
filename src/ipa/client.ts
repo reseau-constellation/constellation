@@ -26,7 +26,7 @@ import Favoris from "./favoris";
 import Projets from "./projets";
 import MotsClefs from "./motsClefs";
 
-import { itérateurÀFlux, CIDvalid } from "./utils";
+import { CIDvalid } from "./utils";
 import localStorage from "./stockageLocal";
 import ContrôleurConstellation, {
   OptionsContrôleurConstellation,
@@ -860,10 +860,8 @@ export default class ClientConstellation extends EventEmitter {
     return await toBuffer(this.sfip!.cat(id), max);
   }
 
-  obtFluxSFIP(id: string): ReadableStream {
-    const itér = this.sfip!.cat(id);
-    const flux = itérateurÀFlux(itér);
-    return flux;
+  obtItérableAsyncSFIP(id: string): AsyncIterable<Uint8Array> {
+    return this.sfip!.cat(id);
   }
 
   async ajouterÀSFIP(fichier: ImportCandidate): Promise<string> {

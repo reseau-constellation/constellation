@@ -1,62 +1,39 @@
-import BD from "./bs";
-
-import xlsx from "xlsx";
+import XLSX from "xlsx";
 // '/Users/julienmalard/Documents/Projet Wietske Medema/BD test/Copy of Wilmot_2016-2018_FWIS.xlsm'
 // XLSX.readFile('test.xlsx')
 
-const LETTRES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const séq = (n: number) => Array.from(Array(n).keys()).map((x) => x + 1);
+export default class ImportateurFeuilleCalcul {
+  doc: XLSX.WorkBook;
 
-const lettreÀNombre = function (lettre: string) {
-  let n = 0;
-  for (const l in [...lettre]) {
-    n *= LETTRES.length;
-    n += LETTRES.indexOf(l);
+  constructor(données: XLSX.WorkBook) {
+    this.doc = données;
   }
-};
-/*
-const nombreÀLettre = function(nombre) {
 
+  obtNomsTableaux(): string[] {
+    return this.doc.SheetNames;
+  }
+
+  obtColsTableau(nomTableau: string): string[] {
+    const feuille = this.doc.Sheets[nomTableau];
+    const données = XLSX.utils.sheet_to_json(feuille, { header: 1 });
+    return données[0] as string[];
+  }
+
+  obtDonnées(
+    nomTableau: string,
+    cols: string[]
+  ): { [key: string]: string | number }[] {
+    const feuille = this.doc.Sheets[nomTableau];
+    const données = XLSX.utils.sheet_to_json(feuille) as {
+      [key: string]: string | number;
+    }[];
+
+    return données.map((d) =>
+      Object.fromEntries(
+        Object.keys(d)
+          .filter((c) => cols.includes(c))
+          .map((c) => [c, d[c]])
+      )
+    );
+  }
 }
-
-class BDXlsx extens BD {
-
-  constructor(fichier, motDePasse) {
-    var données = new Uint8Array(fichier)
-    this.doc = XLSX.read(données, {
-      type: 'array',
-      cellDates: true,
-      password: modDePasse
-    })
-  }
-
-  static ext = ['ods', 'xlsx', 'xls']
-
-  valeurs(tableau, cols) {
-
-  }
-
-  obtTableau(nom) {
-    return this.doc.Sheets[nom]
-  }
-
-  get tableaux() {
-    return this.doc.SheetNames
-  }
-
-  get entêtes(nom: string) {
-    var tableau = this.obtTableau(nom)
-    var plage = tableau['!ref'].split(':').map(x=>x.match(/[a-zA-Z]+|[0-9]+/g))
-    var premièreFile = plage[0][1]
-    var dernièreCol = lettreÀNombre(plage[1][0])
-
-    return séq(dernièreCol).map(
-      x => {
-        var cel = nombreÀLettre(x).concat(premièreFile)
-        var valCel = tableau[cel]
-      }
-    ).filter(x=>x).map(x=>x.v)
-  }
-
-}
-*/

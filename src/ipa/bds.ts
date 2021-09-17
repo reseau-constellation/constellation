@@ -1,6 +1,7 @@
 import { FeedStore, KeyValueStore } from "orbit-db";
 
 import XLSX from "xlsx";
+import toBuffer from "it-to-buffer";
 
 import localStorage from "@/ipa/stockageLocal";
 import { schémaBd } from "@/ipa/reseau";
@@ -19,6 +20,7 @@ import ClientConstellation, {
   uneFois,
   faisRien,
 } from "@/ipa/client";
+import { traduire, zipper } from "./utils";
 import { objRôles } from "@/ipa/accès/types";
 import ContrôleurConstellation from "@/ipa/accès/cntrlConstellation";
 
@@ -26,6 +28,7 @@ export const STATUT = {
   ACTIVE: "active",
   OBSOLÈTE: "obsolète",
 };
+
 export interface infoAuteur {
   idBdRacine: string;
   accepté: boolean;
@@ -39,9 +42,10 @@ export interface infoScore {
   total?: number;
 }
 
-export interface donnéesBdExportées { 
+export interface donnéesBdExportées {
   doc: XLSX.WorkBook;
-  fichiersSFIP: Set<string>;
+  fichiersSFIP: Set<{ cid: string; ext: string }>;
+  nomFichier: string;
 }
 
 export default class BDs {
@@ -961,10 +965,11 @@ export default class BDs {
 
   async exporterDonnées(
     id: string,
-    langues?: string[]
+    langues?: string[],
+    nomFichier?: string
   ): Promise<donnéesBdExportées> {
     const doc = XLSX.utils.book_new();
-    const fichiersSFIP: Set<string> = new Set();
+    const fichiersSFIP: Set<{ cid: string; ext: string }> = new Set();
 
     const idsTableaux = await uneFois((f: schémaFonctionSuivi<string[]>) =>
       this.suivreTableauxBd(id, f)
@@ -973,10 +978,50 @@ export default class BDs {
     for (const idTableau of idsTableaux) {
       const { fichiersSFIP: fichiersSFIPTableau } =
         await this.client.tableaux!.exporterDonnées(idTableau, langues, doc);
-      fichiersSFIPTableau.forEach((cid) => fichiersSFIP.add(cid));
+      fichiersSFIPTableau.forEach((f) => fichiersSFIP.add(f));
     }
 
-    return { doc, fichiersSFIP };
+    if (!nomFichier) {
+      const nomsBd = await uneFois(
+        (f: schémaFonctionSuivi<{ [key: string]: string }>) =>
+          this.suivreNomsBd(id, f)
+      );
+      const idCourt = id.split("/").pop()!;
+
+      nomFichier = langues ? traduire(nomsBd, langues) || idCourt : idCourt;
+    }
+
+    return { doc, fichiersSFIP, nomFichier };
+  }
+
+  async exporterDocumentDonnées(
+    données: donnéesBdExportées,
+    formatDoc: string,
+    inclureFichierSFIP = true
+  ): Promise<void> {
+    const { doc, fichiersSFIP, nomFichier } = données;
+
+    const conversionsTypes: { [key: string]: XLSX.BookType } = {
+      xls: "biff8",
+    };
+    const bookType: XLSX.BookType = conversionsTypes[formatDoc] || formatDoc;
+
+    if (inclureFichierSFIP) {
+      const fichierDoc = {
+        octets: XLSX.write(doc, { bookType }),
+        nom: nomFichier,
+      };
+      const fichiersDeSFIP = [];
+      for (const fichier of fichiersSFIP) {
+        fichiersDeSFIP.push({
+          nom: `${fichier.cid}.${fichier.ext}`,
+          octets: await toBuffer(this.client.obtItérableAsyncSFIP(fichier.cid)),
+        });
+      }
+      await zipper([fichierDoc], fichiersDeSFIP, nomFichier);
+    } else {
+      XLSX.writeFile(doc, `${nomFichier}.${formatDoc}`, { bookType });
+    }
   }
 
   async effacerBd(id: string): Promise<void> {

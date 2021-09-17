@@ -183,7 +183,7 @@ Object.keys(testAPIs).forEach((API) => {
           expect(estUnMod).to.be.true;
         });
 
-        step("Invitations transitives suite lors de bd.load()", async () => {
+        step("Invitations transitives lors de bd.load()", async () => {
           await fermerBd(bd);
           bd = (await orbitdb1.open(bd.id)) as KeyValueStore;
           await bd.load();

@@ -58,7 +58,11 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Autres membres détectés", async () => {
-        await attendreRésultat(rés, "ultat", (x?: infoMembreEnLigne[]) => x && x.length === 2);
+        await attendreRésultat(
+          rés,
+          "ultat",
+          (x?: infoMembreEnLigne[]) => x && x.length === 2
+        );
         expect(rés.ultat).to.be.an("array").with.lengthOf(2);
         expect(rés.ultat!.map((r) => r.idBdRacine)).to.include.members([
           client.idBdRacine,

@@ -1,27 +1,21 @@
-/*
-import importerDonnéesJSON, { DonnéesJSON } from "./json";
+import XLSX from "xlsx";
 
-async function importerDonnéesCovid(
-  url = "https://covid.ourworldindata.org/data/owid-covid-data.json"
-) {
-  return await importerDonnéesURL(url);
+import { valsJSON } from "./json";
+
+export async function importerJSONdURL(url: string): Promise<valsJSON> {
+  const réponse = await fetch(url);
+  return await réponse.json();
 }
 
-async function importerDonnéesURL(url: string, format = "json") {
-  switch (format) {
-    case "json": {
-      const données = await fetch(url);
-      const donnéesJSON = (await données.json()) as DonnéesJSON;
-      return importerDonnéesJSON(donnéesJSON);
-    }
-    default:
-      throw Error(
-        `Le format ${format} n'est pas pris en charge pour l'instant.`
-      );
-  }
+export async function importerFeuilleCalculDURL(
+  url: string,
+  modDePasse?: string
+): Promise<XLSX.WorkBook> {
+  const réponse = await fetch(url);
+  const données = await réponse.arrayBuffer();
+  return XLSX.read(données, {
+    type: "array",
+    cellDates: true,
+    password: modDePasse,
+  });
 }
-
-export abstract class Importateur {
-  abstract tableaux: () => Promise<string[]>;
-}
-*/

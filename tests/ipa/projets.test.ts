@@ -10,20 +10,11 @@ import XLSX from "xlsx";
 
 import { enregistrerContrôleurs } from "@/ipa/accès";
 import ClientConstellation, {
-  schémaFonctionSuivi,
   schémaFonctionOublier,
   adresseOrbiteValide,
-  uneFois,
 } from "@/ipa/client";
-import { InfoColAvecCatégorie } from "@/ipa/tableaux";
-import { infoAuteur, infoScore } from "@/ipa/bds";
-import { schémaBd } from "@/ipa/reseau";
+import { infoAuteur } from "@/ipa/bds";
 import { MODÉRATEUR, MEMBRE } from "@/ipa/accès/consts";
-import {
-  élémentDonnées,
-  élémentBdListeDonnées,
-  règleBornes,
-} from "@/ipa/valid";
 
 import { testAPIs, config } from "./sfipTest";
 import { générerClients, attendreRésultat } from "./utils";
@@ -31,7 +22,7 @@ import { générerClients, attendreRésultat } from "./utils";
 const LOG = false;
 
 Object.keys(testAPIs).forEach((API) => {
-  describe.only("Projets", function () {
+  describe("Projets", function () {
     this.timeout(config.timeout);
 
     let fOublierClients: () => Promise<void>;
@@ -63,7 +54,9 @@ Object.keys(testAPIs).forEach((API) => {
       let idNouveauProjet: string;
 
       before(async () => {
-        fOublier = await client.projets!.suivreProjetsMembre((prjs) => (projets = prjs));
+        fOublier = await client.projets!.suivreProjetsMembre(
+          (prjs) => (projets = prjs)
+        );
       });
       after(async () => {
         if (fOublier) fOublier();
@@ -89,7 +82,10 @@ Object.keys(testAPIs).forEach((API) => {
       let fOublier: schémaFonctionOublier;
 
       before(async () => {
-        fOublier = await client.projets!.suivreNomsProjet(idProjet, (n) => (noms = n));
+        fOublier = await client.projets!.suivreNomsProjet(
+          idProjet,
+          (n) => (noms = n)
+        );
       });
 
       after(async () => {
@@ -118,7 +114,11 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Changer un nom", async () => {
-        await client.projets!.sauvegarderNomProjet(idProjet, "fr", "Systèmes d'écriture");
+        await client.projets!.sauvegarderNomProjet(
+          idProjet,
+          "fr",
+          "Systèmes d'écriture"
+        );
         expect(noms?.fr).to.equal("Systèmes d'écriture");
       });
 
@@ -133,7 +133,10 @@ Object.keys(testAPIs).forEach((API) => {
       let fOublier: schémaFonctionOublier;
 
       before(async () => {
-        fOublier = await client.projets!.suivreDescrProjet(idProjet, (d) => (descrs = d));
+        fOublier = await client.projets!.suivreDescrProjet(
+          idProjet,
+          (d) => (descrs = d)
+        );
       });
 
       after(async () => {
@@ -145,7 +148,11 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Ajouter une description", async () => {
-        await client.projets!.sauvegarderDescrProjet(idProjet, "fr", "Alphabets");
+        await client.projets!.sauvegarderDescrProjet(
+          idProjet,
+          "fr",
+          "Alphabets"
+        );
         expect(descrs.fr).to.equal("Alphabets");
       });
 
@@ -162,7 +169,11 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Changer une description", async () => {
-        await client.projets!.sauvegarderDescrProjet(idProjet, "fr", "Systèmes d'écriture");
+        await client.projets!.sauvegarderDescrProjet(
+          idProjet,
+          "fr",
+          "Systèmes d'écriture"
+        );
         expect(descrs?.fr).to.equal("Systèmes d'écriture");
       });
 
@@ -295,25 +306,30 @@ Object.keys(testAPIs).forEach((API) => {
       let bds: string[];
       let variables: string[];
 
-      const rés: {motsClefs?: string[]} = {};
+      const rés: { motsClefs?: string[] } = {};
 
       const fsOublier: schémaFonctionOublier[] = [];
 
       before(async () => {
-        fsOublier.push(await client.projets!.suivreBdsProjet(
-          idProjet,
-          (b) => (bds = b)
-        ));
-        fsOublier.push(await client.projets!.suivreMotsClefsProjet(
-          idProjet, m=>rés.motsClefs = m
-        ));
-        fsOublier.push(await client.projets!.suivreVariablesProjet(
-          idProjet, v=>variables = v
-        ));
+        fsOublier.push(
+          await client.projets!.suivreBdsProjet(idProjet, (b) => (bds = b))
+        );
+        fsOublier.push(
+          await client.projets!.suivreMotsClefsProjet(
+            idProjet,
+            (m) => (rés.motsClefs = m)
+          )
+        );
+        fsOublier.push(
+          await client.projets!.suivreVariablesProjet(
+            idProjet,
+            (v) => (variables = v)
+          )
+        );
       });
 
       after(async () => {
-        fsOublier.forEach(f=>f());
+        fsOublier.forEach((f) => f());
       });
 
       step("Pas de BDs pour commencer", async () => {
@@ -321,23 +337,27 @@ Object.keys(testAPIs).forEach((API) => {
       });
 
       step("Ajout d'une BD", async () => {
-        idBd = await client.bds!.créerBd("ODbl-1_0")
+        idBd = await client.bds!.créerBd("ODbl-1_0");
         await client.projets!.ajouterBdProjet(idProjet, idBd);
         expect(bds).to.be.an("array").of.length(1);
         expect(bds[0]).to.equal(idBd);
       });
 
-      it("Mots-clefs BD détectés", async () => {
+      it("Mots-clefs BD détectés", async () => {
         const idMotClef = await client.motsClefs!.créerMotClef();
         await client.bds!.ajouterMotsClefsBd(idBd, idMotClef);
 
-        await attendreRésultat(rés, "motsClefs", (x?:string[])=>x && x.length > 0)
+        await attendreRésultat(
+          rés,
+          "motsClefs",
+          (x?: string[]) => x && x.length > 0
+        );
 
         expect(rés.motsClefs).to.be.an("array").of.length(1);
         expect(rés.motsClefs![0]).to.equal(idMotClef);
-      })
+      });
 
-      it("Variables BD détectées", async () => {
+      it("Variables BD détectées", async () => {
         expect(variables).to.be.an.empty("array");
 
         const idVariable = await client.variables!.créerVariable("numérique");
@@ -346,7 +366,7 @@ Object.keys(testAPIs).forEach((API) => {
         await client.tableaux!.ajouterColonneTableau(idTableau, idVariable);
         expect(variables).to.be.an("array").of.length(1);
         expect(variables[0]).to.equal(idVariable);
-      })
+      });
 
       it("Effacer une BD", async () => {
         await client.projets!.effacerBdProjet(idProjet, idBd);
@@ -382,7 +402,10 @@ Object.keys(testAPIs).forEach((API) => {
         idProjetOrig = await client.projets!.créerProjet();
 
         await client.projets!.ajouterNomsProjet(idProjetOrig, réfNoms);
-        await client.projets!.ajouterDescriptionsProjet(idProjetOrig, réfDescrs);
+        await client.projets!.ajouterDescriptionsProjet(
+          idProjetOrig,
+          réfDescrs
+        );
 
         idMotClef = await client.motsClefs!.créerMotClef();
         await client.projets!.ajouterMotsClefsProjet(idProjetOrig, idMotClef);
@@ -393,13 +416,22 @@ Object.keys(testAPIs).forEach((API) => {
         idProjetCopie = await client.projets!.copierProjet(idProjetOrig);
 
         fsOublier.push(
-          await client.projets!.suivreNomsProjet(idProjetCopie, (x) => (noms = x))
+          await client.projets!.suivreNomsProjet(
+            idProjetCopie,
+            (x) => (noms = x)
+          )
         );
         fsOublier.push(
-          await client.projets!.suivreDescrProjet(idProjetCopie, (x) => (descrs = x))
+          await client.projets!.suivreDescrProjet(
+            idProjetCopie,
+            (x) => (descrs = x)
+          )
         );
         fsOublier.push(
-          await client.projets!.suivreMotsClefsProjet(idProjetCopie, (x) => (motsClefs = x))
+          await client.projets!.suivreMotsClefsProjet(
+            idProjetCopie,
+            (x) => (motsClefs = x)
+          )
         );
         fsOublier.push(
           await client.projets!.suivreBdsProjet(idProjetCopie, (x) => (bds = x))
@@ -426,8 +458,8 @@ Object.keys(testAPIs).forEach((API) => {
 
     describe("Exporter données", function () {
       let idProjet: string;
-      let docs: {doc: XLSX.WorkBook, nom: string}[];
-      let fichiersSFIP: Set<string>;
+      let docs: { doc: XLSX.WorkBook; nom: string }[];
+      let fichiersSFIP: Set<{ cid: string; ext: string }>;
 
       const nomTableau1 = "Tableau 1";
       const nomTableau2 = "Tableau 2";
@@ -435,7 +467,7 @@ Object.keys(testAPIs).forEach((API) => {
       before(async () => {
         idProjet = await client.projets!.créerProjet();
         const idBd = await client.bds!.créerBd("ODbl-1_0");
-        await client.bds!.ajouterNomsBd(idBd, {fr: "Ma BD"})
+        await client.bds!.ajouterNomsBd(idBd, { fr: "Ma BD" });
         await client.projets!.ajouterBdProjet(idProjet, idBd);
 
         const idTableau1 = await client.bds!.ajouterTableauBd(idBd);
@@ -463,9 +495,10 @@ Object.keys(testAPIs).forEach((API) => {
           fr: nomTableau2,
         });
 
-        ({ docs, fichiersSFIP } = await client.projets!.exporterDonnées(idProjet, [
-          "fr",
-        ]));
+        ({ docs, fichiersSFIP } = await client.projets!.exporterDonnées(
+          idProjet,
+          ["fr"]
+        ));
       });
 
       step("Doc créé avec toutes les bds", () => {
@@ -473,16 +506,16 @@ Object.keys(testAPIs).forEach((API) => {
         expect(docs[0].doc.SheetNames)
           .to.be.an("array")
           .with.members([nomTableau1, nomTableau2]);
-        expect(docs[0].nom).to.equal("Ma BD")
+        expect(docs[0].nom).to.equal("Ma BD");
       });
+
       step("Fichiers SFIP retrouvés de tous les tableaux", () => {
         expect(fichiersSFIP.size).equal(1);
-        expect(fichiersSFIP).to.have.keys([
-          "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ",
+        expect(fichiersSFIP).to.have.deep.keys([
+          { cid: "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ", ext: "mp4" },
         ]);
       });
     });
-
   });
 });
 

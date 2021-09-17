@@ -258,7 +258,11 @@ export default mixins(
     };
   },
   computed: {
-    petitPousset: function () : {text: string, href?: string, disabled?: boolean}[] {
+    petitPousset: function (): {
+      text: string;
+      href?: string;
+      disabled?: boolean;
+    }[] {
       return [
         { text: "Données", href: "/bd" },
         { text: this.$t("bd.nouvelle.petitPousset") as string, disabled: true },
@@ -384,6 +388,7 @@ export default mixins(
           .map((x) => [x, this.descriptions[x]])
       );
     },
+
     changerLangueDescr: function ({
       langueOriginale,
       langue,
@@ -396,6 +401,7 @@ export default mixins(
       this.effacerDescr({ langue: langueOriginale });
       this.sauvegarderDescr({ langue, nom });
     },
+
     créerBd: async function () {
       if (!this.licence) return;
       this.enCréation = true;

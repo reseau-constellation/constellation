@@ -989,7 +989,7 @@ Object.keys(testAPIs).forEach((API) => {
     describe("Exporter données", function () {
       let idBd: string;
       let doc: XLSX.WorkBook;
-      let fichiersSFIP: Set<string>;
+      let fichiersSFIP: Set<{ cid: string; ext: string }>;
 
       const nomTableau1 = "Tableau 1";
       const nomTableau2 = "Tableau 2";
@@ -1034,8 +1034,8 @@ Object.keys(testAPIs).forEach((API) => {
       });
       step("Fichiers SFIP retrouvés de tous les tableaux", () => {
         expect(fichiersSFIP.size).equal(1);
-        expect(fichiersSFIP).to.have.keys([
-          "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ",
+        expect(fichiersSFIP).to.have.deep.keys([
+          { cid: "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ", ext: "mp4" },
         ]);
       });
     });

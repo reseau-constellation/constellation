@@ -1,14 +1,11 @@
 import { FeedStore, KeyValueStore } from "orbit-db";
-import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
 
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
   élémentBdListe,
 } from "./client";
-import ContrôleurConstellation, {
-  nomType as typeContrôleurAccèsConst,
-} from "./accès/cntrlConstellation";
+import ContrôleurConstellation from "./accès/cntrlConstellation";
 import { règleVariableAvecId, règleVariable, règleCatégorie } from "./valid";
 import { v4 as uuidv4 } from "uuid";
 
@@ -126,34 +123,6 @@ export default class Variables {
     await this.établirStatut(idNouvelleBd, { statut });
 
     return idNouvelleBd;
-  }
-
-  async migrerVariables(): Promise<void> {
-    // Fonction pour migrer les variables qui n'ont pas le bon contrôleur d'accès
-    const migrerVariableSiNécessaire = async (id: string): Promise<string> => {
-      const bd = await this.client.ouvrirBd(id);
-      const typeAccès = (bd.access.constructor as unknown as AccessController)
-        .type;
-      if (typeAccès !== typeContrôleurAccèsConst) {
-        const idNouvelleBd = await this.copierVariable(id);
-        await this.marquerObsolète(id, idNouvelleBd);
-        return idNouvelleBd;
-      }
-      return id;
-    };
-
-    const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
-    const variablesExistantes = ClientConstellation.obtÉlémentsDeBdListe(
-      bdRacine
-    ) as string[];
-
-    // Migrer les BDs si nécessaire
-    variablesExistantes.forEach(async (idBd: string) => {
-      const idNouvelle = await migrerVariableSiNécessaire(idBd);
-      if (idBd !== idNouvelle) {
-        await bdRacine.add(idNouvelle);
-      }
-    });
   }
 
   async ajouterNomsVariable(

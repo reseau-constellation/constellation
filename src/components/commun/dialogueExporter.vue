@@ -50,11 +50,6 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import XLSX from "xlsx";
-
-import { uneFois, schémaFonctionSuivi } from "@/ipa/client";
-import { traduire } from "@/ipa/utils";
-
 import mixinLangues from "@/mixins/langues";
 
 export default mixins(mixinLangues).extend({
@@ -75,41 +70,39 @@ export default mixins(mixinLangues).extend({
     télécharger: async function () {
       this.enProgrès = true;
 
-      let doc: XLSX.WorkBook;
       try {
         switch (this.type) {
-          case "bd":
-            ({ doc } = await this.$ipa.bds!.exporterDonnées(
+          case "bd": {
+            const données = await this.$ipa.bds!.exporterDonnées(
               this.id,
               this.languesPréférées
-            ));
+            );
+            this.$ipa.bds!.exporterDocumentDonnées(
+              données,
+              this.formatDoc,
+              this.inclureMédias
+            );
             break;
+          }
 
-          case "tableau":
-            ({ doc } = await this.$ipa.tableaux!.exporterDonnées(
+          case "tableau": {
+            const données = await this.$ipa.tableaux!.exporterDonnées(
               this.id,
               this.languesPréférées
-            ));
+            );
+            this.$ipa.bds!.exporterDocumentDonnées(
+              données,
+              this.formatDoc,
+              this.inclureMédias
+            );
             break;
+          }
 
           default:
             throw new Error(`"${this.type}" inconnu`);
         }
-        const nomsBd = await uneFois(
-          (f: schémaFonctionSuivi<{ [key: string]: string }>) =>
-            this.$ipa.bds!.suivreNomsBd(this.id, f)
-        );
-        const nomFichier = traduire(nomsBd, this.languesPréférées) || this.id;
-
-        const conversionsTypes: { [key: string]: XLSX.BookType } = {
-          xls: "biff8",
-        };
-        const bookType: XLSX.BookType =
-          conversionsTypes[this.formatDoc] || this.formatDoc;
-
-        XLSX.writeFile(doc, `${nomFichier}.${this.formatDoc}`, { bookType });
       } catch {
-        //Rien à faire
+        // Rien à faire
       }
       this.enProgrès = false;
     },
