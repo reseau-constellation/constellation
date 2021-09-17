@@ -1,6 +1,7 @@
 import { FeedStore, KeyValueStore } from "orbit-db";
 import XLSX from "xlsx";
 import toBuffer from "it-to-buffer";
+import path from "path";
 
 import ClientConstellation, {
   schémaFonctionSuivi,
@@ -480,7 +481,8 @@ export default class Projets {
 
   async exporterDocumentDonnées(
     données: donnéesProjetExportées,
-    formatDoc: string,
+    formatDoc: XLSX.BookType | "xls",
+    dir: string = "",
     inclureFichiersSFIP = true
   ): Promise<void> {
     const { docs, fichiersSFIP, nomFichier } = données;
@@ -493,7 +495,7 @@ export default class Projets {
     const fichiersDocs = docs.map((d) => {
       return {
         nom: `${d.nom}.${formatDoc}`,
-        octets: XLSX.write(d.doc, { bookType }),
+        octets: XLSX.write(d.doc, { bookType, type: "buffer" }),
       };
     });
     const fichiersDeSFIP = [];
@@ -505,7 +507,7 @@ export default class Projets {
         });
       }
     }
-    await zipper(fichiersDocs, fichiersDeSFIP, nomFichier);
+    await zipper(fichiersDocs, fichiersDeSFIP, path.join(dir, nomFichier));
   }
 
   async effacerProjet(id: string): Promise<void> {

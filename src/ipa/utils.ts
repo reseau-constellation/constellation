@@ -2,8 +2,9 @@ import { CID } from "multiformats/cid";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import fs from "fs";
+import path from "path";
 
-export function CIDvalid(cid: unknown): boolean {
+export function cidValide(cid: unknown): boolean {
   if (typeof cid === "string") {
     try {
       CID.parse(cid);
@@ -29,6 +30,8 @@ export async function zipper(
   fichiersSFIP: { nom: string; octets: Uint8Array }[],
   nomFichier: string
 ): Promise<void> {
+  if (!nomFichier.endsWith(".zip")) nomFichier = `${nomFichier}.zip`
+
   const fichierZip = new JSZip();
   for (const doc of fichiersDocs) {
     fichierZip.file(doc.nom, doc.octets);
@@ -39,15 +42,17 @@ export async function zipper(
     dossierFichiersSFIP.file(fichier.nom, fichier.octets);
   }
 
-  if (navigator) {
-    const contenu = await fichierZip.generateAsync({ type: "blob" });
-    saveAs(contenu, `${nomFichier}.zip`);
-  } else {
+  if (typeof window === 'undefined') {
     const contenu = await fichierZip.generateAsync({ type: "arraybuffer" });
+    fs.mkdirSync(path.dirname(nomFichier), { recursive: true });
+
     await fs.promises.writeFile(
-      `${nomFichier}.zip`,
+      nomFichier,
       Buffer.from(contenu),
       "binary"
     );
+  } else {
+    const contenu = await fichierZip.generateAsync({ type: "blob" });
+    saveAs(contenu, nomFichier);
   }
 }

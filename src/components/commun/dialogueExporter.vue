@@ -23,6 +23,7 @@
           :label="$t('exporter.formatFichier')"
           :items="['ods', 'csv', 'txt', 'xls', 'xlsx']"
         />
+        <v-checkbox v-model="inclureMédias"></v-checkbox>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -50,6 +51,8 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
+import XLSX from "xlsx";
+
 import mixinLangues from "@/mixins/langues";
 
 export default mixins(mixinLangues).extend({
@@ -61,7 +64,7 @@ export default mixins(mixinLangues).extend({
       dialogue: false,
       enProgrès: false,
 
-      formatDoc: "ods",
+      formatDoc: "ods" as XLSX.BookType | "xls",
       inclureMédias: false,
       langueColonnes: undefined,
     };
@@ -80,6 +83,7 @@ export default mixins(mixinLangues).extend({
             this.$ipa.bds!.exporterDocumentDonnées(
               données,
               this.formatDoc,
+              undefined,
               this.inclureMédias
             );
             break;
@@ -93,6 +97,21 @@ export default mixins(mixinLangues).extend({
             this.$ipa.bds!.exporterDocumentDonnées(
               données,
               this.formatDoc,
+              undefined,
+              this.inclureMédias
+            );
+            break;
+          }
+
+          case "projet": {
+            const données = await this.$ipa.projets!.exporterDonnées(
+              this.id,
+              this.languesPréférées
+            );
+            this.$ipa.projets!.exporterDocumentDonnées(
+              données,
+              this.formatDoc,
+              undefined,
               this.inclureMédias
             );
             break;

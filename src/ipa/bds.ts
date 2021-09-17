@@ -2,6 +2,7 @@ import { FeedStore, KeyValueStore } from "orbit-db";
 
 import XLSX from "xlsx";
 import toBuffer from "it-to-buffer";
+import path from "path";
 
 import localStorage from "@/ipa/stockageLocal";
 import { schémaBd } from "@/ipa/reseau";
@@ -996,7 +997,8 @@ export default class BDs {
 
   async exporterDocumentDonnées(
     données: donnéesBdExportées,
-    formatDoc: string,
+    formatDoc: XLSX.BookType | "xls",
+    dir: string = "",
     inclureFichierSFIP = true
   ): Promise<void> {
     const { doc, fichiersSFIP, nomFichier } = données;
@@ -1008,8 +1010,8 @@ export default class BDs {
 
     if (inclureFichierSFIP) {
       const fichierDoc = {
-        octets: XLSX.write(doc, { bookType }),
-        nom: nomFichier,
+        octets: XLSX.write(doc, { bookType, type: "buffer" }),
+        nom: `${nomFichier}.${formatDoc}`,
       };
       const fichiersDeSFIP = [];
       for (const fichier of fichiersSFIP) {
@@ -1018,9 +1020,9 @@ export default class BDs {
           octets: await toBuffer(this.client.obtItérableAsyncSFIP(fichier.cid)),
         });
       }
-      await zipper([fichierDoc], fichiersDeSFIP, nomFichier);
+      await zipper([fichierDoc], fichiersDeSFIP, path.join(dir, nomFichier));
     } else {
-      XLSX.writeFile(doc, `${nomFichier}.${formatDoc}`, { bookType });
+      XLSX.writeFile(doc, path.join(dir, `${nomFichier}.${formatDoc}`), { bookType });
     }
   }
 

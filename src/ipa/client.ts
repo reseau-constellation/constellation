@@ -26,7 +26,7 @@ import Favoris from "./favoris";
 import Projets from "./projets";
 import MotsClefs from "./motsClefs";
 
-import { CIDvalid } from "./utils";
+import { cidValide } from "./utils";
 import localStorage from "./stockageLocal";
 import ContrôleurConstellation, {
   OptionsContrôleurConstellation,
@@ -1046,7 +1046,7 @@ export default class ClientConstellation extends EventEmitter {
     const épinglerSiAdresseValide = async (x: unknown) => {
       if (adresseOrbiteValide(x)) {
         await this.épinglerBd(x as string, déjàVus);
-      } else if (CIDvalid(x)) {
+      } else if (cidValide(x)) {
         this.sfip!.pin.add(x as string); // pas async car le contenu correspondant au CID n'est peut-être pas disponible au moment
       }
     };

@@ -7,6 +7,10 @@ chai.should();
 chai.use(chaiAsPromised);
 
 import XLSX from "xlsx";
+import fs from "fs";
+import path from "path";
+import rmrf from "rimraf";
+import AdmZip from "adm-zip";
 
 import { enregistrerContrôleurs } from "@/ipa/accès";
 import ClientConstellation, {
@@ -460,6 +464,9 @@ Object.keys(testAPIs).forEach((API) => {
       let idProjet: string;
       let docs: { doc: XLSX.WorkBook; nom: string }[];
       let fichiersSFIP: Set<{ cid: string; ext: string }>;
+      let nomFichier: string;
+
+      let cid: string;
 
       const nomTableau1 = "Tableau 1";
       const nomTableau2 = "Tableau 2";
@@ -481,10 +488,15 @@ Object.keys(testAPIs).forEach((API) => {
           idVarFichier
         );
 
+        const OCTETS = fs.readFileSync(
+          path.resolve(__dirname, "../../src/assets/logo.svg")
+        );
+        cid = await client.ajouterÀSFIP(OCTETS);
+
         await client.tableaux!.ajouterÉlément(idTableau2, {
           [idColFichier]: {
-            cid: "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ",
-            ext: "mp4",
+            cid,
+            ext: "svg",
           },
         });
 
@@ -495,10 +507,14 @@ Object.keys(testAPIs).forEach((API) => {
           fr: nomTableau2,
         });
 
-        ({ docs, fichiersSFIP } = await client.projets!.exporterDonnées(
+        ({ docs, fichiersSFIP, nomFichier } = await client.projets!.exporterDonnées(
           idProjet,
           ["fr"]
         ));
+      });
+
+      after(()=>{
+        rmrf.sync(path.join(__dirname, "_temp"))
       });
 
       step("Doc créé avec toutes les bds", () => {
@@ -512,9 +528,40 @@ Object.keys(testAPIs).forEach((API) => {
       step("Fichiers SFIP retrouvés de tous les tableaux", () => {
         expect(fichiersSFIP.size).equal(1);
         expect(fichiersSFIP).to.have.deep.keys([
-          { cid: "QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ", ext: "mp4" },
+          { cid, ext: "svg" },
         ]);
       });
+
+      describe("Exporter document projet", async () => {
+        const dirZip = path.join(__dirname, "_temp/testExporterProjet")
+        const fichierExtrait = path.join(__dirname, "_temp/testExporterProjetExtrait")
+
+        let nomZip: string;
+
+        before(async ()=> {
+          await client.projets!.exporterDocumentDonnées({ docs, fichiersSFIP, nomFichier }, "ods", dirZip, true);
+          nomZip = path.join(dirZip, nomFichier + ".zip")
+        })
+
+        step("Le fichier zip existe", ()=>{
+          expect(fs.existsSync(nomZip)).to.be.true;
+          const zip = new AdmZip(nomZip);
+          zip.extractAllTo(fichierExtrait, true);
+          expect(fs.existsSync(fichierExtrait)).to.be.true;
+        })
+
+        it("Les données sont exportées", ()=>{
+          expect(fs.existsSync(path.join(fichierExtrait, "Ma BD.ods"))).to.be.true;
+        })
+
+        step("Le dossier pour les données SFIP existe", ()=>{
+          expect(fs.existsSync(path.join(fichierExtrait, "sfip"))).to.be.true;
+        })
+
+        step("Les fichiers SFIP existent", ()=>{
+          expect(fs.existsSync(path.join(fichierExtrait, "sfip", cid+".svg"))).to.be.true;
+        })
+      })
     });
   });
 });

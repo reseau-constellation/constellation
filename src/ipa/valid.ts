@@ -1,6 +1,6 @@
 import gjv from "geojson-validation";
 
-import { CIDvalid } from "./utils";
+import { cidValide } from "./utils";
 import { catégorieVariables } from "./variables";
 import { élémentsBd } from "./client";
 
@@ -216,7 +216,7 @@ export const formatsFichiers = {
 function validFichier(val: unknown, exts?: string[]): boolean {
   if (typeof val !== "object") return false;
   const { cid, ext } = val as { cid: string; ext: string };
-  if (!CIDvalid(cid)) return false;
+  if (!cidValide(cid)) return false;
   if (typeof ext !== "string") return false;
   if (exts) {
     return exts.includes(ext.replace(".", ""));
