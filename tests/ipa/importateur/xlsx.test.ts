@@ -30,8 +30,8 @@ describe("XLSX", function () {
     });
     step("Données importées", async () => {
       const données = importateur.obtDonnées("Feuille1", {
-        "Numérique": "num",
-        "இது உரை ஆகும்": "உரை"
+        Numérique: "num",
+        "இது உரை ஆகும்": "உரை",
       });
       expect(données).to.have.deep.members([
         { num: 1, உரை: "வணக்கம்" },

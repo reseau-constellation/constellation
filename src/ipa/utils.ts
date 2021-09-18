@@ -30,7 +30,7 @@ export async function zipper(
   fichiersSFIP: { nom: string; octets: Uint8Array }[],
   nomFichier: string
 ): Promise<void> {
-  if (!nomFichier.endsWith(".zip")) nomFichier = `${nomFichier}.zip`
+  if (!nomFichier.endsWith(".zip")) nomFichier = `${nomFichier}.zip`;
 
   const fichierZip = new JSZip();
   for (const doc of fichiersDocs) {
@@ -42,15 +42,11 @@ export async function zipper(
     dossierFichiersSFIP.file(fichier.nom, fichier.octets);
   }
 
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     const contenu = await fichierZip.generateAsync({ type: "arraybuffer" });
     fs.mkdirSync(path.dirname(nomFichier), { recursive: true });
 
-    await fs.promises.writeFile(
-      nomFichier,
-      Buffer.from(contenu),
-      "binary"
-    );
+    await fs.promises.writeFile(nomFichier, Buffer.from(contenu), "binary");
   } else {
     const contenu = await fichierZip.generateAsync({ type: "blob" });
     saveAs(contenu, nomFichier);

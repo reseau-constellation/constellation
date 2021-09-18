@@ -21,7 +21,7 @@ export default class ImportateurFeuilleCalcul {
 
   obtDonnées(
     nomTableau: string,
-    cols: {[key: string]: string}
+    cols: { [key: string]: string }
   ): { [key: string]: string | number }[] {
     const feuille = this.doc.Sheets[nomTableau];
     const données = XLSX.utils.sheet_to_json(feuille) as {

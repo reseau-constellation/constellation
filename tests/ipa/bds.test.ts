@@ -1033,13 +1033,14 @@ Object.keys(testAPIs).forEach((API) => {
           fr: nomTableau2,
         });
 
-        ({ doc, fichiersSFIP, nomFichier } = await client.bds!.exporterDonnées(idBd, [
-          "fr",
-        ]));
+        ({ doc, fichiersSFIP, nomFichier } = await client.bds!.exporterDonnées(
+          idBd,
+          ["fr"]
+        ));
       });
 
-      after(()=>{
-        rmrf.sync(path.join(__dirname, "_temp"))
+      after(() => {
+        rmrf.sync(path.join(__dirname, "_temp"));
       });
 
       step("Doc créé avec tous les tableaux", () => {
@@ -1049,38 +1050,46 @@ Object.keys(testAPIs).forEach((API) => {
       });
       step("Fichiers SFIP retrouvés de tous les tableaux", () => {
         expect(fichiersSFIP.size).equal(1);
-        expect(fichiersSFIP).to.have.deep.keys([
-          { cid, ext: "svg" },
-        ]);
+        expect(fichiersSFIP).to.have.deep.keys([{ cid, ext: "svg" }]);
       });
-      describe("Exporter document données", async () => {
-        const dirZip = path.join(__dirname, "_temp/testExporterBd")
-        const fichierExtrait = path.join(__dirname, "_temp/testExporterBdExtrait")
+      describe("Exporter document données", async () => {
+        const dirZip = path.join(__dirname, "_temp/testExporterBd");
+        const fichierExtrait = path.join(
+          __dirname,
+          "_temp/testExporterBdExtrait"
+        );
 
-        before(async ()=> {
-          await client.bds!.exporterDocumentDonnées({ doc, fichiersSFIP, nomFichier }, "ods", dirZip, true)
-        })
+        before(async () => {
+          await client.bds!.exporterDocumentDonnées(
+            { doc, fichiersSFIP, nomFichier },
+            "ods",
+            dirZip,
+            true
+          );
+        });
 
-        step("Le fichier zip existe", ()=>{
-          const nomZip = path.join(dirZip, nomFichier + ".zip")
+        step("Le fichier zip existe", () => {
+          const nomZip = path.join(dirZip, nomFichier + ".zip");
           expect(fs.existsSync(nomZip)).to.be.true;
           const zip = new AdmZip(nomZip);
           zip.extractAllTo(fichierExtrait, true);
           expect(fs.existsSync(fichierExtrait)).to.be.true;
-        })
+        });
 
-        it("Les données sont exportées", ()=>{
-          expect(fs.existsSync(path.join(fichierExtrait, nomFichier+".ods"))).to.be.true;
-        })
+        it("Les données sont exportées", () => {
+          expect(fs.existsSync(path.join(fichierExtrait, nomFichier + ".ods")))
+            .to.be.true;
+        });
 
-        step("Le dossier pour les données SFIP existe", ()=>{
+        step("Le dossier pour les données SFIP existe", () => {
           expect(fs.existsSync(path.join(fichierExtrait, "sfip"))).to.be.true;
-        })
+        });
 
-        step("Les fichiers SFIP existent", ()=>{
-          expect(fs.existsSync(path.join(fichierExtrait, "sfip", cid+".svg"))).to.be.true;
-        })
-      })
+        step("Les fichiers SFIP existent", () => {
+          expect(fs.existsSync(path.join(fichierExtrait, "sfip", cid + ".svg")))
+            .to.be.true;
+        });
+      });
     });
 
     describe("Rechercher BDs par mot-clef", function () {

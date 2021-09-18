@@ -999,7 +999,7 @@ export default class BDs {
   async exporterDocumentDonnées(
     données: donnéesBdExportées,
     formatDoc: XLSX.BookType | "xls",
-    dir: string = "",
+    dir = "",
     inclureFichierSFIP = true
   ): Promise<void> {
     const { doc, fichiersSFIP, nomFichier } = données;
@@ -1023,7 +1023,9 @@ export default class BDs {
       }
       await zipper([fichierDoc], fichiersDeSFIP, path.join(dir, nomFichier));
     } else {
-      XLSX.writeFile(doc, path.join(dir, `${nomFichier}.${formatDoc}`), { bookType });
+      XLSX.writeFile(doc, path.join(dir, `${nomFichier}.${formatDoc}`), {
+        bookType,
+      });
     }
   }
 

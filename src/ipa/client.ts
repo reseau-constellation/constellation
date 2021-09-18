@@ -258,7 +258,11 @@ export default class ClientConstellation extends EventEmitter {
     );
     this.motsClefs = new MotsClefs(this, idBdMotsClefs!);
 
-    const idBdAuto = await this.obtIdBd("automatisations", this.bdRacine, "feed");
+    const idBdAuto = await this.obtIdBd(
+      "automatisations",
+      this.bdRacine,
+      "feed"
+    );
     this.automatisations = new Automatisations(this, idBdAuto!);
     await this.automatisations.initialiser();
   }

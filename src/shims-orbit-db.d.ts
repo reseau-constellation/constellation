@@ -50,6 +50,14 @@ declare module "orbit-db" {
     stop(): Promise<void>;
   }
 
+  class Log {
+    heads: Entry[];
+  }
+
+  class Entry {
+    hash: string;
+  }
+
   export class Store {
     id: string;
     address: string;
@@ -60,6 +68,7 @@ declare module "orbit-db" {
     drop(): Promise<void>;
     load(): Promise<void>;
     close(): Promise<void>;
+    _oplog: Log;
   }
 
   export class KeyValueStore extends Store {

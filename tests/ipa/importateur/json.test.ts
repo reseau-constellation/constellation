@@ -41,39 +41,39 @@ describe("JSON", function () {
   });
 
   describe("Aplatire données", function () {
-    step("Aplatire objet", () => {
-      const données = {"a": [{"b": 2}, {"b": 3}, {"b": 4}], "c": 1}
+    step("Aplatire objet", () => {
+      const données = { a: [{ b: 2 }, { b: 3 }, { b: 4 }], c: 1 };
 
-      const aplaties = aplatirDonnées(données, ["a"])
-      expect(aplaties).to.have.deep.members(
-        [{c: 1, a: {b:2}}, {c: 1, a: { b:3}}, {c: 1, a: { b:4}}]
-      )
-    })
-    step("Aplatire liste", () => {
-      const données = [[{"b": 2}, {"b": 3}, {"b": 4}], {"c": 1}]
+      const aplaties = aplatirDonnées(données, ["a"]);
+      expect(aplaties).to.have.deep.members([
+        { c: 1, a: { b: 2 } },
+        { c: 1, a: { b: 3 } },
+        { c: 1, a: { b: 4 } },
+      ]);
+    });
+    step("Aplatire liste", () => {
+      const données = [[{ b: 2 }, { b: 3 }, { b: 4 }], { c: 1 }];
 
-      const aplaties = aplatirDonnées(données, [0])
-      expect(aplaties).to.have.deep.members(
-        [[{b: 2}, {c: 1}], [{b: 3}, {c: 1}], [{b: 4}, {c: 1}]]
-      )
-    })
-    step("Aplatire début liste", () => {
-      const données = [{"b": 2}, {"b": 3}, {"b": 4}]
+      const aplaties = aplatirDonnées(données, [0]);
+      expect(aplaties).to.have.deep.members([
+        [{ b: 2 }, { c: 1 }],
+        [{ b: 3 }, { c: 1 }],
+        [{ b: 4 }, { c: 1 }],
+      ]);
+    });
+    step("Aplatire début liste", () => {
+      const données = [{ b: 2 }, { b: 3 }, { b: 4 }];
 
-      const aplaties = aplatirDonnées(données)
-      expect(aplaties).to.have.deep.members(
-        [{"b": 2}, {"b": 3}, {"b": 4}]
-      )
-    })
-    step("Aplatire début dict", () => {
-      const données = {a: {"b": 2}, b: {"b": 3}, c: {"b": 4}}
+      const aplaties = aplatirDonnées(données);
+      expect(aplaties).to.have.deep.members([{ b: 2 }, { b: 3 }, { b: 4 }]);
+    });
+    step("Aplatire début dict", () => {
+      const données = { a: { b: 2 }, b: { b: 3 }, c: { b: 4 } };
 
-      const aplaties = aplatirDonnées(données)
-      expect(aplaties).to.have.deep.members(
-        [{"b": 2}, {"b": 3}, {"b": 4}]
-      )
-    })
-    step("Aplatire dict imbriqué", () => {
+      const aplaties = aplatirDonnées(données);
+      expect(aplaties).to.have.deep.members([{ b: 2 }, { b: 3 }, { b: 4 }]);
+    });
+    step("Aplatire dict imbriqué", () => {
       const données = {
         AFG: {
           location: "Afghanistan",
@@ -103,46 +103,45 @@ describe("JSON", function () {
             },
           ],
         },
-      }
+      };
 
-      const aplaties = aplatirDonnées(données, [null, "data"])
-      expect(aplaties).to.have.deep.members(
-        [{
+      const aplaties = aplatirDonnées(données, [null, "data"]);
+      expect(aplaties).to.have.deep.members([
+        {
           location: "Afghanistan",
           population: 39835428.0,
           data: {
-              date: "2020-02-24",
-              new_cases: 5.0,
-            },
+            date: "2020-02-24",
+            new_cases: 5.0,
           },
-          {
-            location: "Afghanistan",
-            population: 39835428.0,
-            data: {
-              date: "2020-02-25",
-              new_cases: 0.0,
-            },
+        },
+        {
+          location: "Afghanistan",
+          population: 39835428.0,
+          data: {
+            date: "2020-02-25",
+            new_cases: 0.0,
           },
-          {
-            location: "Africa",
-            population: 1373486472.0,
-            data: {
-              date: "2020-02-13",
-              new_cases: 0.0,
-            },
+        },
+        {
+          location: "Africa",
+          population: 1373486472.0,
+          data: {
+            date: "2020-02-13",
+            new_cases: 0.0,
           },
-          {
-            location: "Africa",
-            population: 1373486472.0,
-            data: {
-              date: "2020-02-14",
-              new_cases: 1.0,
-            },
+        },
+        {
+          location: "Africa",
+          population: 1373486472.0,
+          data: {
+            date: "2020-02-14",
+            new_cases: 1.0,
           },
-        ]
-      )
-    })
-  })
+        },
+      ]);
+    });
+  });
 
   describe("Importateur JSON", function () {
     let données: élément[];

@@ -482,7 +482,7 @@ export default class Projets {
   async exporterDocumentDonnées(
     données: donnéesProjetExportées,
     formatDoc: XLSX.BookType | "xls",
-    dir: string = "",
+    dir = "",
     inclureFichiersSFIP = true
   ): Promise<void> {
     const { docs, fichiersSFIP, nomFichier } = données;
