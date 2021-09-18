@@ -25,6 +25,7 @@ import Réseau from "./reseau";
 import Favoris from "./favoris";
 import Projets from "./projets";
 import MotsClefs from "./motsClefs";
+import Automatisations from "./automatisation";
 
 import { cidValide } from "./utils";
 import localStorage from "./stockageLocal";
@@ -161,6 +162,8 @@ export default class ClientConstellation extends EventEmitter {
   favoris?: Favoris;
   projets?: Projets;
   motsClefs?: MotsClefs;
+  automatisations?: Automatisations;
+
   prêt: boolean;
   idBdRacine?: string;
   SUJET_RÉSEAU: string;
@@ -254,6 +257,10 @@ export default class ClientConstellation extends EventEmitter {
       "feed"
     );
     this.motsClefs = new MotsClefs(this, idBdMotsClefs!);
+
+    const idBdAuto = await this.obtIdBd("automatisations", this.bdRacine, "feed");
+    this.automatisations = new Automatisations(this, idBdAuto!);
+    await this.automatisations.initialiser();
   }
 
   async signer(message: string): Promise<Signature> {
@@ -1083,6 +1090,7 @@ export default class ClientConstellation extends EventEmitter {
     );
 
     if (this.réseau) await this.réseau.fermer();
+    if (this.automatisations) await this.automatisations.fermer();
     if (this.orbite) await this.orbite.stop();
     if (this.sfip) await this.sfip.stop();
   }

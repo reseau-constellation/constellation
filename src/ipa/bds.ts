@@ -696,6 +696,7 @@ export default class BDs {
     id: string,
     f: schémaFonctionSuivi<number | undefined>
   ): Promise<schémaFonctionOublier> {
+    //À faire
     f(undefined);
     return faisRien;
   }

@@ -149,6 +149,7 @@ export const extraireDonnées = (
 };
 
 export default class ImportateurDonnéesJSON {
+  //Exemple: https://coordinates.native-land.ca/indigenousLanguages.json
   donnéesJSON: DonnéesJSON;
 
   constructor(données: DonnéesJSON) {

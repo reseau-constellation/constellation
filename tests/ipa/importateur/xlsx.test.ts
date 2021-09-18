@@ -29,14 +29,14 @@ describe("XLSX", function () {
         .and.members(["Numérique", "இது உரை ஆகும்"]);
     });
     step("Données importées", async () => {
-      const données = importateur.obtDonnées("Feuille1", [
-        "Numérique",
-        "இது உரை ஆகும்",
-      ]);
+      const données = importateur.obtDonnées("Feuille1", {
+        "Numérique": "num",
+        "இது உரை ஆகும்": "உரை"
+      });
       expect(données).to.have.deep.members([
-        { Numérique: 1, "இது உரை ஆகும்": "வணக்கம்" },
-        { Numérique: 2, "இது உரை ஆகும்": "Ütz awäch" },
-        { Numérique: 3, "இது உரை ஆகும்": "Salut !" },
+        { num: 1, உரை: "வணக்கம்" },
+        { num: 2, உரை: "Ütz awäch" },
+        { num: 3, உரை: "Salut !" },
       ]);
     });
   });

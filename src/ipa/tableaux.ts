@@ -523,6 +523,43 @@ export default class Tableaux {
     }
   }
 
+  async importerDonnées(
+    idTableau: string,
+    données: élémentBdListeDonnées[]
+  ): Promise<void> {
+
+    const donnéesTableau = await uneFois(
+      async (
+        fSuivi: schémaFonctionSuivi<élémentDonnées<élémentBdListeDonnées>[]>
+      ) => {
+        return await this.suivreDonnées(idTableau, fSuivi);
+      }
+    );
+
+    const nouveaux: élémentBdListeDonnées[] = []
+    for (const élément of données) {
+      if (!donnéesTableau.some(x=>élémentsÉgaux(x.données, élément))) {
+        nouveaux.push(élément)
+      }
+    }
+
+    const àEffacer: string[] = []
+    for (const élément of donnéesTableau) {
+      if (!données.some(x=>élémentsÉgaux(x, élément.données))) {
+        àEffacer.push(élément.empreinte)
+      }
+    }
+
+    for (const n of nouveaux) {
+      await this.ajouterÉlément(idTableau, n)
+    }
+
+    for (const e of àEffacer) {
+      await this.effacerÉlément(idTableau, e)
+    }
+
+  }
+
   async ajouterNomsTableau(
     idTableau: string,
     noms: { [key: string]: string }

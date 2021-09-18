@@ -1,8 +1,8 @@
 import XLSX from "xlsx";
 
-import { valsJSON } from "./json";
+import { DonnéesJSON } from "./json";
 
-export async function importerJSONdURL(url: string): Promise<valsJSON> {
+export async function importerJSONdURL(url: string): Promise<DonnéesJSON> {
   const réponse = await fetch(url);
   return await réponse.json();
 }
