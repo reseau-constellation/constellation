@@ -190,7 +190,7 @@ export default mixins(mixinIPA, mixinImages).extend({
 
       const oublierCourriel = await this.$ipa.compte!.suivreCourriel(
         (courriel) => {
-          if (courriel) this.courrielOrig = courriel;
+          this.courrielOrig = courriel;
         }
       );
 

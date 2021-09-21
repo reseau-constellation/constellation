@@ -3,11 +3,12 @@
 import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
-import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 const isDevelopment = process.env.NODE_ENV !== "production";
 import Store from "electron-store";
 import Ctl from "ipfsd-ctl";
+// import Constellation from "@/ipa/client";
 
+// const client = new Constellation()
 let ipfsd: typeof Ctl;
 async function initSFIP() {
   /* if (!ipfsd) {
@@ -55,9 +56,6 @@ async function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      // Required for Spectron testing
-      enableRemoteModule: true,
-
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env
@@ -110,14 +108,6 @@ app.on("activate", () => {
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
   initSFIP();
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installExtension(VUEJS_DEVTOOLS);
-    } catch (e) {
-      console.error("Vue Devtools failed to install:", e.toString());
-    }
-  }
   createWindow();
 });
 

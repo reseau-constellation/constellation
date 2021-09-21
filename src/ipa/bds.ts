@@ -117,6 +117,14 @@ export default class BDs {
     await bdRacine.add(id);
   }
 
+  async enleverDeMesBds(id: string): Promise<void> {
+    const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
+    const empreinte = (await this.client.rechercherBdListe(
+      this.idBd, e=>e.payload.value===id
+    )).hash
+    await bdRacine.remove(empreinte);
+  }
+
   async copierBd(id: string, ajouter = true): Promise<string> {
     const bdBase = (await this.client.ouvrirBd(id)) as KeyValueStore;
     const licence = await bdBase.get("licence");
@@ -323,6 +331,7 @@ export default class BDs {
     const fFinale = async (bds: string[]): Promise<void> => {
       let idBd: string;
       const idBdLocale = localStorage.getItem(clefStockageLocal);
+      console.log({idBdLocale})
 
       switch (bds.length) {
         case 0: {
@@ -337,7 +346,7 @@ export default class BDs {
         case 1: {
           idBd = bds[0];
           localStorage.setItem(clefStockageLocal, idBd);
-          if (!idBdLocale || idBd !== idBdLocale) {
+          if (idBdLocale && idBd !== idBdLocale) {
             await this.combinerBds(idBd, idBdLocale);
           }
           break;
@@ -381,11 +390,13 @@ export default class BDs {
     };
 
     const fSuivre = async (
-      id: string,
+      idBd: string,
       fSuivreBd: schémaFonctionSuivi<string | undefined>
     ): Promise<schémaFonctionOublier> => {
+      console.log({idBd,
+      idTableauUnique})
       return await this.suivreTableauParIdUnique(
-        id,
+        idBd,
         idTableauUnique,
         fSuivreBd
       );

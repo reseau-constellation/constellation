@@ -73,12 +73,8 @@ export const startIpfs = async (type: string, config = {}) => {
   controllerConfig.ipfsOptions = config;
 
   // Spawn an IPFS daemon (type defined in)
-  try {
-    const ipfsd = Ctl.createController(controllerConfig);
-    return ipfsd;
-  } catch (err) {
-    throw new Error(err);
-  }
+  const ipfsd = Ctl.createController(controllerConfig);
+  return ipfsd;
 };
 
 export const stopIpfs = async (ipfsd: any) => {

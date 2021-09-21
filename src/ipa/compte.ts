@@ -1,4 +1,6 @@
 import { KeyValueStore } from "orbit-db";
+import { ImportCandidate } from "ipfs-core-types/src/utils";
+
 import ClientConstellation, {
   schémaFonctionSuivi,
   schémaFonctionOublier,
@@ -65,11 +67,17 @@ export default class Compte {
     await bd.del(langue);
   }
 
-  async sauvegarderImage(image: File): Promise<void> {
-    if (image.size > MAX_TAILLE_IMAGE)
-      throw new Error("Taille maximale excédée");
-    const octets = await image.arrayBuffer();
-    const idImage = await this.client.ajouterÀSFIP(octets);
+  async sauvegarderImage(image: ImportCandidate|File): Promise<void> {
+    let contenu: ImportCandidate;
+    
+    if (image instanceof File){
+      if (image.size > MAX_TAILLE_IMAGE)
+        throw new Error("Taille maximale excédée");
+      contenu = await image.arrayBuffer();
+    } else {
+      contenu = image
+    }
+    const idImage = await this.client.ajouterÀSFIP(contenu);
     const bd = (await this.client.ouvrirBd(this.idBd)) as KeyValueStore;
     await bd.set("image", idImage);
   }

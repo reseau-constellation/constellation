@@ -245,8 +245,8 @@ export default class ContrôleurConstellation extends AccessController {
 
       await this.bd!.add(entry);
       await this._miseÀJourBdAccès();
-    } catch (e) {
-      console.error(e);
+    } catch (_e) {
+      const e = _e as Error
       if (e.toString().includes("not append entry"))
         throw new Error(
           `Erreur : Le rôle ${rôle} ne peut pas être octroyé à ${id}.`

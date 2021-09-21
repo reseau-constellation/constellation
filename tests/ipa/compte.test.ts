@@ -146,20 +146,9 @@ Object.keys(testAPIs).forEach((API) => {
       let fOublier: schémaFonctionOublier;
       let fOublier2: schémaFonctionOublier;
 
-      const OCTETS = fs.readFileSync(
+      const IMAGE = fs.readFileSync(
         path.resolve(__dirname, "../../src/assets/logo.svg")
       );
-      const IMAGE: File = {
-        name: "logo.png",
-        path: "../../assets/logo.png",
-        arrayBuffer: () => Promise.resolve(OCTETS),
-        lastModified: Date.now(),
-        size: 100,
-        stream: () => new ReadableStream(),
-        type: "image/png",
-        text: () => Promise.resolve(""),
-        slice: () => new Blob(),
-      };
 
       before(async () => {
         fOublier = await client.compte!.suivreImage((i) => (rés["ultat"] = i));
@@ -176,12 +165,12 @@ Object.keys(testAPIs).forEach((API) => {
       step("Ajouter une image", async () => {
         await client.compte!.sauvegarderImage(IMAGE);
         await attendreRésultat(rés, "ultat", (v: unknown) => Boolean(v));
-        expect(rés["ultat"]).to.deep.equal(new Uint8Array(OCTETS));
+        expect(rés["ultat"]).to.deep.equal(new Uint8Array(IMAGE));
       });
 
       step("Lire l'image d'un autre membre", async () => {
         await attendreRésultat(rés, "ultat2", (v: unknown) => Boolean(v));
-        expect(rés["ultat2"]).to.deep.equal(new Uint8Array(OCTETS));
+        expect(rés["ultat2"]).to.deep.equal(new Uint8Array(IMAGE));
       });
 
       step("Effacer l'image", async () => {

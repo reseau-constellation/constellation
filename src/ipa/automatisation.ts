@@ -2,8 +2,9 @@ import { EventEmitter } from "events";
 import { FeedStore } from "orbit-db";
 import XLSX from "xlsx";
 import fs from "fs";
-import chokidar from "chokidar";
 import Semaphore from "@chriscdn/promise-semaphore";
+import isNode from "is-node";
+import isElectron from "is-electron";
 
 import localStorage from "./stockageLocal";
 import ClientConstellation, {
@@ -15,6 +16,8 @@ import ClientConstellation, {
 import { importerFeuilleCalculDURL, importerJSONdURL } from "./importateur";
 import ImportateurFeuilleCalcul from "./importateur/xlsx";
 import ImportateurDonnéesJSON, { clefsExtraction } from "./importateur/json";
+
+// const chokidar = import("chokidar");
 
 export type formatTélécharger = XLSX.BookType | "xls";
 
@@ -158,7 +161,7 @@ const obtDonnéesImportation = async (spéc: SpécificationImporter) => {
           throw new Error(formatDonnées);
       }
     }
-    case "fichier":
+    case "fichier": {
       const { adresseFichier } = spéc.source as SourceDonnéesImportationFichier;
       switch (formatDonnées) {
         case "json": {
@@ -182,6 +185,7 @@ const obtDonnéesImportation = async (spéc: SpécificationImporter) => {
         default:
           throw new Error(formatDonnées);
       }
+    }
 
     default:
       throw new Error(typeSource);
@@ -247,16 +251,18 @@ const générerFAuto = (
   client: ClientConstellation
 ): (() => Promise<void>) => {
   switch (spéc.type) {
-    case "importation":
+    case "importation": {
       const spécImp = spéc as SpécificationImporter;
       return async () => {
         const données = await obtDonnéesImportation(spécImp);
         await client.tableaux!.importerDonnées(spécImp.idTableau, données);
       };
+    }
 
-    case "exportation":
+    case "exportation": {
       const spécExp = spéc as SpécificationExporter;
       return générerFExportation(spécExp, client);
+    }
 
     default:
       throw new Error(spéc.type);
@@ -293,7 +299,7 @@ const lancerAutomatisation = async (
     } catch (e) {
       const nouvelÉtat: ÉtatErreur = {
         type: "erreur",
-        erreur: e,
+        erreur: (e as Error).toString(),
         prochainSchédulé: tempsInterval,
       };
       fÉtat(nouvelÉtat);
@@ -339,7 +345,7 @@ const lancerAutomatisation = async (
     fÉtat(nouvelÉtat);
 
     switch (spéc.type) {
-      case "exportation":
+      case "exportation": {
         const spécExp = spéc as SpécificationExporter;
         const empreinteDernièreModifImportée = localStorage.getItem(
           clefStockageDernièreFois
@@ -352,14 +358,18 @@ const lancerAutomatisation = async (
           }
         });
         return fOublier;
+      }
 
-      case "importation":
+      case "importation": {
         const spécImp = spéc as SpécificationImporter;
 
         switch (spécImp.source.typeSource) {
-          case "fichier":
+          case "fichier": {
+            if (!isNode() && !isElectron()) throw new Error("L'automatisation de l'importation des fichiers locaux n'est pas disponible sur la version apli internet de Constellation.");
+
+            /*const _chokidar = await chokidar
             const source = spécImp.source as SourceDonnéesImportationFichier;
-            const écouteur = chokidar.watch(source.adresseFichier);
+            const écouteur = _chokidar.watch(source.adresseFichier);
             écouteur.on("change", () => {
               fAutoAvecÉtats();
               localStorage.setItem(
@@ -388,8 +398,11 @@ const lancerAutomatisation = async (
 
             const fOublier = async () => await écouteur.close();
             return fOublier;
+            */
+            return faisRien
+          }
 
-          case "url":
+          case "url": {
             const étatErreur: ÉtatErreur = {
               type: "erreur",
               erreur:
@@ -398,10 +411,12 @@ const lancerAutomatisation = async (
             };
             fÉtat(étatErreur);
             return faisRien;
+          }
 
           default:
             throw new Error(spécImp.source.typeSource);
         }
+      }
 
       default:
         throw new Error(spéc.type);
@@ -444,13 +459,15 @@ const activePourCeDispositif = (
   monIdOrbite: string
 ): boolean => {
   switch (spéc.type) {
-    case "importation":
+    case "importation": {
       const spécImp = spéc as SpécificationImporter;
       return spécImp.dispositif === monIdOrbite;
+    }
 
-    case "exportation":
+    case "exportation": {
       const spécExp = spéc as SpécificationExporter;
       return spécExp.dispositifs.includes(monIdOrbite);
+    }
 
     default:
       throw new Error(spéc.type);
@@ -476,7 +493,7 @@ export default class Automatisations extends EventEmitter {
     this.initialiser();
   }
 
-  async initialiser() {
+  async initialiser(): Promise<void> {
     this.fOublier =
       await this.client.suivreBdListe<SpécificationAutomatisation>(
         this.idBd,
@@ -485,7 +502,7 @@ export default class Automatisations extends EventEmitter {
       );
   }
 
-  async mettreAutosÀJour(autos: élémentBdListe<SpécificationAutomatisation>[]) {
+  async mettreAutosÀJour(autos: élémentBdListe<SpécificationAutomatisation>[]): Promise<void> {
     for (const a of autos) {
       const {
         hash,
@@ -568,14 +585,14 @@ export default class Automatisations extends EventEmitter {
   async suivreAutomatisations(
     f: schémaFonctionSuivi<SpécificationAutomatisation[]>,
     idRacine?: string
-  ) {
+  ): Promise<schémaFonctionOublier> {
     idRacine = idRacine || this.idBd;
-    return await this.client.suivreBdListe(this.idBd, f);
+    return await this.client.suivreBdListe(idRacine, f);
   }
 
   async suivreÉtatAutomatisations(
     f: schémaFonctionSuivi<{ [key: string]: ÉtatAutomatisation }[]>
-  ) {
+  ): Promise<schémaFonctionOublier> {
     const fFinale = () => {
       const étatsAuto = Object.fromEntries(
         Object.keys(this.automatisations)
@@ -590,12 +607,12 @@ export default class Automatisations extends EventEmitter {
     };
   }
 
-  fermerAuto(empreinte: string) {
+  fermerAuto(empreinte: string): void {
     this.automatisations[empreinte].fermer();
     delete this.automatisations[empreinte];
   }
 
-  async fermer() {
+  async fermer(): Promise<void> {
     Object.keys(this.automatisations).forEach((a) => {
       this.fermerAuto(a);
     });

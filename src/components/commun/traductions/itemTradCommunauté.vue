@@ -17,11 +17,12 @@
 import mixins from "vue-typed-mixins";
 
 import mixinLangues from "@/mixins/langues";
-import { couper } from "@/utils";
+import mixinIPA from "@/mixins/ipa";
+import { couper, traduireNom } from "@/utils";
 
 import { suggestionTrad } from "./types";
 
-export default mixins(mixinLangues).extend({
+export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemTradCommunauté",
   props: {
     suggestion: {
@@ -30,7 +31,7 @@ export default mixins(mixinLangues).extend({
   },
   data: function () {
     return {
-      noms: {} as { [key: string]: string },
+      nomsAuteur: {} as { [key: string]: string },
     };
   },
   computed: {
@@ -44,9 +45,24 @@ export default mixins(mixinLangues).extend({
       const date = this.suggestion.élément.données.ID_VAR_DATE;
       return this.formatterDate(date);
     },
+    nom: function (): string {
+      return Object.keys(this.nomsAuteur).length
+        ? traduireNom(this.nomsAuteur, this.languesPréférées)
+        : "Incognito";
+    },
   },
   methods: {
     couper,
+    initialiserSuivi: async function () {
+
+      const oublierNomsAuteur = await this.$ipa.réseau!.suivreNomsMembre(
+        this.idAuteur,
+        (noms) => {
+          this.nomsAuteur = noms
+        }
+      );
+      this.suivre([oublierNomsAuteur]);
+    },
   },
 });
 </script>

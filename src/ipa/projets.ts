@@ -162,7 +162,7 @@ export default class Projets {
       return await this.client.réseau!.suivreProjetsMembre(
         idBdRacine,
         fFinaleSuivreBranche,
-        false
+        //false
       );
     };
     const fIdBdDeBranche = (x: infoAccès) => x.idBdRacine;

@@ -153,20 +153,10 @@ Object.keys(testAPIs).forEach((API) => {
       };
       let fOublier: schémaFonctionOublier;
 
-      const OCTETS = fs.readFileSync(
+
+      const IMAGE = fs.readFileSync(
         path.resolve(__dirname, "../../src/assets/logo.svg")
       );
-      const IMAGE: File = {
-        name: "logo.png",
-        path: "../../assets/logo.png",
-        arrayBuffer: () => Promise.resolve(OCTETS),
-        lastModified: Date.now(),
-        size: 100,
-        stream: () => new ReadableStream(),
-        type: "image/png",
-        text: () => Promise.resolve(""),
-        slice: () => new Blob(),
-      };
 
       before(async () => {
         await client.compte!.sauvegarderImage(IMAGE);
@@ -186,7 +176,7 @@ Object.keys(testAPIs).forEach((API) => {
           "ultat",
           (x: Uint8Array | undefined | null) => Boolean(x)
         );
-        expect(rés.ultat).to.deep.equal(new Uint8Array(OCTETS));
+        expect(rés.ultat).to.deep.equal(new Uint8Array(IMAGE));
       });
     });
 

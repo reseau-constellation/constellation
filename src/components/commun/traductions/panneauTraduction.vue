@@ -89,10 +89,11 @@ const ID_MOTCLEF_TRADS_CONSTELLATION =
   "/orbitdb/zdpuAuk6kRoPQKfwuWi5qMYMSyUMeiTjtcFE23AaHy9MQsXcs/93c94a56-f681-4512-8c4b-5c213119ab4b";
 
 const schémaBdTrads: schémaBd = {
-  motsClefs: [ID_MOTCLEF_TRAD],
+  motsClefs: [ID_MOTCLEF_TRAD, ID_MOTCLEF_TRADS_CONSTELLATION],
   licence: "ODbl-1_0",
   tableaux: [
     {
+      idUnique: "trads",
       cols: [
         {
           idVariable: ID_VAR_CLEF,
