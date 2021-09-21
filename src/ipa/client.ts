@@ -972,9 +972,7 @@ export default class ClientConstellation extends EventEmitter {
   }
 
   async effacerBd(id: string): Promise<void> {
-    const bd = await this.ouvrirBd(id);
-    await this.bds!.enleverDeMesBds(id);
-    
+    const bd = await this.ouvrirBd(id);    
     await bd.drop();
     delete this._bds[id];
   }

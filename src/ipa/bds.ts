@@ -119,10 +119,12 @@ export default class BDs {
 
   async enleverDeMesBds(id: string): Promise<void> {
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
-    const empreinte = (await this.client.rechercherBdListe(
+    const élément = (await this.client.rechercherBdListe(
       this.idBd, e=>e.payload.value===id
-    )).hash
-    await bdRacine.remove(empreinte);
+    ))
+    if (élément) {
+      await bdRacine.remove(élément.hash);
+    };
   }
 
   async copierBd(id: string, ajouter = true): Promise<string> {
@@ -1074,6 +1076,7 @@ export default class BDs {
         await this.client.tableaux!.effacerTableau(t);
       }
     }
+    await this.enleverDeMesBds(id);
     await this.client.effacerBd(id);
   }
 }
