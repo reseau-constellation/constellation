@@ -11,12 +11,14 @@ module.exports = {
         fs: false,
       },
     },
+
     watchOptions: {
       ignored: /node_modules/,
     },
   },
   pluginOptions: {
     electronBuilder: {
+      externals: ["ipfs"],
 
       chainWebpackMainProcess: (config) => {
         // Chain webpack config for electron main process only
@@ -28,7 +30,8 @@ module.exports = {
           .options({
             presets: ["@babel/preset-typescript", "@vue/cli-plugin-babel/preset"]
           });
-
+        config.node
+          .set('__dirname', true)
       },
       // externals: ["ipfs", "ipfsd-ctl"], // Cette ligne est magique - ne pas l'enlever !
     },
