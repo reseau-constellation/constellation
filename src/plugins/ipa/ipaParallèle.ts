@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { EventEmitter, once } from "events";
 import _Vue from "vue";
-import { schémaFonctionSuivi, schémaFonctionOublier } from "@/ipa/client";
+import ClientConstellation, { schémaFonctionSuivi, schémaFonctionOublier } from "@/ipa/client";
 
 interface Tâche {
   id: string;
@@ -10,7 +10,7 @@ interface Tâche {
 }
 
 export interface MessageDeTravailleur {
-  type: "prêt" | "suivre" | "suivrePrêt" | "action";
+  type: "prêt" | "suivre" | "suivrePrêt" | "action" | "erreur";
 }
 
 export interface MessagePrêtDeTravailleur extends MessageDeTravailleur {
@@ -32,6 +32,11 @@ export interface MessageActionDeTravailleur extends MessageDeTravailleur {
   type: "action";
   id: string;
   résultat: unknown;
+}
+
+export interface MessageErreurDeTravailleur extends MessageDeTravailleur {
+  type: "erreur";
+  erreur: Error
 }
 
 export interface MessagePourTravailleur {
@@ -66,7 +71,7 @@ export interface MessageOublierPourTravailleur extends MessagePourTravailleur {
 class Callable extends Function {
   _bound: Callable;
 
-  // https://replit.com/@arccoza/Javascript-Callable-Object-using-bind?ref=hackernoon.com
+  // Code obtenu de https://replit.com/@arccoza/Javascript-Callable-Object-using-bind?ref=hackernoon.com
   constructor() {
     // We create a new Function object using `super`, with a `this` reference
     // to itself (the Function object) provided by binding it to `this`,
@@ -86,28 +91,33 @@ class Callable extends Function {
   }
 }
 
+export abstract class téléClient extends EventEmitter {
+  abstract recevoirMessage(message: MessagePourTravailleur): void
+}
+
 class IPAParallèle extends Callable {
   événements: EventEmitter;
-  travailleur: Worker;
+  client: téléClient;
   tâches: { [key: string]: Tâche };
   ipaPrêt: boolean;
   messagesEnAttente: MessagePourTravailleur[];
   erreurs: (Error | ErrorEvent)[];
 
-  constructor() {
+  constructor(client: téléClient, idBdRacine?: string) {
     super();
     console.log("Constructeur IPA parallèl");
+    this.client = client
+
     this.événements = new EventEmitter();
     this.tâches = {};
     this.ipaPrêt = false;
     this.messagesEnAttente = [];
     this.erreurs = [];
 
-    this.travailleur = new Worker(new URL("./travailleur.ts", import.meta.url));
-    this.travailleur.onerror = (e) => {
+    this.client.on("erreur", (e) => {
       this.erreur(e);
-    };
-    this.travailleur.onmessage = (e: MessageEvent<MessageDeTravailleur>) => {
+    });
+    this.client.on("message", (e: MessageEvent<MessageDeTravailleur>) => {
       console.log("message du travailleur", e.data);
       const { type } = e.data;
       switch (type) {
@@ -131,19 +141,24 @@ class IPAParallèle extends Callable {
           this.événements.emit(id, résultat);
           break;
         }
+        case "erreur": {
+          const { erreur } = e.data as MessageErreurDeTravailleur;
+          this.erreur(erreur);
+          break;
+        }
         default: {
           this.erreur(
             new Error(`Type inconnu ${type} dans message ${e.data}.`)
           );
         }
       }
-    };
-    const idBdRacine = localStorage.getItem("idBdRacine") || undefined;
+    });
+
     const messageInit: MessageInitPourTravailleur = {
       type: "init",
       idBdRacine,
     };
-    this.travailleur.postMessage(messageInit);
+    this.client.recevoirMessage(messageInit);
   }
 
   __call__(fonction: string[], listeArgs: unknown[]): Promise<unknown> {
@@ -183,7 +198,7 @@ class IPAParallèle extends Callable {
       id,
     };
     const fOublier = () => {
-      this.travailleur.postMessage(messageOublier);
+      this.envoyerMessage(messageOublier);
     };
     const tâche: Tâche = {
       id,
@@ -222,7 +237,7 @@ class IPAParallèle extends Callable {
   }
 
   ipaActivé(): void {
-    this.messagesEnAttente.forEach((m) => this.travailleur.postMessage(m));
+    this.messagesEnAttente.forEach((m) => this.client.recevoirMessage(m));
     console.log("messages en attente envoyés: ", [...this.messagesEnAttente]);
     this.messagesEnAttente = [];
     this.ipaPrêt = true;
@@ -232,7 +247,7 @@ class IPAParallèle extends Callable {
     console.log("envoyerMessage", { message });
     if (this.ipaPrêt) {
       console.log("message envoyé", { message });
-      this.travailleur.postMessage(message);
+      this.client.recevoirMessage(message);
     } else {
       this.messagesEnAttente.push(message);
     }
@@ -240,8 +255,7 @@ class IPAParallèle extends Callable {
 
   erreur(e: ErrorEvent | Error): void {
     this.erreurs.push(e);
-    this.événements.emit("erreur", this.erreurs);
-    console.error(e);
+    this.événements.emit("erreur", { nouvelle: e, toutes: this.erreurs });
   }
 
   oublierTâche(id: string): void {
@@ -274,12 +288,10 @@ class Handler {
   }
 }
 
-export default {
-  install(Vue: typeof _Vue): void {
-    const handler = new Handler();
-    const ipa = new IPAParallèle();
-    Vue.prototype.$ipa = new Proxy<IPAParallèle>(ipa, handler);
-    //@ts-ignore
-    window.ipa = Vue.prototype.$ipa;
-  },
-};
+export type ProxieClientConstellation = ClientConstellation & IPAParallèle
+
+export default (client: téléClient, idBdRacine?: string) => {
+  const handler = new Handler();
+  const ipa = new IPAParallèle(client, idBdRacine);
+  return new Proxy<IPAParallèle>(ipa, handler);
+}
