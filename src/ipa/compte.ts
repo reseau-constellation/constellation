@@ -67,15 +67,15 @@ export default class Compte {
     await bd.del(langue);
   }
 
-  async sauvegarderImage(image: ImportCandidate|File): Promise<void> {
+  async sauvegarderImage(image: ImportCandidate | File): Promise<void> {
     let contenu: ImportCandidate;
-    
-    if (image instanceof File){
+
+    if (image instanceof File) {
       if (image.size > MAX_TAILLE_IMAGE)
         throw new Error("Taille maximale excédée");
       contenu = await image.arrayBuffer();
     } else {
-      contenu = image
+      contenu = image;
     }
     const idImage = await this.client.ajouterÀSFIP(contenu);
     const bd = (await this.client.ouvrirBd(this.idBd)) as KeyValueStore;

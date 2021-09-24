@@ -153,7 +153,6 @@ Object.keys(testAPIs).forEach((API) => {
       };
       let fOublier: schémaFonctionOublier;
 
-
       const IMAGE = fs.readFileSync(
         path.resolve(__dirname, "../../src/assets/logo.svg")
       );

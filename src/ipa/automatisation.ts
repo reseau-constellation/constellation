@@ -365,7 +365,10 @@ const lancerAutomatisation = async (
 
         switch (spécImp.source.typeSource) {
           case "fichier": {
-            if (!isNode() && !isElectron()) throw new Error("L'automatisation de l'importation des fichiers locaux n'est pas disponible sur la version apli internet de Constellation.");
+            if (!isNode() && !isElectron())
+              throw new Error(
+                "L'automatisation de l'importation des fichiers locaux n'est pas disponible sur la version apli internet de Constellation."
+              );
 
             /*const _chokidar = await chokidar
             const source = spécImp.source as SourceDonnéesImportationFichier;
@@ -399,7 +402,7 @@ const lancerAutomatisation = async (
             const fOublier = async () => await écouteur.close();
             return fOublier;
             */
-            return faisRien
+            return faisRien;
           }
 
           case "url": {
@@ -502,7 +505,9 @@ export default class Automatisations extends EventEmitter {
       );
   }
 
-  async mettreAutosÀJour(autos: élémentBdListe<SpécificationAutomatisation>[]): Promise<void> {
+  async mettreAutosÀJour(
+    autos: élémentBdListe<SpécificationAutomatisation>[]
+  ): Promise<void> {
     for (const a of autos) {
       const {
         hash,

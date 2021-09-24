@@ -161,7 +161,7 @@ export default class Projets {
       };
       return await this.client.réseau!.suivreProjetsMembre(
         idBdRacine,
-        fFinaleSuivreBranche,
+        fFinaleSuivreBranche
         //false
       );
     };

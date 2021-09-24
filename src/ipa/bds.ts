@@ -119,12 +119,13 @@ export default class BDs {
 
   async enleverDeMesBds(id: string): Promise<void> {
     const bdRacine = (await this.client.ouvrirBd(this.idBd)) as FeedStore;
-    const élément = (await this.client.rechercherBdListe(
-      this.idBd, e=>e.payload.value===id
-    ))
+    const élément = await this.client.rechercherBdListe(
+      this.idBd,
+      (e) => e.payload.value === id
+    );
     if (élément) {
       await bdRacine.remove(élément.hash);
-    };
+    }
   }
 
   async copierBd(id: string, ajouter = true): Promise<string> {
@@ -333,7 +334,7 @@ export default class BDs {
     const fFinale = async (bds: string[]): Promise<void> => {
       let idBd: string;
       const idBdLocale = localStorage.getItem(clefStockageLocal);
-      console.log({idBdLocale})
+      console.log({ idBdLocale });
 
       switch (bds.length) {
         case 0: {
@@ -395,8 +396,7 @@ export default class BDs {
       idBd: string,
       fSuivreBd: schémaFonctionSuivi<string | undefined>
     ): Promise<schémaFonctionOublier> => {
-      console.log({idBd,
-      idTableauUnique})
+      console.log({ idBd, idTableauUnique });
       return await this.suivreTableauParIdUnique(
         idBd,
         idTableauUnique,
