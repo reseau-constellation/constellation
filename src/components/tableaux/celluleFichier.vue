@@ -93,7 +93,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { formatsFichiers as formats } from "@/ipa/valid";
+import { formatsFichiers as formats } from "@constl/ipa/lib/valid";
 import {
   itérableÀFlux,
   téléchargerFlux,

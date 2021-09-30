@@ -123,7 +123,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { MAX_TAILLE_IMAGE } from "@/ipa/compte";
+import { MAX_TAILLE_IMAGE } from "@constl/ipa/lib/compte";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinImages from "@/mixins/images";
@@ -184,9 +184,7 @@ export default mixins(mixinIPA, mixinImages).extend({
       }
     },
     initialiserSuivi: async function () {
-      const oublierIdOrbite = await this.$ipa.suivreIdOrbite(
-        (id) => (this.idDispositif = id)
-      );
+      this.idDispositif = await this.$ipa.obtIdOrbite();
 
       const oublierCourriel = await this.$ipa.compte!.suivreCourriel(
         (courriel) => {
@@ -206,12 +204,7 @@ export default mixins(mixinIPA, mixinImages).extend({
         }
       );
 
-      this.suivre([
-        oublierIdOrbite,
-        oublierCourriel,
-        oublierNoms,
-        oublierDispositifs,
-      ]);
+      this.suivre([oublierCourriel, oublierNoms, oublierDispositifs]);
     },
     effacerImage: async function () {
       if (this.fichierTropGrand) {

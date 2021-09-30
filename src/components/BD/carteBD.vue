@@ -31,7 +31,7 @@
           >
             <v-progress-circular
               :rotate="score ? 270 : undefined"
-              :value="score && score.total ? score.total : 0"
+              :value="score && score.total ? score.total * 100 : 0"
               :indeterminate="!score"
               :color="
                 score ? couleurScore(score.total).couleur : 'grey lighten-2'
@@ -110,7 +110,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { infoScore } from "@/ipa/bds";
+import { infoScore } from "@constl/ipa/lib/bds";
 
 import { traduireNom, couper, couleurScore } from "@/utils";
 

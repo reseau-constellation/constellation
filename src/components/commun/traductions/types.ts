@@ -1,4 +1,4 @@
-import { élémentDeMembre } from "@/ipa/reseau";
+import { élémentDeMembre } from "@constl/ipa/lib/reseau";
 
 export const ID_VAR_CLEF =
   "/orbitdb/zdpuAximNmZyUWXGCaLmwSEGDeWmuqfgaoogA7KNSa1B2DAAF/dd77aec3-e7b8-4695-b068-49ce4227b360";
@@ -16,10 +16,10 @@ export const ID_VAR_DATE =
 export type suggestionTrad = élémentDeMembre<élémentBdTraduction>;
 
 export type élémentBdTraduction = {
-  ID_VAR_CLEF: string;
-  ID_VAR_LANGUE_SOURCE: string;
-  ID_VAR_LANGUE_CIBLE: string;
-  ID_VAR_TEXTE_ORIGINAL?: string;
-  ID_VAR_TRADUCTION: string;
-  ID_VAR_DATE: number;
+  [ID_VAR_CLEF]: string;
+  [ID_VAR_LANGUE_SOURCE]: string;
+  [ID_VAR_LANGUE_CIBLE]: string;
+  [ID_VAR_TEXTE_ORIGINAL]?: string;
+  [ID_VAR_TRADUCTION]: string;
+  [ID_VAR_DATE]: number;
 };

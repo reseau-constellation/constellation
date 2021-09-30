@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <ops-langue />
+    <alerte-erreur-constellation />
     <v-main>
       <transition name="fade" mode="out-in">
         <router-view></router-view>
@@ -14,6 +15,8 @@
 import Vue from "vue";
 import Navigation from "@/components/Navigation.vue";
 import opsLangue from "@/components/OpsLangue.vue";
+import alerteErreurConstellation from "@/components/commun/alerteErreurConstellation";
+
 import mixinLangue from "@/mixins/langues";
 
 export default Vue.extend({
@@ -22,6 +25,7 @@ export default Vue.extend({
   components: {
     Navigation,
     opsLangue,
+    alerteErreurConstellation,
   },
 
   data: () => ({

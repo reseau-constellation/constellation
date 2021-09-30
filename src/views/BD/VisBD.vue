@@ -144,12 +144,12 @@
                         v-else
                         :rotate="270"
                         :width="5"
-                        :value="score.total ? score.total : 0"
+                        :value="score.total ? Math.round(score.total * 100) : 0"
                         :color="
                           score ? couleurScore(score.total).couleur : 'primary'
                         "
                       >
-                        {{ score ? score.total : "" }}
+                        {{ score ? Math.round(score.total * 100) : "" }}
                       </v-progress-circular>
                     </v-list-item-avatar>
                     <v-list-item-content>
@@ -380,9 +380,9 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { MODÉRATEUR } from "@/ipa/accès/consts";
-import { infoAuteur, infoScore } from "@/ipa/bds";
-import { infoRéplication } from "@/ipa/reseau";
+import { MODÉRATEUR } from "@constl/ipa/lib/accès/consts";
+import { infoAuteur, infoScore } from "@constl/ipa/lib/bds";
+import { infoRéplication } from "@constl/ipa/lib/reseau";
 
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 

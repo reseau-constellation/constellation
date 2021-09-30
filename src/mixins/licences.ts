@@ -1,6 +1,6 @@
 import Vue from "vue";
 import { ouvrirLien } from "@/utils";
-import { licences, infoLicences } from "@/ipa/licences";
+import { licences, infoLicences } from "@constl/ipa/lib/licences";
 
 export default Vue.extend({
   data: function () {

@@ -61,8 +61,8 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { schémaFonctionOublier } from "@/ipa/client";
-import { règleVariable } from "@/ipa/valid";
+import { schémaFonctionOublier } from "@constl/ipa/lib/client";
+import { règleVariable } from "@constl/ipa/lib/valid";
 
 import dialogueNouvelleVariable from "@/components/commun/dialogueNouvelleVariable.vue";
 import itemVariable from "@/components/tableaux/colonnes/itemVariable.vue";

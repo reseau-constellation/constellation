@@ -123,7 +123,7 @@ import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 
 import mixinLangues from "@/mixins/langues";
 
-import { catégorieVariables } from "@/ipa/variables";
+import { catégorieVariables } from "@constl/ipa/lib/variables";
 
 import {
   traduireNom,

@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { MODÉRATEUR } from "@/ipa/accès/consts";
+import { MODÉRATEUR } from "@constl/ipa/lib/accès/consts";
 
 import itemAuteur from "@/components/BD/auteurs/itemAuteur.vue";
 import dialogueNouvelAuteur from "@/components/BD/auteurs/dialogueNouvelAuteur.vue";

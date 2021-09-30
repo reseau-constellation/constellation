@@ -3,35 +3,58 @@
 import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
-const isDevelopment = process.env.NODE_ENV !== "production";
+const enDéveloppement = process.env.NODE_ENV !== "production";
 import Store from "electron-store";
 import Ctl from "ipfsd-ctl";
-// import Constellation from "@/ipa/client";
+import ClientConstellation from "@constl/ipa";
+import path from "path";
+import IPFS from "ipfs"
+import fs from "fs"
+// import OrbitDB from "orbit-db"
 
-// const client = new Constellation()
+// const client = new Constellation();
 let ipfsd: typeof Ctl;
 async function initSFIP() {
-  /* if (!ipfsd) {
-    const port = 9090
-    const server = await Ctl.createServer(port, {
-      ipfsHttpModule: require('ipfs-http-client'),
-      ipfsModule: require("ipfs")
-    })
-    await server.start()
 
-    console.log({server})
+  /*const DOSSIER_STOCKAGE_LOCAL = "./_stockageTemp";
+  const LocalStorage = require("node-localstorage").LocalStorage;
+  final = new LocalStorage(DOSSIER_STOCKAGE_LOCAL);
+  */
+  // (electron.app || electron.remote.app).getPath('userData')
+  console.log("ici", 0)
+  // const client = await ClientConstellation.créer();
+  // console.log("ici", "Constellation créé !")
+  const sfip = await IPFS.create()
+  console.log("ici", "SFIP créé")
+  // console.log(await sfip.id())
+  // console.log("ici", "ID SFIP")
+
+  /*
+  if (!ipfsd) {
+    const port = 9090;
+    const server = await Ctl.createServer(port, {
+      ipfsHttpModule: require("ipfs-http-client"),
+      ipfsModule: require("ipfs"),
+      ipfsBin: require("go-ipfs").path(),
+    });
+    await server.start();
+
+    console.log({ server });
+    console.log("ici 1");
     const factory = Ctl.createFactory({
-      ipfsHttpModule: require('ipfs-http-client'),
+      ipfsHttpModule: require("ipfs-http-client"),
       remote: true,
-      endpoint: `http://localhost:${port}` // or you can set process.env.IPFSD_CTL_SERVER to http://localhost:9090
-    })
-    ipfsd = await factory.spawn()
-    console.log(ipfsd)
+      endpoint: `http://localhost:${port}`, // or you can set process.env.IPFSD_CTL_SERVER to http://localhost:9090
+    });
+    console.log("ici 2");
+    ipfsd = await factory.spawn();
+    console.log({ ipfsd });
   }
 
-  const id = await ipfsd.api.id()
-
-  console.log(id)
+  console.log("ici 3");
+  const id = await ipfsd.api.id();
+  console.log("ici 4");
+  console.log({ id });
   */
 }
 
@@ -70,12 +93,21 @@ async function createWindow() {
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
     if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
+
     createProtocol("app");
+    console.log({__dirname, __filename, cwd: process.cwd()})
+    /*win.loadURL(url.format({
+      pathname: path.join(__dirname, 'index.html'),
+      protocol: 'file:',
+      slashes: true
+    }))*/
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
+    //win.loadURL(`file://${path.dirname(__filename)}/index.html`)
+    // win.loadURL(`file:///Users/julienmalard/atom/reseau/dist_electron/mac/constellation.app/Contents/Resources/app.asar/index.html`)
   }
   win.once("ready-to-show", () => {
-    autoUpdater.checkForUpdatesAndNotify();
+    // autoUpdater.checkForUpdatesAndNotify();
   });
   autoUpdater.on("update-available", () => {
     win.webContents.send("update_available");
@@ -112,7 +144,7 @@ app.on("ready", async () => {
 });
 
 // Exit cleanly on request from parent process in development mode.
-if (isDevelopment) {
+if (enDéveloppement) {
   if (process.platform === "win32") {
     process.on("message", (data) => {
       if (data === "graceful-exit") {

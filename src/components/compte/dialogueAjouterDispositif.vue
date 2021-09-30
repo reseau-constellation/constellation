@@ -237,8 +237,11 @@ import { copier, couper, traduireNom } from "@/utils";
 import avatarProfil from "@/components/commun/avatarProfil.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 
-import { adresseOrbiteValide, schémaFonctionOublier } from "@/ipa/client";
-import { infoDispositifEnLigne } from "@/ipa/reseau";
+import {
+  adresseOrbiteValide,
+  schémaFonctionOublier,
+} from "@constl/ipa/lib/client";
+import { infoDispositifEnLigne } from "@constl/ipa/lib/reseau";
 
 export default mixins(mixinIPA, mixinLangues).extend({
   name: "dialogueAjouterDispositif",
@@ -354,16 +357,17 @@ export default mixins(mixinIPA, mixinLangues).extend({
       this.dialogue = false;
     },
     initialiserSuivi: async function () {
+      this.idDispositif = await this.$ipa.obtIdOrbite();
+
       const oublierIdBdRacine = await this.$ipa.suivreIdBdRacine(
         (id) => (this.idBdRacine = id)
       );
-      const oublierIdOrbite = await this.$ipa.suivreIdOrbite(
-        (id) => (this.idDispositif = id)
-      );
+
       const oublierDispositifsEnLigne =
         await this.$ipa.réseau!.suivreDispositifsEnLigne((dispositifs) => {
           this.dispositifs = dispositifs;
         });
+
       const oublierDispositifsDeCeCompte = await this.$ipa.suivreDispositifs(
         (dispositifs) => {
           this.dispositifsDeCeCompte = dispositifs;
@@ -371,7 +375,6 @@ export default mixins(mixinIPA, mixinLangues).extend({
       );
       this.suivre([
         oublierIdBdRacine,
-        oublierIdOrbite,
         oublierDispositifsEnLigne,
         oublierDispositifsDeCeCompte,
       ]);

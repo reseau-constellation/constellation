@@ -213,13 +213,13 @@ import celluleHeure from "@/components/tableaux/celluleHeure.vue";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
-import { InfoColAvecCatégorie } from "@/ipa/tableaux";
+import { InfoColAvecCatégorie } from "@constl/ipa/lib/tableaux";
 import {
   règleVariable,
   élémentDonnées,
   élémentBdListeDonnées,
-} from "@/ipa/valid";
-import { élémentsBd } from "@/ipa/client";
+} from "@constl/ipa/lib/valid";
+import { élémentsBd } from "@constl/ipa/lib/client";
 
 type typeEntête = {
   text: string;

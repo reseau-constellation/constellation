@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { schémaFonctionOublier } from "@/ipa/client";
+import { schémaFonctionOublier } from "@constl/ipa/lib/client";
 
 export default Vue.extend({
   data: function () {
@@ -8,13 +8,11 @@ export default Vue.extend({
       crochetIPA: () => {
         //Fonction vide pour l'instant
       },
-      ipaPrèt: false,
     };
   },
   methods: {
     async initialiserSuivi(): Promise<void> {
       // À implémenter dans le composant
-      this.ipaPrèt = true;
     },
     suivre(crochet: schémaFonctionOublier | schémaFonctionOublier[]): void {
       if (!Array.isArray(crochet)) {
@@ -33,14 +31,9 @@ export default Vue.extend({
   },
   mounted: function () {
     this.crochetIPA = this.initialiserSuivi.bind(this);
-
-    this.$ipa.on("prêt", this.crochetIPA);
-    if (this.$ipa.prêt) {
-      this.initialiserSuivi();
-    }
+    this.initialiserSuivi();
   },
   destroyed: function () {
-    this.$ipa.off("prêt", this.crochetIPA);
     this.oublierCrochets();
   },
 });

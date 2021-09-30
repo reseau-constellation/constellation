@@ -20,7 +20,7 @@ import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 import { couper, traduireNom } from "@/utils";
 
-import { suggestionTrad } from "./types";
+import { suggestionTrad, ID_VAR_TRADUCTION, ID_VAR_DATE } from "./types";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemTradCommunauté",
@@ -39,10 +39,10 @@ export default mixins(mixinLangues, mixinIPA).extend({
       return this.suggestion.idBdAuteur;
     },
     traduction: function (): string {
-      return this.suggestion.élément.données.ID_VAR_TRADUCTION;
+      return this.suggestion.élément.données[ID_VAR_TRADUCTION];
     },
     date: function (): string {
-      const date = this.suggestion.élément.données.ID_VAR_DATE;
+      const date = this.suggestion.élément.données[ID_VAR_DATE];
       return this.formatterDate(date);
     },
     nom: function (): string {
@@ -54,11 +54,10 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     initialiserSuivi: async function () {
-
       const oublierNomsAuteur = await this.$ipa.réseau!.suivreNomsMembre(
         this.idAuteur,
         (noms) => {
-          this.nomsAuteur = noms
+          this.nomsAuteur = noms;
         }
       );
       this.suivre([oublierNomsAuteur]);

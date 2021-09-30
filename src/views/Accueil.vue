@@ -50,7 +50,7 @@
           tiled
           outlined
           small
-          class="mx-2"
+          class="ma-2"
           @click="$router.push('/conditions')"
         >
           {{ $t("conditions.entête") }}
@@ -60,7 +60,7 @@
           tiled
           outlined
           small
-          class="mx-2"
+          class="ma-2"
           @click="ouvrirLien(URL_GIT)"
         >
           {{ $t("acceuil.contribuerCode") }}
@@ -72,7 +72,7 @@
           tiled
           outlined
           small
-          class="mx-2"
+          class="ma-2"
           @click="$router.push(encodeURI('/téléchargements'))"
         >
           {{ $t("communs.btnInstaller") }}

@@ -218,7 +218,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { licences, infoLicences, catégories } from "@/ipa/licences";
+import { licences, infoLicences, catégories } from "@constl/ipa/lib/licences";
 import mixinLangues from "@/mixins/langues";
 import mixinImages from "@/mixins/images";
 import mixinLicences from "@/mixins/licences";

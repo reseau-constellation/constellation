@@ -68,7 +68,7 @@ import mixins from "vue-typed-mixins";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
-import { schémaBd } from "@/ipa/reseau";
+import { schémaBd } from "@constl/ipa/lib/reseau";
 
 import itemTradCommunauté from "@/components/commun/traductions/itemTradCommunauté.vue";
 
@@ -151,7 +151,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     tradPrêteÀSauvegarder: function (): boolean {
       const traduction = this.traduction.trim();
       const existante = this.traductionExistante
-        ? this.traductionExistante.élément.données.ID_VAR_TRADUCTION.trim()
+        ? this.traductionExistante.élément.données[ID_VAR_TRADUCTION].trim()
         : "";
       const changée = existante !== traduction;
 
@@ -161,7 +161,8 @@ export default mixins(mixinLangues, mixinIPA).extend({
       if (!this.clef) return;
       return this.suggestions.filter((s) => {
         const sugg = s.élément.données;
-        const { ID_VAR_CLEF: clef, ID_VAR_LANGUE_CIBLE: langueCible } = sugg;
+        const { [ID_VAR_CLEF]: clef, [ID_VAR_LANGUE_CIBLE]: langueCible } =
+          sugg;
         return (
           s.idBdAuteur === this.idBdRacine &&
           clef === this.clef &&
@@ -176,7 +177,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
       this.traductionExistante = this.maSuggestion;
     },
     utiliserSuggestion: function (suggestion: suggestionTrad) {
-      this.traduction = suggestion.élément.données.ID_VAR_TRADUCTION;
+      this.traduction = suggestion.élément.données[ID_VAR_TRADUCTION];
 
       if (suggestion.idBdAuteur === this.idBdRacine)
         this.traductionExistante = suggestion;

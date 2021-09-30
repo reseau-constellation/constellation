@@ -76,7 +76,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { catégorieVariables } from "@/ipa/variables";
+import { catégorieVariables } from "@constl/ipa/lib/variables";
 
 import {
   couper,

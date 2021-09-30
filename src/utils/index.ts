@@ -113,6 +113,7 @@ export interface interfaceCouleurScore {
 
 export function couleurScore(score: number): interfaceCouleurScore {
   if (score === null) return { couleur: "#666666", note: "?" };
+  score *= 100;
   if (score >= 95) {
     return { couleur: "#1e7145", note: "A" };
   } else if (score >= 90) {

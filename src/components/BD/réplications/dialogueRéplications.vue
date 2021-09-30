@@ -69,7 +69,7 @@ import { PropType } from "vue";
 
 import mixinLangues from "@/mixins/langues";
 
-import { infoRéplication } from "@/ipa/reseau";
+import { infoRéplication } from "@constl/ipa/lib/reseau";
 
 const DÉLAI_EN_LIGNE = 10000;
 

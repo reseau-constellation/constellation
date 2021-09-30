@@ -12,7 +12,7 @@
           :width="4"
           :size="25"
           :indeterminate="!score"
-          :value="scoreTitre ? scoreTitre : 0"
+          :value="scoreTitre ? scoreTitre * 100 : 0"
           :color="
             scoreTitre ? couleurScore(scoreTitre).couleur : 'grey lighten-2'
           "
@@ -44,10 +44,14 @@
                   <v-progress-circular
                     :rotate="270"
                     :width="5"
-                    :value="v ? v : 0"
+                    :value="v ? v * 100 : 0"
                     :color="couleurScore(v).couleur"
                   >
-                    {{ v }}
+                    {{
+                      typeof v === "number" && !isNaN(v)
+                        ? Math.round(v * 100)
+                        : ""
+                    }}
                   </v-progress-circular>
                 </v-list-item-avatar>
                 <v-list-item-content>
