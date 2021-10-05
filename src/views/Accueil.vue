@@ -31,13 +31,12 @@
             :key="i"
             link
             class="ma-5"
-            min-height="50"
             width="250"
             outlined
             tile
             @click="lien.page ? $router.push(lien.page) : ouvrirLien(lien.href)"
           >
-            <v-img :src="image(lien.img)" class="mx-4 mt-4" contain />
+            <v-img :src="image(lien.img)" class="mx-4 mt-4" height="125" contain />
             <v-card-text>
               <p class="text-h6">{{ $t(lien.text) }}</p>
             </v-card-text>
