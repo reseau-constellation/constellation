@@ -19,12 +19,6 @@ jobs:
       - name: Nétoyer les dépendances d'installation
         run: yarn install --frozen-lockfile
 
-      - name: Vérifier les tests
-        run: yarn couverture
-
-      - name: Envoyer couverure à Codecov
-        uses: codecov/codecov-action@v2
-
       - name: Déployer
         run: |
           git config user.name "julienmalard" && git config user.email "julien.malard@mail.mcgill.ca"

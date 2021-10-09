@@ -81,6 +81,12 @@ import {
   ID_VAR_TEXTE_ORIGINAL,
   ID_VAR_TRADUCTION,
   ID_VAR_DATE,
+  ID_COL_CLEF,
+  ID_COL_LANGUE_SOURCE,
+  ID_COL_LANGUE_CIBLE,
+  ID_COL_TEXTE_ORIGINAL,
+  ID_COL_TRADUCTION,
+  ID_COL_DATE,
 } from "./types";
 
 const ID_MOTCLEF_TRAD =
@@ -97,27 +103,27 @@ const schémaBdTrads: schémaBd = {
       cols: [
         {
           idVariable: ID_VAR_CLEF,
-          idColonne: "clef",
+          idColonne: ID_COL_CLEF,
         },
         {
           idVariable: ID_VAR_LANGUE_SOURCE,
-          idColonne: "langue source",
+          idColonne: ID_COL_LANGUE_SOURCE,
         },
         {
           idVariable: ID_VAR_LANGUE_CIBLE,
-          idColonne: "langue cible",
+          idColonne: ID_COL_LANGUE_CIBLE,
         },
         {
           idVariable: ID_VAR_TEXTE_ORIGINAL,
-          idColonne: "texte original",
+          idColonne: ID_COL_TEXTE_ORIGINAL,
         },
         {
           idVariable: ID_VAR_TRADUCTION,
-          idColonne: "traduction",
+          idColonne: ID_COL_TRADUCTION,
         },
         {
           idVariable: ID_VAR_DATE,
-          idColonne: "date",
+          idColonne: ID_COL_DATE,
         },
       ],
     },
@@ -151,7 +157,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     tradPrêteÀSauvegarder: function (): boolean {
       const traduction = this.traduction.trim();
       const existante = this.traductionExistante
-        ? this.traductionExistante.élément.données[ID_VAR_TRADUCTION].trim()
+        ? this.traductionExistante.élément.données[ID_COL_TRADUCTION].trim()
         : "";
       const changée = existante !== traduction;
 
@@ -161,7 +167,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
       if (!this.clef) return;
       return this.suggestions.filter((s) => {
         const sugg = s.élément.données;
-        const { [ID_VAR_CLEF]: clef, [ID_VAR_LANGUE_CIBLE]: langueCible } =
+        const { [ID_COL_CLEF]: clef, [ID_COL_LANGUE_CIBLE]: langueCible } =
           sugg;
         return (
           s.idBdAuteur === this.idBdRacine &&
@@ -177,7 +183,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
       this.traductionExistante = this.maSuggestion;
     },
     utiliserSuggestion: function (suggestion: suggestionTrad) {
-      this.traduction = suggestion.élément.données[ID_VAR_TRADUCTION];
+      this.traduction = suggestion.élément.données[ID_COL_TRADUCTION];
 
       if (suggestion.idBdAuteur === this.idBdRacine)
         this.traductionExistante = suggestion;
@@ -189,11 +195,12 @@ export default mixins(mixinLangues, mixinIPA).extend({
 
       if (traduction.length) {
         const élément = {
-          clef: this.clef,
-          langueSource: this.langueSource,
-          langueCible: this.langueCible,
-          traduction: traduction,
-          texteInitial: this.texteOriginal,
+          [ID_COL_CLEF]: this.clef,
+          [ID_COL_LANGUE_SOURCE]: this.langueSource,
+          [ID_COL_LANGUE_CIBLE]: this.langueCible,
+          [ID_COL_TRADUCTION]: traduction,
+          [ID_COL_TEXTE_ORIGINAL]: this.texteOriginal,
+          [ID_COL_DATE]: new Date().getTime(),
         };
 
         await this.$ipa.tableaux!.ajouterÉlément(this.idTableau, élément);

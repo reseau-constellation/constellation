@@ -13,13 +13,20 @@ export const ID_VAR_TRADUCTION =
 export const ID_VAR_DATE =
   "/orbitdb/zdpuAkfSVLrNUdbXjWifzuUM5vvWhLBThGTqshuJJUY8yphtF/3e801a45-ddb1-416b-b1aa-9af613e300da";
 
+export const ID_COL_CLEF = "clef";
+export const ID_COL_LANGUE_SOURCE = "langue source";
+export const ID_COL_LANGUE_CIBLE = "langue cible";
+export const ID_COL_TEXTE_ORIGINAL = "texte original";
+export const ID_COL_TRADUCTION = "traduction";
+export const ID_COL_DATE = "date";
+
 export type suggestionTrad = élémentDeMembre<élémentBdTraduction>;
 
 export type élémentBdTraduction = {
-  [ID_VAR_CLEF]: string;
-  [ID_VAR_LANGUE_SOURCE]: string;
-  [ID_VAR_LANGUE_CIBLE]: string;
-  [ID_VAR_TEXTE_ORIGINAL]?: string;
-  [ID_VAR_TRADUCTION]: string;
-  [ID_VAR_DATE]: number;
+  [ID_COL_CLEF]: string;
+  [ID_COL_LANGUE_SOURCE]: string;
+  [ID_COL_LANGUE_CIBLE]: string;
+  [ID_COL_TEXTE_ORIGINAL]?: string;
+  [ID_COL_TRADUCTION]: string;
+  [ID_COL_DATE]: number;
 };

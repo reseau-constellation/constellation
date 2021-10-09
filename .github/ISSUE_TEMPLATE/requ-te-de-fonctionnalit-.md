@@ -1,5 +1,5 @@
 ---
-name: Requète de fonctionnalité
+name: Requête de fonctionnalité
 about: Proposer une nouvelle idée
 title: ''
 labels: ''
@@ -16,5 +16,5 @@ Une description claire et précise du comportement que vous préfériez voir.
 **Décrire les alternatives**
 Une brève description des solutions alternatives que vous avez considéré (si applicable).
 
-**Context additionnel**
-Vous pouvez ajoutter d'autres informations ou même des prises d'écran si vous le souhaitez.
+**Contexte additionnel**
+Vous pouvez ajouter d'autres informations ou même des prises d'écran si vous le souhaitez.

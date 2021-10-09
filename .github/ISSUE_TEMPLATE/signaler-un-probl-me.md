@@ -21,7 +21,7 @@ Si cela s'applique, incluez des prises d'écran du problème.
 
 **Pour ordinateurs :**
  - SO: [p. ex. iOS, Windows 11, Linux, ...]
- - Navigateur [p.ex. chrome, safari]
+ - Navigateur [p.ex. firefox, brave, chrome, safari]
  - Version [p. ex. 22]
 
 **Pour téléphones intelligents :**
@@ -30,5 +30,5 @@ Si cela s'applique, incluez des prises d'écran du problème.
  - Navigateur [p.ex. chrome, safari]
  - Version [p. ex. 22]
 
-**Additional context**
+**Contexte additionnel**
 Add any other context about the problem here.

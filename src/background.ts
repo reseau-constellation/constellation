@@ -5,65 +5,22 @@ import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 const enDéveloppement = process.env.NODE_ENV !== "production";
 import Store from "electron-store";
-import Ctl from "ipfsd-ctl";
-import ClientConstellation from "@constl/ipa";
+import initConstellation from "@/électron/initConstellation";
+
 import path from "path";
-import IPFS from "ipfs"
-import fs from "fs"
-// import OrbitDB from "orbit-db"
 
-// const client = new Constellation();
-let ipfsd: typeof Ctl;
-async function initSFIP() {
+let fermerConstellation: () => Promise<void>;
 
+async function test() {
+  console.log("Test processus principal Électron");
   /*const DOSSIER_STOCKAGE_LOCAL = "./_stockageTemp";
   const LocalStorage = require("node-localstorage").LocalStorage;
   final = new LocalStorage(DOSSIER_STOCKAGE_LOCAL);
   */
-  // (electron.app || electron.remote.app).getPath('userData')
-  console.log("ici", 0)
-  // const client = await ClientConstellation.créer();
-  // console.log("ici", "Constellation créé !")
-  const sfip = await IPFS.create()
-  console.log("ici", "SFIP créé")
-  // console.log(await sfip.id())
-  // console.log("ici", "ID SFIP")
-
-  /*
-  if (!ipfsd) {
-    const port = 9090;
-    const server = await Ctl.createServer(port, {
-      ipfsHttpModule: require("ipfs-http-client"),
-      ipfsModule: require("ipfs"),
-      ipfsBin: require("go-ipfs").path(),
-    });
-    await server.start();
-
-    console.log({ server });
-    console.log("ici 1");
-    const factory = Ctl.createFactory({
-      ipfsHttpModule: require("ipfs-http-client"),
-      remote: true,
-      endpoint: `http://localhost:${port}`, // or you can set process.env.IPFSD_CTL_SERVER to http://localhost:9090
-    });
-    console.log("ici 2");
-    ipfsd = await factory.spawn();
-    console.log({ ipfsd });
-  }
-
-  console.log("ici 3");
-  const id = await ipfsd.api.id();
-  console.log("ici 4");
-  console.log({ id });
-  */
 }
 
-async function fermerSFIP() {
-  if (ipfsd) await ipfsd.stop();
-}
-
-async function fermerConstellation() {
-  await fermerSFIP();
+async function fermerApli() {
+  if (fermerConstellation) await fermerConstellation();
   app.quit();
 }
 Store.initRenderer();
@@ -85,26 +42,21 @@ async function createWindow() {
         .ELECTRON_NODE_INTEGRATION as unknown as boolean,
       contextIsolation: !(process.env
         .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
+      preload: path.join(__dirname, "preload.js"), // use a preload script
     },
   });
+
+  test();
+  fermerConstellation = initConstellation(win);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
     if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
-
     createProtocol("app");
-    console.log({__dirname, __filename, cwd: process.cwd()})
-    /*win.loadURL(url.format({
-      pathname: path.join(__dirname, 'index.html'),
-      protocol: 'file:',
-      slashes: true
-    }))*/
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
-    //win.loadURL(`file://${path.dirname(__filename)}/index.html`)
-    // win.loadURL(`file:///Users/julienmalard/atom/reseau/dist_electron/mac/constellation.app/Contents/Resources/app.asar/index.html`)
   }
   win.once("ready-to-show", () => {
     // autoUpdater.checkForUpdatesAndNotify();
@@ -125,7 +77,7 @@ app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
-    fermerConstellation();
+    fermerApli();
   }
 });
 
@@ -139,7 +91,6 @@ app.on("activate", () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
-  initSFIP();
   createWindow();
 });
 
@@ -148,12 +99,12 @@ if (enDéveloppement) {
   if (process.platform === "win32") {
     process.on("message", (data) => {
       if (data === "graceful-exit") {
-        fermerConstellation();
+        fermerApli();
       }
     });
   } else {
     process.on("SIGTERM", () => {
-      fermerConstellation();
+      fermerApli();
     });
   }
 }
