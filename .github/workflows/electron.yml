@@ -17,8 +17,7 @@ jobs:
       - name: Installer Node.js, NPM et Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: 'lts/*'
-          check-latest: true
+          node-version: 16
 
       - name: Installer Snapcraft
         uses: samuelmeuli/action-snapcraft@v1
