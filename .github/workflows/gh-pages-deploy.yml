@@ -11,8 +11,7 @@ jobs:
       - name: Préparation de Node.js
         uses: actions/setup-node@v1.4.4
         with:
-          node-version: 'lts'
-          check-latest: true
+          node-version: 16
 
       - name: Ouvrir la branche
         uses: actions/checkout@v2
