@@ -4,6 +4,7 @@ import estÉlectron from "is-electron";
 
 import clientProc from "@constl/ipa/lib/proxy/ipaProc";
 import clientTravailleur from "@constl/ipa/lib/proxy/ipaTravailleur";
+
 import clientConstellationÉlectron from "./clientÉlectronPrincipal";
 
 import { ProxyClientConstellation } from "@constl/ipa/lib/proxy/proxy";

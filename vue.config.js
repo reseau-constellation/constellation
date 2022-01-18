@@ -25,7 +25,6 @@ module.exports = {
           "multiformats/cjs/src/hashes/sha2.js"
         );
 
-        // Chain webpack config for electron main process only
         config.module
           .rule("compile")
           .test(/\.(t|j)s$/)
