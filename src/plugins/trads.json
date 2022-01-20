@@ -28,6 +28,9 @@
     "carteMembre": {
       "aucuneBd": "Aucune BD"
     },
+    "dialogueAuteurs": {
+      "entête": "Auteurs"
+    },
     "qualité": {
       "titre": "Composition du score",
       "sousTitre": "Un meilleur score augmente la confiance que les autres porteront à vos données et favorisera le classement de vos données dans les recherches.",
@@ -430,6 +433,9 @@
     },
     "carteMembre": {
       "aucuneBd": "தரவுத்தளம் இல்லை"
+    },
+    "dialogueAuteurs": {
+      "entête": "உரிமையாளர்"
     },
     "signalements": {
       "entête": "சிரமம் உள்ளதா?"

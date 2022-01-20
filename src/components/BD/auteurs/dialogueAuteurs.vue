@@ -5,7 +5,7 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline"> Auteurs </v-card-title>
+      <v-card-title class="headline"> {{ $t("dialogueAuteurs.entête") }} </v-card-title>
       <v-divider />
 
       <v-card-text>
