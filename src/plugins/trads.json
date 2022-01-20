@@ -25,6 +25,9 @@
       "titre": "Exporter une copie des données",
       "formatFichier": "Format du fichier"
     },
+    "carteMembre": {
+      "aucuneBd": "Aucune BD"
+    },
     "qualité": {
       "titre": "Composition du score",
       "sousTitre": "Un meilleur score augmente la confiance que les autres porteront à vos données et favorisera le classement de vos données dans les recherches.",
@@ -424,6 +427,9 @@
     },
     "compte": {
       "entête": "கணக்கு அமைப்புகள்"
+    },
+    "carteMembre": {
+      "aucuneBd": "தரவுத்தளம் இல்லை"
     },
     "signalements": {
       "entête": "சிரமம் உள்ளதா?"

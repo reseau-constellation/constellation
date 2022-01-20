@@ -27,7 +27,7 @@
         + {{ bds.length - N_MAX_LISTE }} autre(s)
       </v-chip>
       <v-chip v-if="!bds.length" label outlined small disabled>
-        Aucune BD
+        {{ $t("carteMembre.aucuneBd")}}
       </v-chip>
 
       <p class="mb-0 text-overline">Projets</p>
