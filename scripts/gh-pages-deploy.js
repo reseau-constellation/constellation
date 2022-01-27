@@ -20,6 +20,7 @@ const thirdLog = `${emoji.get('rocket')} ${chalk.green('Your app successfully de
     // Afin de garder le domaine réseau-constellation.ca dans le déploiement Github
     await execa.command('touch dist/CNAME')
     await execa.command('echo "xn--rseau-constellation-bzb.ca" > dist/CNAME')
+    await execa.command('cat dist/CNAME')
 
     await execa.command('git --work-tree dist add --all')
     await execa.command('git --work-tree dist commit -m "gh-pages"')
