@@ -15,8 +15,10 @@ const thirdLog = `${emoji.get('rocket')} ${chalk.green('Your app successfully de
 
     // Idée de https://stackoverflow.com/questions/48521177/404-when-reloading-a-vue-website-published-to-github-pages
     await execa.command('cp dist/index.html dist/404.html')
-    await execa.command('touch CNAME')
-    await execa.command("echo 'xn--rseau-constellation-bzb.ca' > CNAME")
+
+    // Idée de https://stackoverflow.com/questions/66311145/github-pages-custom-domain-settings-gets-reset-during-new-commit
+    await execa.command('touch dist/CNAME')
+    await execa.command("echo 'xn--rseau-constellation-bzb.ca' > dist/CNAME")
 
     await execa.command('git --work-tree dist add --all')
     await execa.command('git --work-tree dist commit -m "gh-pages"')
