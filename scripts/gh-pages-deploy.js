@@ -15,15 +15,19 @@ const thirdLog = `${emoji.get('rocket')} ${chalk.green('Your app successfully de
 
     // Idée de https://stackoverflow.com/questions/48521177/404-when-reloading-a-vue-website-published-to-github-pages
     await execa.command('cp dist/index.html dist/404.html')
+    await execa.command('touch CNAME')
+    await execa.command("echo 'xn--rseau-constellation-bzb.ca' > CNAME")
 
     await execa.command('git --work-tree dist add --all')
     await execa.command('git --work-tree dist commit -m "gh-pages"')
     console.log(secondLog)
+
     await execa.command('git push origin HEAD:gh-pages --force', { stdio: 'inherit' })
     await execa.command('rm -r dist')
     await execa.command(`git checkout -f ${currentBranch}`)
     await execa.command('git branch -D gh-pages')
     console.log(thirdLog)
+
   } catch (e) {
     console.log(e.message)
     process.exit(1)
