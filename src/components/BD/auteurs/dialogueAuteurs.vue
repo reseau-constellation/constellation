@@ -23,7 +23,7 @@
                     <v-icon>mdi-plus</v-icon>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    Autoriser un autre auteur
+                  {{$t("dialogueAuteurs.அங்கீகாரம்")}}
                   </v-list-item-content>
                 </v-list-item>
               </template>

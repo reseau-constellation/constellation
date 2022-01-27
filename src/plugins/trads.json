@@ -28,13 +28,16 @@
     "carteMembre": {
       "aucuneBd": "Aucune BD"
     },
-    "dialogueAuteurs": {
-      "entête": "Auteurs"
+        "dialogueAuteurs": {
+      "entête": "Auteurs",
+      "அங்கீகாரம்":"Autoriser un autre auteur"
+
     },
     "qualité": {
       "titre": "Composition du score",
       "sousTitre": "Un meilleur score augmente la confiance que les autres porteront à vos données et favorisera le classement de vos données dans les recherches.",
       "titres": {
+
         "accès": "Accessibilité",
         "couverture": "Couverture tests",
         "valide": "Qualité données"
@@ -435,7 +438,8 @@
       "aucuneBd": "தரவுத்தளம் இல்லை"
     },
     "dialogueAuteurs": {
-      "entête": "உரிமையாளர்"
+      "entête": "உரிமையாளர்",
+      "அங்கீகாரம்":"உரிமையாளரை சேருங்கள்"
     },
     "signalements": {
       "entête": "சிரமம் உள்ளதா?"
