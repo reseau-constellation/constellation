@@ -18,7 +18,8 @@ const thirdLog = `${emoji.get('rocket')} ${chalk.green('Your app successfully de
 
     // Idée de https://stackoverflow.com/questions/66311145/github-pages-custom-domain-settings-gets-reset-during-new-commit
     // Afin de garder le domaine réseau-constellation.ca dans le déploiement Github
-    await execa.command('echo "xn--rseau-constellation-bzb.ca" > "dist/CNAME"')
+    await execa.command('touch dist/CNAME')
+    await execa.command('echo "xn--rseau-constellation-bzb.ca" > dist/CNAME')
 
     await execa.command('git --work-tree dist add --all')
     await execa.command('git --work-tree dist commit -m "gh-pages"')
