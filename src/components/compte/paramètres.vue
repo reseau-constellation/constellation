@@ -96,10 +96,10 @@
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>
-                {{ $t("Paramètres.சேர்த்தல்") }}
+                {{ $t("compte.onglets.compte.சேர்த்தல்") }}
                </v-list-item-title>
               <v-list-item-subtitle>
-                {{ $t("Paramètres.பாதுகாப்பு") }}
+                {{ $t("compte.onglets.compte.பாதுகாப்பு") }}
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -112,7 +112,7 @@
         <v-list-item-content>
           <v-list-item-title> {{ $t("compte.onglets.compte.Id") }} {{ d }} </v-list-item-title>
           <v-list-item-subtitle class="success--text">
-            {{ $t("compte.onglets.compte.Dispositif") d === idDispositif ? : "" }}
+            {{ d === idDispositif ? $t("compte.onglets.compte.Dispositif") : "" }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
