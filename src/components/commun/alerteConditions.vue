@@ -6,7 +6,7 @@
     class="text-left mx-auto my-10"
     max-width="650"
   >
-    <p>{{ $t("alerteConditions.texte") }}</p>
+    <p>{{ $t("alerteConditions.உரை") }}</p>
     <v-btn
       tiled
       small
@@ -14,7 +14,7 @@
       color="warning"
       @click="$router.push('/conditions')"
     >
-      {{ $t("alerteConditions.bouton") }}
+      {{ $t("alerteConditions.பொத்தான்") }}
     </v-btn>
   </v-alert>
 </template>

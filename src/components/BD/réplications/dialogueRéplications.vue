@@ -5,14 +5,13 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline mb-2"> Réplications </v-card-title>
+      <v-card-title class="headline mb-2">
+      {{$t("dialogueRéplications.பிரதிகள்")}} </v-card-title>
       <v-card-subtitle>
-        Chaque réplication de la base de données contribue à sa disponibilité au
-        sein du réseau Constellation.
+      {{ $t("dialogueRéplications.விண்மீன்_தரவு") }}
       </v-card-subtitle>
       <v-divider />
-
-      <v-card-text>
+       <v-card-text>
         <div class="mt-3">
           <v-skeleton-loader v-if="!replications" type="paragraph@2" />
           <div v-else>
@@ -23,12 +22,12 @@
               </v-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  Dispositifs
+                  {{$t("dialogueRéplications.சாதனங்கள்")}}
                   <v-icon right>mdi-monitor-cellphone</v-icon>
                 </v-list-item-title>
                 <v-list-item-subtitle class="success--text"
-                  >Dont {{ dispositifsEnLigne.length }} en
-                  ligne</v-list-item-subtitle
+                  >{{ $t("dialogueRéplication.enLigne", { n: dispositifsEnLigne.length }) }}
+                  </v-list-item-subtitle
                 >
               </v-list-item-content>
             </v-list-item>

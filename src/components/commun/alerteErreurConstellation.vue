@@ -8,17 +8,14 @@
   >
     <p>
       <span class="font-weight-bold"
-        >Oups ! Nous avons une erreur avec Constellation.</span
+        >{{ $t("alerteErreurConstellation.பிழை_உள்ளது") }}
+        </span
       >
       <br />
-      C'est peut-être grave, peut-être pas. Je n'en sais rien. En tout cas, nous
-      sommes désolés. Mais c'est ce qui se passe, parfois, quand on utilise un
-      logiciel de fine pointe.
+      {{ $t("alerteErreurConstellation.விளக்கம்") }}
       <br />
-      Si tout paraît fonctionner, vous pouvez continuer à travailler sans souci.
-      Mais si quelque chose cloche, merci de nous signaler l'erreur afin que
-      nous puissions la régler !
-    </p>
+      {{ $t("alerteErreurConstellation.புகாரளிக்க")}}
+      </p>
 
     <div class="text-center">
       <v-btn tiled outlined color="error" @click="signaler"
@@ -48,7 +45,9 @@
       >
         <template v-slot:activator>
           <v-list-item-content>
-            <v-list-item-title>Erreurs précédentes</v-list-item-title>
+            <v-list-item-title>
+              {{ $t("alerteErreurConstellation.பிழை") }}
+            </v-list-item-title>
           </v-list-item-content>
         </template>
         <item-erreur-constellation

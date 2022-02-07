@@ -95,24 +95,24 @@
               <v-icon>mdi-plus</v-icon>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title> Ajouter un dispositif </v-list-item-title>
+              <v-list-item-title>
+                {{ $t("Paramètres.சேர்த்தல்") }}
+               </v-list-item-title>
               <v-list-item-subtitle>
-                Ajouttez un autre ordinateur, téléphone, ou navigateur à votre
-                compte pour plus de sécurité.
+                {{ $t("Paramètres.பாதுகாப்பு") }}
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </template>
       </dialogue-ajouter-dispositif>
-
       <v-list-item v-for="d in dispositifs" :key="d">
         <v-list-item-avatar>
           <v-img :src="image('dispositif')" contain />
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title> Id: {{ d }} </v-list-item-title>
+          <v-list-item-title> {{ $t("compte.onglets.compte.Id") }} {{ d }} </v-list-item-title>
           <v-list-item-subtitle class="success--text">
-            {{ d === idDispositif ? "Dispositif présent" : "" }}
+            {{ $t("compte.onglets.compte.Dispositif") d === idDispositif ? : "" }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>

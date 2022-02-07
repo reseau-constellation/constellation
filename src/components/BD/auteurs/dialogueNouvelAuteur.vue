@@ -6,12 +6,12 @@
 
     <v-card>
       <v-card-title class="headline mb-2">
-        Autoriser un nouvel auteur
+      {{ $t("dialogueNouvelAuteur.புதிய_அங்கீகாரம்") }}
       </v-card-title>
       <v-card-subtitle
-        ><v-icon small left>mdi-information-outline</v-icon>Attention ! Il n'est
-        présentement pas possible de révoquer l'accès une fois celui-ci est
-        octroyé.</v-card-subtitle
+        ><v-icon small left>mdi-information-outline</v-icon>
+        {{ $t("dialogueNouvelAuteur.எச்சரிக்கை") }}
+        </v-card-subtitle
       >
       <v-divider />
 
@@ -24,10 +24,10 @@
           hide-details
         >
           <template v-slot:item="{ item, on, attrs }">
-            <item-membre v-bind="attrs" v-on="on" :id="item.idBdRacine" />
+          <item-membre v-bind="attrs" v-on="on" :id="item.idBdRacine" />
           </template>
           <template v-slot:selection="{ item }">
-            <jeton-membre :id="item.idBdRacine" />
+          <jeton-membre :id="item.idBdRacine" />
           </template>
         </v-select>
         <v-checkbox

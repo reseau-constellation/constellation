@@ -6,7 +6,7 @@
 
     <v-card>
       <v-card-title class="headline">
-        Connecter dispositifs
+        {{ $t("dialougeAjouterDispositif.இணைத்தல்") }}
         <v-spacer />
         <v-btn icon @click="fermer">
           <v-icon>mdi-close</v-icon>
@@ -18,8 +18,7 @@
         <v-window v-model="étape">
           <v-window-item :value="1">
             <p class="mt-2">
-              Vous pouvez connecter différents navigateurs, téléphones ou
-              installations locales de Constellation.
+              {{ $t("dialougeAjouterDispositif.இணைப்பு_முறை") }}
             </p>
             <v-list>
               <v-list-item
@@ -57,8 +56,7 @@
                 />
               </v-list-item-avatar>
               <v-list-item-content>
-                Sur l'autre dispositif, choisir "Rejoindre un compte existant"
-                et copier ci-dessous le code affiché.
+                {{ $t("dialogueAjouterDispositif.தேர்ந்தெடுத்தல்") }}
               </v-list-item-content>
             </v-list-item>
             <v-autocomplete
@@ -81,12 +79,13 @@
                 />
               </v-list-item-avatar>
               <v-list-item-content>
-                Copier le code de confirmation suivant sur l'autre dispositif.
+                {{ $t("dialogueAjouterDispositif.உறுதிப்படுத்தல்_குறியீடு") }}
               </v-list-item-content>
             </v-list-item>
             <v-list-item
               outlined
-              class="py-2 ma-2"
+              cla
+              ss="py-2 ma-2"
               dense
               @click="copier(idBdRacine)"
             >
@@ -109,8 +108,7 @@
                 />
               </v-list-item-avatar>
               <v-list-item-content>
-                Cliquez sur le code ci-dessous et copiez-le sur l'autre
-                dispositif.
+                {{ $t("dialogueAjouterDispositif.நகலெடுக்க") }}
               </v-list-item-content>
             </v-list-item>
             <v-list-item
@@ -136,8 +134,7 @@
                 />
               </v-list-item-avatar>
               <v-list-item-content>
-                Entrez le code de confirmation de l'autre disposiitif
-                ci-dessous.
+                {{ $t("dialogueAjouterDispositif.உள்ளீடு") }}
               </v-list-item-content>
             </v-list-item>
             <v-text-field
@@ -150,19 +147,17 @@
           <v-window-item :value="4" class="text-center">
             <span v-if="idOrbiteNouveau">
               <p class="text-h5 mt-5">
-                Vous allez ajouter le dispositif avec l'identifiant suivant à
-                votre compte.
+                {{ $t("dialogueAjouterDispositif.சாதனம்_சேர்ப்பு") }}
               </p>
               <p class="text--secondary text-left">
                 <v-icon>mdi-alert-circle-outline</v-icon>
-                Vérifiez bien le code ci-dessous. Il n'est présentement pas
-                possible de révoquer l'accès à un dispositif.
+                {{ $t("dialogueAjouterDispositif.சரிபார்க்கவும்") }}
               </p>
               <p>{{ idOrbiteNouveau }}</p>
             </span>
             <span v-else-if="idBdRacineNouveau">
               <p class="text-h5 mt-5">
-                Vous allez joindre ce dispositif au compte suivant.
+                {{ $t("dialogueAjouterDispositif.கணக்கில்_இணைப்பு") }}
               </p>
               <v-list-item class="text-left">
                 <v-list-item-avatar>
@@ -180,11 +175,8 @@
               <v-divider />
               <p class="mt-4 text--secondary text-left">
                 <v-icon>mdi-alert-circle-outline</v-icon>
-                Note: cette action suprimera les données associées au compte
-                présent. Assurez-vous bien d'avoir des copies (hors
-                Constellation) de toute base de données que vous voudriez
-                transférer au nouveau compte.
-              </p>
+                {{ $t("dialogueAjouterDispositif.குறிப்பு") }}
+                </p>
             </span>
             <v-btn
               text
@@ -272,20 +264,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
             "L'adresse Orbite doit terminer en `/racine`.",
         ],
       },
-      options: [
-        {
-          titre: "Nouveau dispositif",
-          sousTitre: "Ajouter un dispositif à ce compte",
-          icône: "mdi-plus",
-          prochaineÉtape: 2,
-        },
-        {
-          titre: "Rejoindre un compte existant",
-          sousTitre: "Ajouter ce dispositif à un compte existant",
-          icône: "mdi-plus",
-          prochaineÉtape: 3,
-        },
-      ],
+
     };
   },
   computed: {
@@ -310,8 +289,26 @@ export default mixins(mixinIPA, mixinLangues).extend({
       }
       return false;
     },
+    options: function(): {titre: string, sousTitre: string, icône: string, prochaineÉtape: number}[]
+     {
+      return [
+        {
+          titre: this.$t("dialogueAjouterDispositif.தலைப்பு") as string,
+          sousTitre: this.$t("dialogueAjouterDispositif.வசன_வரிகள்") as string,
+          icône: "mdi-plus",
+          prochaineÉtape: 2,
+        },
+        {
+          titre: this.$t("dialogueAjouterDispositif.கணக்கில்_சேர்த்தல்") as string,
+          sousTitre: this.$t("dialogueAjouterDispositif.சாதனத்தை_சேர்த்தல்") as string,
+          icône: "mdi-plus",
+          prochaineÉtape: 3,
+        },
+      ]
+    },
   },
-  watch: {
+
+    watch: {
     idBdRacineNouveau: async function (val) {
       if (
         val &&

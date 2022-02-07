@@ -12,8 +12,14 @@
       "télécharger": "Télécharger"
     },
     "alerteConditions": {
-      "texte": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
-      "bouton": "Lire les conditions"
+      "உரை": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
+      "பொத்தான்": "Lire les conditions"
+    },
+    "alerteErreurConstellation": {
+      "பிழை_உள்ளது": "Oups ! Nous avons une erreur avec Constellation.",
+      "விளக்கம்": "C'est peut-être grave, peut-être pas. Je n'en sais rien. En tout cas, nous sommes désolés. Mais c'est ce qui se passe, parfois, quand on utilise un logiciel de fine pointe.",
+      "புகாரளிக்க": "Si tout paraît fonctionner, vous pouvez continuer à travailler sans souci. Mais si quelque chose cloche, merci de nous signaler l'erreur afin que nous puissions la régler !",
+      "பிழை": "Erreurs précédentes"
     },
     "boîteNoms": {
       "titre": "Ajoutez des noms",
@@ -28,16 +34,51 @@
     "carteMembre": {
       "aucuneBd": "Aucune BD"
     },
-        "dialogueAuteurs": {
-      "entête": "Auteurs",
-      "அங்கீகாரம்":"Autoriser un autre auteur"
-
+      "dialogueAuteurs": {
+      "entête": "உருவாக்கியவர்",
+      "அங்கீகாரம்": "Reconnaissance de l'auteur"
     },
-    "qualité": {
+    "dialogueNouvelAuteur": {
+      "புதிய_அங்கீகாரம்": "Autoriser un nouvel auteur",
+      "எச்சரிக்கை": "Il n'est présentement pas possible de révoquer l'accès une fois celui-ci est octroyé"
+    },
+    "dialogueRéplications": {
+      "பிரதிகள்": "Réplications",
+      "விண்மீன்_தரவு": "Chaque réplication de la base de données contribue à sa disponibilité au sein du réseau Constellation",
+      "சாதனங்கள்": "Dispositifs",
+      "enLigne": "Dont {n} en ligne"
+     },
+    "dialogueNouvelleVariable": {
+      "மாறி": "Nouvelle variable"
+    },
+    "itemTableau": {
+      "அட்டவணை_நீக்கம்": "Voulez-vous vraiment effacer ce tableau ?",
+      "தகவல்": "Ceci enlevera le tableau de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées."
+    },
+    "dialogueAjouterDispositif": {
+      "இணைத்தல்": "Connecter dispositifs",
+      "இணைப்பு_முறை": "Vous pouvez connecter différents navigateurs, téléphones ou installations locales de Constellation.",
+      "தேர்ந்தெடுத்தல்": "Sur l'autre dispositif, choisir Rejoindre un compte existant et copier ci-dessous le code affiché.",
+      "உறுதிப்படுத்தல்_குறியீடு": "Copier le code de confirmation suivant sur l'autre dispositif",
+      "நகலெடுக்க": "Cliquez sur le code ci-dessous et copiez-le sur l'autre dispositif.",
+      "உள்ளீடு": "Entrez le code de confirmation de l'autre disposiitif ci-dessous",
+      "சாதனம்_சேர்ப்பு": "Vous allez ajouter le dispositif avec l'identifiant suivant à votre compte.",
+      "சரிபார்க்கவும்": "Vérifiez bien le code ci-dessous. Il n'est présentement pas possible de révoquer l'accès à un dispositif.",
+      "கணக்கில்_இணைப்பு": "Vous allez joindre ce dispositif au compte suivant",
+      "குறிப்பு": "cette action suprimera les données associées au compte présent. Assurez-vous bien d'avoir des copies (hors Constellation) de toute base de données que vous voudriez transférer au nouveau compte.",
+      "தலைப்பு": "Nouveau dispositif",
+      "வசன_வரிகள்": "Ajouter un dispositif à ce compte",
+      "கணக்கில்_சேர்த்தல்": "Rejoindre un compte existant",
+      "சாதனத்தை_சேர்த்தல்": "Ajouter ce dispositif à un compte existant"
+    },
+    "Paramètres": {
+      "சேர்த்தல்": "Ajouter un dispositif",
+      "பாதுகாப்பு": "Ajouttez un autre ordinateur, téléphone, ou navigateur à votre compte pour plus de sécurité."
+    },
+     "qualité": {
       "titre": "Composition du score",
       "sousTitre": "Un meilleur score augmente la confiance que les autres porteront à vos données et favorisera le classement de vos données dans les recherches.",
       "titres": {
-
         "accès": "Accessibilité",
         "couverture": "Couverture tests",
         "valide": "Qualité données"
@@ -81,7 +122,8 @@
           "sousTitreBoîteNoms": "Le plus de langues vous ajouterez, le plus de chances que les autres membres de Constellation sauront comment vous appeler.",
           "courriel": "Votre courriel",
           "image": "Votre image de profil",
-          "dispositifs": "Dispositifs"
+          "dispositifs": "Dispositifs",
+          "Id":
         },
         "thème": {
           "entête": "Thème et langues",
@@ -439,8 +481,57 @@
     },
     "dialogueAuteurs": {
       "entête": "உரிமையாளர்",
-      "அங்கீகாரம்":"உரிமையாளரை சேருங்கள்"
+      "அங்கீகாரம்": "உரிமையாளரை சேருங்கள்"
     },
+    "dialogueNouvelAuteur": {
+      "புதிய_அங்கீகாரம்": "புதிய ஆசிரியரை அங்கீகரிக்கவும்",
+      "எச்சரிக்கை": "ஒருமுறை வழங்கப்பட்ட அனுகலை திரும்ப பெறுவது தற்போது சாத்தியமில்லை"
+    },
+    "dialogueRéplications": {
+      "பிரதிகள்": "Réplications",
+      "விண்மீன்_தரவு": "தரவுத்தளத்தின் ஒவ்வொரு பிரதியும் விண்மீன் நெட்வொர்க்கிற்குள் அதன் கிடைக்கும் தன்மைக்கு பங்களிக்கிறது",
+      "சாதனங்கள்": "Dispositifs",
+      "enLigne": "இணையத்தில் {n} உள்ளன"
+    },
+    "itemTableau": {
+      "அட்டவணை_நீக்கம்": "இந்த அட்டவணையை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",
+      "தகவல்": "இது உங்கள் சாதனத்திலிருந்து பலகையை அகற்றும். பிற விண்மீன் கூட்டத்தின் பயனர்கள் உருவாக்கிய நகல்களை இது நீக்காது."
+    },
+
+    "alerteConditions": {
+      "உரை": "இந்த மென்பொருளைப் பயன்படுத்த, பயன்பாட்டு விதிமுறைகளை நீங்கள் ஏற்க வேண்டும்.",
+      "பொத்தான்": "நிபந்தனைகளைப் படியுங்கள்"
+    },
+    "alerteErreurConstellation": {
+      "பிழை_உள்ளது": "அச்சச்சோ ! விண்மீன் அமைப்பில் எங்களிடம் பிழை உள்ளது.",
+      "விளக்கம்": "ஒருவேளை அது தீவிரமானது, ஒருவேளை இல்லை. எனக்கு தெரியாது. எப்படியிருந்தாலும், மன்னிக்கவும். ஆனால், சில நேரங்களில், நீங்கள் அதிநவீன மென்பொருளைப் பயன்படுத்தும்போது அதுதான் நடக்கும்.",
+      "புகாரளிக்க": "எல்லாம் வேலை செய்வதாகத் தோன்றினால், கவலையின்றி வேலையைத் தொடரலாம். ஆனால் ஏதாவது தவறு இருந்தால், பிழையை எங்களிடம் புகாரளிக்கவும், அதை நாங்கள் சரிசெய்ய முடியும்!",
+      "பிழை": "முந்தைய பிழைகள்"
+    },
+    "dialogueNouvelleVariable": {
+      "மாறி": "புதிய மாறி"
+    },
+    "dialogueAjouterDispositif": {
+      "இணைத்தல்": "சாதனங்களை இணைக்கவும்",
+      "இணைப்பு_முறை": "நீங்கள் வெவ்வேறு உலாவிகள், தொலைபேசிகள் அல்லது விண்மீனின் உள்ளூர் நிறுவல்களை இணைக்கலாம்.",
+      "தேர்ந்தெடுத்தல்": "மற்றொரு சாதனத்தில், ஏற்கனவே இருக்கும் கணக்கில் சேரவும் மற்றும் கீழே காட்டப்படும் குறியீட்டை நகலெடுக்கவும் என்பதைத் தேர்ந்தெடுக்கவும்.",
+      "உறுதிப்படுத்தல்_குறியீடு": "பின்வரும் உறுதிப்படுத்தல் குறியீட்டை மற்ற சாதனத்திற்கு நகலெடுக்கவும்",
+      "நகலெடுக்க": "கீழே உள்ள குறியீட்டைக் கிளிக் செய்து அதை மற்ற சாதனத்தில் நகலெடுக்கவும்.",
+      "உள்ளீடு": "மற்ற சாதனத்தின் உறுதிப்படுத்தல் குறியீட்டை கீழே உள்ளிடவும்",
+      "சாதனம்_சேர்ப்பு": "பின்வரும் அடையாளம்காட்டியுடன் சாதனத்தை உங்கள் கணக்கில் சேர்ப்பீர்கள்.",
+      "சரிபார்க்கவும்": "கீழே உள்ள குறியீட்டை இருமுறை சரிபார்க்கவும். சாதனத்திற்கான அணுகலைத் திரும்பப் பெறுவது தற்போது சாத்தியமில்லை.",
+      "கணக்கில்_இணைப்பு": "இந்தச் சாதனத்தை பின்வரும் கணக்கில் இணைப்பீர்கள்",
+      "குறிப்பு": "இந்தச் செயல் நடப்புக் கணக்குடன் தொடர்புடைய தரவை நீக்கும். நீங்கள் புதிய கணக்கிற்கு மாற்ற விரும்பும் தரவுத்தளங்களின் நகல்களை (விண்மீன் கூட்டத்தைத் தவிர்த்து) இருப்பதை உறுதிசெய்யவும்.",
+      "தலைப்பு": "புதிய சாதனம்",
+      "வசன_வரிகள்": "இந்தக் கணக்கில் சாதனத்தைச் சேர்க்கவும்",
+      "கணக்கில்_சேர்த்தல்": "ஏற்கனவே உள்ள கணக்கில் சேரவும்",
+      "சாதனத்தை_சேர்த்தல்": "இந்தச் சாதனத்தை ஏற்கனவே உள்ள கணக்கில் சேர்க்கவும்"
+   },
+    "Paramètres": {
+      "சேர்த்தல்": "சாதனத்தைச் சேர்க்கவும்",
+      "பாதுகாப்பு": "கூடுதல் பாதுகாப்பிற்காக உங்கள் கணக்கில் மற்றொரு கணினி, தொலைபேசி அல்லது உலாவியைச் சேர்க்கவும்."
+    },
+
     "signalements": {
       "entête": "சிரமம் உள்ளதா?"
     },

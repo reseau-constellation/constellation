@@ -5,7 +5,9 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline"> Nouvelle variable </v-card-title>
+      <v-card-title class="headline">
+        {{ $t("dialogueNouvelleVariable.மாறி") }}
+      </v-card-title>
       <v-divider />
 
       <v-card-text class="mt-3">

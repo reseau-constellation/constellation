@@ -16,17 +16,13 @@
 
         <v-card>
           <v-card-title class="headline red--text">
-            Voulez-vous vraiment effacer ce tableau ?
+            {{ $t("itemTableau.அட்டவணை_நீக்கம்") }}
           </v-card-title>
 
           <v-card-text>
-            Ceci enlevera le tableau de votre dispositif. Elle n'effacera pas
-            des copies que d'autres utilisatrices et utilisateurs de
-            Constellation pourraient avoir créées.
+            {{ $t("itemTableau.தகவல்") }}
           </v-card-text>
-
           <v-divider></v-divider>
-
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="error" text outlined @click="dialogue = false">
