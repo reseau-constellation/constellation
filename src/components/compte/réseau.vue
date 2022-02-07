@@ -19,7 +19,9 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <p v-else class="text--disabled">Aucune connexion pour l'instant</p>
+    <p v-else class="text--disabled">
+      {{ $t("compte.onglets.réseau.Aucune_connexion") }}
+    </p>
   </v-card>
 </template>
 
