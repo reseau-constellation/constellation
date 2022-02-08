@@ -26,7 +26,7 @@
         outlined
         small
       >
-        + {{ bds.length - N_MAX_LISTE }} autre(s)
+      {{ $t("carteMembre.bdsExtra",{n:formatterChiffre(bds.length - N_MAX_LISTE)}) }}
       </v-chip>
       <v-chip v-if="!bds.length" label outlined small disabled>
         {{ $t("carteMembre.aucuneBd")}}
@@ -36,7 +36,7 @@
         {{ $t("carteMembre.திட்டங்கள்") }}</p>
       <jeton-bd v-for="projet in projets" :key="projet" :id="projet" />
       <v-chip v-if="!projets.length" label outlined small disabled>
-        Aucun projet
+      {{ $t("carteMembre.Aucunprojet") }}
       </v-chip>
     </v-card-text>
   </v-card>

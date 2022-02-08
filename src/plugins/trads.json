@@ -37,7 +37,10 @@
       "aucuneBd": "Aucune BD",
       "தொடர்பு": "Contact",
       "தரவு": "Bases de données",
-      "திட்டங்கள்": "Projets"
+      "திட்டங்கள்": "Projets",
+      "Aucunprojet": "Aucun projet",
+      "bdsExtra": "+ { n } autre(s)"
+
     },
       "dialogueAuteurs": {
       "entête": "entête",
@@ -483,7 +486,12 @@
       "entête": "கணக்கு அமைப்புகள்"
     },
     "carteMembre": {
-      "aucuneBd": "தரவுத்தளம் இல்லை"
+      "aucuneBd": "தரவுத்தளம் இல்லை",
+      "தொடர்பு": "தொடர்பு கொள்ளவும்",
+      "தரவு": "தரவு அடிப்படை",
+      "திட்டங்கள்": "திட்டங்கள்",
+      "Aucunprojet": "திட்டம் இல்லை",
+      "bdsExtra": "மேலும் { n }"
     },
     "dialogueAuteurs": {
       "entête": "உரிமையாளர்",
