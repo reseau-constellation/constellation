@@ -19,7 +19,9 @@
       "பிழை_உள்ளது": "Oups ! Nous avons une erreur avec Constellation.",
       "விளக்கம்": "C'est peut-être grave, peut-être pas. Je n'en sais rien. En tout cas, nous sommes désolés. Mais c'est ce qui se passe, parfois, quand on utilise un logiciel de fine pointe.",
       "புகாரளிக்க": "Si tout paraît fonctionner, vous pouvez continuer à travailler sans souci. Mais si quelque chose cloche, merci de nous signaler l'erreur afin que nous puissions la régler !",
-      "பிழை": "Erreurs précédentes"
+      "பிழை": "Erreurs précédentes",
+      "மறை": "Cacher les détails",
+      "தகவல்கள்": "Plus de détails"
     },
     "boîteNoms": {
       "titre": "Ajoutez des noms",
@@ -32,7 +34,10 @@
       "formatFichier": "Format du fichier"
     },
     "carteMembre": {
-      "aucuneBd": "Aucune BD"
+      "aucuneBd": "Aucune BD",
+      "தொடர்பு": "Contact",
+      "தரவு": "Bases de données",
+      "திட்டங்கள்": "Projets"
     },
       "dialogueAuteurs": {
       "entête": "entête",
@@ -507,7 +512,9 @@
       "பிழை_உள்ளது": "அச்சச்சோ ! விண்மீன் அமைப்பில் எங்களிடம் பிழை உள்ளது.",
       "விளக்கம்": "ஒருவேளை அது தீவிரமானது, ஒருவேளை இல்லை. எனக்கு தெரியாது. எப்படியிருந்தாலும், மன்னிக்கவும். ஆனால், சில நேரங்களில், நீங்கள் அதிநவீன மென்பொருளைப் பயன்படுத்தும்போது அதுதான் நடக்கும்.",
       "புகாரளிக்க": "எல்லாம் வேலை செய்வதாகத் தோன்றினால், கவலையின்றி வேலையைத் தொடரலாம். ஆனால் ஏதாவது தவறு இருந்தால், பிழையை எங்களிடம் புகாரளிக்கவும், அதை நாங்கள் சரிசெய்ய முடியும்!",
-      "பிழை": "முந்தைய பிழைகள்"
+      "பிழை": "முந்தைய பிழைகள்",
+      "மறை": "விவரங்களை மறை",
+      "தகவல்கள்": "கூடுதல் தகவல்கள்"
     },
     "dialogueNouvelleVariable": {
       "மாறி": "புதிய மாறி"

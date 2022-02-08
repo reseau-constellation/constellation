@@ -24,7 +24,7 @@
     </div>
 
     <p class="font-weight-bold" @click="détails = !détails">
-      {{ détails ? "Cacher les détails" : "Plus de détails" }}
+      {{ détails ? $t("alerteErreurConstellation.மறை") : $t("alerteErreurConstellation.தகவல்கள்") }}
       <v-icon color="error">{{
         détails ? "mdi-chevron-up" : "mdi-chevron-down"
       }}</v-icon>
