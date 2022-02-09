@@ -42,6 +42,11 @@
       "bdsExtra": "+ { n } autre(s)"
 
     },
+    "carteVariable": {
+      "unités": "unités",
+      "Catégorie": "Catégorie",
+      "Aucune_unité": "Aucune unité"
+    },
       "dialogueAuteurs": {
       "entête": "entête",
       "அங்கீகாரம்": "Reconnaissance de l'auteur"
@@ -492,6 +497,27 @@
       "திட்டங்கள்": "திட்டங்கள்",
       "Aucunprojet": "திட்டம் இல்லை",
       "bdsExtra": "மேலும் { n }"
+    },
+    "carteVariable": {
+      "unités": "அலகுகள்",
+      "Catégorie": "வகை",
+      "Aucune_unité": "அலகு இல்லை"
+    },
+    "variables": {
+      "catégories": {
+        "numérique": "எண்முறை",
+        "date": "தேதியிட்டது",
+        "heure": "நேரம்",
+        "dateEtHeure": "தேதி மற்றும் மணிநேரம்",
+        "chaîne": "சரம் (உரை)",
+        "catégorique": "பகுப்பு",
+        "booléen": "பூலியன்",
+        "géojson": "ஜியோஜேசான்",
+        "vidéo": "காணொளி",
+        "audio": "ஒலிப்பதிவு",
+        "photo": "புகைப்படம்",
+        "fichier": "கோப்பு"
+      }
     },
     "dialogueAuteurs": {
       "entête": "உரிமையாளர்",

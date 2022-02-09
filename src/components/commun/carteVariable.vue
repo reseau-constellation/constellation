@@ -49,16 +49,16 @@
     <v-divider />
     <v-card-text>
       <p class="mb-0 text-overline">
-        Unités
-        <v-chip label outlined small>
-          {{ unités ? unités : "Aucune unité" }}
+        {{ $t("carteVariable.unités") }}
+          <v-chip label outlined small>
+          {{ unités ? unités :$t("carteVariable.Aucune_unité")}}
         </v-chip>
       </p>
       <p class="mb-0 text-overline">
-        Catégorie
+        {{ $t("carteVariable.Catégorie") }}
         <v-chip v-if="catégorie !== undefined" label outlined small>
           <v-icon left small>{{ icôneCatégorie }}</v-icon>
-          {{ catégorie }}
+          {{ $t("variables.catégories."+ catégorie) }}
         </v-chip>
         <v-select
           v-else
