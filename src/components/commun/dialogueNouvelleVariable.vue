@@ -11,7 +11,8 @@
       <v-divider />
 
       <v-card-text class="mt-3">
-        <p class="text-overline mb-2">Nom</p>
+        <p class="text-overline mb-2">
+          {{ $t("dialogueNouvelleVariable.nom") }}</p>
         <v-menu
           offset-x
           :close-on-content-click="false"
@@ -39,7 +40,8 @@
           />
         </v-menu>
 
-        <p class="text-overline mb-2">Description</p>
+        <p class="text-overline mb-2">
+          {{ $t("dialogueNouvelleVariable.Description") }}</p>
         <v-menu
           offset-x
           :close-on-content-click="false"
@@ -54,7 +56,7 @@
               v-bind="attrs"
               :readonly="true"
               :value="descr"
-              label="Description"
+              :label= "$t('dialogueNouvelleVariable.Description')"
             />
           </template>
           <boîteNoms
@@ -67,7 +69,8 @@
           />
         </v-menu>
 
-        <p class="text-overline mb-2">Catégorie</p>
+        <p class="text-overline mb-2">
+          {{ $t("dialogueNouvelleVariable.Catégorie") }}</p>
         <v-select v-model="catégorie" :items="optionsCatégories" outlined dense>
           <template v-slot:item="{ on, item }">
             <v-list-item v-on="on">
@@ -87,13 +90,16 @@
           </template>
         </v-select>
 
-        <p class="text-overline mb-0">Contrôles de qualité</p>
+        <p class="text-overline mb-0">
+          {{ $t("dialogueNouvelleVariable.கட்டுப்பாடு") }}</p>
         <v-list>
           <v-list-item @click="ajouterRègle;">
             <v-list-item-avatar>
               <v-icon>mdi-plus</v-icon>
             </v-list-item-avatar>
-            <v-list-item-content> Ajouter une règle </v-list-item-content>
+            <v-list-item-content>
+              {{ $t("dialogueNouvelleVariable.சேர்க்க") }}
+             </v-list-item-content>
           </v-list-item>
           <v-list-item
             v-for="r in [...règlesCatégorie, ...règlesPropre]"

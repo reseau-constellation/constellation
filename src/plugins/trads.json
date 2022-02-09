@@ -62,7 +62,12 @@
       "enLigne": "Dont {n} en ligne"
      },
     "dialogueNouvelleVariable": {
-      "மாறி": "Nouvelle variable"
+      "மாறி": "Nouvelle variable",
+      "nom": "Nom",
+      "Description": "Description",
+      "Catégorie": "Catégorie",
+      "கட்டுப்பாடு":"Contrôles de qualité",
+      "சேர்க்க": "Ajouter une règle"
     },
     "itemTableau": {
       "அட்டவணை_நீக்கம்": "Voulez-vous vraiment effacer ce tableau ?",
@@ -568,7 +573,12 @@
       "தகவல்கள்": "கூடுதல் தகவல்கள்"
     },
     "dialogueNouvelleVariable": {
-      "மாறி": "புதிய மாறி"
+      "மாறி": "புதிய மாறி",
+      "nom": "கடைசி பெயர்",
+      "Description": "விளக்கம்",
+      "Catégorie": "வகை",
+      "கட்டுப்பாடு":"தரக் கட்டுப்பாடுகள்",
+      "சேர்க்க": "விதியைச் சேர்க்கவும்"
     },
     "dialogueAjouterDispositif": {
       "இணைத்தல்": "சாதனங்களை இணைக்கவும்",

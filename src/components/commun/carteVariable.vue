@@ -51,7 +51,7 @@
       <p class="mb-0 text-overline">
         {{ $t("carteVariable.unités") }}
           <v-chip label outlined small>
-          {{ unités ? unités :$t("carteVariable.Aucune_unité")}}
+          {{ unités ? unités :$t("carteVariable.Aucune_unité") }}
         </v-chip>
       </p>
       <p class="mb-0 text-overline">
