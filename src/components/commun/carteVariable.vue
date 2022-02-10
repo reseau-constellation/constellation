@@ -49,30 +49,26 @@
     <v-divider />
     <v-card-text>
       <p class="mb-0 text-overline">
-        {{ $t("carteVariable.unités") }}</p>
+        {{ $t("carteVariable.unités") }}
         <v-chip label outlined small>
           {{ unités ? unités :$t("carteVariable.Aucune_unité") }}
         </v-chip>
-  <template>
-   <div class="text-center d-flex align-center justify-space-around">
-    <v-tooltip bottom>
-    <template v-slot:activator="{ on, attrs }">
-      <v-chip label outlined small v-on="on" v-bind="attrs">
-      {{ $t("variables.catégories."+ catégorie) }}
-    </v-chip>
-      </template>
-    <span>
-    {{$t("variables.catégories.info."+catégorie)}}
-    </span>
-  </v-tooltip>
- </template>
-   <p class="mb-0 text-overline">
+    </p>
+    <p class="mb-0 text-overline">
       {{ $t("carteVariable.Catégorie") }}
-        <v-chip v-if="catégorie !== undefined" label outlined small>
-        <v-icon left small>{{ icôneCatégorie }}</v-icon>
-      {{ $t("variables.catégories."+ catégorie) }}
-        </v-chip>
-        <v-select
+           <div class="text-center d-flex align-center justify-space-around">
+        <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-chip v-if="catégorie !== undefined" label outlined small v-on="on" v-bind="attrs">
+           <v-icon left small>{{ icôneCatégorie }}</v-icon>
+          {{ $t("variables.catégories."+ catégorie) }}
+          </v-chip>
+          </template>
+        <span>
+        {{$t("variables.catégories.info."+catégorie)}}
+        </span>
+      </v-tooltip>
+       <v-select
           v-else
           outlined
           dense
