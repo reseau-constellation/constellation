@@ -56,10 +56,9 @@
     </p>
     <p class="mb-0 text-overline">
       {{ $t("carteVariable.Catégorie") }}
-           <div class="text-center d-flex align-center justify-space-around">
-        <v-tooltip bottom>
+        <v-tooltip v-if="catégorie !== undefined" bottom>
         <template v-slot:activator="{ on, attrs }">
-          <v-chip v-if="catégorie !== undefined" label outlined small v-on="on" v-bind="attrs">
+          <v-chip  label outlined small v-on="on" v-bind="attrs">
            <v-icon left small>{{ icôneCatégorie }}</v-icon>
           {{ $t("variables.catégories."+ catégorie) }}
           </v-chip>
