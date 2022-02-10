@@ -53,7 +53,6 @@
         <v-chip label outlined small>
           {{ unités ? unités :$t("carteVariable.Aucune_unité") }}
         </v-chip>
-    </p>
   <template>
    <div class="text-center d-flex align-center justify-space-around">
     <v-tooltip bottom>
