@@ -3,6 +3,8 @@
 [![Électron](https://github.com/julienmalard/constellation/actions/workflows/electron.yml/badge.svg)](https://github.com/julienmalard/constellation/actions/workflows/electron.yml)
 [![Apli Internet](https://github.com/julienmalard/constellation/actions/workflows/gh-pages-deploy.yml/badge.svg)](https://github.com/julienmalard/constellation/actions/workflows/gh-pages-deploy.yml)
 
+Un réseau distribué et ouvert pour le partage des bases de données scientifiques. 
+
 ## Installation
 
 ## Développement
