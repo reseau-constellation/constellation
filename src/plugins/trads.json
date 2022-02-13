@@ -42,12 +42,7 @@
       "bdsExtra": "+ { n } autre(s)"
 
     },
-    "carteVariable": {
-      "unités": "unités",
-      "Catégorie": "Catégorie",
-      "Aucune_unité": "Aucune unité"
-    },
-      "dialogueAuteurs": {
+    "dialogueAuteurs": {
       "entête": "entête",
       "அங்கீகாரம்": "Reconnaissance de l'auteur"
     },
@@ -209,20 +204,39 @@
     "tableau": {
       "vide": "Aucune donnée"
     },
+    "carteVariable": {
+      "unités": "unités",
+      "Catégorie": "Catégorie",
+      "Aucune_unité": "Aucune unité"
+    },
     "variables": {
       "catégories": {
         "numérique": "Numérique",
         "date": "Date",
         "heure": "Heure",
         "dateEtHeure": "Date et heure",
-        "chaîne": "Chaîne (text)",
+        "chaîne": "Chaîne",
         "catégorique": "Catégorique",
         "booléen": "Booléenne",
         "géojson": "GéoJSON",
         "vidéo": "Vidéo",
         "audio": "Audio",
         "photo": "Photo",
-        "fichier": "Fichier"
+        "fichier": "Fichier",
+      "info": {
+          "numérique": "Numérique",
+          "date": "Date",
+          "heure": "Heure",
+          "dateEtHeure": "Date et heure",
+          "chaîne": "Chaîne (text)",
+          "catégorique": "Catégorique",
+          "booléen": "Booléenne (Système de numération avec seulement deux nombres appelés zéro et un)",
+          "géojson": "Code sémantique pour Earth JavaScript (GéoJSON)",
+          "vidéo": "Vidéo",
+          "audio": "Audio",
+          "photo": "Photo",
+          "fichier": "Fichier",
+        }
       }
     },
     "conditions": {
@@ -541,7 +555,7 @@
         "audio": "ஒலிப்பதிவு",
         "photo": "புகைப்படம்",
         "fichier": "கோப்பு",
-        "info": {
+      "info": {
           "numérique": "எண்முறை",
           "date": "தேதியிட்டது",
           "heure": "நேரம்",
