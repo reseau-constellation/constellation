@@ -67,7 +67,9 @@
       "Description": "Description",
       "Catégorie": "Catégorie",
       "கட்டுப்பாடு":"Contrôles de qualité",
-      "சேர்க்க": "Ajouter une règle"
+      "சேர்க்க": "Ajouter une règle",
+      "Description": "Description",
+      "Nom": "Nom"
     },
     "itemTableau": {
       "அட்டவணை_நீக்கம்": "Voulez-vous vraiment effacer ce tableau ?",
@@ -531,7 +533,7 @@
         "date": "தேதியிட்டது",
         "heure": "நேரம்",
         "dateEtHeure": "தேதி மற்றும் மணிநேரம்",
-        "chaîne": "சரம் (உரை)",
+        "chaîne": "சரம்",
         "catégorique": "பகுப்பு",
         "booléen": "ஈர்மம்",
         "géojson": "புவி யாவாக்கிறீட்டு பொருள் குறியீடு",
@@ -594,7 +596,8 @@
       "Catégorie": "வகை",
       "கட்டுப்பாடு":"தரக் கட்டுப்பாடுகள்",
       "சேர்க்க": "விதியைச் சேர்க்கவும்",
-      "Description": "விளக்கம்"
+      "Description": "விளக்கம்",
+       "Nom": "கடைசி பெயர்"
     },
 
     "dialogueAjouterDispositif": {

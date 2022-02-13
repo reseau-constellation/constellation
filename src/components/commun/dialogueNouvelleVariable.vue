@@ -27,7 +27,7 @@
               v-bind="attrs"
               :readonly="true"
               :value="nom"
-              label="Nom"
+              :label="$t('dialogueNouvelleVariable.Nom')"
             />
           </template>
           <boîteNoms
