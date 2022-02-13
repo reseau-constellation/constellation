@@ -17,6 +17,10 @@
       "étiquetteLangue": "Langue",
       "étiquetteNom": "Nom"
     },
+    "itemNouveauNom": {
+      "Langue": "etiquetteLangue",
+      "Nom": "etiquetteNom"
+    },
     "alerteConditions": {
       "உரை": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
       "பொத்தான்": "Lire les conditions"
@@ -515,6 +519,10 @@
       "sousTitre": "நீங்கள் விரும்பும் பல மொழிகளைக் குறிப்பிடவும்.",
       "étiquetteLangue": "மொழி",
       "étiquetteNom": "கடைசி பெயர்"
+    },
+    "itemNouveauNom": {
+      "Langue": "மொழி முத்திரை",
+      "Nom": "முத்திரை பெயர்"
     },
     "nav": {
       "compte": "கணக்கு",
