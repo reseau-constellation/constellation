@@ -11,6 +11,12 @@
       "retour": "Retour",
       "télécharger": "Télécharger"
     },
+    "boîteNoms": {
+      "titre": "Ajoutez des noms",
+      "sousTitre": "Spécifiez autant que langues que vous voudrez.",
+      "étiquetteLangue": "Langue",
+      "étiquetteNom": "Nom"
+    },
     "alerteConditions": {
       "உரை": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
       "பொத்தான்": "Lire les conditions"
@@ -23,12 +29,7 @@
       "மறை": "Cacher les détails",
       "தகவல்கள்": "Plus de détails"
     },
-    "boîteNoms": {
-      "titre": "Ajoutez des noms",
-      "sousTitre": "Spécifiez autant que langues que vous voudrez.",
-      "étiquetteLangue": "Langue",
-      "étiquetteNom": "Nom"
-    },
+
     "exporter": {
       "titre": "Exporter une copie des données",
       "formatFichier": "Format du fichier"
@@ -509,7 +510,12 @@
       "retour": "திரும்பு",
       "télécharger": "பதிவிறக்க"
     },
-
+    "boîteNoms": {
+      "titre": "பெயர்களைச் சேர்க்கவும்",
+      "sousTitre": "நீங்கள் விரும்பும் பல மொழிகளைக் குறிப்பிடவும்.",
+      "étiquetteLangue": "மொழி",
+      "étiquetteNom": "கடைசி பெயர்"
+    },
     "nav": {
       "compte": "கணக்கு",
       "projets": "என் திட்டங்கள்",
