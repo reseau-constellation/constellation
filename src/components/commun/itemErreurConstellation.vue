@@ -14,7 +14,9 @@
     </template>
     <v-list-item>
       <v-list-item-content>
-        <v-list-item-title class="mb-2">Tracé</v-list-item-title>
+        <v-list-item-title class="mb-2">
+          {{ $t("itemErreurConstellation.Tracé") }}
+        </v-list-item-title>
         {{ erreur.stack }}
       </v-list-item-content>
     </v-list-item>

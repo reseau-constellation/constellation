@@ -56,16 +56,6 @@
       "சாதனங்கள்": "Dispositifs",
       "enLigne": "Dont {n} en ligne"
      },
-    "dialogueNouvelleVariable": {
-      "மாறி": "Nouvelle variable",
-      "nom": "Nom",
-      "Description": "Description",
-      "Catégorie": "Catégorie",
-      "கட்டுப்பாடு":"Contrôles de qualité",
-      "சேர்க்க": "Ajouter une règle",
-      "Description": "Description",
-      "Nom": "Nom"
-    },
     "itemTableau": {
       "அட்டவணை_நீக்கம்": "Voulez-vous vraiment effacer ce tableau ?",
       "தகவல்": "Ceci enlevera le tableau de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées."
@@ -86,6 +76,16 @@
       "கணக்கில்_சேர்த்தல்": "Rejoindre un compte existant",
       "சாதனத்தை_சேர்த்தல்": "Ajouter ce dispositif à un compte existant"
     },
+    "dialogueNouvelleVariable": {
+      "மாறி": "Nouvelle variable",
+      "nom": "Nom",
+      "Description": "Description",
+      "Catégorie": "Catégorie",
+      "கட்டுப்பாடு":"Contrôles de qualité",
+      "சேர்க்க": "Ajouter une règle",
+      "Description": "Description",
+      "Nom": "Nom"
+    },
      "qualité": {
       "titre": "Composition du score",
       "sousTitre": "Un meilleur score augmente la confiance que les autres porteront à vos données et favorisera le classement de vos données dans les recherches.",
@@ -100,6 +100,10 @@
         "valide": "Cette section mesure le pourcentage des données qui passent les tests de contrôle de la qualité. Vous pouvez voir ci-dessous les données problématiques, s'il y en a."
       }
     },
+    "itemErreurConstellation": {
+      "Tracé": "Tracé"
+    },
+
     "nav": {
       "compte": "Compte",
       "projets": "Mes projets",
@@ -625,6 +629,9 @@
        "couverture": "இந்தப் பிரிவு, தரக் கட்டுப்பாட்டுச் சோதனை மூலம் உள்ளடக்கப்பட்ட உங்கள் நெடுவரிசைகளின் சதவீதத்தை அளவிடுகிறது. கீழே உள்ள சோதனைகளைச் சேர்க்கலாம் அல்லது மாற்றலாம்.",
        "valide": "இந்தப் பிரிவு தரக் கட்டுப்பாட்டுச் சோதனையில் தேர்ச்சி பெறும் தரவின் சதவீதத்தை அளவிடுகிறது. ஏதேனும் சிக்கல் உள்ள தரவு இருந்தால், கீழே காணலாம்."
      }
+   },
+   "itemErreurConstellation": {
+     "Tracé": "சுவடு"
    },
     "dialogueAjouterDispositif": {
       "இணைத்தல்": "சாதனங்களை இணைக்கவும்",
