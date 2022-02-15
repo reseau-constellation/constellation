@@ -5,12 +5,14 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline"> Nouveau mot clef </v-card-title>
+      <v-card-title class="headline">
+        {{ $t("dialogueNouveauMotClef.motclef") }}
+       </v-card-title>
       <v-divider />
 
       <v-card-text class="mt-3">
         <span class="grey--text text--darken-1">
-          Choisissez un nom pour votre mot clef
+          {{ $t("dialogueNouveauMotClef.தேர்ந்தெடுக்க") }}
         </span>
         <item-nouveau-nom
           :languesExistantes="Object.keys(noms)"

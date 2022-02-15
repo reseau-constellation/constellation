@@ -491,12 +491,21 @@
           "abr": "Introuvable"
         }
       }
-    }
-  },
+    },
+    "dialogueMotsClefs": {
+      "Motsclefs": "Mots clefs",
+      "motclef": "Nouveau mot clef",
+      "Aucunrésultat": "Aucun résultat"
+    },
+    "dialogueNouveauMotClef": {
+      "motclef": "Nouveau mot clef",
+      "தேர்ந்தெடுக்க": " Choisissez un nom pour votre mot clef"
+    },
   "kaq": {
     "acceuil": {
       "entête": "Ch'umil"
     }
+   }
   },
   "த": {
     "communs": {
@@ -923,6 +932,15 @@
           "abr": "கிடைக்கவில்லை"
         }
       }
+    },
+    "dialogueMotsClefs": {
+      "Motsclefs": "முக்கிய வார்த்தைகள்",
+      "motclef": "புதிய முக்கிய சொல்",
+      "Aucunrésultat": "முடிவு இல்லை"
+    },
+    "dialogueNouveauMotClef": {
+      "motclef": "புதிய முக்கிய சொல்",
+      "தேர்ந்தெடுக்க": "உங்கள் முக்கிய சொல்லுக்கு ஒரு பெயரைத் தேர்ந்தெடுக்கவும்"
     }
   },
   "ار": {
