@@ -6,7 +6,7 @@
 
     <v-card>
       <v-card-title class="headline mb-3">
-        Traduire Constellation
+        {{ $t("dialogueTraductionsInterface.மொழிபெயர்க்கவும்") }}
         <v-spacer />
         <v-btn icon>
           <v-icon>mdi-download</v-icon>
@@ -17,6 +17,7 @@
       </v-card-title>
       <v-card-subtitle>
         <v-icon left small>mdi-information-outline</v-icon>
+        {{ $t("dialogueTraductionsInterface.சேர்த்தல்") }}
         Les traductions que vous contribuez seront incluses dans les
         distributions de Constellation sous la licence GNU GPL Affero 3,0.
       </v-card-subtitle>
