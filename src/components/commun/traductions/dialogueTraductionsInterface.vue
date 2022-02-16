@@ -18,10 +18,7 @@
       <v-card-subtitle>
         <v-icon left small>mdi-information-outline</v-icon>
         {{ $t("dialogueTraductionsInterface.சேர்த்தல்") }}
-        Les traductions que vous contribuez seront incluses dans les
-        distributions de Constellation sous la licence GNU GPL Affero 3,0.
-      </v-card-subtitle>
-
+        </v-card-subtitle>
       <v-card outlined>
         <div class="d-flex flex-wrap">
           <v-card flat max-width="200" class="ma-3">
