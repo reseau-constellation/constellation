@@ -334,7 +334,7 @@
           "lien": "https://opendatacommons.org/licenses/pddl/summary"
         },
         "rvca-open": {
-          "nom": "Licence de données ouvertes RCVA",
+          "nom": "Licence de données ouvertes RVCA",
           "abr": "RVCA",
           "lien": "https://rvcagis.github.io/jkan/datasets/rvca-open-licence/"
         },
@@ -852,27 +852,27 @@
           "lien": "https://choosealicense.com/licenses/gpl-2.0/"
         },
         "gpl-3_0": {
-          "nom": "பொது உரிமம் GNU v3,0",
+          "nom": "பொது உரிமம் ஜிஎன்யூ வி௩,௦",
           "lien": "https://choosealicense.com/licenses/gpl-3.0/"
         },
         "isc": {
-          "nom": "உரிமம் ISC",
+          "nom": "உரிமம் இணைய அமைப்புகள் கூட்டமைப்பு",
           "lien": "https://choosealicense.com/licenses/isc/"
         },
         "lgpl-2_1": {
-          "nom": "குறைந்த பொது உரிமம் GNU v2,1",
+          "nom": "குறைந்த பொது உரிமம் ஜிஎன்யூ வி௨,௧",
           "lien": "https://choosealicense.com/licenses/lgpl-2.1/"
         },
         "lgpl-3_0": {
-          "nom": "குறைந்த பொது உரிமம் GNU v3,1",
+          "nom": "குறைந்த பொது உரிமம்  ஜிஎன்யூ வி௩,௧",
           "lien": "https://choosealicense.com/licenses/lgpl-3.0/"
         },
         "lppl-1_3c": {
-          "nom": "திட்ட பொது உரிமம் LaTeX v1,3c",
+          "nom": "திட்ட பொது உரிமம் LaTeX வி௧,௩சி",
           "lien": "https://choosealicense.com/licenses/lppl-1.3c/"
         },
         "mit-0": {
-          "nom": "பண்புக்கூறு இல்லாத MIT",
+          "nom": "மாசாச்சூசெட்சு தொழில்நுட்பக் கழகம் பண்புக்கூறு இல்லை",
           "lien": "https://choosealicense.com/licenses/mit-0/"
         },
         "mit": {
