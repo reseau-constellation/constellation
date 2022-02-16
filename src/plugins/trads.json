@@ -304,37 +304,37 @@
       "aucunLien": "Aucun lien disponible",
       "info": {
         "CC-BY-SA-4_0": {
-          "nom": "CC BY SA 4,0",
-          "abr": "CC BY SA 4,0",
+          "nom": "படைப்பாக்கப் பொதுமங்களை குறிப்பிடுதல் மற்றும் அதே மாதிரிப் பகிர்தல் ௪,௦",
+          "abr": "படைப்பாக்கப் பொதுமங்களை குறிப்பிடுதல் மற்றும் அதே மாதிரிப் பகிர்தல் ௪,௦",
           "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr"
         },
         "CC-BY-4_0": {
-          "nom": "CC BY 4,0",
-          "abr": "CC BY 4,0",
+          "nom": "படைப்பாக்கப் பொதுமங்களை குறிப்பிடுதல் ௪,௦",
+          "abr": "படைப்பாக்கப் பொதுமங்களை குறிப்பிடுதல் ௪,௦",
           "lien": "https://creativecommons.org/licenses/by/4.0/deed.fr"
         },
         "CC-0-1_0": {
-          "nom": "CC 0 1,0",
-          "abr": "CC 0 1,0",
+          "nom": "படைப்பாக்கப் பொதுமங்கள் ௦ ௧,௦",
+          "abr": "படைப்பாக்கப் பொதுமங்கள் ௦ ௧,௦",
           "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.fr"
         },
         "ODbl-1_0": {
-          "nom": "Licence ouverte ODC 1,0",
+          "nom": "திறந்த உரிமம் திறந்த தரவு பொதுமங்கள் ௧,௦",
           "abr": "ODbl 1,0",
           "lien": "https://opendatacommons.org/licenses/odbl/summary/"
         },
         "ODC-BY-1_0": {
-          "nom": "Licence attribution ODC 1,0",
-          "abr": "ODC BY 1,0",
+          "nom": "உரிமம் பண்பு திறந்த தரவு பொதுமங்கள் ௧,௦",
+          "திறந்த தரவு பொதுமங்களை குறிப்பிடுதல் ௧,௦",
           "lien": "https://opendatacommons.org/licenses/by/summary"
         },
         "PDDL": {
-          "nom": "Domaine publique ODC",
+          "nom": "பொதுக் களம் திறந்த தரவு பொதுமங்கள்",
           "abr": "PDDL",
           "lien": "https://opendatacommons.org/licenses/pddl/summary"
         },
         "rvca-open": {
-          "nom": "Licence de données ouvertes RCVA",
+          "nom": "திறந்த தரவு உரிமம் ரிடோ பள்ளத்தாக்கு பாதுகாப்பு ஆணையம்",
           "abr": "RVCA",
           "lien": "https://rvcagis.github.io/jkan/datasets/rvca-open-licence/"
         },
