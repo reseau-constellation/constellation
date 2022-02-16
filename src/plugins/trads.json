@@ -796,59 +796,59 @@
           "lien": "https://choosealicense.com/licenses/agpl-3.0/"
         },
         "apache-2_0": {
-          "nom": "உரிமம் Apache 2.0",
+          "nom": "உரிமம் Apache ௨.௦",
           "lien": "https://choosealicense.com/licenses/apache-2.0/"
         },
         "artistic-2_0": {
-          "nom": "கலை உரிமம் 2.0",
+          "nom": "கலை உரிமம் ௨.௦",
           "lien": "https://choosealicense.com/licenses/artistic-2.0/"
         },
         "bsd-2-clause": {
-          "nom": "எளிமைப்படுத்தப்பட்ட 2-பிரிவு BSD உரிமம்",
+          "nom": "எளிமைப்படுத்தப்பட்ட ௨-பிரிவு பெர்க்லி மென்பொருள் பரவல் உரிமம்",
           "lien": "https://choosealicense.com/licenses/bsd-2-clause/"
         },
         "bsd-3-clause-clear": {
-          "nom": "3-பிரிவு BSD உரிமத்தை அழிக்கவும்",
+          "nom": "௩-பிரிவு பெர்க்லி மென்பொருள் பரவல் உரிமத்தை அழிக்கவும்",
           "lien": "https://choosealicense.com/licenses/bsd-3-clause-clear/"
         },
         "bsd-3-clause": {
-          "nom": "BSD உரிமம் 3-புதிய பிரிவு",
+          "nom": "பெர்க்லி மென்பொருள் பரவல் உரிமம் ௩-புதிய பிரிவு",
           "lien": "https://choosealicense.com/licenses/bsd-3-clause/"
         },
         "bsd-4-clause": {
-          "nom": "அசல் 4-பிரிவு BSD உரிமம்",
+          "nom": "அசல் ௪-பிரிவு பெர்க்லி மென்பொருள் பரவல் உரிமம்",
           "lien": "https://choosealicense.com/licenses/bsd-4-clause/"
         },
         "bsl-1_0": {
-          "nom": "மென்பொருள் உரிமத்தை அதிகரிக்கவும் 1.0",
+          "nom": "மென்பொருள் உரிமத்தை அதிகரிக்கவும் ௧.௦",
           "lien": "https://choosealicense.com/licenses/bsl-1.0/"
         },
         "cecill-2_1": {
-          "nom": "இலவச மென்பொருள் உரிமம் CeCILL v2,1",
+          "nom": "இலவச மென்பொருள் உரிமம் சசில்ல வி௨,௧",
           "lien": "https://choosealicense.com/licenses/cecill-2.1/"
         },
         "ecl-2_0": {
-          "nom": "கல்வி சமூக உரிமம் 2,0",
+          "nom": "கல்வி சமூக உரிமம் ௨,௦",
           "lien": "https://choosealicense.com/licenses/ecl-2.0/"
         },
         "epl-1_0": {
-          "nom": "பொது உரிமம் Eclipse 1,0",
+          "nom": "பொது உரிமம் கிரகணம் ௧,௦",
           "lien": "https://choosealicense.com/licenses/epl-1.0/"
         },
         "epl-2_0": {
-          "nom": "பொது உரிமம் Eclipse 2,0",
+          "nom": "பொது உரிமம் கிரகணம் ௨,0",
           "lien": "https://choosealicense.com/licenses/epl-2.0/"
         },
         "eupl-1_0": {
-          "nom": "ஐரோப்பிய ஒன்றிய பொது உரிமம் 1,1",
+          "nom": "ஐரோப்பிய ஒன்றிய பொது உரிமம் ௧,௧",
           "lien": "https://choosealicense.com/licenses/eupl-1.1/"
         },
         "eupl-1_2": {
-          "nom": "ஐரோப்பிய ஒன்றிய பொது உரிமம் 1,2",
+          "nom": "ஐரோப்பிய ஒன்றிய பொது உரிமம் ௧,௨",
           "lien": "https://choosealicense.com/licenses/eupl-1.2/"
         },
         "gpl-2_0": {
-          "nom": "பொது உரிமம் GNU v2,0",
+          "nom": "பொது உரிமம் ஜிஎன்யூ வி௨,௦",
           "lien": "https://choosealicense.com/licenses/gpl-2.0/"
         },
         "gpl-3_0": {
