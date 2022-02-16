@@ -122,5 +122,4 @@ export default mixins(mixinIPA, mixinImage).extend({
   },
 });
 </script>
-<style>
-</style>
+<style></style>
