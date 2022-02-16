@@ -749,42 +749,42 @@
       "aucunLien": "இணைப்பு இல்லை",
       "info": {
         "CC-BY-SA-4_0": {
-          "nom": "CC BY SA 4,0",
-          "abr": "CC BY SA 4,0",
+          "nom": "படைப்பாக்க பொதுமங்களை குறிப்பிடுதல் மற்றும் அதே மாதிரி பகிர்தல் ௪,௦",
+          "abr": "படைப்பாக்க பொதுமங்களை குறிப்பிடுதல் மற்றும் அதே மாதிரி பகிர்தல் ௪,௦",
           "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr"
         },
         "CC-BY-4_0": {
-          "nom": "CC BY 4,0",
-          "abr": "CC BY 4,0",
+          "nom": "படைப்பாக்க பொதுமங்களை குறிப்பிடுதல் ௪,௦"
+          "abr": "படைப்பாக்க பொதுமங்களை குறிப்பிடுதல் ௪,௦",
           "lien": "https://creativecommons.org/licenses/by/4.0/deed.fr"
         },
         "CC-0-1_0": {
-          "nom": "CC 0 1,0",
-          "abr": "CC 0 1,0",
+          "nom": "படைப்பாக்க பொதுமங்கள் ௦ ௧,௦",
+          "abr": "படைப்பாக்க பொதுமங்கள் ௦ க,௦",
           "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.fr"
         },
         "ODbl-1_0": {
-          "nom": "திறந்த உரிமம் ODC 1,0",
+          "nom": "திறந்த உரிமம் திறந்த தரவு பொதுமங்கள் ௧,௦",
           "abr": "ODbl 1,0",
           "lien": "https://opendatacommons.org/licenses/odbl/summary/"
         },
         "ODC-BY-1_0": {
-          "nom": "உரிமம் பண்புக்கூறு ODC 1,0",
-          "abr": "ODC BY 1,0",
+          "nom": "உரிமம் பண்புக்கூறு திறந்த தரவு பொதுமங்கள் ௧,௦",
+          "abr": "திறந்த தரவு பொதுமங்களை குறிப்பிடுதல் ௧,௦",
           "lien": "https://opendatacommons.org/licenses/by/summary"
         },
         "PDDL": {
-          "nom": "பொது களம் ODC",
+          "nom": "பொது களம் திறந்த தரவு பொதுமங்கள்",
           "abr": "PDDL",
           "lien": "https://opendatacommons.org/licenses/pddl/summary"
         },
         "rvca-open": {
-          "nom": "திறந்த தரவு உரிமம் RCVA",
+          "nom": "திறந்த தரவு உரிமம் ரிடோ பள்ளத்தாக்கு பாதுகாப்பு ஆணையம்",
           "abr": "RVCA",
           "lien": "https://rvcagis.github.io/jkan/datasets/rvca-open-licence/"
         },
         "0bsd": {
-          "nom": "BSD பூஜ்ஜிய விதி",
+          "nom": "பெர்க்லி மென்பொருள் பரவல் பூஜ்ஜிய விதி",
           "lien": "https://choosealicense.com/licenses/0bsd/"
         },
         "afl-3_0": {
@@ -792,7 +792,7 @@
           "lien": "https://choosealicense.com/licenses/afl-3.0/"
         },
         "agpl-3_0": {
-          "nom": "பொது உரிமம் GNU Affero 3,0",
+          "nom": "பொது உரிமம் ஜிஎன்யூ அஃபெரோ ௩,௦",
           "lien": "https://choosealicense.com/licenses/agpl-3.0/"
         },
         "apache-2_0": {
