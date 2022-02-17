@@ -268,8 +268,7 @@
         "Permissions": "Permissions",
         "Conditions": "Conditions",
         "compris": "J'ai compris"
-
-      },
+        },
       "visBD": {
         "நீக்கம்": "Voulez-vous vraiment effacer cette base de données ?",
         "தரவுத்தளம்_அகற்றல்": "Ceci enlevera la base de données de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées.",
@@ -279,7 +278,7 @@
         "மாறிகள்": "Variables",
         "மாறி": "Aucune variable",
         "வார்த்தைகள்": "Mots-clefs",
-        "இல்லை": " Aucun mot clef",
+        "இல்லை": "Aucun mot clef",
         "கண்டறிதல்": "Aucune région détectée",
         "Tableaux": "Tableaux",
         "அட்டவணைகள்": "Il n'y a aucun tableau pour l'instant",
