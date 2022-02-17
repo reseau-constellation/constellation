@@ -796,7 +796,7 @@
           "lien": "https://choosealicense.com/licenses/agpl-3.0/"
         },
         "apache-2_0": {
-          "nom": "உரிமம் Apache ௨.௦",
+          "nom": "உரிமம் அப்பாச்சி ௨.௦",
           "lien": "https://choosealicense.com/licenses/apache-2.0/"
         },
         "artistic-2_0": {
@@ -896,7 +896,7 @@
           "lien": "https://choosealicense.com/licenses/mulanpsl-2.0/"
         },
         "ncsa": {
-          "nom": "திறந்த மூல உரிமம் தேசிய மீத்திறன் கணினி பயன்பாட்டு மையம்/இல்லினாய்ஸ் பல்கலைக்கழகம்",
+          "nom": "திறந்த மூல உரிமம் தேசிய மீத்திறன் கணினியியல் பயன்பாட்டு மையம்/இல்லினாய்ஸ் பல்கலைக்கழகம்",
           "lien": "https://choosealicense.com/licenses/ncsa/"
         },
         "osl-3_0": {
@@ -904,7 +904,7 @@
           "lien": "https://choosealicense.com/licenses/osl-3.0/"
         },
         "postgresql": {
-          "nom": "உரிமம் PostgreSQL",
+          "nom": "உரிமம் போசுகிரசு",
           "lien": "https://choosealicense.com/licenses/postgresql/"
         },
         "unlicence": {
@@ -928,7 +928,7 @@
           "lien": "https://choosealicense.com/licenses/zlib/"
         },
         "ofl-1_1": {
-          "nom": "திறந்த மூல எழுத்துரு உரிமம் SIL ௧,௧",
+          "nom": "திறந்த மூல எழுத்துரு உரிமம் கோடைக்கால மொழியியல் நிறுவனம் ௧,௧",
           "lien": "https://choosealicense.com/licenses/ofl-1.1/"
         },
         "introuvable": {
