@@ -73,14 +73,12 @@
 
           <v-card>
             <v-card-title class="headline red--text">
-              Voulez-vous vraiment effacer cette base de données ?
+              {{ $t("visBD.நீக்கம்") }}
             </v-card-title>
 
             <v-card-text>
-              Ceci enlevera la base de données de votre dispositif. Elle
-              n'effacera pas des copies que d'autres utilisatrices et
-              utilisateurs de Constellation pourraient avoir créées.
-            </v-card-text>
+              {{ $t("visBD.தரவுத்தளம்_அகற்றல்") }}
+              </v-card-text>
 
             <v-divider></v-divider>
 
@@ -103,7 +101,7 @@
       </v-card-title>
       <v-card-subtitle>
         <span v-if="descriptionsBD">
-          {{ description ? description : "Aucune description." }}
+          {{ description ? description : $t("visBD.விளக்கம்") }}
         </span>
         <v-menu
           v-if="permissionÉcrire"
@@ -129,7 +127,8 @@
       <v-divider />
       <v-card-text>
         <v-card flat class="mx-3 mb-3">
-          <p class="mb-0 text-overline">Information Générale</p>
+          <p class="mb-0 text-overline">
+            {{ $t("visBD.செய்தி") }}</p>
           <div class="d-flex flex-wrap">
             <v-card flat width="200" class="mb-3">
               <dialogueQualité
@@ -153,7 +152,7 @@
                       </v-progress-circular>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      Score de qualité
+                      {{ $t("visBD.மதிப்பெண்") }}
                       <span
                         v-if="score"
                         :style="`color:${couleurScore(score.total).couleur}`"
@@ -262,9 +261,10 @@
         <v-card flat class="mx-3 mb-3">
           <div class="d-flex flex-wrap">
             <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
-              <p class="mb-0 text-overline">Variables</p>
+              <p class="mb-0 text-overline">
+                {{ $t("visBD.மாறிகள்") }}</p>
               <p v-if="!variables.length" class="text--disabled">
-                Aucune variable
+                {{ $t("visBD.மாறி") }}
               </p>
               <jeton-variable v-for="id in variables" :key="id" :id="id" />
             </v-card>

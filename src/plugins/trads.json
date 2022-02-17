@@ -270,7 +270,16 @@
         "compris": "J'ai compris"
 
       },
-      "vis": {
+      "visBD": {
+        "நீக்கம்": "Voulez-vous vraiment effacer cette base de données ?",
+        "தரவுத்தளம்_அகற்றல்": "Ceci enlevera la base de données de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées.",
+        "விளக்கம்": "Aucune description",
+        "செய்தி": "Information Générale",
+        "மதிப்பெண்": "Score de qualité",
+        "மாறிகள்": "Variables",
+        "மாறி": "Aucune variable"
+      },
+     "vis": {
         "boîteNoms": {
           "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données."
         },
@@ -740,8 +749,7 @@
         "Permissions": "அனுமதிகள்",
         "Conditions": "விதிமுறை",
         "compris": "எனக்கு புரிகிறது"
-
-      },
+       },
       "vis": {
         "boîteNoms": {
           "sousTitre": "அதிக மொழிகள் இருந்தால் சிறந்தது! உங்கள் தரவு எங்கிருந்து வருகிறது என்பதைப் பேசும் மொழிகளுக்கு முன்னுரிமை அளிப்பதைக் கவனியுங்கள்."
