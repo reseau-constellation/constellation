@@ -264,13 +264,13 @@
               <p class="mb-0 text-overline">
                 {{ $t("visBD.மாறிகள்") }}</p>
               <p v-if="!variables.length" class="text--disabled">
-                {{ $t("visBD.மாறி") }}
+                {{ $t("VisBD.மாறி") }}
               </p>
               <jeton-variable v-for="id in variables" :key="id" :id="id" />
             </v-card>
             <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">
-                Mots-clefs
+                {{ $t("VisBD.வார்த்தைகள்") }}
                 <dialogue-mots-clefs
                   v-if="permissionÉcrire"
                   :selectionnes="motsClefs"
@@ -290,7 +290,7 @@
                 </dialogue-mots-clefs>
               </p>
               <p v-if="!motsClefs.length" class="text--disabled">
-                Aucun mot clef
+              {{ $t("VisBD.இல்லை") }}
               </p>
               <jeton-mot-clef
                 v-for="m in motsClefs"
@@ -303,7 +303,7 @@
             <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">Géographie</p>
               <p v-if="!géog.length" class="text--disabled">
-                Aucune région détectée
+                {{ $t("VisBD.கண்டறிதல்") }}
               </p>
               <v-chip
                 v-for="m in géog"
@@ -319,7 +319,7 @@
         </v-card>
         <v-list>
           <p class="mb-0 text-overline">
-            Tableaux
+            {{ $t("VisBD.Tableaux") }}
             <v-btn v-if="permissionÉcrire" icon small @click="ajouterTableau">
               <v-icon small>mdi-plus</v-icon>
             </v-btn>
@@ -327,7 +327,8 @@
           <v-divider />
           <v-skeleton-loader v-if="tableaux === null" type="paragraph" />
           <div v-else-if="!tableaux.length" class="text-center">
-            <p class="text-h5 mt-5">Il n'y a aucun tableau pour l'instant</p>
+            <p class="text-h5 mt-5">
+              {{ $t("VisBD.அட்டவணைகள்") }} </p>
             <v-img :src="image('vide')" class="my-5" contain height="175px" />
 
             <v-btn
@@ -338,7 +339,7 @@
               text
               @click="ajouterTableau"
             >
-              Ajouter un tableau
+            {{ $t("VisBD.சேர்க்கவும்") }}
             </v-btn>
             <v-btn
               v-if="permissionÉcrire"
