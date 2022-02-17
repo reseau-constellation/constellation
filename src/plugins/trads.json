@@ -171,23 +171,7 @@
         "détails": "Créer un nouveau projet"
       }
     },
-    "bd": {
-      "entête": "Mes bases de données",
-      "filtrer": "Filtrer",
-      "nouvelle": {
-        "entêteCarte": "Nouvelle BD",
-        "détailsCarte": "Créer une nouvelle base de données",
-        "petitPousset": "Nouvelle BD"
-      },
-      "vis": {
-        "boîteNoms": {
-          "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données."
-        },
-        "boîteDescr": {
-          "titre": "Ajoutez des descriptions."
-        }
-      }
-    },
+
     "recherche": {
       "entête": "Explorez les données",
       "soustitre": "Recherchez mots clefs, région géographique, variable..."
@@ -267,6 +251,32 @@
     },
     "téléchargements": {
       "entête": "Télécharger Constellation"
+    },
+    "bd": {
+      "entête": "Mes bases de données",
+      "filtrer": "Filtrer",
+      "nouvelle": {
+        "entêteCarte": "Nouvelle BD",
+        "détailsCarte": "Créer une nouvelle base de données",
+        "petitPousset": "Nouvelle BD",
+        "மாற்றுதல்": "Ne vous cassez pas la tête ; ces noms pouront être modifiés ensuite.",
+        "தரம்": "Quelque chose de claire, net et précis !",
+        "உறுதிப்படுத்தவும்": "Veuillez confirmer la création de la base de données afin de  pouvoir commencer à y ajouter des données.",
+        "பகிர_வேண்டாம்": "Toute base de données partagée sur Constellation devient immédiatement et irrévocablement disponible sur le réseau publique. Ne partagez rien de personnel ou confidentiel.",
+        "Licence": "Licence",
+        "சேர்க்கவும்": "Inclure les licences spécialisées",
+        "Permissions": "Permissions",
+        "Conditions": "Conditions"
+
+      },
+      "vis": {
+        "boîteNoms": {
+          "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données."
+        },
+        "boîteDescr": {
+          "titre": "Ajoutez des descriptions."
+        }
+      }
     },
     "licences": {
       "droits": {

@@ -33,8 +33,7 @@
         <v-window-item :value="1">
           <v-card-text>
             <span class="grey--text text--darken-1">
-              Ne vous cassez pas la tête ; ces noms pouront être modifiés
-              ensuite.
+              {{$t("bd.nouvelle.மாற்றுதல்")}}
             </span>
             <v-list style="max-height: 300px" class="overflow-y-auto">
               <item-nouveau-nom
@@ -60,7 +59,7 @@
         <v-window-item :value="2">
           <v-card-text>
             <span class="grey--text text--darken-1">
-              Quelque chose de claire, net et précis !
+              {{("bd.nouvelle.தரம்")}}
             </span>
             <v-list style="max-height: 300px" class="overflow-y-auto">
               <item-nouveau-nom
@@ -91,14 +90,14 @@
             <v-select
               v-model="licence"
               :items="itemsLicences"
-              label="Licence"
+              :label="$t('bd.nouvelle.Licence')"
               outlined
               dense
               hide-details
             />
             <v-checkbox
               v-model="licencesSpécilisées"
-              label="Inclure les licences spécialisées"
+              :label="$t('bd.nouvelle.சேர்க்கவும்')"
             />
 
             <v-card v-if="licence" flat class="mx-3 mb-3">
@@ -108,14 +107,16 @@
               </p>
               <div class="d-flex flex-wrap">
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
-                  <p class="mb-0 text-overline">Permissions</p>
+                  <p class="mb-0 text-overline">
+                    {{("bd.nouvelle.Permissions")}}</p>
                   <p v-if="!droits.length" class="text--disabled">
                     {{ $t("licences.droits.aucune") }}
                   </p>
                   <jeton-droit v-for="p in droits" :key="p" :droit="p" />
                 </v-card>
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
-                  <p class="mb-0 text-overline">Conditions</p>
+                  <p class="mb-0 text-overline">
+                    {{("bd.nouvelle.Conditions")}}</p>
                   <p v-if="!conditions.length" class="text--disabled">
                     {{ $t("licences.conditions.aucune") }}
                   </p>
@@ -166,20 +167,17 @@
               :src="image('logoBD')"
             ></v-img>
             <h3 class="title font-weight-light mb-2">
-              Veuillez confirmer la création de la base de données afin de
-              pouvoir commencer à y ajouter des données.
+              {{("bd.nouvelle.உறுதிப்படுத்தவும்")}}
             </h3>
             <p class="text--disabled text-left">
               <v-icon>mdi-alert-circle-outline</v-icon>
-              Toute base de données partagée sur Constellation devient
-              immédiatement et irrévocablement disponible sur le réseau
-              publique. Ne partagez rien de personnel ou confidentiel.
+              {{("bd.nouvelle.பகிர_வேண்டாம்")}}
             </p>
             <div class="mx-auto">
               <v-checkbox
                 v-model="jaiCompris"
                 class="mx-auto"
-                label="J'ai compris"
+                :label="$t('bd.nouvelle.compris')"
               />
             </div>
 
