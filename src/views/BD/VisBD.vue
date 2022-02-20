@@ -291,7 +291,8 @@
               />
             </v-card>
             <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
-              <p class="mb-0 text-overline">Géographie</p>
+              <p class="mb-0 text-overline">
+                {{ $t("VisBD.Géographie") }}</p>
               <p v-if="!géog.length" class="text--disabled">
                 {{ $t("VisBD.கண்டறிதல்") }}
               </p>

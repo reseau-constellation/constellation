@@ -285,7 +285,8 @@
         "Tableaux": "Tableaux",
         "அட்டவணைகள்": "Il n'y a aucun tableau pour l'instant",
         "சேர்க்கவும்": "Ajouter un tableau",
-        "இறக்குமதி": "Importer des données"
+        "இறக்குமதி": "Importer des données",
+        "Géographie": "Géographie"
       },
      "vis": {
         "boîteNoms": {
@@ -774,7 +775,8 @@
          "Tableaux": "ஓவியங்கள்",
          "அட்டவணைகள்": "தற்போது அட்டவணைகள் இல்லை",
          "சேர்க்கவும்": "ஒரு அட்டவணையைச் சேர்க்கவும்",
-         "இறக்குமதி": "தரவு இறக்குமதி"
+         "இறக்குமதி": "தரவு இறக்குமதி",
+         "Géographie": "நிலவியல்"
        },
       "vis": {
         "boîteNoms": {
