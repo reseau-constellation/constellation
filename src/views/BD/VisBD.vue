@@ -180,11 +180,7 @@
                     <v-list-item-content>
                       <v-skeleton-loader v-if="auteurs === null" type="chip" />
                       <span v-else>
-                        {{
-                          `${
-                            auteurs ? formatterChiffre(auteurs.length) : ""
-                          } Auteurs`
-                        }}
+                        {{auteurs ? $t("VisBd.Auteurs`", {n=formatterChiffre(auteurs.length)}) : ""}}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -243,13 +239,7 @@
                         type="chip"
                       />
                       <span v-else>
-                        {{
-                          `${
-                            réplications
-                              ? formatterChiffre(réplications.length)
-                              : ""
-                          } Réplications`
-                        }}
+                      {{réplications ?$t("visBD.Réplications`",{n=formatterChiffre(réplications.length)}): " "}}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -349,8 +339,8 @@
               text
               @click="importer"
             >
-              Importer des données
-            </v-btn>
+            {{ $t("VisBD.இறக்குமதி") }}
+           </v-btn>
           </div>
           <transition-group
             v-else
