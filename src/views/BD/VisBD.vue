@@ -239,7 +239,7 @@
                         type="chip"
                       />
                       <span v-else>
-                      {{réplications ?$t("visBD.Réplications`",{n=formatterChiffre(réplications.length)}): " "}}
+                      {{réplications ? $t("visBD.Réplications`",{n=formatterChiffre(réplications.length)}) : ""}}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
