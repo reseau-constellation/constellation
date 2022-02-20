@@ -180,7 +180,7 @@
                     <v-list-item-content>
                       <v-skeleton-loader v-if="auteurs === null" type="chip" />
                       <span v-else>
-                        {{auteurs ? $t("visBd.Auteurs`", {n=formatterChiffre(auteurs.length)}) : ""}}
+                        {{auteurs ? $t("visBd.Auteurs", {n=formatterChiffre(auteurs.length)}) : ""}}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -292,7 +292,8 @@
             </v-card>
             <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">
-                {{ $t("visBD.Géographie") }}</p>
+                {{ $t("visBD.Géographie") }}
+              </p>
               <p v-if="!géog.length" class="text--disabled">
                 {{ $t("visBD.கண்டறிதல்") }}
               </p>
