@@ -287,8 +287,9 @@
         "சேர்க்கவும்": "Ajouter un tableau",
         "இறக்குமதி": "Importer des données",
         "Géographie": "Géographie",
-        "effacer": "Oui, effacer"
-      },
+        "effacer": "Oui, effacer",
+        "Non": "Non !"
+        },
      "vis": {
         "boîteNoms": {
           "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données."
@@ -778,8 +779,9 @@
          "சேர்க்கவும்": "ஒரு அட்டவணையைச் சேர்க்கவும்",
          "இறக்குமதி": "தரவு இறக்குமதி",
          "Géographie": "நிலவியல்",
-         "effacer": "ஆமாம், நீக்கவும்"
-       },
+         "effacer": "ஆமாம், நீக்கவும்",
+          "Non": "இல்லை !"
+         },
       "vis": {
         "boîteNoms": {
           "sousTitre": "அதிக மொழிகள் இருந்தால் சிறந்தது! உங்கள் தரவு எங்கிருந்து வருகிறது என்பதைப் பேசும் மொழிகளுக்கு முன்னுரிமை அளிப்பதைக் கவனியுங்கள்."

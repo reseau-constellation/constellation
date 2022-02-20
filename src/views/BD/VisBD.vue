@@ -90,7 +90,7 @@
                 outlined
                 @click="dialogueEffacerBd = false"
               >
-                Non !
+              {{ $t("visBD.Non") }}
               </v-btn>
               <v-btn color="error" depressed @click="effacerBd">
                 {{ $t("visBD.effacer") }}
@@ -148,7 +148,7 @@
                           score ? couleurScore(score.total).couleur : 'primary'
                         "
                       >
-                        {{ score ? Math.round(score.total * 100) : "" }}
+                    {{ score ? formatterChiffre(Math.round(score.total)) : "" }}
                       </v-progress-circular>
                     </v-list-item-avatar>
                     <v-list-item-content>
