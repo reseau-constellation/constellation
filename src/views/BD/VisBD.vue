@@ -180,7 +180,7 @@
                     <v-list-item-content>
                       <v-skeleton-loader v-if="auteurs === null" type="chip" />
                       <span v-else>
-                        {{auteurs ? $t("visBd.Auteurs", {n=formatterChiffre(auteurs.length)}) : ""}}
+                        {{auteurs ? $t("visBd.Auteurs",{n:formatterChiffre(auteurs.length)}) : ""}}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -201,7 +201,7 @@
                         :color="
                           licence && !licenceApprouvée ? 'error' : 'secondary'
                         "
-                      >
+                        >
                         mdi-scale-balance
                       </v-icon>
                     </v-list-item-avatar>
@@ -239,7 +239,7 @@
                         type="chip"
                       />
                       <span v-else>
-                      {{réplications ? $t("visBD.Réplications",{n=formatterChiffre(réplications.length)}) : ""}}
+                      {{réplications ? $t("visBD.Réplications",{n:formatterChiffre(réplications.length)}) : ""}}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -626,6 +626,5 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
     },
   }
 );
-</script>
-
+ </script>
 <style></style>
