@@ -206,7 +206,7 @@
           outlined
           @click="étape++"
         >
-          Suivant
+          {{ $t("bd.nouvelle.Suivant") }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -269,11 +269,11 @@ export default mixins(
     titrePrésent: function (): string {
       switch (this.étape) {
         case 1:
-          return this.$t("bd.nouvelle.தேர்ந்தெடுக்கவும்");
+          return this.$t("bd.nouvelle.தேர்ந்தெடுக்கவும்") as string;
         case 2:
-          return this.$t("bd.nouvelle.சேர்க்கவும்");
+          return this.$t("bd.nouvelle.சேர்க்கவும்") as string  ;
         case 3:
-          return this.$t("bd.nouvelle.தேர்வுசெய்க");
+          return this.$t("bd.nouvelle.தேர்வுசெய்க")as string;
         default:
           return "";
       }
