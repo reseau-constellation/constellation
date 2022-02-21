@@ -271,9 +271,9 @@ export default mixins(
         case 1:
           return this.$t("bd.nouvelle.தேர்ந்தெடுக்கவும்") as string;
         case 2:
-          return this.$t("bd.nouvelle.சேர்க்கவும்") as string  ;
+          return this.$t("bd.nouvelle.சேர்க்கவும்") as string;
         case 3:
-          return this.$t("bd.nouvelle.தேர்வுசெய்க")as string;
+          return this.$t("bd.nouvelle.தேர்வுசெய்க") as string;
         default:
           return "";
       }
