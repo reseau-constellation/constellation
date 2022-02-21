@@ -21,7 +21,6 @@
       <v-img :src="logoBD" height="100px" contain />
       <v-card-title>
         {{ couper(nom, 40) }}
-
         <span v-if="permissionÉcrire">
           <v-menu
             offset-x
@@ -41,7 +40,6 @@
               @effacer="effacerNom"
             />
           </v-menu>
-
           <v-btn icon small>
             <v-icon small>mdi-camera-outline</v-icon>
           </v-btn>
@@ -58,8 +56,7 @@
               </v-btn>
             </template>
           </dialogue-exporter>
-        </span>
-
+          </span>
         <v-dialog
           v-if="permissionÉcrire"
           v-model="dialogueEffacerBd"
@@ -69,19 +66,15 @@
             <v-btn v-bind="attrs" v-on="on" icon color="error">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
-          </template>
-
+           </template>
           <v-card>
             <v-card-title class="headline red--text">
               {{ $t("visBD.நீக்கம்") }}
-            </v-card-title>
-
+             </v-card-title>
             <v-card-text>
               {{ $t("visBD.தரவுத்தளம்_அகற்றல்") }}
               </v-card-text>
-
-            <v-divider></v-divider>
-
+             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -123,8 +116,7 @@
           />
         </v-menu>
       </v-card-subtitle>
-
-      <v-divider />
+       <v-divider />
       <v-card-text>
         <v-card flat class="mx-3 mb-3">
           <p class="mb-0 text-overline">
@@ -165,8 +157,7 @@
                 </template>
               </dialogueQualité>
             </v-card>
-
-            <v-card flat width="200" class="mb-3">
+             <v-card flat width="200" class="mb-3">
               <dialogue-auteurs
                 :idBd="idBd"
                 :auteurs="auteurs"
@@ -322,8 +313,7 @@
             <p class="text-h5 mt-5">
               {{ $t("visBD.அட்டவணைகள்") }} </p>
             <v-img :src="image('vide')" class="my-5" contain height="175px" />
-
-            <v-btn
+             <v-btn
               v-if="permissionÉcrire"
               color="primary"
               class="mx-2"
@@ -368,8 +358,7 @@
       </v-card-text>
     </v-card>
   </v-container>
-</template>
-
+ </template>
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
@@ -626,5 +615,5 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
     },
   }
 );
- </script>
+</script>
 <style></style>
