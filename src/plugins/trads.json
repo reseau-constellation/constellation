@@ -75,7 +75,9 @@
       "தலைப்பு": "Nouveau dispositif",
       "வசன_வரிகள்": "Ajouter un dispositif à ce compte",
       "கணக்கில்_சேர்த்தல்": "Rejoindre un compte existant",
-      "சாதனத்தை_சேர்த்தல்": "Ajouter ce dispositif à un compte existant"
+      "சாதனத்தை_சேர்த்தல்": "Ajouter ce dispositif à un compte existant",
+      "Suivant": "Suivant",
+      "Retour": "Retour"
     },
     "dialogueNouvelleVariable": {
       "மாறி": "Nouvelle variable",
@@ -697,7 +699,9 @@
       "தலைப்பு": "புதிய சாதனம்",
       "வசன_வரிகள்": "இந்தக் கணக்கில் சாதனத்தைச் சேர்க்கவும்",
       "கணக்கில்_சேர்த்தல்": "ஏற்கனவே உள்ள கணக்கில் சேரவும்",
-      "சாதனத்தை_சேர்த்தல்": "இந்தச் சாதனத்தை ஏற்கனவே உள்ள கணக்கில் சேர்க்கவும்"
+      "சாதனத்தை_சேர்த்தல்": "இந்தச் சாதனத்தை ஏற்கனவே உள்ள கணக்கில் சேர்க்கவும்",
+      "Suivant": "பின்வருபவை",
+      "Retour": "திரும்பவும்"
    },
    "compte": {
      "entête": "கணக்கு அமைப்புகள்",

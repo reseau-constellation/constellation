@@ -6,7 +6,7 @@
 
     <v-card>
       <v-card-title class="headline">
-        {{ $t("dialougeAjouterDispositif.இணைத்தல்") }}
+        {{ $t("dialogueAjouterDispositif.இணைத்தல்") }}
         <v-spacer />
         <v-btn icon @click="fermer">
           <v-icon>mdi-close</v-icon>
@@ -18,7 +18,7 @@
         <v-window v-model="étape">
           <v-window-item :value="1">
             <p class="mt-2">
-              {{ $t("dialougeAjouterDispositif.இணைப்பு_முறை") }}
+              {{ $t("dialogueAjouterDispositif.இணைப்பு_முறை") }}
             </p>
             <v-list>
               <v-list-item
@@ -197,7 +197,7 @@
             <v-icon left>{{
               $vuetify.rtl ? "mdi-chevron-right" : "mdi-chevron-left"
             }}</v-icon>
-            Retour
+            {{ $t("dialogueAjouterDispositif.Retour") }}
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn
@@ -207,7 +207,7 @@
             outlined
             @click="auSuivant"
           >
-            Suivant
+            {{ $t("dialogueAjouterDispositif.Suivant") }}
             <v-icon right>{{
               $vuetify.rtl ? "mdi-chevron-left" : "mdi-chevron-right"
             }}</v-icon>
