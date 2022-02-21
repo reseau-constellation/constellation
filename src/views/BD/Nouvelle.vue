@@ -269,11 +269,11 @@ export default mixins(
     titrePrésent: function (): string {
       switch (this.étape) {
         case 1:
-          return "Choisissez un nom";
+          return this.$t("bd.nouvelle.தேர்ந்தெடுக்கவும்");
         case 2:
-          return "Ajoutez une description (optionnel)";
+          return this.$t("bd.nouvelle.சேர்க்கவும்");
         case 3:
-          return "Choisissez une licence";
+          return this.$t("bd.nouvelle.தேர்வுசெய்க");
         default:
           return "";
       }
