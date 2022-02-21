@@ -275,7 +275,9 @@
         "சேர்க்கவும்": "Ajoutez une description (optionnel)",
         "தேர்வுசெய்க": "Choisissez une licence",
         "Suivant": "Suivant",
-        "வெல்வோம்": "C'est parti !"
+        "வெல்வோம்": "C'est parti !",
+        "Limitations": "Limitations",
+        "Retour": "Retour"
         },
       "visBD": {
         "நீக்கம்": "Voulez-vous vraiment effacer cette base de données ?",
@@ -775,7 +777,9 @@
         "சேர்க்கவும்": "விளக்கத்தைச் சேர்க்கவும் (விரும்பினால்)",
         "தேர்வுசெய்க": "உரிமத்தைத் தேர்வுசெய்க",
         "Suivant": "பின்வரும்",
-        "வெல்வோம்": "வெல்வோம் !"
+        "வெல்வோம்": "வெல்வோம் !",
+        "Limitations": "கட்டுப்பாடுகள்",
+        "Retour": "திரும்பவும்"
        },
        "visBD": {
          "நீக்கம்": "இந்தத் தரவுத்தளத்தை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",

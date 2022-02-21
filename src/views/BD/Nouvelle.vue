@@ -33,7 +33,7 @@
         <v-window-item :value="1">
           <v-card-text>
             <span class="grey--text text--darken-1">
-              {{$t("bd.nouvelle.மாற்றுதல்")}}
+              {{ $t("bd.nouvelle.மாற்றுதல்") }}
             </span>
             <v-list style="max-height: 300px" class="overflow-y-auto">
               <item-nouveau-nom
@@ -59,7 +59,7 @@
         <v-window-item :value="2">
           <v-card-text>
             <span class="grey--text text--darken-1">
-              {{("bd.nouvelle.தரம்")}}
+              {{ $t("bd.nouvelle.இருக்கிறது") }}
             </span>
             <v-list style="max-height: 300px" class="overflow-y-auto">
               <item-nouveau-nom
@@ -108,7 +108,7 @@
               <div class="d-flex flex-wrap">
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
                   <p class="mb-0 text-overline">
-                    {{("bd.nouvelle.Permissions")}}</p>
+                    {{ $t("bd.nouvelle.Permissions") }}</p>
                   <p v-if="!droits.length" class="text--disabled">
                     {{ $t("licences.droits.aucune") }}
                   </p>
@@ -116,7 +116,7 @@
                 </v-card>
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
                   <p class="mb-0 text-overline">
-                    {{("bd.nouvelle.Conditions")}}</p>
+                    {{ $t("bd.nouvelle.Conditions") }}</p>
                   <p v-if="!conditions.length" class="text--disabled">
                     {{ $t("licences.conditions.aucune") }}
                   </p>
@@ -127,7 +127,8 @@
                   />
                 </v-card>
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
-                  <p class="mb-0 text-overline">Limitations</p>
+                  <p class="mb-0 text-overline">
+                    {{ $t("bd.nouvelle.Limitations") }}</p>
                   <p v-if="!limitations.length" class="text--disabled">
                     {{ $t("licences.limitations.aucune") }}
                   </p>
@@ -167,11 +168,11 @@
               :src="image('logoBD')"
             ></v-img>
             <h3 class="title font-weight-light mb-2">
-              {{("bd.nouvelle.உறுதிப்படுத்தவும்")}}
+              {{ $t("bd.nouvelle.உறுதிப்படுத்தவும்") }}
             </h3>
             <p class="text--disabled text-left">
               <v-icon>mdi-alert-circle-outline</v-icon>
-              {{("bd.nouvelle.பகிர_வேண்டாம்")}}
+              {{ $t("bd.nouvelle.பகிர_வேண்டாம்") }}
             </p>
             <div class="mx-auto">
               <v-checkbox
@@ -198,7 +199,8 @@
       <v-divider></v-divider>
 
       <v-card-actions>
-        <v-btn :disabled="étape === 1" text @click="étape--"> Retour </v-btn>
+        <v-btn :disabled="étape === 1" text @click="étape--">
+          {{ $t("bd.nouvelle.Retour") }} </v-btn>
         <v-spacer></v-spacer>
         <v-btn
           :disabled="(étape === 3 && !licence) || étape === 4"
