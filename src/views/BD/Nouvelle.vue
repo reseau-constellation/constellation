@@ -189,7 +189,7 @@
               :disabled="!jaiCompris"
               @click="(e) => créerBd(e)"
             >
-              C'est parti !
+              {{ $t("bd.nouvelle.வெல்வோம்") }}
             </v-btn>
           </div>
         </v-window-item>
