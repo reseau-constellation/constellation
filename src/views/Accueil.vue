@@ -13,16 +13,16 @@
 
       <v-col class="mb-4">
         <h1 class="display-2 font-weight-bold mb-3">
-          {{ $t("acceuil.entête") }}
+          {{ $t("accueil.entête") }}
         </h1>
         <p class="subheading font-weight-regular">
-          {{ $t("acceuil.soustitre") }}
+          {{ $t("accueil.soustitre") }}
         </p>
       </v-col>
 
       <v-col class="mb-5" cols="12">
         <h2 class="headline font-weight-bold mb-5">
-          {{ $t("acceuil.orientation") }}
+          {{ $t("accueil.orientation") }}
         </h2>
 
         <v-row class="center d-flex justify-space-around">
@@ -105,17 +105,17 @@ import { URL_GIT, RACINE_URL_DOCS } from "@/utils/config";
       URL_GIT,
       liens: [
         {
-          text: "acceuil.liens.docs",
+          text: "accueil.liens.docs",
           href: `${RACINE_URL_DOCS}/${this.$i18n.locale}/latest`,
           img: "docs",
         },
         {
-          text: "acceuil.liens.recherche",
+          text: "accueil.liens.recherche",
           page: "/recherche",
           img: "recherche",
         },
         {
-          text: "acceuil.liens.projet",
+          text: "accueil.liens.projet",
           page: "/projets",
           img: "constr",
         },

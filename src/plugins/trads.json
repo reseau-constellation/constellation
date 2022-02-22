@@ -116,7 +116,7 @@
       "automatisation": "Automatisation",
       "signalements": "Signaler un problème"
     },
-    "acceuil": {
+    "accueil": {
       "entête": "Constellation",
       "soustitre": "Le système distribué et ouvert pour le partage des données scientifiques.",
       "orientation": "Un peu perdu.e ?",
@@ -547,7 +547,7 @@
         "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0"
       },
   "kaq": {
-    "acceuil": {
+    "accueil": {
       "entête": "Ch'umil"
     }
    }
@@ -579,11 +579,18 @@
       "automatisation": "தானியங்கல்",
       "signalements": "சிக்கலைப் புகாரளிக்க"
     },
-    "acceuil": {
-      "entête": "குழாம்",
-      "soustitre": "திறந்த அறிவியல் தகவல்களுக்காக ஒரு விநியோகிக்கப்பட்ட வலை."
+    "accueil": {
+      "entête": "விண்மீன் கூட்டம்",
+      "soustitre": "திறந்த அறிவியல் தகவல்களுக்காக ஒரு விநியோகிக்கப்பட்ட வலை.",
+      "orientation": "கொஞ்சம் தொலைந்து விட்டதா?",
+      "liens": {
+        "docs": "ஆவணங்களைப் படிக்கவும்",
+        "recherche": "தரவைக் கண்டறியவும்",
+        "projet": "ஒரு திட்டத்தைத் தொடங்குங்கள்"
+      },
+      "contribuerCode": "பங்களிப்பு குறியீடு"
     },
-    "compte": {
+     "compte": {
       "entête": "கணக்கு அமைப்புகள்"
     },
     "exporter": {
@@ -708,7 +715,7 @@
       "வசன_வரிகள்": "இந்தக் கணக்கில் சாதனத்தைச் சேர்க்கவும்",
       "கணக்கில்_சேர்த்தல்": "ஏற்கனவே உள்ள கணக்கில் சேரவும்",
       "சாதனத்தை_சேர்த்தல்": "இந்தச் சாதனத்தை ஏற்கனவே உள்ள கணக்கில் சேர்க்கவும்",
-      "Suivant": "பின்வருபவை",
+      "Suivant": "அடுத்தது",
       "Retour": "திரும்பவும்"
    },
    "compte": {
