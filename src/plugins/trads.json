@@ -176,7 +176,10 @@
 
     "recherche": {
       "entête": "Explorez les données",
-      "soustitre": "Recherchez mots clefs, région géographique, variable..."
+      "soustitre": "Recherchez mots clefs, région géographique, variable...",
+      "Bases": "Bases de données",
+      "Projets": "Projets",
+      "Personnes": "Personnes"
     },
     "favoris": {
       "entête": "Mes favoris"
@@ -598,6 +601,14 @@
       "entête": "தானியக்கமாக்கல்",
       "soustitre": "உங்கள் தரவுத்தள புதுப்பிப்புகளை தானியங்குபடுத்துங்கள்"
     },
+    "recherche": {
+      "entête": "தரவுகளை ஆராயுங்கள்",
+      "soustitre": "தேடல் முக்கிய வார்த்தைகள், புவியியல் பகுதி, மாறி...",
+      "Bases": "தரவு அடிப்படை",
+      "Projets": "திட்டங்கள்",
+      "Personnes": "மக்கள்"
+    },
+
     "signalements": {
       "entête": "நீங்கள் சிரமங்களை அனுபவிக்கிறீர்களா?",
       "soustitre": "எங்களிடம் கூறுங்கள், நாங்கள் உங்களுக்கு உதவுவோம்.",

@@ -7,9 +7,9 @@
     />
     <v-text-field outlined class="mx-10 mt-0"></v-text-field>
     <v-radio-group v-model="catégorie" row>
-      <v-radio label="Bases de données" value="bds"></v-radio>
-      <v-radio label="Projets" value="projets" disabled></v-radio>
-      <v-radio label="Personnes" value="personnes"></v-radio>
+      <v-radio :label="$t('recherche.Bases')" value="bds"></v-radio>
+      <v-radio :label="$t('recherche.Projets')" value="projets" disabled></v-radio>
+      <v-radio :label="$t('recherche.Personnes')" value="personnes"></v-radio>
     </v-radio-group>
     <résultatsRecherchePersonnes v-if="catégorie === 'personnes'" />
     <résultatsRechercheBds v-else-if="catégorie === 'bds'" />
