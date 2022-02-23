@@ -9,7 +9,8 @@
       "sauvegarder": "Sauvegarder",
       "confirmer": "Confirmer",
       "retour": "Retour",
-      "télécharger": "Télécharger"
+      "télécharger": "Télécharger",
+      "pointInterogation": "?"
     },
     "boîteNoms": {
       "titre": "Ajoutez des noms",
@@ -66,6 +67,18 @@
       "Représentant": "Représentant",
       "Membres": "Membres"
      },
+    "carteBD": {
+      "note": {
+          "A": "A",
+          "A-": "A-",
+          "B": "B",
+          "B-": "B-",
+          "C+": "C+",
+           "C": "C",
+           "D": "D",
+           "F": "F"
+        }
+      },
     "itemTableau": {
       "அட்டவணை_நீக்கம்": "Voulez-vous vraiment effacer ce tableau ?",
       "தகவல்": "Ceci enlevera le tableau de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées.",
@@ -579,7 +592,8 @@
       "sauvegarder": "பாதுகாப்பதற்காக",
       "confirmer": "உறுதிப்படுத்த",
       "retour": "திரும்பு",
-      "télécharger": "பதிவிறக்க"
+      "télécharger": "பதிவிறக்க",
+      "pointInterogation": "?"
     },
     "boîteNoms": {
       "titre": "பெயர்களைச் சேர்க்கவும்",
@@ -724,6 +738,18 @@
       "Représentant": "பிரதிபலிக்கிறது",
       "Membres": "உறுப்பினர்கள்"
     },
+    "carteBD": {
+      "note": {
+          "A": "அ",
+          "A-": "அ-",
+          "B": "ஆ",
+          "B-": "ஆ-",
+          "C+": "இ+",
+           "C": "இ",
+           "D": "ஈ",
+           "F": "உ"
+        }
+      },
     "itemTableau": {
       "அட்டவணை_நீக்கம்": "இந்த அட்டவணையை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",
       "தகவல்": "இது உங்கள் சாதனத்திலிருந்து பலகையை அகற்றும். பிற விண்மீன் கூட்டத்தின் பயனர்கள் உருவாக்கிய நகல்களை இது நீக்காது.",
