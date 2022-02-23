@@ -63,8 +63,7 @@
       "enLigne": "Dont {n} en ligne",
       "நகலெடுக்கப்பட்டது": "Présentement répliquée par",
       "Représentant": "Représentant",
-      "Membres": "Membres",
-      "enLigne": "Dont {n} en ligne"
+      "Membres": "Membres"
      },
     "itemTableau": {
       "அட்டவணை_நீக்கம்": "Voulez-vous vraiment effacer ce tableau ?",
@@ -720,8 +719,7 @@
       "enLigne": "இணையத்தில் {n} உள்ளன",
       "நகலெடுக்கப்பட்டது": "தற்போது நகலெடுக்கப்பட்டது",
       "Représentant": "பிரதிபலிக்கிறது",
-      "Membres": "உறுப்பினர்கள்",
-      "enLigne": "இணையத்தில் {n} உள்ளன"
+      "Membres": "உறுப்பினர்கள்"
     },
     "itemTableau": {
       "அட்டவணை_நீக்கம்": "இந்த அட்டவணையை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",
