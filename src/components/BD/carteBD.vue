@@ -46,8 +46,7 @@
                   couleurScore(score ? score.total : null).couleur
                 }`"
                 class="font-weight-bold"
-              >
-                {{ score ? couleurScore(score.total).note : "?" }}
+              >{{ score ? $t("carteBD.note."+ couleurScore(score.total).note) : $t("communs.pointIntérogation") }}
               </span>
             </span>
           </v-chip>
