@@ -255,7 +255,10 @@
       "p4_2": "Les images et l'art proviennent de [unDraw](https://undraw.co/) et de [வள்ளுவர் வள்ளலார் வட்டம்](https://commons.wikimedia.org/wiki/User:Valluvar_Vallalar_Vattam?uselang=ta). Ces derniers sont disponibles selon la licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr)."
     },
     "téléchargements": {
-      "entête": "Télécharger Constellation"
+      "entête": "Télécharger Constellation",
+      "Version": "Version",
+      "Système": "Système opératoire",
+      "பார்க்கவும்": "Voir toutes les versions"
     },
     "bd": {
       "entête": "Mes bases de données",
@@ -608,12 +611,17 @@
       "Projets": "திட்டங்கள்",
       "Personnes": "மக்கள்"
     },
-
     "signalements": {
-      "entête": "நீங்கள் சிரமங்களை அனுபவிக்கிறீர்களா?",
+      "entête": "சிரமம் உள்ளதா?",
       "soustitre": "எங்களிடம் கூறுங்கள், நாங்கள் உங்களுக்கு உதவுவோம்.",
       "bouton": "கிட்ஹப் பற்றிய அறிக்கை",
       "boutonCourriel": "மின்னஞ்சல் வாயிலாக"
+    },
+    "téléchargements": {
+      "entête": "விண்மீன் கூட்டத்தைப் பதிவிறக்கவும்",
+      "Version": "பதிப்பு",
+      "Système": "இயக்க முறைமை",
+      "பார்க்கவும்": "அனைத்து பதிப்புகளையும் பார்க்கவும்"
     },
     "favoris": {
       "entête": "எனக்கு பிடித்தவை"
@@ -805,12 +813,7 @@
        "détails": "புதிய திட்டத்தை உருவாக்கவும்"
      }
    },
-
-
-    "signalements": {
-      "entête": "சிரமம் உள்ளதா?"
-    },
-    "conditions": {
+     "conditions": {
       "entête": "விதிமுறைகள் மற்றும் நிபந்தனைகள்"
     },
     "bd": {

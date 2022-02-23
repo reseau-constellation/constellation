@@ -9,7 +9,7 @@
             <v-select
               dense
               hide-details
-              label="Version"
+              :label=$t"('téléchargements.Version')"
               clearable
               v-model="version"
               :items="versions"
@@ -21,7 +21,7 @@
               dense
               hide-details
               clearable
-              label="Système opératoire"
+              :label=$t"('téléchargements.Système')"
               v-model="système"
               :items="systèmesOpératoirs.map((x) => x.nom)"
               outlined
@@ -34,7 +34,7 @@
               color="primary"
               @click="ouvrirLien(URL_TÉLÉCHARGEMENTS)"
             >
-              Voir toutes les versions
+            {{ $t("téléchargements.பார்க்கவும்") }}
               <v-icon right>mdi-open-in-new</v-icon>
             </v-btn>
           </v-col>
