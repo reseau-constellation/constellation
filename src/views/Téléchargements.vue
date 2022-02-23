@@ -9,7 +9,7 @@
             <v-select
               dense
               hide-details
-              :label=$t"('téléchargements.Version')"
+              :label="$t('téléchargements.Version')"
               clearable
               v-model="version"
               :items="versions"
@@ -21,7 +21,7 @@
               dense
               hide-details
               clearable
-              :label=$t"('téléchargements.Système')"
+              :label="$t('téléchargements.Système')"
               v-model="système"
               :items="systèmesOpératoirs.map((x) => x.nom)"
               outlined

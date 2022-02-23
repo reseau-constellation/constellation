@@ -5,7 +5,8 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline"> {{ $t("dialogueAuteurs.entête") }} </v-card-title>
+      <v-card-title class="headline"> {{ $t("dialogueAuteurs.entête") }}
+      </v-card-title>
       <v-divider />
 
       <v-card-text>
@@ -23,7 +24,7 @@
                     <v-icon>mdi-plus</v-icon>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                  {{$t("dialogueAuteurs.அங்கீகாரம்")}}
+                  {{ $t("dialogueAuteurs.அங்கீகாரம்") }}
                   </v-list-item-content>
                 </v-list-item>
               </template>

@@ -33,7 +33,7 @@
         <v-checkbox
           v-model="donnerPermissionModérateur"
           :disabled="!auteurSélectionné"
-          label="Donner permission modérateur"
+          :label="$t('dialogueNouvelAuteur.அனுமதி_கொடுங்கள்')"
         />
       </v-card-text>
       <v-divider />
