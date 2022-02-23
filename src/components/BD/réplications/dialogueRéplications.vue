@@ -15,14 +15,15 @@
         <div class="mt-3">
           <v-skeleton-loader v-if="!replications" type="paragraph@2" />
           <div v-else>
-            <p class="mb-0 text-overline">Présentement répliquée par</p>
+            <p class="mb-0 text-overline">
+             {{ $t("dialogueRéplications.நகலெடுக்கப்பட்டது") }} </p>
             <v-list-item two-line>
               <v-avatar class="me-3 text-h3">
                 {{ dispositifs.length }}
               </v-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  {{$t("dialogueRéplications.சாதனங்கள்")}}
+                  {{ $t("dialogueRéplications.சாதனங்கள்") }}
                   <v-icon right>mdi-monitor-cellphone</v-icon>
                 </v-list-item-title>
                 <v-list-item-subtitle class="success--text"
@@ -32,19 +33,20 @@
               </v-list-item-content>
             </v-list-item>
 
-            <p class="mb-0 text-overline">Représentant</p>
+            <p class="mb-0 text-overline">
+              {{ $t("dialogueRéplications.Représentant") }}</p>
             <v-list-item two-line>
               <v-avatar class="me-3 text-h3">
                 {{ membres.length }}
               </v-avatar>
               <v-list-item-content>
-                <v-list-item-title
-                  >Membres<v-icon right>mdi-account</v-icon></v-list-item-title
-                >
+                <v-list-item-title>
+                {{ $t("dialogueRéplications.Membres") }}
+                <v-icon right>mdi-account</v-icon>
+                </v-list-item-title>
                 <v-list-item-subtitle class="success--text"
-                  >Dont {{ membresEnLigne.length }} en
-                  ligne</v-list-item-subtitle
-                >
+                  >{{ $t("dialogueRéplication.enLigne", { n: membresEnLigne.length }) }}
+                  </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </div>

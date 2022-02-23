@@ -12,10 +12,10 @@
           label
           small
           color="secondary"
-          >Invité</v-chip
+          >{{ $t("itemAuteur.Invité") }}</v-chip
         >
         <v-chip v-if="mod" class="mx-2" outlined label small color="success"
-          >Modérateur</v-chip
+          >{{ $t("itemAuteur.Modérateur") }}</v-chip
         >
       </span>
     </v-list-item-content>

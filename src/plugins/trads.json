@@ -50,11 +50,20 @@
     "dialogueNouvelAuteur": {
       "புதிய_அங்கீகாரம்": "Autoriser un nouvel auteur",
       "எச்சரிக்கை": "Il n'est présentement pas possible de révoquer l'accès une fois celui-ci est octroyé"
+      "அனுமதி_கொடுங்கள்": "Donner permission modérateur"
+    },
+    "itemAuteur": {
+      "Invité": "Invité",
+      "Modérateur": "Modérateur"
     },
     "dialogueRéplications": {
       "பிரதிகள்": "Réplications",
       "விண்மீன்_தரவு": "Chaque réplication de la base de données contribue à sa disponibilité au sein du réseau Constellation",
       "சாதனங்கள்": "Dispositifs",
+      "enLigne": "Dont {n} en ligne",
+      "நகலெடுக்கப்பட்டது": "Présentement répliquée par",
+      "Représentant": "Représentant",
+      "Membres": "Membres",
       "enLigne": "Dont {n} en ligne"
      },
     "itemTableau": {
@@ -697,12 +706,21 @@
     },
     "dialogueNouvelAuteur": {
       "புதிய_அங்கீகாரம்": "புதிய ஆசிரியரை அங்கீகரிக்கவும்",
-      "எச்சரிக்கை": "ஒருமுறை வழங்கப்பட்ட அனுகலை திரும்ப பெறுவது தற்போது சாத்தியமில்லை"
+      "எச்சரிக்கை": "ஒருமுறை வழங்கப்பட்ட அனுகலை திரும்ப பெறுவது தற்போது சாத்தியமில்லை",
+      "அனுமதி_கொடுங்கள்": "மதிப்பீட்டாளர் அனுமதி கொடுங்கள்"
+    },
+    "itemAuteur": {
+      "Invité": "விருந்தினர்",
+      "Modérateur": "மதிப்பீட்டாளர்"
     },
     "dialogueRéplications": {
       "பிரதிகள்": "பிரதிகள்",
       "விண்மீன்_தரவு": "தரவுத்தளத்தின் ஒவ்வொரு பிரதியும் விண்மீன் நெட்வொர்க்கிற்குள் அதன் கிடைக்கும் தன்மைக்கு பங்களிக்கிறது",
       "சாதனங்கள்": "சாதனங்கள்",
+      "enLigne": "இணையத்தில் {n} உள்ளன",
+      "நகலெடுக்கப்பட்டது": "Présentement répliquée par",
+      "Représentant": "பிரதிபலிக்கிறது",
+      "Membres": "உறுப்பினர்கள்",
       "enLigne": "இணையத்தில் {n} உள்ளன"
     },
     "itemTableau": {
