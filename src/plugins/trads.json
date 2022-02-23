@@ -49,7 +49,7 @@
     },
     "dialogueNouvelAuteur": {
       "புதிய_அங்கீகாரம்": "Autoriser un nouvel auteur",
-      "எச்சரிக்கை": "Il n'est présentement pas possible de révoquer l'accès une fois celui-ci est octroyé"
+      "எச்சரிக்கை": "Il n'est présentement pas possible de révoquer l'accès une fois celui-ci est octroyé",
       "அனுமதி_கொடுங்கள்": "Donner permission modérateur"
     },
     "itemAuteur": {
@@ -718,7 +718,7 @@
       "விண்மீன்_தரவு": "தரவுத்தளத்தின் ஒவ்வொரு பிரதியும் விண்மீன் நெட்வொர்க்கிற்குள் அதன் கிடைக்கும் தன்மைக்கு பங்களிக்கிறது",
       "சாதனங்கள்": "சாதனங்கள்",
       "enLigne": "இணையத்தில் {n} உள்ளன",
-      "நகலெடுக்கப்பட்டது": "Présentement répliquée par",
+      "நகலெடுக்கப்பட்டது": "தற்போது நகலெடுக்கப்பட்டது",
       "Représentant": "பிரதிபலிக்கிறது",
       "Membres": "உறுப்பினர்கள்",
       "enLigne": "இணையத்தில் {n} உள்ளன"
