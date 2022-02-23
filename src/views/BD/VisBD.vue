@@ -150,7 +150,7 @@
                         :style="`color:${couleurScore(score.total).couleur}`"
                         class="font-weight-bold"
                       >
-                        {{ $t("carteBD.note." + couleurScore(score.total).note)) }}
+                        {{ $t("carteBD.note." + couleurScore(score.total).note) }}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
