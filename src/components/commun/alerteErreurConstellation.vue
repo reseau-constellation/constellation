@@ -19,7 +19,7 @@
 
     <div class="text-center">
       <v-btn tiled outlined color="error" @click="signaler"
-        >Signaler l'erreur</v-btn
+        >{{ $t("alerteErreurConstellation.புகாரளிக்கவும்")}}</v-btn
       >
     </div>
 

@@ -27,7 +27,8 @@
       "புகாரளிக்க": "Si tout paraît fonctionner, vous pouvez continuer à travailler sans souci. Mais si quelque chose cloche, merci de nous signaler l'erreur afin que nous puissions la régler !",
       "பிழை": "Erreurs précédentes",
       "மறை": "Cacher les détails",
-      "தகவல்கள்": "Plus de détails"
+      "தகவல்கள்": "Plus de détails",
+      "புகாரளிக்கவும்": "Signaler l'erreur"
     },
 
     "exporter": {
@@ -740,7 +741,8 @@
       "புகாரளிக்க": "எல்லாம் வேலை செய்வதாகத் தோன்றினால், கவலையின்றி வேலையைத் தொடரலாம். ஆனால் ஏதாவது தவறு இருந்தால், பிழையை எங்களிடம் புகாரளிக்கவும், அதை நாங்கள் சரிசெய்ய முடியும்!",
       "பிழை": "முந்தைய பிழைகள்",
       "மறை": "விவரங்களை மறை",
-      "தகவல்கள்": "கூடுதல் தகவல்கள்"
+      "தகவல்கள்": "கூடுதல் தகவல்கள்",
+      "புகாரளிக்கவும்": "பிழையைப் புகாரளிக்கவும்"
     },
     "dialogueNouvelleVariable": {
       "மாறி": "புதிய மாறி",
