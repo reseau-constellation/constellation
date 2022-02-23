@@ -67,7 +67,9 @@
      },
     "itemTableau": {
       "அட்டவணை_நீக்கம்": "Voulez-vous vraiment effacer ce tableau ?",
-      "தகவல்": "Ceci enlevera le tableau de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées."
+      "தகவல்": "Ceci enlevera le tableau de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées.",
+      "Non": "Non !",
+      "effacer": "Oui, effacer"
     },
     "dialogueAjouterDispositif": {
       "இணைத்தல்": "Connecter dispositifs",
@@ -723,7 +725,9 @@
     },
     "itemTableau": {
       "அட்டவணை_நீக்கம்": "இந்த அட்டவணையை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",
-      "தகவல்": "இது உங்கள் சாதனத்திலிருந்து பலகையை அகற்றும். பிற விண்மீன் கூட்டத்தின் பயனர்கள் உருவாக்கிய நகல்களை இது நீக்காது."
+      "தகவல்": "இது உங்கள் சாதனத்திலிருந்து பலகையை அகற்றும். பிற விண்மீன் கூட்டத்தின் பயனர்கள் உருவாக்கிய நகல்களை இது நீக்காது.",
+      "Non": "இல்லை !",
+      "effacer": "ஆம், நீக்கு"
     },
 
     "alerteConditions": {
