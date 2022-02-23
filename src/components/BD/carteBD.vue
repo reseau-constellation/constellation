@@ -98,8 +98,9 @@
             <v-icon>{{ épinglée ? "mdi-pin" : "mdi-pin-outline" }}</v-icon>
           </v-btn>
         </template>
-        <span>{{
-          épinglée ? "Enlever de mes favoris" : "Épingler dans mes favoris"
+        <span>
+        {{
+          épinglée ? $t("carteBD.அகற்று") : $t("carteBD.பொருத்து")
         }}</span>
       </v-tooltip>
     </v-card-actions>
