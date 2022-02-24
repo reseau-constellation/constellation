@@ -572,7 +572,7 @@
     },
     "dialogueNouveauMotClef": {
       "motclef": "Nouveau mot clef",
-      "தேர்ந்தெடுக்க": " Choisissez un nom pour votre mot clef"
+      "தேர்ந்தெடுக்க": "Choisissez un nom pour votre mot clef"
     },
       "dialogueTraductionsInterface": {
         "மொழிபெயர்க்கவும்": "Traduire Constellation",
@@ -742,7 +742,7 @@
     },
     "carteBD": {
       "அகற்று": "எனக்கு பிடித்தவற்றிலிருந்து அகற்று",
-      "பொருத்து": "எனக்குப் பிடித்தவற்றைப் பொருத்து"
+      "பொருத்து": "எனக்குப் பிடித்தவற்றைப் பொருத்து",
       "note": {
           "A": "அ",
           "A-": "அ-",
