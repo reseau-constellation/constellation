@@ -40,7 +40,7 @@
         </v-list>
 
         <p class="text-overline mb-0">
-        {{ $t("dialogueNouvelleColonne.சோதனைகள்") }} </p>
+        {{ $t("dialogueNouvelleColonne.கட்டுப்பாடுகள்") }} </p>
         <v-list>
           <v-list-item v-for="r in règlesPropre" :key="r"> </v-list-item>
         </v-list>

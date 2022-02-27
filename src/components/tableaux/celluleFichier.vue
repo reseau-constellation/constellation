@@ -66,7 +66,7 @@
           </vue-plyr>
           <div v-else class="text-center">
             <p class="text-h6 mt-5">
-              Ce format de fichier ne peut pas être prévisualisé pour le moment.
+              {{ $t("celluleFichier.முன்னோட்டம்") }}
             </p>
             <v-img :src="image('vide')" class="my-5" contain height="175px" />
             <v-btn
@@ -77,7 +77,7 @@
               append
               @click="() => télécharger()"
             >
-              Télécharger
+             {{ $t("communs.télécharger") }}
               <v-icon right> mdi-download </v-icon>
             </v-btn>
           </div>

@@ -595,6 +595,9 @@
       "சோதனைகள்": "Contrôles de qualité (hérités)",
       "கட்டுப்பாடுகள்": "Contrôles de qualité (propres)"
     },
+    "celluleFichier": {
+      "முன்னோட்டம்": "Ce format de fichier ne peut pas être prévisualisé pour le moment."
+      },
       "dialogueTraductionsInterface": {
         "மொழிபெயர்க்கவும்": "Traduire Constellation",
         "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0"
@@ -1199,6 +1202,9 @@
       "சோதனைகள்": "தர சோதனைகள் (மரபு)",
       "கட்டுப்பாடுகள்": "தரக் கட்டுப்பாடுகள் (சொந்தமாக)"
     },
+    "celluleFichier": {
+      "முன்னோட்டம்": "இந்தக் கோப்பு வடிவத்தை இப்போது முன்னோட்டமிட முடியாது."
+      },
     "dialogueTraductionsInterface": {
       "மொழிபெயர்க்கவும்": "விண்மீன் தொகுப்பை மொழிபெயர்க்கவும்",
       "சேர்த்தல்": "நீங்கள் பங்களிக்கும் மொழிபெயர்ப்புகள் GNU GPL Affero 3.0 உரிமத்தின் கீழ் விண்மீன் விநியோகங்களில் சேர்க்கப்படும்"
