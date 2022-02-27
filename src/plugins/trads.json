@@ -584,9 +584,7 @@
     "carteFichierInstallation": {
       "பதிப்பு": "Constellation version"
     },
-    "opsLangue": {
-      "Contribuer": "Contribuer"
-    },
+
     "dialogueNouvelleColonne": {
       "நெடுவரிசை": "Nouvelle colonne",
       "மாறி": "Variable",
@@ -601,6 +599,9 @@
         "vide": "Aucune donnée",
         "சேர்க்கவும்": "Ajouter une colonne",
         "சேர்க்க": "Ajouter une rangée"
+      },
+      "opsLangue": {
+        "Contribuer": "Contribuer"
       },
       "dialogueTraductionsInterface": {
         "மொழிபெயர்க்கவும்": "Traduire Constellation",
@@ -1214,6 +1215,9 @@
         "vide": "தகவல் இல்லை",
         "சேர்க்கவும்": "ஒரு நெடுவரிசையைச் சேர்க்கவும்",
         "சேர்க்க": "வரிசையைச் சேர்க்கவும்"
+      },
+      "opsLangue": {
+        "Contribuer": "பங்களிக்க"
       },
     "dialogueTraductionsInterface": {
       "மொழிபெயர்க்கவும்": "விண்மீன் தொகுப்பை மொழிபெயர்க்கவும்",
