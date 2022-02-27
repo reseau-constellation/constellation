@@ -1,7 +1,7 @@
 <template>
   <span>
     <p class="mb-0 text-overline">
-      Données
+      {{ $t("tableau.Données") }}
       <dialogue-nouvelle-colonne
         :permissionModifier="permissionÉcrire"
         @sauvegarder="creerColonne"
@@ -65,7 +65,7 @@
                   text
                 >
                   <v-icon left>mdi-table-column-plus-after</v-icon>
-                  Ajouter une colonne
+                  {{ $t("tableau.சேர்க்கவும்") }}
                 </v-btn>
               </template>
             </dialogue-nouvelle-colonne>
@@ -78,7 +78,7 @@
               @click="nouvelleLigne = true"
             >
               <v-icon left>mdi-table-row-plus-after</v-icon>
-              Ajouter une rangée
+              {{ $t("tableau.சேர்க்க") }}
             </v-btn>
           </div>
         </div>
