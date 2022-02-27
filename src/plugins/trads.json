@@ -574,6 +574,11 @@
       "motclef": "Nouveau mot clef",
       "Aucunrésultat": "Aucun résultat"
     },
+    "panneauTraduction": {
+      "பரிந்துரைக்கவும்": "Proposez un traduction",
+      "தேர்ந்தெடுக்கவும்": "Sélectionnez un item de la liste à gauche",
+      "நகலெடுக்கவும்": "Copier originale"
+    },
     "dialogueNouveauMotClef": {
       "motclef": "Nouveau mot clef",
       "தேர்ந்தெடுக்க": "Choisissez un nom pour votre mot clef"
@@ -1160,6 +1165,11 @@
       "Motsclefs": "முக்கிய வார்த்தைகள்",
       "motclef": "புதிய முக்கிய சொல்",
       "Aucunrésultat": "முடிவு இல்லை"
+    },
+    "panneauTraduction": {
+      "பரிந்துரைக்கவும்": "ஒரு மொழிபெயர்ப்பைப் பரிந்துரைக்கவும்",
+      "தேர்ந்தெடுக்கவும்": "இடதுபுறத்தில் உள்ள பட்டியலில் இருந்து உருப்படியைத் தேர்ந்தெடுக்கவும்",
+      "நகலெடுக்கவும்": "அசல் நகலெடுக்கவும்"
     },
     "dialogueNouveauMotClef": {
       "motclef": "புதிய முக்கிய சொல்",

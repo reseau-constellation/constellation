@@ -3,8 +3,8 @@
     <v-card-title>
       {{
         clef
-          ? "Proposez un traduction"
-          : "Sélectionnez un item de la liste à gauche"
+          ? $t("panneauTraduction.பரிந்துரைக்கவும்")
+          :$t("panneauTraduction.தேர்ந்தெடுக்கவும்")
       }}
     </v-card-title>
     <v-card-text>
@@ -24,7 +24,8 @@
             text
             :disabled="!clef || !texteOriginal"
             @click="() => (traduction = texteOriginal)"
-            ><v-icon left>mdi-content-copy</v-icon> Copier originale
+            ><v-icon left>mdi-content-copy</v-icon>
+            {{ $t("panneauTraduction.நகலெடுக்கவும்") }}
           </v-btn>
           <v-spacer />
           <v-btn text :disabled="!clef" @click="$emit('annuler')">
