@@ -4,7 +4,7 @@
       <v-row>
         <v-col cols="4">
           <v-select
-            :label="etiquetteLangue"
+            :label="$t('itemNouveauNom.etiquetteLangue')"
             v-model="langueNouveauNom"
             outlined
             dense
