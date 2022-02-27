@@ -583,6 +583,9 @@
       "motclef": "Nouveau mot clef",
       "தேர்ந்தெடுக்க": "Choisissez un nom pour votre mot clef"
     },
+    "carteFichierInstallation": {
+      "பதிப்பு": "Constellation version"
+    },
       "dialogueTraductionsInterface": {
         "மொழிபெயர்க்கவும்": "Traduire Constellation",
         "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0"
@@ -1165,6 +1168,9 @@
       "Motsclefs": "முக்கிய வார்த்தைகள்",
       "motclef": "புதிய முக்கிய சொல்",
       "Aucunrésultat": "முடிவு இல்லை"
+    },
+    "carteFichierInstallation": {
+      "பதிப்பு": "விண்மீன் பதிப்பு"
     },
     "panneauTraduction": {
       "பரிந்துரைக்கவும்": "ஒரு மொழிபெயர்ப்பைப் பரிந்துரைக்கவும்",

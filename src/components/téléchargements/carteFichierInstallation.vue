@@ -7,7 +7,7 @@
       <v-btn icon><v-icon>mdi-download</v-icon></v-btn>
     </v-card-title>
     <v-card-text
-      >Constellation version
+      >{{ $t("carteFichierInstallation.பதிப்பு") }}
       {{
         version
           .split(".")
