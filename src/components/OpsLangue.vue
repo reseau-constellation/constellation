@@ -38,7 +38,7 @@
             <v-list-item-icon>
               <v-icon>mdi-pencil-outline</v-icon>
             </v-list-item-icon>
-            <v-list-item-content> Contribuer </v-list-item-content>
+            <v-list-item-content> {{ $t("opsLangue.Contribuer") }} </v-list-item-content>
           </v-list-item>
         </template>
       </dialogue-traductions-interface>

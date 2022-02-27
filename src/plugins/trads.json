@@ -586,6 +586,9 @@
     "carteFichierInstallation": {
       "பதிப்பு": "Constellation version"
     },
+    "opsLangue": {
+      "Contribuer": "Contribuer"
+    },
       "dialogueTraductionsInterface": {
         "மொழிபெயர்க்கவும்": "Traduire Constellation",
         "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0"
@@ -1180,6 +1183,9 @@
     "dialogueNouveauMotClef": {
       "motclef": "புதிய முக்கிய சொல்",
       "தேர்ந்தெடுக்க": "உங்கள் முக்கிய சொல்லுக்கு ஒரு பெயரைத் தேர்ந்தெடுக்கவும்"
+    },
+    "opsLangue": {
+      "Contribuer": "பங்களிக்க வேண்டும்"
     },
     "dialogueTraductionsInterface": {
       "மொழிபெயர்க்கவும்": "விண்மீன் தொகுப்பை மொழிபெயர்க்கவும்",
