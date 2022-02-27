@@ -589,6 +589,12 @@
     "opsLangue": {
       "Contribuer": "Contribuer"
     },
+    "dialogueNouvelleColonne": {
+      "நெடுவரிசை": "Nouvelle colonne",
+      "மாறி": "Variable",
+      "சோதனைகள்": "Contrôles de qualité (hérités)",
+      "கட்டுப்பாடுகள்": "Contrôles de qualité (propres)"
+    },
       "dialogueTraductionsInterface": {
         "மொழிபெயர்க்கவும்": "Traduire Constellation",
         "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0"
@@ -1186,6 +1192,12 @@
     },
     "opsLangue": {
       "Contribuer": "பங்களிக்க வேண்டும்"
+    },
+    "dialogueNouvelleColonne": {
+      "நெடுவரிசை": "புதிய நெடுவரிசை",
+      "மாறி": "மாறி",
+      "சோதனைகள்": "தர சோதனைகள் (மரபு)",
+      "கட்டுப்பாடுகள்": "தரக் கட்டுப்பாடுகள் (சொந்தமாக)"
     },
     "dialogueTraductionsInterface": {
       "மொழிபெயர்க்கவும்": "விண்மீன் தொகுப்பை மொழிபெயர்க்கவும்",

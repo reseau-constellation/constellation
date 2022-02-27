@@ -5,11 +5,11 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline"> Nouvelle colonne </v-card-title>
+      <v-card-title class="headline"> {{ $t("dialogueNouvelleColonne.நெடுவரிசை") }} </v-card-title>
       <v-divider />
 
       <v-card-text class="mt-3">
-        <p class="text-overline mb-2">Variable</p>
+        <p class="text-overline mb-2">{{ $t("dialogueNouvelleColonne.மாறி") }}</p>
         <v-select
           v-model="variable"
           :items="variablesDisponibles"
@@ -33,12 +33,14 @@
           </template>
         </v-select>
 
-        <p class="text-overline mb-0">Contrôles de qualité (hérités)</p>
+        <p class="text-overline mb-0">
+          {{ $t("dialogueNouvelleColonne.சோதனைகள்") }}</p>
         <v-list>
           <v-list-item v-for="r in règlesVariable" :key="r"> </v-list-item>
         </v-list>
 
-        <p class="text-overline mb-0">Contrôles de qualité (propres)</p>
+        <p class="text-overline mb-0">
+        {{ $t("dialogueNouvelleColonne.சோதனைகள்") }} </p>
         <v-list>
           <v-list-item v-for="r in règlesPropre" :key="r"> </v-list-item>
         </v-list>
