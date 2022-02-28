@@ -606,13 +606,15 @@
       "dialogueTraductionsInterface": {
         "மொழிபெயர்க்கவும்": "Traduire Constellation",
         "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0"
-      },
+      }
+    },
+
   "kaq": {
     "accueil": {
       "entête": "Ch'umil"
     }
-   }
   },
+
   "த": {
     "communs": {
       "auto": "தானியங்கி",
@@ -919,9 +921,9 @@
         "Conditions": "விதிமுறை",
         "compris": "எனக்கு புரிகிறது",
         "தேர்ந்தெடுக்கவும்": "ஒரு பெயரைத் தேர்ந்தெடுக்கவும்",
-        "சேர்க்கவும்": "விளக்கத்தைச் சேர்க்கவும் (விரும்பினால்)",
+        "காண்பிக்க": "சிறப்பு உரிமங்களை காண்பிக்கவும் (விரும்பினால்)",
         "தேர்வுசெய்க": "உரிமத்தைத் தேர்வுசெய்க",
-        "Suivant": "பின்வரும்",
+        "Suivant": "அடுத்தது",
         "வெல்வோம்": "வெல்வோம் !",
         "Limitations": "கட்டுப்பாடுகள்",
         "Retour": "திரும்பவும்"
@@ -1222,7 +1224,12 @@
     "dialogueTraductionsInterface": {
       "மொழிபெயர்க்கவும்": "விண்மீன் தொகுப்பை மொழிபெயர்க்கவும்",
       "சேர்த்தல்": "நீங்கள் பங்களிக்கும் மொழிபெயர்ப்புகள் GNU GPL Affero 3.0 உரிமத்தின் கீழ் விண்மீன் விநியோகங்களில் சேர்க்கப்படும்"
-    }
+    },
+    "kaq": {
+      "accueil": {
+        "entête": "Ch'umil"
+      }
+     }
   },
   "ار": {
     "acceuil": {
