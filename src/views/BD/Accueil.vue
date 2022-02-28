@@ -30,9 +30,8 @@
               <v-spacer />
             </v-card-title>
             <v-divider />
-            <v-card-subtitle>{{
-              $t("bd.nouvelle.détailsCarte")
-            }}</v-card-subtitle>
+            <v-card-subtitle>
+              {{ $t("bd.nouvelle.détailsCarte") }}</v-card-subtitle>
             <v-card-text></v-card-text>
           </v-card>
           <carte-bd
