@@ -150,12 +150,12 @@
       "entête": "Constellation",
       "soustitre": "Le système distribué et ouvert pour le partage des données scientifiques.",
       "orientation": "Un peu perdu.e ?",
+      "contribuerCode": "Contribuer au code",
       "liens": {
         "docs": "Lire la documentation",
         "recherche": "Trouver des données",
         "projet": "Démarrer un projet"
-      },
-      "contribuerCode": "Contribuer au code"
+      }
     },
     "compte": {
       "entête": "Paramètres de compte",
@@ -651,12 +651,12 @@
       "entête": "விண்மீன் கூட்டம்",
       "soustitre": "திறந்த அறிவியல் தகவல்களுக்காக ஒரு விநியோகிக்கப்பட்ட வலை.",
       "orientation": "கொஞ்சம் தொலைந்து விட்டதா?",
+      "contribuerCode": "பங்களிப்புக் குறியீடு",
       "liens": {
         "docs": "ஆவணங்களைப் படிக்கவும்",
         "recherche": "தரவைக் கண்டறியவும்",
         "projet": "ஒரு திட்டத்தைத் தொடங்குங்கள்"
-      },
-      "contribuerCode": "பங்களிப்பு குறியீடு"
+      }      
     },
       "exporter": {
       "titre": "தரவின் நகலை ஏற்றுமதி செய்யவும்",
