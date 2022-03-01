@@ -38,8 +38,8 @@
             <v-list style="max-height: 300px" class="overflow-y-auto">
               <item-nouveau-nom
                 :languesExistantes="Object.keys(this.noms)"
-                etiquetteNom="Nom de la BD"
-                etiquetteLangue="Langue"
+                :etiquetteNom="$t('bd.nouvelle.Nom')"
+                :etiquetteLangue="$t('bd.nouvelle.Langue')"
                 @sauvegarder="sauvegarderNom"
               />
               <v-divider />
@@ -64,8 +64,8 @@
             <v-list style="max-height: 300px" class="overflow-y-auto">
               <item-nouveau-nom
                 :languesExistantes="Object.keys(this.descriptions)"
-                etiquetteNom="Description"
-                etiquetteLangue="Langue"
+                :etiquetteNom="$t('bd.nouvelle.Description')"
+                :etiquetteLangue="$t('bd.nouvelle.Langue')"
                 @sauvegarder="sauvegarderDescr"
               />
               <v-divider />

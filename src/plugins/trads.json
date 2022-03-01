@@ -311,7 +311,10 @@
         "Suivant": "Suivant",
         "வெல்வோம்": "C'est parti !",
         "Limitations": "Limitations",
-        "Retour": "Retour"
+        "Retour": "Retour",
+        "Nom": "Nom de la BD",
+        "Langue": "Langue",
+        "Description": "Description"
         },
       "visBD": {
         "நீக்கம்": "Voulez-vous vraiment effacer cette base de données ?",
@@ -926,7 +929,10 @@
         "Suivant": "அடுத்தது",
         "வெல்வோம்": "வெல்வோம் !",
         "Limitations": "கட்டுப்பாடுகள்",
-        "Retour": "திரும்பவும்"
+        "Retour": "திரும்பவும்",
+        "Nom": "தரவுத்தள பெயர்",
+        "Langue": "மொழி",
+        "Description": "விளக்கம்"
        },
        "visBD": {
          "நீக்கம்": "இந்தத் தரவுத்தளத்தை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",
