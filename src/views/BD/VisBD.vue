@@ -83,10 +83,10 @@
                 outlined
                 @click="dialogueEffacerBd = false"
               >
-              {{ $t("visBD.Non") }}
+              {{ $t("visBD.இல்லை") }}
               </v-btn>
               <v-btn color="error" depressed @click="effacerBd">
-                {{ $t("visBD.effacer") }}
+                {{ $t("visBD.நீக்கவும்") }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -171,7 +171,7 @@
                     <v-list-item-content>
                       <v-skeleton-loader v-if="auteurs === null" type="chip" />
                       <span v-else>
-                        {{auteurs ? $t("visBd.Auteurs",{n:formatterChiffre(auteurs.length)}) : ""}}
+                        {{auteurs ? $t("visBd.ஆசிரியர்கள்",{n:formatterChiffre(auteurs.length)}) : ""}}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -230,7 +230,7 @@
                         type="chip"
                       />
                       <span v-else>
-                      {{réplications ? $t("visBD.Réplications",{n:formatterChiffre(réplications.length)}) : ""}}
+                      {{réplications ? $t("visBD.பிரதிகள்",{n:formatterChiffre(réplications.length)}) : ""}}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -283,7 +283,7 @@
             </v-card>
             <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">
-                {{ $t("visBD.Géographie") }}
+                {{ $t("visBD.நிலவியல்") }}
               </p>
               <p v-if="!géog.length" class="text--disabled">
                 {{ $t("visBD.கண்டறிதல்") }}
@@ -302,7 +302,7 @@
         </v-card>
         <v-list>
           <p class="mb-0 text-overline">
-            {{ $t("visBD.Tableaux") }}
+            {{ $t("visBD.சித்திரங்கள்") }}
             <v-btn v-if="permissionÉcrire" icon small @click="ajouterTableau">
               <v-icon small>mdi-plus</v-icon>
             </v-btn>
