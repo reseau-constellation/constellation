@@ -22,7 +22,7 @@
       "étiquetteLangue": "Langue",
       "étiquetteNom": "Nom"
     },
-      "alerteConditions": {
+    "alerteConditions": {
       "உரை": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
       "பொத்தான்": "Lire les conditions"
     },
@@ -35,7 +35,6 @@
       "தகவல்கள்": "Plus de détails",
       "புகாரளிக்கவும்": "Signaler l'erreur"
     },
-
     "exporter": {
       "titre": "Exporter une copie des données",
       "formatFichier": "Format du fichier"
@@ -47,7 +46,6 @@
       "திட்டங்கள்": "Projets",
       "Aucunprojet": "Aucun projet",
       "bdsExtra": "+ { n } autre(s)"
-
     },
     "dialogueAuteurs": {
       "entête": "entête",
@@ -70,21 +68,21 @@
       "நகலெடுக்கப்பட்டது": "Présentement répliquée par",
       "Représentant": "Représentant",
       "Membres": "Membres"
-     },
+    },
     "carteBD": {
       "அகற்று": "Enlever de mes favoris",
       "பொருத்து": "Épingler dans mes favoris",
       "note": {
-          "A": "A",
-          "A-": "A-",
-          "B": "B",
-          "B-": "B-",
-          "C+": "C+",
-           "C": "C",
-           "D": "D",
-           "F": "F"
-        }
-      },
+        "A": "A",
+        "A-": "A-",
+        "B": "B",
+        "B-": "B-",
+        "C+": "C+",
+        "C": "C",
+        "D": "D",
+        "F": "F"
+      }
+    },
     "itemTableau": {
       "அட்டவணை_நீக்கம்": "Voulez-vous vraiment effacer ce tableau ?",
       "தகவல்": "Ceci enlevera le tableau de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées.",
@@ -119,15 +117,15 @@
       "Description": "Description",
       "Nom": "Nom"
     },
-     "qualité": {
+    "qualité": {
       "titre": "Composition du score",
       "sousTitre": "Un meilleur score augmente la confiance que les autres porteront à vos données et favorisera le classement de vos données dans les recherches.",
-      "titres": {
-        "accès": "Accessibilité",
-        "couverture": "Couverture tests",
-        "valide": "Qualité données"
+     "titres": {
+      "accès": "Accessibilité",
+      "couverture": "Couverture tests",
+      "valide": "Qualité données"
       },
-      "sousTitres": {
+     "sousTitres": {
         "accès": "Cette section mesure l'accessibilité de votre base de données. Le plus elle est disponible dans les langues parlées là d'où proviennent vous données, le plus fort votre score.",
         "couverture": "Cette section mesure le pourcentage de vos colonnes qui sont couvertes par des tests de contrôle de la qualité. Vous pouvez ajouter ou modifier les tests ci-dessous.",
         "valide": "Cette section mesure le pourcentage des données qui passent les tests de contrôle de la qualité. Vous pouvez voir ci-dessous les données problématiques, s'il y en a."
@@ -136,29 +134,28 @@
     "itemErreurConstellation": {
       "Tracé": "Tracé"
     },
-
     "nav": {
-      "compte": "Compte",
-      "projets": "Mes projets",
-      "bd": "Mes bases de données",
-      "recherche": "Explorer",
-      "favoris": "Mes favoris",
-      "automatisation": "Automatisation",
-      "signalements": "Signaler un problème"
+     "compte": "Compte",
+     "projets": "Mes projets",
+     "bd": "Mes bases de données",
+     "recherche": "Explorer",
+     "favoris": "Mes favoris",
+     "automatisation": "Automatisation",
+     "signalements": "Signaler un problème"
     },
     "accueil": {
-      "entête": "Constellation",
-      "soustitre": "Le système distribué et ouvert pour le partage des données scientifiques.",
-      "orientation": "Un peu perdu.e ?",
-      "contribuerCode": "Contribuer au code",
-      "liens": {
+     "entête": "Constellation",
+     "soustitre": "Le système distribué et ouvert pour le partage des données scientifiques.",
+     "orientation": "Un peu perdu.e ?",
+     "contribuerCode": "Contribuer au code",
+       "liens": {
         "docs": "Lire la documentation",
         "recherche": "Trouver des données",
         "projet": "Démarrer un projet"
       }
     },
     "compte": {
-      "entête": "Paramètres de compte",
+     "entête": "Paramètres de compte",
       "onglets": {
         "compte": {
           "entête": "Mon compte",
@@ -186,30 +183,29 @@
           "entête": "Réseau",
           "connexions": "Connexions",
           "Aucune_connexion": "Aucune connexion pour l'instant"
-        }
-      },
-      "options": {
-        "thèmeNuit": "Claire/Sombre",
-        "thèmeImages": "Thème images",
-        "langue": "Langage d'interface",
-        "numération": "Système de numération"
+      }
+    },
+    "options": {
+     "thèmeNuit": "Claire/Sombre",
+     "thèmeImages": "Thème images",
+     "langue": "Langage d'interface",
+     "numération": "Système de numération"
       }
     },
     "projets": {
-      "entête": "Mes projets",
-      "filtrer": "Filtrer",
-      "nouveau": {
+     "entête": "Mes projets",
+     "filtrer": "Filtrer",
+       "nouveau": {
         "entête": "Nouveau Projet",
         "détails": "Créer un nouveau projet"
       }
     },
-
     "recherche": {
-      "entête": "Explorez les données",
-      "soustitre": "Recherchez mots clefs, région géographique, variable...",
-      "Bases": "Bases de données",
-      "Projets": "Projets",
-      "Personnes": "Personnes"
+     "entête": "Explorez les données",
+     "soustitre": "Recherchez mots clefs, région géographique, variable...",
+     "Bases": "Bases de données",
+     "Projets": "Projets",
+     "Personnes": "Personnes"
     },
     "favoris": {
       "entête": "Mes favoris"
@@ -224,7 +220,6 @@
       "bouton": "Signaler sur GitHub",
       "boutonCourriel": "Par courriel"
     },
-
     "carteVariable": {
       "unités": "unités",
       "Catégorie": "Catégorie",
@@ -315,31 +310,31 @@
         "Nom": "Nom de la BD",
         "Langue": "Langue",
         "Description": "Description"
-        },
-      "visBD": {
-        "நீக்கம்": "Voulez-vous vraiment effacer cette base de données ?",
-        "தரவுத்தளம்_அகற்றல்": "Ceci enlevera la base de données de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées.",
-        "விளக்கம்": "Aucune description",
-        "செய்தி": "Information Générale",
-        "மதிப்பெண்": "Score de qualité",
-        "ஆசிரியர்கள்": "{n} auteurs",
-        "பிரதிகள்": "{n} Réplications",
-        "மாறிகள்": "Variables",
-        "மாறி": "Aucune variable",
-        "வார்த்தைகள்": "Mots-clefs",
-        "இல்லை": "Aucun mot clef",
-        "கண்டறிதல்": "Aucune région détectée",
-        "சித்திரங்கள்": "Tableaux",
-        "அட்டவணைகள்": "Il n'y a aucun tableau pour l'instant",
-        "சேர்க்கவும்": "Ajouter un tableau",
-        "இறக்குமதி": "Importer des données",
-        "நிலவியல்": "Géographie",
-        "நீக்கவும்": "Oui, effacer",
-        "இல்லை": "Non !"
-        },
-     "vis": {
-        "boîteNoms": {
-          "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données."
+    },
+    "visBD": {
+      "நீக்கம்": "Voulez-vous vraiment effacer cette base de données ?",
+      "தரவுத்தளம்_அகற்றல்": "Ceci enlevera la base de données de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées.",
+      "விளக்கம்": "Aucune description",
+      "செய்தி": "Information Générale",
+      "மதிப்பெண்": "Score de qualité",
+      "ஆசிரியர்கள்": "{n} auteurs",
+      "பிரதிகள்": "{n} Réplications",
+      "மாறிகள்": "Variables",
+      "மாறி": "Aucune variable",
+      "வார்த்தைகள்": "Mots-clefs",
+      "இல்லை": "Aucun mot clef",
+      "கண்டறிதல்": "Aucune région détectée",
+      "சித்திரங்கள்": "Tableaux",
+      "அட்டவணைகள்": "Il n'y a aucun tableau pour l'instant",
+      "சேர்க்கவும்": "Ajouter un tableau",
+      "இறக்குமதி": "Importer des données",
+      "நிலவியல்": "Géographie",
+      "நீக்கவும்": "Oui, effacer",
+      "இல்லை": "Non !"
+    },
+    "vis": {
+      "boîteNoms": {
+        "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données."
         },
         "boîteDescr": {
           "titre": "Ajoutez des descriptions."
@@ -355,31 +350,31 @@
         "usageComercial": "Utilisation commercial",
         "usagePrivé": "Utilisation privée",
         "usageBrevets": "Brevets"
-      },
-      "conditions": {
-        "sousTitre": "Conditions",
-        "aucune": "Aucune condition",
-        "attribution": "Attribution",
-        "partageÉgal": "Même licence",
-        "inclureDroitDauteur": "Droit d'auteur",
-        "indiquerChangements": "Indiquer modifications",
-        "partagerCodeSource": "Code source",
-        "usageRéseau": "Usage réseau compris",
-        "aucune": "Aucune condition"
-      },
-      "limitations": {
-        "sousTitre": "Limitations",
-        "aucune": "Aucune limitation",
-        "aucuneResponsabilité": "Aucune resposabilité",
-        "aucuneGarantie": "Aucune garantie",
-        "marqueCommerce": "Marques de commerce",
-        "brevetExclu": "Brevets",
-        "sousLicence": "Sous-licence",
-        "aucune": "Aucune limitation"
-      },
-      "avertissement": "L'information ci-dessous n'est qu'un résumé de la licence, pourrait contenir des erreurs et n'est pas un avis légal. Nous vous recommandons vivement de lire la licence en entier.",
-      "lire": "Lire la licence",
-      "aucunLien": "Aucun lien disponible",
+    },
+    "conditions": {
+      "sousTitre": "Conditions",
+      "aucune": "Aucune condition",
+      "attribution": "Attribution",
+      "partageÉgal": "Même licence",
+      "inclureDroitDauteur": "Droit d'auteur",
+      "indiquerChangements": "Indiquer modifications",
+      "partagerCodeSource": "Code source",
+      "usageRéseau": "Usage réseau compris",
+      "aucune": "Aucune condition"
+    },
+    "limitations": {
+      "sousTitre": "Limitations",
+      "aucune": "Aucune limitation",
+      "aucuneResponsabilité": "Aucune resposabilité",
+      "aucuneGarantie": "Aucune garantie",
+      "marqueCommerce": "Marques de commerce",
+      "brevetExclu": "Brevets",
+      "sousLicence": "Sous-licence",
+      "aucune": "Aucune limitation"
+    },
+    "avertissement": "L'information ci-dessous n'est qu'un résumé de la licence, pourrait contenir des erreurs et n'est pas un avis légal. Nous vous recommandons vivement de lire la licence en entier.",
+     "lire": "Lire la licence",
+     "aucunLien": "Aucun lien disponible",
       "info": {
         "CC-BY-SA-4_0": {
           "nom": "CC BY SA 4,0",
@@ -587,7 +582,6 @@
     "carteFichierInstallation": {
       "பதிப்பு": "Constellation version"
     },
-
     "dialogueNouvelleColonne": {
       "நெடுவரிசை": "Nouvelle colonne",
       "மாறி": "Variable",
@@ -596,27 +590,27 @@
     },
     "celluleFichier": {
       "முன்னோட்டம்": "Ce format de fichier ne peut pas être prévisualisé pour le moment."
-      },
-      "tableau": {
-        "தகவல்கள்": "Données",
-        "vide": "Aucune donnée",
-        "சேர்க்கவும்": "Ajouter une colonne",
-        "சேர்க்க": "Ajouter une rangée"
-      },
-      "opsLangue": {
-        "Contribuer": "Contribuer"
-      },
-      "dialogueTraductionsInterface": {
-        "மொழிபெயர்க்கவும்": "Traduire Constellation",
-        "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0"
-      }
     },
+    "tableau": {
+      "தகவல்கள்": "Données",
+      "vide": "Aucune donnée",
+      "சேர்க்கவும்": "Ajouter une colonne",
+      "சேர்க்க": "Ajouter une rangée"
+    },
+    "opsLangue": {
+      "Contribuer": "Contribuer"
+    },
+    "dialogueTraductionsInterface": {
+      "மொழிபெயர்க்கவும்": "Traduire Constellation",
+      "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0"
+    }
+ },
 
   "kaq": {
     "accueil": {
       "entête": "Ch'umil"
-    }
-  },
+     }
+   },
 
   "த": {
     "communs": {
@@ -661,7 +655,7 @@
         "projet": "ஒரு திட்டத்தைத் தொடங்குங்கள்"
       }
     },
-      "exporter": {
+    "exporter": {
       "titre": "தரவின் நகலை ஏற்றுமதி செய்யவும்",
       "formatFichier": "கோப்பு வகை"
     },
@@ -791,7 +785,7 @@
            "D": "ஈ",
            "F": "உ"
         }
-      },
+    },
     "itemTableau": {
       "அட்டவணை_நீக்கம்": "இந்த அட்டவணையை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",
       "தகவல்": "இது உங்கள் சாதனத்திலிருந்து பலகையை அகற்றும். பிற விண்மீன் கூட்டத்தின் பயனர்கள் உருவாக்கிய நகல்களை இது நீக்காது.",
@@ -829,16 +823,16 @@
        "accès": "அணுகல்",
        "couverture": "சோதனை துழாவுகை",
        "valide": "தரவு தரம்"
-     },
-     "sousTitres": {
+    },
+    "sousTitres": {
        "accès": "இந்த பிரிவு உங்கள் தரவுத்தளத்தின் அணுகலை அளவிடுகிறது. உங்கள் தரவு எங்கிருந்து வருகிறது என்பதைப் பேசும் மொழிகளில் இது எவ்வளவு அதிகமாகக் கிடைக்கிறதோ, அவ்வளவு அதிகமாக உங்கள் மதிப்பெண்ணையும் பெறுவீர்கள்.",
        "couverture": "இந்தப் பிரிவு, தரக் கட்டுப்பாட்டுச் சோதனை மூலம் உள்ளடக்கப்பட்ட உங்கள் நெடுவரிசைகளின் சதவீதத்தை அளவிடுகிறது. கீழே உள்ள சோதனைகளைச் சேர்க்கலாம் அல்லது மாற்றலாம்.",
        "valide": "இந்தப் பிரிவு தரக் கட்டுப்பாட்டுச் சோதனையில் தேர்ச்சி பெறும் தரவின் சதவீதத்தை அளவிடுகிறது. ஏதேனும் சிக்கல் உள்ள தரவு இருந்தால், கீழே காணலாம்."
-     }
-   },
-   "itemErreurConstellation": {
+      }
+    },
+    "itemErreurConstellation": {
      "Tracé": "சுவடு"
-   },
+    },
     "dialogueAjouterDispositif": {
       "இணைத்தல்": "சாதனங்களை இணைக்கவும்",
       "இணைப்பு_முறை": "நீங்கள் வெவ்வேறு உலாவிகள், தொலைபேசிகள் அல்லது விண்மீனின் உள்ளூர் நிறுவல்களை இணைக்கலாம்.",
@@ -856,8 +850,8 @@
       "சாதனத்தை_சேர்த்தல்": "இந்தச் சாதனத்தை ஏற்கனவே உள்ள கணக்கில் சேர்க்கவும்",
       "Suivant": "அடுத்தது",
       "Retour": "திரும்பவும்"
-   },
-   "compte": {
+    },
+    "compte": {
      "entête": "கணக்கு அமைப்புகள்",
      "onglets": {
        "compte": {
@@ -875,35 +869,35 @@
          "Dispositif": "இந்த சாதனம்",
          "சேர்த்தல்": "சாதனத்தைச் சேர்க்கவும்",
          "பாதுகாப்பு": "கூடுதல் பாதுகாப்பிற்காக உங்கள் கணக்கில் மற்றொரு கணினி, தொலைபேசி அல்லது உலாவியைச் சேர்க்கவும்."
-      },
+    },
        "thème": {
          "entête": "வடிவூட்டம் மற்றும் மொழிகள்",
          "couleurs": "வண்ணங்கள்",
          "langue": "மொழி",
          "culture": "கலாச்சாரம்"
-       },
+    },
        "réseau": {
          "entête": "வலைப்பின்னல்",
          "connexions": "இணைப்புகள்",
          "Aucune_connexion": "இன்னும் இணைப்பு இல்லை"
        }
-     },
-     "options": {
+    },
+    "options": {
        "thèmeNuit": "ஒளி/இருள்",
        "thèmeImages": "படத்தின் வடிவூட்டம",
        "langue": "இடைமுக மொழி",
        "numération": "எண் அமைப்பு"
-     }
-   },
-   "projets": {
+      }
+    },
+    "projets": {
      "entête": "எனது திட்டங்கள்",
      "filtrer": "வடிகட்டி",
      "nouveau": {
        "entête": "புதிய திட்டம்",
        "détails": "புதிய திட்டத்தை உருவாக்கவும்"
-     }
-   },
-     "conditions": {
+      }
+    },
+    "conditions": {
       "entête": "விதிமுறைகள் மற்றும் நிபந்தனைகள்"
     },
     "bd": {
@@ -933,32 +927,32 @@
         "Nom": "தரவுத்தள பெயர்",
         "Langue": "மொழி",
         "Description": "விளக்கம்"
+    },
+    "visBD": {
+       "நீக்கம்": "இந்தத் தரவுத்தளத்தை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",
+       "தரவுத்தளம்_அகற்றல்": "இது உங்கள் சாதனத்திலிருந்து தரவுத்தளத்தை அகற்றும். பிற விண்மீன் கூட்டத்தின் பயனர்கள் உருவாக்கிய நகல்களை இது அழிக்காது.",
+       "விளக்கம்": "விளக்கம் இல்லை",
+       "செய்தி": "பொதுவான செய்தி",
+       "மதிப்பெண்": "தரமான மதிப்பெண்",
+       "ஆசிரியர்கள்": "{n} ஆசிரியர்கள்",
+       "பிரதிகள்": "{n} பிரதிகள்",
+       "மாறிகள்": "மாறிகள்",
+       "மாறி": "மாறிகள் இல்லை",
+       "வார்த்தைகள்": "முக்கிய வார்த்தைகள்",
+       "இல்லை": "முக்கிய வார்த்தைகள் இல்லை",
+       "கண்டறிதல்": "எந்த பகுதியும் கண்டறியப்படவில்லை",
+       "சித்திரங்கள்": "சித்திரங்கள்",
+       "அட்டவணைகள்": "தற்போது அட்டவணைகள் இல்லை",
+       "சேர்க்கவும்": "ஒரு அட்டவணையைச் சேர்க்கவும்",
+       "இறக்குமதி": "தரவு இறக்குமதி",
+       "நிலவியல்": "நிலவியல்",
+       "நீக்கவும்": "ஆமாம், நீக்கவும்",
+       "இல்லை": "இல்லை !"
+    },
+    "vis": {
+      "boîteNoms": {
+        "sousTitre": "அதிக மொழிகள் இருந்தால் சிறந்தது! உங்கள் தரவு எங்கிருந்து வருகிறது என்பதைப் பேசும் மொழிகளுக்கு முன்னுரிமை அளிப்பதைக் கவனியுங்கள்."
        },
-       "visBD": {
-         "நீக்கம்": "இந்தத் தரவுத்தளத்தை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",
-         "தரவுத்தளம்_அகற்றல்": "இது உங்கள் சாதனத்திலிருந்து தரவுத்தளத்தை அகற்றும். பிற விண்மீன் கூட்டத்தின் பயனர்கள் உருவாக்கிய நகல்களை இது அழிக்காது.",
-         "விளக்கம்": "விளக்கம் இல்லை",
-         "செய்தி": "பொதுவான செய்தி",
-         "மதிப்பெண்": "தரமான மதிப்பெண்",
-         "ஆசிரியர்கள்": "{n} ஆசிரியர்கள்",
-         "பிரதிகள்": "{n} பிரதிகள்",
-         "மாறிகள்": "மாறிகள்",
-         "மாறி": "மாறிகள் இல்லை",
-         "வார்த்தைகள்": "முக்கிய வார்த்தைகள்",
-         "இல்லை": "முக்கிய வார்த்தைகள் இல்லை",
-         "கண்டறிதல்": "எந்த பகுதியும் கண்டறியப்படவில்லை",
-         "சித்திரங்கள்": "சித்திரங்கள்",
-         "அட்டவணைகள்": "தற்போது அட்டவணைகள் இல்லை",
-         "சேர்க்கவும்": "ஒரு அட்டவணையைச் சேர்க்கவும்",
-         "இறக்குமதி": "தரவு இறக்குமதி",
-         "நிலவியல்": "நிலவியல்",
-         "நீக்கவும்": "ஆமாம், நீக்கவும்",
-          "இல்லை": "இல்லை !"
-         },
-      "vis": {
-        "boîteNoms": {
-          "sousTitre": "அதிக மொழிகள் இருந்தால் சிறந்தது! உங்கள் தரவு எங்கிருந்து வருகிறது என்பதைப் பேசும் மொழிகளுக்கு முன்னுரிமை அளிப்பதைக் கவனியுங்கள்."
-        },
         "boîteDescr": {
           "titre": "விளக்கங்களைச் சேர்க்கவும்."
         }
@@ -984,18 +978,18 @@
         "partagerCodeSource": "மூல குறியீடு",
         "usageRéseau": "இணையம் பயன்பாடு சேர்க்கப்பட்டுள்ளது",
         "aucune": "எதுவும் இல்லை"
-      },
-      "limitations": {
-        "sousTitre": "கட்டுப்பாடுகள்",
-        "aucune": "வரம்புகள் இல்லை",
-        "aucuneResponsabilité": "பொறுப்பு இல்லை",
-        "aucuneGarantie": "உத்தரவாதம் இல்லை",
-        "marqueCommerce": "வர்த்தக முத்திரைகள்",
-        "brevetExclu": "காப்புரிமைகள்",
-        "sousLicence": "உரிமம் பெற்றது",
-        "aucune": "வரம்புகள் இல்லை"
-      },
-      "avertissement": "கீழே உள்ள தகவல் உரிமச் சுருக்கம் மட்டுமே, பிழைகள் இருக்கலாம் மற்றும் சட்ட ஆலோசனை அல்ல. முழு உரிமத்தையும் படிக்குமாறு நாங்கள் பரிந்துரைக்கிறோம்.",
+    },
+    "limitations": {
+      "sousTitre": "கட்டுப்பாடுகள்",
+      "aucune": "வரம்புகள் இல்லை",
+      "aucuneResponsabilité": "பொறுப்பு இல்லை",
+      "aucuneGarantie": "உத்தரவாதம் இல்லை",
+      "marqueCommerce": "வர்த்தக முத்திரைகள்",
+      "brevetExclu": "காப்புரிமைகள்",
+      "sousLicence": "உரிமம் பெற்றது",
+      "aucune": "வரம்புகள் இல்லை"
+    },
+    "avertissement": "கீழே உள்ள தகவல் உரிமச் சுருக்கம் மட்டுமே, பிழைகள் இருக்கலாம் மற்றும் சட்ட ஆலோசனை அல்ல. முழு உரிமத்தையும் படிக்குமாறு நாங்கள் பரிந்துரைக்கிறோம்.",
       "lire": "உரிமத்தைப் படிக்கவும்",
       "aucunLien": "இணைப்பு இல்லை",
       "info": {
@@ -1188,7 +1182,6 @@
         }
       }
     },
-
     "dialogueMotsClefs": {
       "Motsclefs": "முக்கிய வார்த்தைகள்",
       "motclef": "புதிய முக்கிய சொல்",
@@ -1217,13 +1210,13 @@
     },
     "celluleFichier": {
       "முன்னோட்டம்": "இந்தக் கோப்பு வடிவத்தை இப்போது முன்னோட்டமிட முடியாது."
-      },
-      "tableau": {
-        "தகவல்கள்": "தகவல்கள்",
-        "vide": "தகவல் இல்லை",
-        "சேர்க்கவும்": "ஒரு நெடுவரிசையைச் சேர்க்கவும்",
-        "சேர்க்க": "வரிசையைச் சேர்க்கவும்"
-      },
+    },
+    "tableau": {
+      "தகவல்கள்": "தகவல்கள்",
+      "vide": "தகவல் இல்லை",
+      "சேர்க்கவும்": "ஒரு நெடுவரிசையைச் சேர்க்கவும்",
+      "சேர்க்க": "வரிசையைச் சேர்க்கவும்"
+    },
     "dialogueTraductionsInterface": {
       "மொழிபெயர்க்கவும்": "விண்மீன் தொகுப்பை மொழிபெயர்க்கவும்",
       "சேர்த்தல்": "நீங்கள் பங்களிக்கும் மொழிபெயர்ப்புகள் GNU GPL Affero 3.0 உரிமத்தின் கீழ் விண்மீன் விநியோகங்களில் சேர்க்கப்படும்"
