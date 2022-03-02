@@ -235,7 +235,7 @@
         "audio": "Audio",
         "photo": "Photo",
         "fichier": "Fichier",
-      "info": {
+        "info": {
           "numérique": "Numérique",
           "date": "Date",
           "heure": "Heure",
