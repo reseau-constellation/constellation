@@ -69,10 +69,10 @@
            </template>
           <v-card>
             <v-card-title class="headline red--text">
-              {{ $t("visBD.நீக்கம்") }}
+              {{ $t("bd.visBD.நீக்கம்") }}
              </v-card-title>
             <v-card-text>
-              {{ $t("visBD.தரவுத்தளம்_அகற்றல்") }}
+              {{ $t("bd.visBD.தரவுத்தளம்_அகற்றல்") }}
               </v-card-text>
              <v-divider></v-divider>
             <v-card-actions>
@@ -83,10 +83,10 @@
                 outlined
                 @click="dialogueEffacerBd = false"
               >
-              {{ $t("visBD.இல்லை") }}
+              {{ $t("bd.visBD.இல்லை") }}
               </v-btn>
               <v-btn color="error" depressed @click="effacerBd">
-                {{ $t("visBD.நீக்கவும்") }}
+                {{ $t("bd.visBD.நீக்கவும்") }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -94,7 +94,7 @@
       </v-card-title>
       <v-card-subtitle>
         <span v-if="descriptionsBD">
-          {{ description ? description : $t("visBD.விளக்கம்") }}
+          {{ description ? description : $t("bd.visBD.விளக்கம்") }}
         </span>
         <v-menu
           v-if="permissionÉcrire"
@@ -120,7 +120,7 @@
       <v-card-text>
         <v-card flat class="mx-3 mb-3">
           <p class="mb-0 text-overline">
-            {{ $t("visBD.செய்தி") }}</p>
+            {{ $t("bd.visBD.செய்தி") }}</p>
           <div class="d-flex flex-wrap">
             <v-card flat width="200" class="mb-3">
               <dialogueQualité
@@ -144,7 +144,7 @@
                       </v-progress-circular>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      {{ $t("visBD.மதிப்பெண்") }}
+                      {{ $t("bd.visBD.மதிப்பெண்") }}
                       <span
                         v-if="score"
                         :style="`color:${couleurScore(score.total).couleur}`"
@@ -171,7 +171,7 @@
                     <v-list-item-content>
                       <v-skeleton-loader v-if="auteurs === null" type="chip" />
                       <span v-else>
-                        {{auteurs ? $t("visBd.ஆசிரியர்கள்",{n:formatterChiffre(auteurs.length)}) : ""}}
+                        {{auteurs ? $t("bd.visBd.ஆசிரியர்கள்",{n:formatterChiffre(auteurs.length)}) : ""}}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -230,7 +230,7 @@
                         type="chip"
                       />
                       <span v-else>
-                      {{réplications ? $t("visBD.பிரதிகள்",{n:formatterChiffre(réplications.length)}) : ""}}
+                      {{réplications ? $t("bd.visBD.பிரதிகள்",{n:formatterChiffre(réplications.length)}) : ""}}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -243,15 +243,15 @@
           <div class="d-flex flex-wrap">
             <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">
-                {{ $t("visBD.மாறிகள்") }}</p>
+                {{ $t("bd.visBD.மாறிகள்") }}</p>
               <p v-if="!variables.length" class="text--disabled">
-                {{ $t("visBD.மாறி") }}
+                {{ $t("bd.visBD.மாறி") }}
               </p>
               <jeton-variable v-for="id in variables" :key="id" :id="id" />
             </v-card>
             <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">
-                {{ $t("visBD.வார்த்தைகள்") }}
+                {{ $t("bd.visBD.வார்த்தைகள்") }}
                 <dialogue-mots-clefs
                   v-if="permissionÉcrire"
                   :selectionnes="motsClefs"
@@ -271,7 +271,7 @@
                 </dialogue-mots-clefs>
               </p>
               <p v-if="!motsClefs.length" class="text--disabled">
-              {{ $t("visBD.இல்லை") }}
+              {{ $t("bd.visBD.இல்லை") }}
               </p>
               <jeton-mot-clef
                 v-for="m in motsClefs"
@@ -283,10 +283,10 @@
             </v-card>
             <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">
-                {{ $t("visBD.நிலவியல்") }}
+                {{ $t("bd.visBD.நிலவியல்") }}
               </p>
               <p v-if="!géog.length" class="text--disabled">
-                {{ $t("visBD.கண்டறிதல்") }}
+                {{ $t("bd.visBD.கண்டறிதல்") }}
               </p>
               <v-chip
                 v-for="m in géog"
@@ -302,7 +302,7 @@
         </v-card>
         <v-list>
           <p class="mb-0 text-overline">
-            {{ $t("visBD.சித்திரங்கள்") }}
+            {{ $t("bd.visBD.சித்திரங்கள்") }}
             <v-btn v-if="permissionÉcrire" icon small @click="ajouterTableau">
               <v-icon small>mdi-plus</v-icon>
             </v-btn>
@@ -311,7 +311,7 @@
           <v-skeleton-loader v-if="tableaux === null" type="paragraph" />
           <div v-else-if="!tableaux.length" class="text-center">
             <p class="text-h5 mt-5">
-              {{ $t("visBD.அட்டவணைகள்") }} </p>
+              {{ $t("bd.visBD.அட்டவணைகள்") }} </p>
             <v-img :src="image('vide')" class="my-5" contain height="175px" />
              <v-btn
               v-if="permissionÉcrire"
@@ -321,7 +321,7 @@
               text
               @click="ajouterTableau"
             >
-            {{ $t("visBD.சேர்க்கவும்") }}
+            {{ $t("bd.visBD.சேர்க்கவும்") }}
             </v-btn>
             <v-btn
               v-if="permissionÉcrire"
@@ -331,7 +331,7 @@
               text
               @click="importer"
             >
-            {{ $t("visBD.இறக்குமதி") }}
+            {{ $t("bd.visBD.இறக்குமதி") }}
            </v-btn>
           </div>
           <transition-group
@@ -443,7 +443,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         disabled?: boolean;
       }[] {
         return [
-          { text: "Données", href: "/bd" },
+          { text: this.$t"Données", href: "/bd" },
           { text: couper(this.nom, 35), disabled: true },
         ];
       },
