@@ -67,7 +67,7 @@
           class="ma-2"
           @click="ouvrirLien(URL_GIT)"
         >
-          {{ $t("acceuil.contribuerCode") }}
+          {{ $t("accueil.contribuerCode") }}
           <v-icon right>mdi-git</v-icon>
         </v-btn>
         <v-btn
