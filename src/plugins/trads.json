@@ -197,11 +197,11 @@
       }
     },
     "recherche": {
-     "entête": "Explorez les données",
-     "soustitre": "Recherchez mots clefs, région géographique, variable...",
-     "Bases": "Bases de données",
-     "Projets": "Projets",
-     "Personnes": "Personnes"
+      "entête": "Explorez les données",
+      "soustitre": "Recherchez mots clefs, région géographique, variable...",
+      "Bases": "Bases de données",
+      "Projets": "Projets",
+      "Personnes": "Personnes"
     },
     "favoris": {
       "entête": "Mes favoris"
