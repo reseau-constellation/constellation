@@ -443,7 +443,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         disabled?: boolean;
       }[] {
         return [
-          { text: this.$t("bd.visBD.Données") as string, href: "/bd" },
+          { text: this.$t("bd.visBD.தகவல்கள்") as string, href: "/bd" },
           { text: couper(this.nom, 35), disabled: true },
         ];
       },
