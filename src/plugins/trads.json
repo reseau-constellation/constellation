@@ -305,7 +305,9 @@
         "Retour": "Retour",
         "Nom": "Nom de la BD",
         "Langue": "Langue",
-        "Description": "Description"
+        "Description": "Description",
+        "Licences": "Licences pour BDs (recommendées)",
+        "logiciels": "Licences pour logiciels (non recommendées)"
     },
     "visBD": {
       "நீக்கம்": "Voulez-vous vraiment effacer cette base de données ?",
@@ -916,7 +918,9 @@
         "Retour": "திரும்பவும்",
         "Nom": "தரவுத்தள பெயர்",
         "Langue": "மொழி",
-        "Description": "விளக்கம்"
+        "Description": "விளக்கம்",
+        "Licences": "தரவுத்தள உரிமங்கள் (பரிந்துரைக்கப்பட்டது)",
+        "logiciels": "மென்பொருள் உரிமங்கள் (பரிந்துரைக்கப்படவில்லை)"
     },
     "visBD": {
        "நீக்கம்": "இந்தத் தரவுத்தளத்தை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",

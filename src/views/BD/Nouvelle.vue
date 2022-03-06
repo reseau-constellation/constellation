@@ -287,7 +287,7 @@ export default mixins(
         divider?: boolean;
         value?: string;
         text?: string;
-      }[] = [{ header: "Licences pour BDs (recommendées)" }, { divider: true }];
+      }[] = [{ header: $t("bd.nouvelle.Licences") }, { divider: true }];
       const licences: string[] = this.licences.filter((l: string) =>
         this.licencesSpécilisées ? true : !infoLicences[l].spécialisée
       );
@@ -314,7 +314,7 @@ export default mixins(
       );
       if (licencesCode.length) {
         licencesFinales.push({
-          header: "Licences pour logiciels (non recommendées)",
+          header: $t("bd.nouvelle.logiciels"),
         });
         licencesFinales.push({ divider: true });
         licencesFinales.push(...générerÉléments(licencesCode));
