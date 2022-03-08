@@ -264,7 +264,7 @@ export default mixins(
       disabled?: boolean;
     }[] {
       return [
-        { text: "Données", href: "/bd" },
+        { text: this.$t("bd.visBD.தகவல்கள்") as string, href: "/bd" },
         { text: this.$t("bd.nouvelle.petitPousset") as string, disabled: true },
       ];
     },
