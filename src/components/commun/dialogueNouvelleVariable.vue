@@ -80,6 +80,9 @@
               <v-list-item-content>
                 {{ $t(`variables.catégories.${item.text}`) }}
               </v-list-item-content>
+              <v-list-item-subtitle>
+                {{$t("variables.catégories.info."+catégorie)}}
+              </v-list-item-subtitle>
             </v-list-item>
           </template>
           <template v-slot:selection="{ item }">

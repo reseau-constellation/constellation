@@ -171,7 +171,7 @@
                     <v-list-item-content>
                       <v-skeleton-loader v-if="auteurs === null" type="chip" />
                       <span v-else>
-                        {{auteurs ? $t("bd.visBd.எழுத்தாளர்கள்",{n:formatterChiffre(auteurs.length)}) : ""}}
+                        {auteurs ? $t("bd.visBd.எழுத்தாளர்கள்",{n:formatterChiffre(auteurs.length)}) : ""}}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
