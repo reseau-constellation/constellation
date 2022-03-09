@@ -111,7 +111,10 @@
       "கட்டுப்பாடு":"Contrôles de qualité",
       "சேர்க்க": "Ajouter une règle",
       "Description": "Description",
-      "Nom": "Nom"
+      "Nom": "Nom",
+      "எதைக்_குறிக்கிறது": "Que représente votre variable ?",
+      "சிறந்தது": "Le plus de langues, le mieux !",
+      "தேர்ந்தெடுக்கவும்": "Choisissez un nom pour votre variable"
     },
     "qualité": {
       "titre": "Composition du score",
@@ -808,7 +811,10 @@
       "கட்டுப்பாடு":"தரக் கட்டுப்பாடுகள்",
       "சேர்க்க": "விதியைச் சேர்க்கவும்",
       "Description": "விளக்கம்",
-      "Nom": "கடைசி பெயர்"
+      "Nom": "கடைசி பெயர்",
+      "எதைக்_குறிக்கிறது": "உங்கள் மாறி எதைக் குறிக்கிறது?",
+      "சிறந்தது": "அதிக மொழிகள், சிறந்தது!",
+      "தேர்ந்தெடுக்கவும்": "உங்கள் மாறிக்கு ஒரு பெயரைத் தேர்ந்தெடுக்கவும்"
     },
     "qualité": {
      "titre": "மதிப்பெண் கலவை",

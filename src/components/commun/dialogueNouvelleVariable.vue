@@ -32,8 +32,8 @@
           </template>
           <boîteNoms
             :noms="noms"
-            titre="Choisissez un nom pour votre variable"
-            sousTitre="Le plus de langues, le mieux !"
+            :titre="$t('dialogueNouvelleVariable.தேர்ந்தெடுக்கவும்')"
+            :sousTitre="$t('dialogueNouvelleVariable.சிறந்தது')"
             @sauvegarder="sauvegarderNom"
             @changerLangue="changerLangueNom"
             @effacer="effacerNom"
@@ -61,8 +61,8 @@
           </template>
           <boîteNoms
             :noms="descriptions"
-            titre="Que représente votre variable ?"
-            sousTitre="Le plus de langues, le mieux !"
+            :titre="$t('dialogueNouvelleVariable.எதைக்_குறிக்கிறது')"
+            :sousTitre="$t('dialogueNouvelleVariable.சிறந்தது')"
             @sauvegarder="sauvegarderDescr"
             @changerLangue="changerLangueDescr"
             @effacer="effacerDescr"
