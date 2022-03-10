@@ -57,7 +57,7 @@
       "Modérateur": "Modérateur"
     },
     "dialogueRéplications": {
-      "பிரதிகள்": "Réplications",
+      "நகல்கள்": "Réplications",
       "விண்மீன்_தரவு": "Chaque réplication de la base de données contribue à sa disponibilité au sein du réseau Constellation",
       "சாதனங்கள்": "Dispositifs",
       "enLigne": "Dont {n} en ligne",
@@ -760,7 +760,7 @@
       "Modérateur": "மதிப்பீட்டாளர்"
     },
     "dialogueRéplications": {
-      "பிரதிகள்": "பிரதிகள்",
+      "நகல்கள்": "நகல்கள்",
       "விண்மீன்_தரவு": "தரவுத்தளத்தின் ஒவ்வொரு பிரதியும் விண்மீன் நெட்வொர்க்கிற்குள் அதன் கிடைக்கும் தன்மைக்கு பங்களிக்கிறது",
       "சாதனங்கள்": "சாதனங்கள்",
       "enLigne": "இணையத்தில் {n} உள்ளன",
