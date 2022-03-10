@@ -6,7 +6,7 @@
 
     <v-card>
       <v-card-title class="headline mb-2">
-      {{$t("dialogueRéplications.பிரதிகள்")}} </v-card-title>
+      {{$t("dialogueRéplications.நகல்கள்")}} </v-card-title>
       <v-card-subtitle>
       {{ $t("dialogueRéplications.விண்மீன்_தரவு") }}
       </v-card-subtitle>

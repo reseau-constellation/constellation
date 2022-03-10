@@ -27,7 +27,7 @@
               v-bind="attrs"
               :readonly="true"
               :value="nom"
-              :label="$t('dialogueNouvelleVariable.Nom')"
+              :label="$t('dialogueNouvelleVariable.nom')"
             />
           </template>
           <boîteNoms
@@ -80,6 +80,12 @@
               <v-list-item-content>
                 {{ $t(`variables.catégories.${item.text}`) }}
               </v-list-item-content>
+              <template v-slot:activator="{ on, attrs }">
+                <v-chip  label outlined small v-on="on" v-bind="attrs">
+                 <v-icon left small>{{ icôneCatégorie }}</v-icon>
+                {{ $t("variables.catégories."+ catégorie) }}
+                </v-chip>
+                </template>
               <v-list-item-subtitle>
                 {{$t("variables.catégories.info."+catégorie)}}
               </v-list-item-subtitle>
