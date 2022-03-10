@@ -325,7 +325,7 @@ export default mixins(
       );
       if (licencesArtistiques.length) {
         licencesFinales.push({
-          header: "Licences artistiques (non recommendées)",
+          header: this.$t("bd.nouvelle.artistiques") as string,
         });
         licencesFinales.push({ divider: true });
         licencesFinales.push(...générerÉléments(licencesArtistiques));

@@ -26,10 +26,9 @@
                   {{ $t("dialogueRéplications.சாதனங்கள்") }}
                   <v-icon right>mdi-monitor-cellphone</v-icon>
                 </v-list-item-title>
-                <v-list-item-subtitle class="success--text"
-                  >{{ $t("dialogueRéplication.enLigne", { n: dispositifsEnLigne.length }) }}
-                  </v-list-item-subtitle
-                >
+                <v-list-item-subtitle class="success--text">
+                  {{ $t("dialogueRéplications.enLigne", { n: dispositifsEnLigne.length }) }}
+                  </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
 
@@ -45,7 +44,7 @@
                 <v-icon right>mdi-account</v-icon>
                 </v-list-item-title>
                 <v-list-item-subtitle class="success--text"
-                  >{{ $t("dialogueRéplication.enLigne", { n: membresEnLigne.length }) }}
+                  >{{ $t("dialogueRéplications.enLigne", { n: membresEnLigne.length }) }}
                   </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
