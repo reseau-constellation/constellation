@@ -310,7 +310,8 @@
         "Description": "Description",
         "Licences": "Licences pour BDs (recommendées)",
         "logiciels": "Licences pour logiciels (non recommendées)",
-        "artistiques": "Licences artistiques (non recommendées)"
+        "artistiques": "Licences artistiques (non recommendées)",
+        "வெறு_உரிமங்கள்": "Autres licences (non recommendées)"
     },
     "visBD": {
       "நீக்கம்": "Voulez-vous vraiment effacer cette base de données ?",
@@ -925,7 +926,8 @@
         "Description": "விளக்கம்",
         "Licences": "தரவுத்தள உரிமங்கள் (பரிந்துரைக்கப்பட்டது)",
         "logiciels": "மென்பொருள் உரிமங்கள் (பரிந்துரைக்கப்படவில்லை)",
-        "artistiques": "உரிம கலைப்பொருட்கள் (பரிந்துரைக்கப்படாதவை)"
+        "artistiques": "உரிம கலைப்பொருட்கள் (பரிந்துரைக்கப்படவில்ல)",
+        "வெறு_உரிமங்கள்": "வெறு உரிமங்கள் (பரிந்துரைக்கப்படவில்லை)"
     },
     "visBD": {
        "நீக்கம்": "இந்தத் தரவுத்தளத்தை நிச்சயமாக நீக்க விரும்புகிறீர்களா?",

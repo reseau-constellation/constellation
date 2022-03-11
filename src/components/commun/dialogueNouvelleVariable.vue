@@ -71,18 +71,7 @@
 
         <p class="text-overline mb-2">
           {{ $t("dialogueNouvelleVariable.Catégorie") }}</p>
-          <v-tooltip v-if="catégorie !== undefined" bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-chip  label outlined small v-on="on" v-bind="attrs">
-             <v-icon left small>{{ icôneCatégorie }}</v-icon>
-            {{ $t("variables.catégories."+ catégorie) }}
-            </v-chip>
-            </template>
-          <span>
-          {{$t("variables.catégories.info."+catégorie)}}
-          </span>
-        </v-tooltip>
-        <v-select v-model="catégorie" :items="optionsCatégories" outlined dense>
+         <v-select v-model="catégorie" :items="optionsCatégories" outlined dense>
           <template v-slot:item="{ on, item }">
             <v-list-item v-on="on">
               <v-list-item-avatar>
@@ -91,6 +80,9 @@
               <v-list-item-content>
                 {{ $t(`variables.catégories.${item.text}`) }}
               </v-list-item-content>
+              <v-list-item-subtitle>
+                {{$t("variables.catégories.info."+catégorie)}}
+              </v-list-item-subtitle>
             </v-list-item>
           </template>
           <template v-slot:selection="{ item }">
@@ -99,7 +91,7 @@
               {{ $t(`variables.catégories.${item.text}`) }}
             </v-chip>
           </template>
-        </v-select>
+         </v-select>
 
         <p class="text-overline mb-0">
           {{ $t("dialogueNouvelleVariable.கட்டுப்பாடு") }}</p>

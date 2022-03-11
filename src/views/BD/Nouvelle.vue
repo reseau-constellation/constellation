@@ -335,7 +335,8 @@ export default mixins(
         (l) => infoLicences[l].catégorie === catégories.AUTRE
       );
       if (licencesAutres.length) {
-        licencesFinales.push({ header: "Autres licences (non recommendées)" });
+        licencesFinales.push({ header:  this.$t("bd.nouvelle.வெறு_உரிமங்கள்") as string,
+      });
         licencesFinales.push({ divider: true });
         licencesFinales.push(...générerÉléments(licencesAutres));
       }
