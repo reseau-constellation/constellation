@@ -1,7 +1,7 @@
 <template>
   <span>
     <p class="mb-0 text-overline">
-      {{ $t("bd.visBD.Données") }}
+      {{ $t("bd.visBD.தகவல்கள்") }}
       <dialogue-nouvelle-colonne
         :permissionModifier="permissionÉcrire"
         @sauvegarder="creerColonne"
