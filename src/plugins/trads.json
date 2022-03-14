@@ -267,7 +267,7 @@
       "p2_1": "Les données disponibles à travers Constellation ont été contribuées par d'autres membres de la communauté. Chaque personne, au moment de partager ses données, doit spécifier une licence d'accès ouvert ; celle-ci est indiquée sur chaque base de données. Soyez toujours conscient de respecter les licences appartenant aux données que vous utilisez.",
       "p2_2": "Ne partagez que des données qui vous appartiennent ou dont vous détenez, de la part de la personne à qui elles appartiennent, la permission écrite de les partager sous la licence que vous y spécifierez. Cela va sans dire, mais ne partagez rien d'illégal non plus.",
       "p2_3": "Si quelqu'un d'autre a partagé des données qui vous appartiennent de manière non conforme aux termes de la licence que vous y aviez appliquée et nous résoudrons le problème.",
-      "t3": "Vie privée et sécurité",
+      "t3": "Vie privée et சத் csécurité",
       "p3_1": "Veuillez prendre note que Constellation est un réseau distribué, ouvert et publique. Tout ce que vous y partagerez (bases de données, votre nom, information de contact) deviendra accessible à tout le réseau.",
       "p3_2": "Ce qui est vrai de tout système informatique l'est encore plus dans le contexte d'un réseau distribué : une fois que de l'information est partagée avec d'autres personnes, vous pouvez toujours la supprimer vous-même, mais il est effectivement impossible de forcer les personnes qui l'ont déjà reçue de la supprimer également (même si vous pouvez toujours leur demander gentillement). **Ne partagez donc que des données que vous voulez partager avec toute la planète Terre. Ne partagez jamais des données confidentielles sur Constellation**.",
       "p3_3": "En revanche, il n'y a pas de serveur central et vous ne partagez que ce que vous décidez de contribuer. Donc, fini le suivi de vos activités en ligne et de vos données personnelles ! Votre activité d'utilisation, vos activités et intérêts, demeurent sur votre ordinateur (même si vous utilisez la version Internet de ce logiciel).",
@@ -416,14 +416,17 @@
         },
         "0bsd": {
           "nom": "BSD Zéro Clause",
+          "abr": "0bsd",
           "lien": "https://choosealicense.com/licenses/0bsd/"
         },
         "afl-3_0": {
           "nom": "Licence libre académique",
+          "abr": "afl-3_0",
           "lien": "https://choosealicense.com/licenses/afl-3.0/"
         },
         "agpl-3_0": {
           "nom": "Licence Publique Générale GNU Affero 3,0",
+          "abr": "agpl-3_0",
           "lien": "https://choosealicense.com/licenses/agpl-3.0/"
         },
         "apache-2_0": {
@@ -1032,150 +1035,187 @@
         },
         "0bsd": {
           "nom": "பெர்க்லி மென்பொருள் பரவல் பூஜ்ஜிய விதி",
+          "abr": "பெ.மெ.ப பூஜ்ஜிய விதி",
           "lien": "https://choosealicense.com/licenses/0bsd/"
         },
         "afl-3_0": {
           "nom": "இலவச கல்வி உரிமம்",
+          "abr": "இ.க உரிமம்",
           "lien": "https://choosealicense.com/licenses/afl-3.0/"
         },
         "agpl-3_0": {
           "nom": "பொது உரிமம் ஜிஎன்யூ அஃபெரோ ௩,௦",
+          "abr": "பொ.உ.ஜிஎன்யூ அஃபெரோ ௩,௦",
           "lien": "https://choosealicense.com/licenses/agpl-3.0/"
         },
         "apache-2_0": {
           "nom": "உரிமம் அப்பாச்சி ௨.௦",
+          "abr": "உ.அப்பாச்சி ௨.௦",
           "lien": "https://choosealicense.com/licenses/apache-2.0/"
         },
         "artistic-2_0": {
           "nom": "கலை உரிமம் ௨.௦",
+          "abr": "க.உரிமம் ௨.௦",
           "lien": "https://choosealicense.com/licenses/artistic-2.0/"
         },
         "bsd-2-clause": {
           "nom": "எளிமைப்படுத்தப்பட்ட ௨-பிரிவு பெர்க்லி மென்பொருள் பரவல் உரிமம்",
+          "abr": "பெ.மெ.ப.உரிமம்",
           "lien": "https://choosealicense.com/licenses/bsd-2-clause/"
         },
         "bsd-3-clause-clear": {
           "nom": "௩-பிரிவு பெர்க்லி மென்பொருள் பரவல் உரிமத்தை அழிக்கவும்",
+          "abr": "பெ.மெ.ப.உரிமம் அழிக்கவும்",
           "lien": "https://choosealicense.com/licenses/bsd-3-clause-clear/"
         },
         "bsd-3-clause": {
           "nom": "பெர்க்லி மென்பொருள் பரவல் உரிமம் ௩-புதிய பிரிவு",
+          "abr": "பெ.மெ.ப.உ.௩-புதிய பிரிவு",
           "lien": "https://choosealicense.com/licenses/bsd-3-clause/"
         },
         "bsd-4-clause": {
           "nom": "அசல் ௪-பிரிவு பெர்க்லி மென்பொருள் பரவல் உரிமம்",
+          "abr": "பெ.மெ.ப.உ அசல் ௪-பிரிவு",
           "lien": "https://choosealicense.com/licenses/bsd-4-clause/"
         },
         "bsl-1_0": {
           "nom": "மென்பொருள் உரிமத்தை அதிகரிக்கவும் ௧.௦",
+          "abr": "மெ.உ அதிகரிக்கவும் ௧.௦ ",
           "lien": "https://choosealicense.com/licenses/bsl-1.0/"
         },
         "cecill-2_1": {
           "nom": "இலவச மென்பொருள் உரிமம் சசில்ல வி௨,௧",
+          "abr": "இ.மெ.உ.சசில்ல வி௨,௧",
           "lien": "https://choosealicense.com/licenses/cecill-2.1/"
         },
         "ecl-2_0": {
           "nom": "கல்வி சமூக உரிமம் ௨,௦",
+          "abr": "க.ச.உரிமம் ௨,௦",
           "lien": "https://choosealicense.com/licenses/ecl-2.0/"
         },
         "epl-1_0": {
           "nom": "பொது உரிமம் கிரகணம் ௧,௦",
+          "abr": "பொ.உ.கிரகணம் ௧,௦",
           "lien": "https://choosealicense.com/licenses/epl-1.0/"
         },
         "epl-2_0": {
           "nom": "பொது உரிமம் கிரகணம் ௨,0",
+          "abr": "பொ.உ.கிரகணம் ௨,௦",
           "lien": "https://choosealicense.com/licenses/epl-2.0/"
         },
         "eupl-1_0": {
           "nom": "ஐரோப்பிய ஒன்றிய பொது உரிமம் ௧,௧",
+          "abr": "ஐ.ஓ.பொ.உரிமம் ௧,௧",
           "lien": "https://choosealicense.com/licenses/eupl-1.1/"
         },
         "eupl-1_2": {
           "nom": "ஐரோப்பிய ஒன்றிய பொது உரிமம் ௧,௨",
+          "abr": "ஐ.ஓ.பொ.உரிமம் ௧,௨",
           "lien": "https://choosealicense.com/licenses/eupl-1.2/"
         },
         "gpl-2_0": {
           "nom": "பொது உரிமம் ஜிஎன்யூ வி௨,௦",
+          "abr": "பொ.உ. ஜிஎன்யூ வி௨,௦",
           "lien": "https://choosealicense.com/licenses/gpl-2.0/"
         },
         "gpl-3_0": {
           "nom": "பொது உரிமம் ஜிஎன்யூ வி௩,௦",
+          "abr": "பொ.உ. ஜிஎன்யூ வி௩,௦",
           "lien": "https://choosealicense.com/licenses/gpl-3.0/"
         },
         "isc": {
           "nom": "உரிமம் இணைய அமைப்புகள் கூட்டமைப்பு",
+          "abr": "உ.இ.அ கூட்டமைப்பு",
           "lien": "https://choosealicense.com/licenses/isc/"
         },
         "lgpl-2_1": {
           "nom": "குறைந்த பொது உரிமம் ஜிஎன்யூ வி௨,௧",
+          "abr": "கு.பொ.உ ஜிஎன்யூ வி௨,௧",
           "lien": "https://choosealicense.com/licenses/lgpl-2.1/"
         },
         "lgpl-3_0": {
           "nom": "குறைந்த பொது உரிமம்  ஜிஎன்யூ வி௩,௧",
+          "abr": "கு.பொ.உ ஜிஎன்யூ வி௩,௧",
           "lien": "https://choosealicense.com/licenses/lgpl-3.0/"
         },
         "lppl-1_3c": {
           "nom": "திட்ட பொது உரிமம் LaTeX வி௧,௩சி",
+          "abr": "தி.பொ.உ LaTeX வி௧,௩சி",
           "lien": "https://choosealicense.com/licenses/lppl-1.3c/"
         },
         "mit-0": {
           "nom": "மாசாச்சூசெட்சு தொழில்நுட்பக் கழகம் பண்புக்கூறு இல்லை",
+          "abr": "மா.தொ.க பண்புக்கூறு இல்லை",
           "lien": "https://choosealicense.com/licenses/mit-0/"
         },
         "mit": {
           "nom": "மாசாச்சூசெட்சு தொழில்நுட்பக் கழகம்",
+          "abr": "மா.தொ.கழகம்",
           "lien": "https://choosealicense.com/licenses/mit/"
         },
         "mpl-2_0": {
-          "nom": "பொது உரிமம் மொசில்லா 2,௦",
+          "nom": "பொது உரிமம் மொசில்லா ௨,௦",
+          "abr": "பொ.உ.மொசில்லா ௨,௦",
           "lien": "https://choosealicense.com/licenses/mpl-2.0/"
         },
         "ms-pl": {
           "nom": "பொது உரிமம் மைக்ரோசாப்ட்",
+          "abr": "பொ.உ மைக்ரோசாப்ட்",
           "lien": "https://choosealicense.com/licenses/ms-pl/"
         },
         "ms-rl": {
           "nom": "பரஸ்பர உரிமம் மைக்ரோசாப்ட்",
+          "abr": "ப.உ மைக்ரோசாப்ட்",
           "lien": "https://choosealicense.com/licenses/ms-rl/"
         },
         "mulanpsl-2_0": {
           "nom": "முலான் அனுமதி மென்பொருள் உரிமம், பதிப்பு ௨",
+          "abr": "மு.அ.மெ.உ, பதிப்பு ௨",
           "lien": "https://choosealicense.com/licenses/mulanpsl-2.0/"
         },
         "ncsa": {
           "nom": "திறந்த மூல உரிமம் தேசிய மீத்திறன் கணினியியல் பயன்பாட்டு மையம்/இல்லினாய்ஸ் பல்கலைக்கழகம்",
+          "abr": "தே.மீ.க.ப மையம்",
           "lien": "https://choosealicense.com/licenses/ncsa/"
         },
         "osl-3_0": {
           "nom": "திறந்த மென்பொருள் உரிமம் ௩,௦",
+          "abr": "தி.மெ.உரிமம் ௩,௦",
           "lien": "https://choosealicense.com/licenses/osl-3.0/"
         },
         "postgresql": {
           "nom": "உரிமம் போசுகிரசு",
+          "abr": "உ.போசுகிரசு",
           "lien": "https://choosealicense.com/licenses/postgresql/"
         },
         "unlicence": {
           "nom": "பொது களம்",
+          "abr": "பொ.களம்",
           "lien": "https://choosealicense.com/licenses/unlicense/"
         },
         "upl-1_0": {
           "nom": "உலகளாவிய அனுமதி உரிமம் ௧,௦",
+          "abr": "உ.அ.உரிமம் ௧,௦",
           "lien": "https://choosealicense.com/licenses/upl-1.0/"
         },
         "vim": {
           "nom": "உரிமம் விம்",
+          "abr": "உ.விம்",
           "lien": "https://choosealicense.com/licenses/vim/"
         },
         "wtfpl": {
           "nom": "பொது உரிமம் எது வேண்டுமானாலும்",
+          "abr": "பொ.உ.எது வேண்டுமானாலும்",
           "lien": "https://choosealicense.com/licenses/wtfpl/"
         },
         "zlib": {
           "nom": "உரிமம் செட்லிப்",
+          "abr": "உ.செட்லிப்",
           "lien": "https://choosealicense.com/licenses/zlib/"
         },
         "ofl-1_1": {
           "nom": "திறந்த மூல எழுத்துரு உரிமம் கோடைக்கால மொழியியல் நிறுவனம் ௧,௧",
+          "abr": "தி.மூ.எ.உரிமம கோ.மொ.நி ௧,௧",
           "lien": "https://choosealicense.com/licenses/ofl-1.1/"
         },
         "introuvable": {
