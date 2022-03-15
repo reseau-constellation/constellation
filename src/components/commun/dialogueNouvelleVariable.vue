@@ -225,6 +225,7 @@ export default mixins(mixinLangues).extend({
       );
     },
     changerLangueDescr: function ({
+
       langueOriginale,
       langue,
       nom,
@@ -238,7 +239,7 @@ export default mixins(mixinLangues).extend({
     },
     sauvegarder: async function () {
       if (!this.catégorie)
-        throw new Error("Catégorie de variable non spécifiée");
+        throw new Error(this.$t("dialogueNouvelleVariable.குறிப்பிடப்படாதவை")as string);
       const idVariable = await this.$ipa.variables!.créerVariable(
         this.catégorie
       );

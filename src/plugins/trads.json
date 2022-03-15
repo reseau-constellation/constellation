@@ -113,7 +113,8 @@
       "Description": "Description",
       "எதைக்_குறிக்கிறது": "Que représente votre variable ?",
       "சிறந்தது": "Le plus de langues, le mieux !",
-      "தேர்ந்தெடுக்கவும்": "Choisissez un nom pour votre variable"
+      "தேர்ந்தெடுக்கவும்": "Choisissez un nom pour votre variable",
+      "குறிப்பிடப்படாதவை": "Catégorie de variable non spécifiée"
     },
     "qualité": {
       "titre": "Composition du score",
@@ -658,7 +659,7 @@
       "btnInstaller": "விண்மீனை நிறுவவும்",
       "fermer": "முன் செல்க",
       "annuler": "ரத்து செய்ய",
-      "sauvegarder": "பாதுகாப்பதற்காக",
+      "sauvegarder": "பதிவு செய்க",
       "confirmer": "உறுதிப்படுத்த",
       "retour": "பின் செல்க",
       "télécharger": "பதிவிறக்க",
@@ -851,7 +852,8 @@
       "Description": "விளக்கம்",
       "எதைக்_குறிக்கிறது": "உங்கள் மாறி எதைக் குறிக்கிறது?",
       "சிறந்தது": "அதிக மொழிகள், சிறந்தது!",
-      "தேர்ந்தெடுக்கவும்": "உங்கள் மாறிக்கு ஒரு பெயரைத் தேர்ந்தெடுக்கவும்"
+      "தேர்ந்தெடுக்கவும்": "உங்கள் மாறிக்கு ஒரு பெயரைத் தேர்ந்தெடுக்கவும்",
+      "குறிப்பிடப்படாதவை": "குறிப்பிடப்படாத மாறியின் வகை"
     },
     "qualité": {
      "titre": "மதிப்பெண் கலவை",
