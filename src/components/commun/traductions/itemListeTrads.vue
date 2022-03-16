@@ -13,7 +13,7 @@
       </v-card>
       <v-card outlined max-width="300" class="mx-4 mb-2">
         <v-card-text :class="`text--${traduction ? 'primary' : 'disabled'}`">
-          {{ traduction || "[Aucune traduction]" }}
+          {{ traduction || "[$t('itemListeTrads.இல்லை)']" }}
         </v-card-text>
         <v-divider />
         <v-card-actions class="px-4 text--secondary">

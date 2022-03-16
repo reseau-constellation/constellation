@@ -625,6 +625,9 @@
       "நகலெடுக்கவும்": "Copier originale",
       "பரிந்துரைகள்": "Suggestions de la communauté"
     },
+    "itemListeTrads": {
+      "இல்லை": "Aucune traduction"
+    },
     "dialogueNouveauMotClef": {
       "motclef": "Nouveau mot clef",
       "தேர்ந்தெடுக்க": "Choisissez un nom pour votre mot clef",
@@ -1297,6 +1300,10 @@
       "நகலெடுக்கவும்": "அசல் நகலெடுக்கவும்",
       "பரிந்துரைகள்": "சமூகத்தின் பரிந்துரைகள்"
     },
+    "itemListeTrads": {
+      "இல்லை": "மொழிபெயர்ப்பு இல்லை"
+    },
+
     "dialogueNouveauMotClef": {
       "motclef": "புதிய முக்கிய சொல்",
       "தேர்ந்தெடுக்க": "உங்கள் முக்கிய சொல்லுக்கு ஒரு பெயரைத் தேர்ந்தெடுக்கவும்",
