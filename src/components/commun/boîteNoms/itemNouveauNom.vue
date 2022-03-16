@@ -4,7 +4,7 @@
       <v-row>
         <v-col cols="4">
           <v-select
-            :label="etiquetteLangue"
+            :label="$t('boîteNoms.etiquetteLangue')"
             v-model="langueNouveauNom"
             outlined
             dense
@@ -16,7 +16,7 @@
         <v-col cols="8">
           <v-text-field
             v-model="nouveauNom"
-            :label="etiquetteNom"
+            :label="$t('boîteNoms.etiquetteNom')"
             :dir="droiteÀGauche(langueNouveauNom) ? 'rtl' : 'ltr'"
             outlined
             dense
