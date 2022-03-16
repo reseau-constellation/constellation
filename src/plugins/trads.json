@@ -648,7 +648,11 @@
     },
     "dialogueTraductionsInterface": {
       "மொழிபெயர்க்கவும்": "Traduire Constellation",
-      "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0"
+      "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0",
+      "Languesource": "Langue source",
+      "Languecible": "Langue cible",
+      "clefSélectionnée": "clef Sélectionnée",
+      "messageOriginal": "message Original"
     }
  },
 
@@ -1310,7 +1314,11 @@
     },
     "dialogueTraductionsInterface": {
       "மொழிபெயர்க்கவும்": "விண்மீன் தொகுப்பை மொழிபெயர்க்கவும்",
-      "சேர்த்தல்": "நீங்கள் பங்களிக்கும் மொழிபெயர்ப்புகள் GNU GPL Affero 3.0 உரிமத்தின் கீழ் விண்மீன் விநியோகங்களில் சேர்க்கப்படும்"
+      "சேர்த்தல்": "நீங்கள் பங்களிக்கும் மொழிபெயர்ப்புகள் GNU GPL Affero 3.0 உரிமத்தின் கீழ் விண்மீன் விநியோகங்களில் சேர்க்கப்படும்",
+      "Languesource": "மூல மொழி",
+      "Languecible": "இலக்கு மொழி",
+      "clefSélectionnée": "தேர்ந்தெடுக்கப்பட்ட திறவுகோல்",
+      "messageOriginal": "அசல் இடுகை"      
     }
   },
     "kaq": {

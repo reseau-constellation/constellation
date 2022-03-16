@@ -33,7 +33,7 @@
               outlined
               dense
               hide-details
-              label="Langue source"
+              :label="$t('dialogueTraductionsInterface.Languesource')"
               @change="changerLangueSource"
             >
               <template v-slot:item="{ item }">
@@ -57,7 +57,7 @@
               outlined
               dense
               hide-details
-              label="Langue cible"
+              :label="$t('dialogueTraductionsInterface.Languecible')"
               @change="changerLangueCible"
             >
               <template v-slot:item="{ item }">
@@ -88,10 +88,10 @@
           </v-col>
           <v-col cols="6">
             <panneau-traduction
-              :clef="clefSélectionnée"
-              :texteOriginal="messageOriginal"
-              :langueCible="langueCible"
-              :langueSource="langueSource"
+              :clef="$t('dialogueTraductionsInterface.clefSélectionnée')"
+              :texteOriginal="$t('dialogueTraductionsInterface.messageOriginal')"
+              :langueCible="$t('dialogueTraductionsInterface.Languecible')"
+              :langueSource="$t('dialogueTraductionsInterface.Languesource')"
               @annuler="clefSélectionnée = null"
             />
           </v-col>
