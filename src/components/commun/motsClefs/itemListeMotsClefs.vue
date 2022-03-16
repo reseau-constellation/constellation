@@ -18,8 +18,8 @@
         </template>
         <boîteNoms
           :noms="noms"
-          titre="motsClefs.jeton.titreBoîteNoms"
-          sousTitre="motsClefs.jeton.sousTitreBoîteNoms"
+          :titre="$t('motsClefs.jeton.titreBoîteNoms')"
+          :sousTitre="$t('motsClefs.jeton.sousTitreBoîteNoms')"
           @sauvegarder="sauvegarderNom"
           @changerLangue="changerLangueNom"
           @effacer="effacerNom"

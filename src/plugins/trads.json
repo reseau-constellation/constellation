@@ -606,6 +606,10 @@
         }
       }
     },
+    "motsclefs":{
+      "titreBoîteNoms": "titreBoîteNoms",
+      "sousTitreBoîteNoms": "sousTitreBoîteNoms"
+    },
     "dialogueMotsClefs": {
       "Motsclefs": "Mots clefs",
       "motclef": "Nouveau mot clef",
@@ -1260,6 +1264,12 @@
           "nom": "உரிமம் கிடைக்கவில்லை",
           "abr": "கிடைக்கவில்லை"
         }
+      }
+    },
+    "motsClefs":{
+     "jeton":{
+       "titreBoîteNoms": "தலைப்புப் பெட்டியின் பெயர்கள்",
+       "sousTitreBoîteNoms": "தலைப்புப் பெட்டியின் துணைப்பெயர்கள்"
       }
     },
     "dialogueMotsClefs": {
