@@ -16,7 +16,9 @@
       "titre": "Ajoutez des noms",
       "sousTitre": "Spécifiez autant que langues que vous voudrez.",
       "étiquetteLangue": "Langue",
-      "étiquetteNom": "Nom"
+      "étiquetteNom": "Nom",
+      "noms": "noms",
+      "descriptions": "descriptions"
     },
     "alerteConditions": {
       "உரை": "Vous devez accepter les conditions d'utilisation afin d'utiliser ce logiciel.",
@@ -607,8 +609,10 @@
       }
     },
     "motsclefs":{
-      "titreBoîteNoms": "titreBoîteNoms",
-      "sousTitreBoîteNoms": "sousTitreBoîteNoms"
+      "jeton":{
+       "titreBoîteNoms": "titreBoîteNoms",
+       "sousTitreBoîteNoms": "sousTitreBoîteNoms"
+      }
     },
     "dialogueMotsClefs": {
       "Motsclefs": "Mots clefs",
@@ -618,7 +622,8 @@
     "panneauTraduction": {
       "பரிந்துரைக்கவும்": "Proposez un traduction",
       "தேர்ந்தெடுக்கவும்": "Sélectionnez un item de la liste à gauche",
-      "நகலெடுக்கவும்": "Copier originale"
+      "நகலெடுக்கவும்": "Copier originale",
+      "பரிந்துரைகள்": "Suggestions de la communauté"
     },
     "dialogueNouveauMotClef": {
       "motclef": "Nouveau mot clef",
@@ -679,7 +684,9 @@
       "titre": "பெயர்களைச் சேர்க்கவும்",
       "sousTitre": "நீங்கள் விரும்பும் பல மொழிகளைக் குறிப்பிடவும்.",
       "étiquetteLangue": "மொழி",
-      "étiquetteNom": "மாறியின் பெயர்"
+      "étiquetteNom": "மாறியின் பெயர்",
+      "noms": "பெயர்கள்",
+      "descriptions": "விளக்கங்கள்"
     },
     "nav": {
       "compte": "கணக்கு",
@@ -1272,8 +1279,8 @@
     },
     "motsClefs":{
      "jeton":{
-       "titreBoîteNoms": "தலைப்புப் பெட்டியின் பெயர்கள்",
-       "sousTitreBoîteNoms": "தலைப்புப் பெட்டியின் துணைப்பெயர்கள்"
+       "titreBoîteNoms": "முக்கிய சொல்லின் பெயர்",
+       "sousTitreBoîteNoms": "அதிக மொழிகள் சிறந்தது"
       }
     },
     "dialogueMotsClefs": {
@@ -1287,7 +1294,8 @@
     "panneauTraduction": {
       "பரிந்துரைக்கவும்": "ஒரு மொழிபெயர்ப்பைப் பரிந்துரைக்கவும்",
       "தேர்ந்தெடுக்கவும்": "இடதுபுறத்தில் உள்ள பட்டியலில் இருந்து உருப்படியைத் தேர்ந்தெடுக்கவும்",
-      "நகலெடுக்கவும்": "அசல் நகலெடுக்கவும்"
+      "நகலெடுக்கவும்": "அசல் நகலெடுக்கவும்",
+      "பரிந்துரைகள்": "சமூகத்தின் பரிந்துரைகள்"
     },
     "dialogueNouveauMotClef": {
       "motclef": "புதிய முக்கிய சொல்",
@@ -1318,7 +1326,7 @@
       "Languesource": "மூல மொழி",
       "Languecible": "இலக்கு மொழி",
       "clefSélectionnée": "தேர்ந்தெடுக்கப்பட்ட திறவுகோல்",
-      "messageOriginal": "அசல் இடுகை"      
+      "messageOriginal": "அசல் இடுகை"
     }
   },
     "kaq": {

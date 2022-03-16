@@ -14,7 +14,7 @@
             </v-btn>
           </template>
           <boîteNoms
-            :noms="noms"
+            :noms="$t('boîteNoms.noms')"
             @sauvegarder="sauvegarderNom"
             @changerLangue="changerLangueNom"
             @effacer="effacerNom"
@@ -38,7 +38,7 @@
             </v-btn>
           </template>
           <boîteNoms
-            :noms="descriptions"
+            :noms="$t('boîteNoms.descriptions')"
             @sauvegarder="sauvegarderDescr"
             @changerLangue="changerLangueDescr"
             @effacer="effacerDescr"

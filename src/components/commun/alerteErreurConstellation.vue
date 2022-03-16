@@ -7,20 +7,19 @@
     outlined
   >
     <p>
-      <span class="font-weight-bold"
-        >{{ $t("alerteErreurConstellation.பிழை_உள்ளது") }}
-        </span
-      >
+      <span class="font-weight-bold">
+        {{ $t("alerteErreurConstellation.பிழை_உள்ளது") }}
+      </span>
       <br />
       {{ $t("alerteErreurConstellation.விளக்கம்") }}
       <br />
-      {{ $t("alerteErreurConstellation.புகாரளிக்க")}}
+      {{ $t("alerteErreurConstellation.புகாரளிக்க") }}
       </p>
 
     <div class="text-center">
-      <v-btn tiled outlined color="error" @click="signaler"
-        >{{ $t("alerteErreurConstellation.புகாரளிக்கவும்")}}</v-btn
-      >
+      <v-btn tiled outlined color="error" @click="signaler">
+      {{ $t("alerteErreurConstellation.புகாரளிக்கவும்") }}
+      </v-btn>
     </div>
 
     <p class="font-weight-bold" @click="détails = !détails">

@@ -45,7 +45,8 @@
       <v-divider />
       <v-card v-if="clef" flat>
         <v-card-title>
-          Suggestions de la communauté ({{
+          {{ $t("panneauTraduction.பரிந்துரைகள்") }}
+           ({{
             formatterChiffre(suggestions.length)
           }})
         </v-card-title>
@@ -241,5 +242,4 @@ export default mixins(mixinLangues, mixinIPA).extend({
   },
 });
 </script>
-
 <style></style>
