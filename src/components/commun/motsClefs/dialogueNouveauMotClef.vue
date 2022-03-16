@@ -16,8 +16,8 @@
         </span>
         <item-nouveau-nom
           :languesExistantes="Object.keys(noms)"
-          etiquetteNom="Description"
-          etiquetteLangue="Langue"
+          :etiquetteNom="$t('dialogueNouveauMotClef.Description')"
+          :etiquetteLangue="$t('dialogueNouveauMotClef.Langue')"
           @sauvegarder="sauvegarderNom"
         />
         <v-divider v-show="Object.keys(noms).length" />

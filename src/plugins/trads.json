@@ -618,7 +618,9 @@
     },
     "dialogueNouveauMotClef": {
       "motclef": "Nouveau mot clef",
-      "தேர்ந்தெடுக்க": "Choisissez un nom pour votre mot clef"
+      "தேர்ந்தெடுக்க": "Choisissez un nom pour votre mot clef",
+      "Description": "Description",
+      "Langue": "Langue"
     },
     "carteFichierInstallation": {
       "பதிப்பு": "Constellation version"
@@ -1275,7 +1277,9 @@
     },
     "dialogueNouveauMotClef": {
       "motclef": "புதிய முக்கிய சொல்",
-      "தேர்ந்தெடுக்க": "உங்கள் முக்கிய சொல்லுக்கு ஒரு பெயரைத் தேர்ந்தெடுக்கவும்"
+      "தேர்ந்தெடுக்க": "உங்கள் முக்கிய சொல்லுக்கு ஒரு பெயரைத் தேர்ந்தெடுக்கவும்",
+      "Description": "விளக்கம்",
+      "Langue": "மொழி"
     },
     "opsLangue": {
       "Contribuer": "பங்களிக்க வேண்டும்"
