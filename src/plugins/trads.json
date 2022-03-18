@@ -31,7 +31,9 @@
       "பிழை": "Erreurs précédentes",
       "மறை": "Cacher les détails",
       "தகவல்கள்": "Plus de détails",
-      "புகாரளிக்கவும்": "Signaler l'erreur"
+      "புகாரளிக்கவும்": "Signaler l'erreur",
+      "பிழை": "Erreur signalée de l'application Constellation",
+      "பிழை_இருக்கிறது": "`*Erreur signalée de l'application Constellation\n\n*Inclure des détails [facultatif]\n[P. ex., Quand l'erreur est-elle survenue ? Que faisiez-vous ?]\n\n*Informations incluses automatiquement - ne pas modifier à mois que vous soyez vraiment sûr de ce que vous faites\n*Version de l'apli`"
     },
     "exporter": {
       "titre": "Exporter une copie des données",

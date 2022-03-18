@@ -107,15 +107,11 @@ export default mixins().extend({
     signaler: function () {
       if (!this.nouvelleErreur) return;
 
-      const titre = "Erreur signalée de l'application Constellation";
+      const titre = this.$t("alerteErreurConstellation.பிழை")as string;
       const erreur = this.nouvelleErreur.toString();
       const tracéErreur = this.nouvelleErreur.stack;
       //const autresErreurs = this.autresErreurs.length ? "\n*Erreurs précédentes* :\n" + this.autresErreurs.map(e=>`\n${e.toString()}\n\`\`\`${e.stack}\`\`\``).join("\n") : ""
-      const contenu = `**Erreur signalée de l'application Constellation**\n\n*Inclure des détails [facultatif]*\n[P. ex., Quand l'erreur est-elle survenue ? Que faisiez-vous ?]\n\n**Informations incluses automatiquement - ne pas modifier à mois que vous soyez vraiment sûr de ce que vous faites**\n*Version de l'apli*\n- [${
-        isElectron() ? "X" : " "
-      }] Électron\n- [${
-        isElectron() ? " " : "X"
-      }] Apli Internet\n\n*Tracé de l'erreur*\n${erreur}\n\`\`\`${tracéErreur}\`\`\`\n`;
+      const contenu = this.$t("alerteErreurConstellation.பிழை_இருக்கிறது",{அ:isElectron() ? "X" : " ",ஆ:isElectron() ? " " : "X",இ:erreur,ஈ:tracéErreur}) as string;
       const urlSignalement = `${URL_BASE_SIGNALER_AUTO}?title=${encodeURI(
         titre
       )}&body=${encodeURI(contenu)}`;
