@@ -33,7 +33,7 @@
       "தகவல்கள்": "Plus de détails",
       "புகாரளிக்கவும்": "Signaler l'erreur",
       "பிழை": "Erreur signalée de l'application Constellation",
-      "பிழை_இருக்கிறது": "`*Erreur signalée de l'application Constellation\n\n*Inclure des détails [facultatif]\n[P. ex., Quand l'erreur est-elle survenue ? Que faisiez-vous ?]\n\n*Informations incluses automatiquement - ne pas modifier à mois que vous soyez vraiment sûr de ce que vous faites\n*Version de l'apli`"
+      "பிழை_இருக்கிறது": "Erreur signalée de l'application Constellation\n\n*Inclure des détails [facultatif]\n[P. ex., Quand l'erreur est-elle survenue ? Que faisiez-vous ?]\n\n*Informations incluses automatiquement - ne pas modifier à mois que vous soyez vraiment sûr de ce que vous faites\n*Version de l'apli\n*[{அ}]Électron\n-[{ஆ}]Apli Internet\n\n*Tracé de l'erreur*\n{இ}```\n{ஈ}```\n"
     },
     "exporter": {
       "titre": "Exporter une copie des données",
@@ -174,7 +174,8 @@
           "Id": "Id",
           "Dispositif": "Dispositif",
           "சேர்த்தல்": "Ajouter un dispositif",
-          "பாதுகாப்பு": "Ajouttez un autre ordinateur, téléphone, ou navigateur à votre compte pour plus de sécurité."
+          "பாதுகாப்பு":"Ajouttez un autre ordinateur, téléphone, ou navigateur à votre compte pour plus de sécurité.",
+          "பட_அளவு": "La taille de l'image doit être inférieure à 1,5 megaoctets."
         },
         "thème": {
           "entête": "Thème et langues",
@@ -862,7 +863,9 @@
       "பிழை": "முந்தைய பிழைகள்",
       "மறை": "விவரங்களை மறை",
       "தகவல்கள்": "கூடுதல் தகவல்கள்",
-      "புகாரளிக்கவும்": "பிழையைப் புகாரளிக்கவும்"
+      "புகாரளிக்கவும்": "பிழையைப் புகாரளிக்கவும்",
+      "பிழை": "விண்மீன் பயன்பாடு பிழையைப் புகாரளித்தது",
+      "பிழை_இருக்கிறது": "விண்மீன் பயன்பாடு பிழையைப் புகாரளித்துள்ளது\n\n*விவரங்களைச் சேர்க்கவும் [விரும்பினால்]\n[பி. எ.கா. பிழை எப்போது ஏற்பட்டது? நீங்கள் என்ன செய்து கொண்டிருந்தீர்கள்?]\n\n*தகவல் தானாகவே சேர்க்கப்பட்டுள்ளது - நீங்கள் என்ன செய்கிறீர்கள் என்று உறுதியாக தெரியாவிட்டால் திருத்த வேண்டாம்\n*பயன்பாட்டுப் பதிப்பு\n*[{அ}]எலக்ட்ரான்\n- [{ஆ }]இணைய பயன்பாடு\n\n*பிழையின் வரலாறு*\n{I}```\n{ஈ}```\n"
     },
     "dialogueNouvelleVariable": {
       "மாறி": "புதிய மாறி",
@@ -929,7 +932,8 @@
          "Id": "அடையாளம்",
          "Dispositif": "இந்த சாதனம்",
          "சேர்த்தல்": "சாதனத்தைச் சேர்க்கவும்",
-         "பாதுகாப்பு": "கூடுதல் பாதுகாப்பிற்காக உங்கள் கணக்கில் மற்றொரு கணினி, தொலைபேசி அல்லது உலாவியைச் சேர்க்கவும்."
+         "பாதுகாப்பு": "கூடுதல் பாதுகாப்பிற்காக உங்கள் கணக்கில் மற்றொரு கணினி, தொலைபேசி அல்லது உலாவியைச் சேர்க்கவும்.",
+         "பட_அளவு": "பட அளவு ௧௫ இலட்சம் எண்ணுன்மிக்கு குறைவாக இருக்க வேண்டும்"
     },
        "thème": {
          "entête": "வடிவூட்டம் மற்றும் மொழிகள்",

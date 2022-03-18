@@ -72,7 +72,7 @@
           :error="fichierTropGrand"
           :error-messages="
             fichierTropGrand
-              ? ['La taille de l\'image doit être inférieure à 1,5 megaoctets.']
+              ? $t('compte.onglets.compte.பட_அளவு')
               : []
           "
           @click:append="effacerImage"

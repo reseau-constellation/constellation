@@ -55,6 +55,13 @@
             </v-btn>
           </template>
         </dialogue-exporter>
+        <dialogue-Importer :id="idTableau" type="tableau">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-bind="attrs" v-on="on" icon>
+              <v-icon>mdi-upload</v-icon>
+            </v-btn>
+          </template>
+        </dialogue-Importer>
       </v-card-title>
       <v-divider />
 
@@ -75,6 +82,7 @@ import tableau from "@/components/tableaux/tableau.vue";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import dialogueExporter from "@/components/commun/dialogueExporter.vue";
+import dialogueImporter from "@/components/commun/dialogueImporter.vue";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
@@ -119,7 +127,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
       disabled?: boolean;
     }[] {
       return [
-        { text: "Données", href: "/bd" },
+        { text: this.$t("bd.visBD.தகவல்கள்") as string, href: "/bd" },
         {
           text: couper(this.nomBD, 15),
           href: `/bd/visualiser/${encodeURIComponent(this.idBd)}`,
