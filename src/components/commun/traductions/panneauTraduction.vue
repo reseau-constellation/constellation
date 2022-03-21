@@ -3,8 +3,8 @@
     <v-card-title>
       {{
         clef
-          ? $t("panneauTraduction.பரிந்துரைக்கவும்")
-          :$t("panneauTraduction.தேர்ந்தெடுக்கவும்")
+          ? $t("traduction.பரிந்துரைக்கவும்")
+          :$t("traduction.தேர்ந்தெடுக்கவும்")
       }}
     </v-card-title>
     <v-card-text>
@@ -25,7 +25,7 @@
             :disabled="!clef || !texteOriginal"
             @click="() => (traduction = texteOriginal)"
             ><v-icon left>mdi-content-copy</v-icon>
-            {{ $t("panneauTraduction.நகலெடுக்கவும்") }}
+            {{ $t("traduction.நகலெடுக்கவும்") }}
           </v-btn>
           <v-spacer />
           <v-btn text :disabled="!clef" @click="$emit('annuler')">
@@ -45,10 +45,7 @@
       <v-divider />
       <v-card v-if="clef" flat>
         <v-card-title>
-          {{ $t("panneauTraduction.பரிந்துரைகள்") }}
-           ({{
-            formatterChiffre(suggestions.length)
-          }})
+          {{$t("traduction.பரிந்துரைகள்",{n:formatterChiffre(suggestions.length)})}}
         </v-card-title>
         <v-card-text>
           <v-list style="max-height: 200px" class="overflow-y-auto">

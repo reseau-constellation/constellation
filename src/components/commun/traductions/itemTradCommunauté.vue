@@ -48,7 +48,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     nom: function (): string {
       return Object.keys(this.nomsAuteur).length
         ? traduireNom(this.nomsAuteur, this.languesPréférées)
-        : "Incognito";
+        :this.$t("traduction.மறைமுகம்")as string;
     },
   },
   methods: {
