@@ -74,7 +74,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
     nom: function (): string {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
-        : "Incognito";
+        :this.$t("traduction.மறைமுகம்")as string;
     },
     moiMême: function (): boolean {
       return this.id === this.monIdBdRacine;
