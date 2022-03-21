@@ -92,6 +92,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   components: {
     lienOrbite,
     dialogueExporter,
+    dialogueImporter,
     boîteNoms,
     tableau,
   },

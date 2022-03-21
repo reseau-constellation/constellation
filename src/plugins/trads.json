@@ -39,6 +39,10 @@
       "titre": "Exporter une copie des données",
       "formatFichier": "Format du fichier"
     },
+    "importer": {
+      "titre": "Importer des données",
+      "formatFichier": "Format du fichier"
+    },
     "carteMembre": {
       "aucuneBd": "Aucune BD",
       "தொடர்பு": "Contact",
@@ -683,7 +687,8 @@
       "sauvegarder": "பதிவு செய்க",
       "confirmer": "உறுதிப்படுத்த",
       "retour": "பின் செல்க",
-      "télécharger": "பதிவிறக்க",
+      "télécharger": "பதிவிறக்கம் செய்க",
+      "téléverser": "பதிவேற்றம் செய்க",
       "pointInterogation": "?"
     },
     "boîteNoms": {
@@ -715,7 +720,11 @@
       }
     },
     "exporter": {
-      "titre": "தரவின் நகலை ஏற்றுமதி செய்யவும்",
+      "titre": "தரவை இறக்குமதி செய்யவும்",
+      "formatFichier": "கோப்பு வகை"
+    },
+    "importer": {
+      "titre": "தரவை ஏற்றுமதி செய்யவும்",
       "formatFichier": "கோப்பு வகை"
     },
     "automatisation": {
