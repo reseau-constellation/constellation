@@ -370,6 +370,7 @@ import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 
 import dialogueQualité from "@/components/commun/dialogueQualité.vue";
 import dialogueExporter from "@/components/commun/dialogueExporter.vue";
+import dialogueImporter from "@/components/commun/dialogueImporter.vue";
 import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
 import dialogueMotsClefs from "@/components/commun/motsClefs/dialogueMotsClefs.vue";
 import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications.vue";
@@ -395,6 +396,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       jetonMotClef,
       dialogueQualité,
       dialogueExporter,
+      dialogueImporter,
       dialogueLicence,
       dialogueAuteurs,
       dialogueMotsClefs,

@@ -56,7 +56,7 @@ import XLSX from "xlsx";
 import mixinLangues from "@/mixins/langues";
 
 export default mixins(mixinLangues).extend({
-  name: "dialoguetéléverser",
+  name: "dialogueTéléverser",
   props: ["id", "type"],
   mixins: [mixinLangues],
   data: function () {
@@ -76,11 +76,11 @@ export default mixins(mixinLangues).extend({
       try {
         switch (this.type) {
           case "bd": {
-            const données = await this.$ipa.bds!.importerDonnées(
+            const données = await this.$ipa.bds!.exporterDonnées(
               this.id,
               this.languesPréférées
             );
-            this.$ipa.bds!.importerDocumentDonnées(
+            this.$ipa.bds!.exporterDocumentDonnées(
               données,
               this.formatDoc,
               undefined,
@@ -90,11 +90,11 @@ export default mixins(mixinLangues).extend({
           }
 
           case "tableau": {
-            const données = await this.$ipa.tableaux!.importerDonnées(
+            const données = await this.$ipa.tableaux!.exporterDonnées(
               this.id,
               this.languesPréférées
             );
-            this.$ipa.bds!.importerDocumentDonnées(
+            this.$ipa.bds!.exporterDocumentDonnées(
               données,
               this.formatDoc,
               undefined,
@@ -104,11 +104,11 @@ export default mixins(mixinLangues).extend({
           }
 
           case "projet": {
-            const données = await this.$ipa.projets!.importerDonnées(
+            const données = await this.$ipa.projets!.exporterDonnées(
               this.id,
               this.languesPréférées
             );
-            this.$ipa.projets!.importerDocumentDonnées(
+            this.$ipa.projets!.exporterDocumentDonnées(
               données,
               this.formatDoc,
               undefined,
