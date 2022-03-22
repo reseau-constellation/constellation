@@ -51,15 +51,14 @@
         <dialogue-exporter :id="idTableau" type="tableau">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" icon>
-              <v-icon>mdi-upload</v-icon>
-              {{ $t("visTableau.பதிவேற்றம்") }}
-            </v-btn>
+              <v-icon>mdi-download</v-icon>
+              </v-btn>
           </template>
         </dialogue-exporter>
         <dialogue-Importer :id="idTableau" type="tableau">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" icon>
-              <v-icon>mdi-download</v-icon>
+              <v-icon>mdi-upload</v-icon>
             </v-btn>
           </template>
         </dialogue-Importer>
