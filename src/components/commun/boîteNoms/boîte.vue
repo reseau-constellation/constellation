@@ -9,8 +9,8 @@
     <v-divider></v-divider>
     <item-nouveau-nom
       :languesExistantes="Object.keys(this.noms)"
-      :etiquetteLangue="$t(etiquetteLangue)"
-      :etiquetteNom="$t(etiquetteNom)"
+      :etiquetteLangue="$t(étiquetteLangue)"
+      :etiquetteNom="$t(étiquetteNom)"
       @sauvegarder="(e) => $emit('sauvegarder', e)"
     />
     <v-divider />
