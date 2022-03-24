@@ -40,8 +40,14 @@
               @effacer="effacerNom"
             />
           </v-menu>
-          <v-btn icon small>
+          <v-btn icon small @click="onPickFile">
             <v-icon small>mdi-camera-outline</v-icon>
+            <input
+            type="file"
+            style="display: none"
+            ref="fileInput"
+            accept="image/*"
+            @change="onFilePicked"/>
           </v-btn>
         </span>
         <span>
@@ -461,6 +467,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         return Boolean(accèsMod);
       },
     },
+
     methods: {
       couper,
       couleurScore,
@@ -474,6 +481,20 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       effacerBd: async function (): Promise<void> {
         await this.$ipa.bds!.effacerBd(this.idBd);
         this.$router.push("/bd");
+      },
+      onFilePicked: function ():void {
+        let fileInput = this.$refs.fileInput
+        //@ts-ignore  let imgFile = fileInput.files
+         {
+          let reader = new FileReader();
+          reader.addEventListener("load", function () {
+          // this.$ipa.bds!.sauvegarderImage(this.idBd, reader.result);
+          }, false);
+          //@ts-ignore  reader.readAsDataURL(imgFile[0])
+        }
+      },
+      onPickFile: function ():void {
+      //@ts-ignore    this.$refs.fileInput.click()
       },
       sauvegarderNom: async function ({
         langue,
@@ -599,7 +620,6 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
             this.réplications = réplications;
           }
         );
-
         this.suivre([
           oublierPermissionÉcrire,
           oublierIdBdRacine,
@@ -618,4 +638,5 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
   }
 );
 </script>
+
 <style></style>
