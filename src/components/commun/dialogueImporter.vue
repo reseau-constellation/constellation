@@ -5,58 +5,29 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline mb-3">
-        {{ $t("importer.titre") }}
-        <v-spacer />
-        <v-btn icon @click="dialogue = false">
-          <v-icon>mdi-close</v-icon>
+    <v-card-title class="headline mb-3">
+      {{ $t("importer.titre") }}
+       <v-spacer />
+         <v-btn icon @click="dialogue = false">
+           <v-icon>mdi-close</v-icon>
         </v-btn>
-      </v-card-title>
-      <v-divider />
-
-      <v-card-text class="mt-3 py-2">
-        <v-select
-          v-model="formatDoc"
-          outlined
-          dense
-          hide-details
-          :label="$t('importer.formatFichier')"
-          :items="['ods', 'csv', 'txt', 'xls', 'xlsx']"
-        />
-    <template>
+    <v-divider />
     <v-stepper v-model="e6" vertical >
      <v-stepper-step :complete="e6 > 1" step="1">
-       {{ $t("importer.இணைக்கவும்") }}
-       <small>{{ $t("importer.இணைக்க") }}</small>
-        </v-stepper-step>
-
-        <v-stepper-content step="1">
-        <v-card
-         color="grey lighten-1"
-         class="mb-12"
-         height="200px"
-        ></v-card>
-        <v-btn  color="primary" @click="e6 = 2">
-         {{ $t("importer.முன்செல்க") }}
-        </v-btn>
-         <v-btn text>
-         {{ $t("importer.ரத்துசெய்க") }}
+       {{ $t("importer.தேர்வுசெய்க") }}
+        <small>{{ $t("importer.தேர்வுசெய்") }}</small>
+         </v-stepper-step>
+          <v-stepper-content step="1">
+           <v-btn text>
+             {{ $t("importer.ரத்துசெய்க") }}
+            </v-btn>
+    <v-divider></v-divider>
+     <v-card-actions>
+      <v-spacer></v-spacer>
+       <v-btn color="secondary" text outlined @click="dialogue = false">
+        {{ $t("communs.fermer") }}
        </v-btn>
-     </v-stepper-content>
-   </v-stepper>
-  </template>
-
-      <v-checkbox v-model="inclureMédias"></v-checkbox>
-      </v-card-text>
-
-      <v-divider></v-divider>
-
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="secondary" text outlined @click="dialogue = false">
-          {{ $t("communs.fermer") }}
-        </v-btn>
-        <v-btn
+       <v-btn
           color="primary"
           text
           outlined
@@ -66,8 +37,11 @@
           {{ $t("communs.téléverser") }}
           <v-icon right>mdi-upload</v-icon>
         </v-btn>
-      </v-card-actions>
-    </v-card>
+       </v-card-actions>
+      </v-stepper-content>
+     </v-stepper>
+    </v-card-title>
+   </v-card>
   </v-dialog>
 </template>
 
