@@ -4,6 +4,7 @@
       "auto": "Automatique",
       "messageInstaller": "La version navigateur de Constellation est limitée par la mémoire disponible dans votre navigateur. Il est préférable d'installer le logiciel pour toute analyse importante.",
       "btnInstaller": "Installer Constellation",
+      "fichier": "Sélectionnez le fichier",
       "fermer": "Fermer",
       "annuler": "Annuler",
       "sauvegarder": "Sauvegarder",
@@ -42,7 +43,8 @@
     },
     "importer": {
       "titre": "Importer des données",
-      "formatFichier": "Format du fichier"
+      "தேர்வுசெய்க": "Choisissez",
+      "தேர்வுசெய்": "Sélectionnez le fichier à télécharger"
     },
     "carteMembre": {
       "aucuneBd": "Aucune BD",
@@ -685,8 +687,9 @@
       "auto": "தானியங்கி",
       "messageInstaller": "விண்மீன்களின் உலாவி பதிப்பு உங்கள் உலாவியில் உள்ள நினைவகத்தால் வரையறுக்கப்பட்டுள்ளது. எந்தவொரு முக்கியமான பகுப்பாய்விற்கும் மென்பொருளை நிறுவுவது சிறந்தது.",
       "btnInstaller": "விண்மீனை நிறுவவும்",
+      "fichier": "கோப்பை தேர்வு செய்க",
       "fermer": "முன் செல்க",
-      "annuler": "ரத்து செய்ய",
+      "annuler": "ரத்து செய்க",
       "sauvegarder": "பதிவு செய்க",
       "confirmer": "உறுதிப்படுத்த",
       "retour": "பின் செல்க",
@@ -729,9 +732,7 @@
     "importer": {
       "titre": "தரவை இறக்குமதி செய்ய",
       "தேர்வுசெய்க": "தேர்வு செய்க",
-      "தேர்வுசெய்": "பதிவேற்றம் செய்யும் கோப்பை தேர்வு செய்க",
-      "முன்செல்க": "முன் செல்க",
-      "ரத்துசெய்க": "ரத்து செய்க"
+      "தேர்வுசெய்": "பதிவேற்றம் செய்யும் கோப்பை தேர்வு செய்க"
     },
     "automatisation": {
       "entête": "தானியக்கமாக்கல்",
