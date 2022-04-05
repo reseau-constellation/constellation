@@ -14,16 +14,16 @@
   <v-divider />
 
   <template>
-    <v-stepper v-model="e1" horizontal >
+    <v-stepper v-model="e6" horizontal >
       <v-stepper-header>
-        <v-stepper-step :complete="e1 > 1" step="1">
+        <v-stepper-step :complete="e6 > 1" step="1">
           {{ $t("importer.தேர்வுசெய்க") }}
         </v-stepper-step>
-        <v-stepper-step :complete="e1 > 2" step="2">
+        <v-stepper-step :complete="e6 > 2" step="2">
           {{ $t("importer.நெடுவரிசை") }}
         </v-stepper-step>
-        <v-stepper-step :complete="e1 > 3" step="3">
-           {{ $t("importer.பதிவேற்றம்") }}
+        <v-stepper-step :complete="e6 > 3" step="3">
+          {{ $t("importer.பதிவேற்றம்") }}
         </v-stepper-step>
     </v-stepper-header>
 
@@ -31,7 +31,7 @@
      <v-stepper-content step="1">
        <v-card
        class="mb-2"
-       height="50px"
+       height="70px"
        >
        <v-btn
           color="primary"
@@ -42,12 +42,19 @@
           >
           {{ $t("communs.fichier") }}
        </v-btn>
+       <v-btn
+       color="primary"
+       @click="e6 = 2"
+       :disabled="!suivante"
+       >
+       {{ $t("communs.suivante") }}
+        </v-btn>
       </v-card>
        </v-stepper-content>
        <v-stepper-content step="2">
          <v-card
          class="mb-2"
-         height="50px"
+         height="70px"
          >
          <v-btn
             color="primary"
@@ -57,13 +64,20 @@
             @click="() => colonne()"
             >
             {{ $t("communs.colonne") }}
-       </v-btn>
-      </v-card>
+         </v-btn>
+         <v-btn
+         color="primary"
+         @click="e6 = 3"
+         :disabled="!suivante"
+         >
+        {{ $t("communs.suivante") }}
+          </v-btn>
+       </v-card>
      </v-stepper-content>
      <v-stepper-content step="3">
        <v-card
          class="mb-2"
-         height="50px"
+         height="70px"
          >
        <v-btn
          color="primary"
@@ -75,14 +89,22 @@
          {{ $t("communs.téléverser") }}
         <v-icon right>mdi-upload</v-icon>
         </v-btn>
+        <v-btn
+        color="primary"
+        @click="e6 = 1"
+        :disabled="!suivante"
+        >
+        {{ $t("communs.suivante") }}
+         </v-btn>
       </v-card>
-    </v-stepper-content>
+     </v-stepper-content>
         <v-card-actions>
           <v-spacer></v-spacer>
            <v-btn color="secondary" text outlined @click="dialogue = false">
             {{ $t("communs.annuler") }}
             </v-btn>
-            <v-btn color="secondary" text outlined @click="dialogue = false">
+            <v-btn color="secondary" text outlined @click="dialogue = false"
+            :disabled="!fermer">
             {{ $t("communs.fermer") }}
           </v-btn>
         </v-card-actions>
@@ -109,8 +131,10 @@ export default mixins(mixinLangues).extend({
       formatDoc: "ods" as XLSX.BookType | "xls",
       inclureMédias: false,
       langueColonnes: undefined,
+      e6: 1,
     };
   },
+
   methods: {
     téléverser: async function () {
       this.enProgrès = true;
