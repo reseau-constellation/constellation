@@ -38,10 +38,17 @@
           text
           outlined
           :loading="enProgrès"
-          @click="() => fichier()"
+          @click="onPickFile"
           >
           {{ $t("communs.fichier") }}
+          <input
+          type="file"
+          style="display: none"
+          ref="fileInput"
+          accept="xls/*"
+          @change="onFilePicked"/>
        </v-btn>
+
        <v-btn
        color="primary"
        @click="e6 = 2"
@@ -98,25 +105,26 @@
          </v-btn>
       </v-card>
      </v-stepper-content>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-           <v-btn color="secondary" text outlined @click="dialogue = false">
-            {{ $t("communs.annuler") }}
-            </v-btn>
-            <v-btn color="secondary" text outlined @click="dialogue = false"
-            :disabled="!fermer">
-            {{ $t("communs.fermer") }}
-          </v-btn>
-        </v-card-actions>
-      </v-stepper-items>
-     </v-stepper>
-    </template>
-   <v-divider></v-divider>
-  </v-card>
- </v-dialog>
+          <v-card-actions>
+           <v-spacer></v-spacer>
+                <v-btn color="secondary" text outlined @click="dialogue = false">
+                {{ $t("communs.annuler") }}
+                </v-btn>
+                <v-btn color="secondary" text outlined @click="dialogue = false"
+                :disabled="!fermer">
+                {{ $t("communs.fermer") }}
+               </v-btn>
+             </v-card-actions>
+           </v-stepper-items>
+         </v-stepper>
+       </template>
+      <v-divider></v-divider>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
+import ImportateurFeuilleCalcul from "@/components/commun/xlsx"
 import mixins from "vue-typed-mixins";
 import XLSX from "xlsx";
 import mixinLangues from "@/mixins/langues";
@@ -132,10 +140,26 @@ export default mixins(mixinLangues).extend({
       inclureMédias: false,
       langueColonnes: undefined,
       e6: 1,
+      importateur: undefined as ImportateurFeuilleCalcul | undefined,
     };
   },
 
   methods: {
+    onFilePicked: async function(): Promise<void> {
+      const fichiers = this.$refs.fileInput as HTMLInputElement // தேர்ந்தெடுத்தப்பட்டு கோப்பு
+      if (!fichiers.files) return
+      const données = await fichiers!.files[0].arrayBuffer(); // கோப்பில் உள்ள தகவல்கள்
+      const doc = XLSX.read(données); // கோப்பை யாவாக்கிறீட்டில் திறக்கவும்
+
+       this.importateur = new ImportateurFeuilleCalcul(doc)  // விண்மீன் மூலம் பகுப்பாய்வு செய்யலாம்
+
+   },
+   onPickFile: function ():void {
+     //@ts-ignor
+     const fileInput = this.$refs.fileInput as HTMLInputElement;
+    fileInput.click()
+
+  },
     téléverser: async function () {
       this.enProgrès = true;
       try {
