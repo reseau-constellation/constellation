@@ -18,7 +18,7 @@
       <v-card-subtitle>
         <v-icon left small>mdi-information-outline</v-icon>
         {{ $t("dialogueTraductionsInterface.சேர்த்தல்") }}
-        </v-card-subtitle>
+      </v-card-subtitle>
       <v-card outlined>
         <div class="d-flex flex-wrap">
           <v-card flat max-width="200" class="ma-3">
@@ -89,7 +89,9 @@
           <v-col cols="6">
             <panneau-traduction
               :clef="$t('dialogueTraductionsInterface.clefSélectionnée')"
-              :texteOriginal="$t('dialogueTraductionsInterface.messageOriginal')"
+              :texteOriginal="
+                $t('dialogueTraductionsInterface.messageOriginal')
+              "
               :langueCible="$t('dialogueTraductionsInterface.Languecible')"
               :langueSource="$t('dialogueTraductionsInterface.Languesource')"
               @annuler="clefSélectionnée = null"

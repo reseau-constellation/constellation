@@ -2,12 +2,13 @@ import _Vue from "vue";
 
 import estÉlectron from "is-electron";
 
-import clientProc from "@constl/ipa/lib/proxy/ipaProc";
-import clientTravailleur from "@constl/ipa/lib/proxy/ipaTravailleur";
+import { proxy } from "@constl/ipa";
 
 import clientConstellationÉlectron from "./clientÉlectronPrincipal";
 
-import { ProxyClientConstellation } from "@constl/ipa/lib/proxy/proxy";
+const clientProc = proxy.ipa.default;
+const clientTravailleur = proxy.ipaTravailleur.default;
+const { ProxyClientConstellation } = proxy.proxy
 
 const TRAVAILLEUR = false;
 

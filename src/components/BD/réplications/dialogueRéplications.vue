@@ -6,17 +6,19 @@
 
     <v-card>
       <v-card-title class="headline mb-2">
-      {{$t("dialogueRéplications.நகல்கள்")}} </v-card-title>
+        {{ $t("dialogueRéplications.நகல்கள்") }}
+      </v-card-title>
       <v-card-subtitle>
-      {{ $t("dialogueRéplications.விண்மீன்_தரவு") }}
+        {{ $t("dialogueRéplications.விண்மீன்_தரவு") }}
       </v-card-subtitle>
       <v-divider />
-       <v-card-text>
+      <v-card-text>
         <div class="mt-3">
           <v-skeleton-loader v-if="!replications" type="paragraph@2" />
           <div v-else>
             <p class="mb-0 text-overline">
-             {{ $t("dialogueRéplications.நகலெடுக்கப்பட்டது") }} </p>
+              {{ $t("dialogueRéplications.நகலெடுக்கப்பட்டது") }}
+            </p>
             <v-list-item two-line>
               <v-avatar class="me-3 text-h3">
                 {{ dispositifs.length }}
@@ -27,25 +29,34 @@
                   <v-icon right>mdi-monitor-cellphone</v-icon>
                 </v-list-item-title>
                 <v-list-item-subtitle class="success--text">
-                  {{ $t("dialogueRéplications.enLigne", { n: dispositifsEnLigne.length }) }}
-                  </v-list-item-subtitle>
+                  {{
+                    $t("dialogueRéplications.enLigne", {
+                      n: dispositifsEnLigne.length,
+                    })
+                  }}
+                </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
 
             <p class="mb-0 text-overline">
-              {{ $t("dialogueRéplications.Représentant") }}</p>
+              {{ $t("dialogueRéplications.Représentant") }}
+            </p>
             <v-list-item two-line>
               <v-avatar class="me-3 text-h3">
                 {{ membres.length }}
               </v-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                {{ $t("dialogueRéplications.Membres") }}
-                <v-icon right>mdi-account</v-icon>
+                  {{ $t("dialogueRéplications.Membres") }}
+                  <v-icon right>mdi-account</v-icon>
                 </v-list-item-title>
                 <v-list-item-subtitle class="success--text"
-                  >{{ $t("dialogueRéplications.enLigne", { n: membresEnLigne.length }) }}
-                  </v-list-item-subtitle>
+                  >{{
+                    $t("dialogueRéplications.enLigne", {
+                      n: membresEnLigne.length,
+                    })
+                  }}
+                </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </div>
@@ -69,7 +80,7 @@ import { PropType } from "vue";
 
 import mixinLangues from "@/mixins/langues";
 
-import { infoRéplication } from "@constl/ipa/lib/reseau";
+import { infoRéplication } from "@constl/ipa/reseau";
 
 const DÉLAI_EN_LIGNE = 10000;
 

@@ -14,16 +14,20 @@
       {{ $t("alerteErreurConstellation.விளக்கம்") }}
       <br />
       {{ $t("alerteErreurConstellation.புகாரளிக்க") }}
-      </p>
+    </p>
 
     <div class="text-center">
       <v-btn tiled outlined color="error" @click="signaler">
-      {{ $t("alerteErreurConstellation.புகாரளிக்கவும்") }}
+        {{ $t("alerteErreurConstellation.புகாரளிக்கவும்") }}
       </v-btn>
     </div>
 
     <p class="font-weight-bold" @click="détails = !détails">
-      {{ détails ? $t("alerteErreurConstellation.மறை") : $t("alerteErreurConstellation.தகவல்கள்") }}
+      {{
+        détails
+          ? $t("alerteErreurConstellation.மறை")
+          : $t("alerteErreurConstellation.தகவல்கள்")
+      }}
       <v-icon color="error">{{
         détails ? "mdi-chevron-up" : "mdi-chevron-down"
       }}</v-icon>
@@ -107,11 +111,16 @@ export default mixins().extend({
     signaler: function () {
       if (!this.nouvelleErreur) return;
 
-      const titre = this.$t("alerteErreurConstellation.பிழை")as string;
+      const titre = this.$t("alerteErreurConstellation.பிழை") as string;
       const erreur = this.nouvelleErreur.toString();
       const tracéErreur = this.nouvelleErreur.stack;
       //const autresErreurs = this.autresErreurs.length ? "\n*Erreurs précédentes* :\n" + this.autresErreurs.map(e=>`\n${e.toString()}\n\`\`\`${e.stack}\`\`\``).join("\n") : ""
-      const contenu = this.$t("alerteErreurConstellation.பிழை_இருக்கிறது",{அ:isElectron() ? "X" : " ",ஆ:isElectron() ? " " : "X",இ:erreur,ஈ:tracéErreur}) as string;
+      const contenu = this.$t("alerteErreurConstellation.பிழை_இருக்கிறது", {
+        அ: isElectron() ? "X" : " ",
+        ஆ: isElectron() ? " " : "X",
+        இ: erreur,
+        ஈ: tracéErreur,
+      }) as string;
       const urlSignalement = `${URL_BASE_SIGNALER_AUTO}?title=${encodeURI(
         titre
       )}&body=${encodeURI(contenu)}`;

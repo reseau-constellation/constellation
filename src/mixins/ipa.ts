@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { schémaFonctionOublier } from "@constl/ipa/lib/client";
+import { schémaFonctionOublier } from "@constl/ipa/client";
 
 export default Vue.extend({
   data: function () {

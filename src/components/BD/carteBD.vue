@@ -46,7 +46,11 @@
                   couleurScore(score ? score.total : null).couleur
                 }`"
                 class="font-weight-bold"
-              >{{ score ? $t("carteBD.note."+ couleurScore(score.total).note) : $t("communs.pointIntérogation") }}
+                >{{
+                  score
+                    ? $t("carteBD.note." + couleurScore(score.total).note)
+                    : $t("communs.pointIntérogation")
+                }}
               </span>
             </span>
           </v-chip>
@@ -99,9 +103,8 @@
           </v-btn>
         </template>
         <span>
-        {{
-          épinglée ? $t("carteBD.அகற்று") : $t("carteBD.பொருத்து")
-        }}</span>
+          {{ épinglée ? $t("carteBD.அகற்று") : $t("carteBD.பொருத்து") }}</span
+        >
       </v-tooltip>
     </v-card-actions>
   </v-card>
@@ -110,7 +113,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { infoScore } from "@constl/ipa/lib/bds";
+import { infoScore } from "@constl/ipa/bds";
 
 import { traduireNom, couper, couleurScore } from "@/utils";
 

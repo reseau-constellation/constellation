@@ -7,7 +7,7 @@
     <v-card>
       <v-card-title class="headline">
         {{ $t("dialogueMotsClefs.Motsclefs") }}
-       </v-card-title>
+      </v-card-title>
       <v-divider />
 
       <v-card-text>
@@ -43,7 +43,7 @@
             />
             <div v-if="!motsClefsVisibles.length" class="text-center">
               <v-img :src="image('vide')" class="my-3" contain height="75px" />
-              <p class="mt-2">{{ $t("dialogueMotsClefs.Aucunrésultat") }} </p>
+              <p class="mt-2">{{ $t("dialogueMotsClefs.Aucunrésultat") }}</p>
             </div>
           </v-list>
         </div>

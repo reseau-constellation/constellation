@@ -1,9 +1,14 @@
-import générerProxy, {
+import { proxy } from "@constl/ipa";
+
+const générerProxy = proxy.proxy.default
+const {
   téléClient,
-  MessageDeTravailleur,
-  MessagePourTravailleur,
   ProxyClientConstellation,
-} from "@constl/ipa/lib/proxy/proxy";
+} = proxy.proxy;
+const {
+  MessageDeTravailleur,
+  MessagePourTravailleur
+} = proxy.messages;
 
 declare global {
   interface Window {

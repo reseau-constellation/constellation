@@ -51,23 +51,23 @@
       <p class="mb-0 text-overline">
         {{ $t("carteVariable.unités") }}
         <v-chip label outlined small>
-          {{ unités ? unités :$t("carteVariable.Aucune_unité") }}
+          {{ unités ? unités : $t("carteVariable.Aucune_unité") }}
         </v-chip>
-    </p>
-    <p class="mb-0 text-overline">
-      {{ $t("carteVariable.Catégorie") }}
+      </p>
+      <p class="mb-0 text-overline">
+        {{ $t("carteVariable.Catégorie") }}
         <v-tooltip v-if="catégorie !== undefined" bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-chip  label outlined small v-on="on" v-bind="attrs">
-           <v-icon left small>{{ icôneCatégorie }}</v-icon>
-          {{ $t("variables.catégories."+ catégorie) }}
-          </v-chip>
+          <template v-slot:activator="{ on, attrs }">
+            <v-chip label outlined small v-on="on" v-bind="attrs">
+              <v-icon left small>{{ icôneCatégorie }}</v-icon>
+              {{ $t("variables.catégories." + catégorie) }}
+            </v-chip>
           </template>
-        <span>
-        {{$t("variables.catégories.info."+catégorie)}}
-        </span>
-      </v-tooltip>
-       <v-select
+          <span>
+            {{ $t("variables.catégories.info." + catégorie) }}
+          </span>
+        </v-tooltip>
+        <v-select
           v-else
           outlined
           dense
@@ -83,7 +83,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { catégorieVariables } from "@constl/ipa/lib/variables";
+import { catégorieVariables } from "@constl/ipa/variables";
 
 import {
   couper,

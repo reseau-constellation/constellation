@@ -176,7 +176,7 @@
               <p class="mt-4 text--secondary text-left">
                 <v-icon>mdi-alert-circle-outline</v-icon>
                 {{ $t("dialogueAjouterDispositif.குறிப்பு") }}
-                </p>
+              </p>
             </span>
             <v-btn
               text
@@ -229,11 +229,10 @@ import { copier, couper, traduireNom } from "@/utils";
 import avatarProfil from "@/components/commun/avatarProfil.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 
-import {
-  adresseOrbiteValide,
-  schémaFonctionOublier,
-} from "@constl/ipa/lib/client";
-import { infoDispositifEnLigne } from "@constl/ipa/lib/reseau";
+import { client, réseau } from "@constl/ipa";
+
+const { adresseOrbiteValide, schémaFonctionOublier } = client;
+const { statutDispositif } = réseau;
 
 export default mixins(mixinIPA, mixinLangues).extend({
   name: "dialogueAjouterDispositif",
@@ -253,7 +252,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
       nomsNouveauCompte: {},
       oublierNoms: undefined as undefined | schémaFonctionOublier,
       dispositifsDeCeCompte: [] as string[],
-      dispositifs: [] as infoDispositifEnLigne[],
+      dispositifs: [] as statutDispositif[],
       règlesValide: {
         adresseBdRacine: [
           (val: string) =>
@@ -264,7 +263,6 @@ export default mixins(mixinIPA, mixinLangues).extend({
             "L'adresse Orbite doit terminer en `/racine`.",
         ],
       },
-
     };
   },
   computed: {
@@ -289,8 +287,12 @@ export default mixins(mixinIPA, mixinLangues).extend({
       }
       return false;
     },
-    options: function(): {titre: string, sousTitre: string, icône: string, prochaineÉtape: number}[]
-     {
+    options: function (): {
+      titre: string;
+      sousTitre: string;
+      icône: string;
+      prochaineÉtape: number;
+    }[] {
       return [
         {
           titre: this.$t("dialogueAjouterDispositif.தலைப்பு") as string,
@@ -299,16 +301,20 @@ export default mixins(mixinIPA, mixinLangues).extend({
           prochaineÉtape: 2,
         },
         {
-          titre: this.$t("dialogueAjouterDispositif.கணக்கில்_சேர்த்தல்") as string,
-          sousTitre: this.$t("dialogueAjouterDispositif.சாதனத்தை_சேர்த்தல்") as string,
+          titre: this.$t(
+            "dialogueAjouterDispositif.கணக்கில்_சேர்த்தல்"
+          ) as string,
+          sousTitre: this.$t(
+            "dialogueAjouterDispositif.சாதனத்தை_சேர்த்தல்"
+          ) as string,
           icône: "mdi-plus",
           prochaineÉtape: 3,
         },
-      ]
+      ];
     },
   },
 
-    watch: {
+  watch: {
     idBdRacineNouveau: async function (val) {
       if (
         val &&
@@ -361,7 +367,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
       );
 
       const oublierDispositifsEnLigne =
-        await this.$ipa.réseau!.suivreDispositifsEnLigne((dispositifs) => {
+        await this.$ipa.réseau!.suivreConnexionsDispositifs((dispositifs) => {
           this.dispositifs = dispositifs;
         });
 

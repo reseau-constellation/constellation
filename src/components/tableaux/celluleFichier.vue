@@ -77,7 +77,7 @@
               append
               @click="() => télécharger()"
             >
-             {{ $t("communs.télécharger") }}
+              {{ $t("communs.télécharger") }}
               <v-icon right> mdi-download </v-icon>
             </v-btn>
           </div>
@@ -93,7 +93,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { formatsFichiers as formats } from "@constl/ipa/lib/valid";
+import { formatsFichiers as formats } from "@constl/ipa/valid";
 import {
   itérableÀFlux,
   téléchargerFlux,

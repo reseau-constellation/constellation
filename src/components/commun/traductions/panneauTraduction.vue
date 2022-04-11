@@ -4,7 +4,7 @@
       {{
         clef
           ? $t("traduction.பரிந்துரைக்கவும்")
-          :$t("traduction.தேர்ந்தெடுக்கவும்")
+          : $t("traduction.தேர்ந்தெடுக்கவும்")
       }}
     </v-card-title>
     <v-card-text>
@@ -45,7 +45,11 @@
       <v-divider />
       <v-card v-if="clef" flat>
         <v-card-title>
-          {{$t("traduction.பரிந்துரைகள்",{n:formatterChiffre(suggestions.length)})}}
+          {{
+            $t("traduction.பரிந்துரைகள்", {
+              n: formatterChiffre(suggestions.length),
+            })
+          }}
         </v-card-title>
         <v-card-text>
           <v-list style="max-height: 200px" class="overflow-y-auto">
@@ -67,7 +71,7 @@ import mixins from "vue-typed-mixins";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
-import { schémaBd } from "@constl/ipa/lib/reseau";
+import { schémaBd } from "@constl/ipa/reseau";
 
 import itemTradCommunauté from "@/components/commun/traductions/itemTradCommunauté.vue";
 

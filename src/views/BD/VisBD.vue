@@ -1,4 +1,4 @@
-  <template>
+<template>
   <v-container>
     <v-card flat>
       <v-card-subtitle>
@@ -43,11 +43,12 @@
           <v-btn icon small @click="onPickFile">
             <v-icon small>mdi-camera-outline</v-icon>
             <input
-            type="file"
-            style="display: none"
-            ref="fileInput"
-            accept="image/*"
-            @change="onFilePicked"/>
+              type="file"
+              style="display: none"
+              ref="fileInput"
+              accept="image/*"
+              @change="onFilePicked"
+            />
           </v-btn>
         </span>
         <span>
@@ -62,7 +63,7 @@
               </v-btn>
             </template>
           </dialogue-exporter>
-          </span>
+        </span>
         <v-dialog
           v-if="permissionÉcrire"
           v-model="dialogueEffacerBd"
@@ -72,15 +73,15 @@
             <v-btn v-bind="attrs" v-on="on" icon color="error">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
-           </template>
+          </template>
           <v-card>
             <v-card-title class="headline red--text">
               {{ $t("bd.visBD.நீக்கம்") }}
-             </v-card-title>
+            </v-card-title>
             <v-card-text>
               {{ $t("bd.visBD.தரவுத்தளம்_அகற்றல்") }}
-              </v-card-text>
-             <v-divider></v-divider>
+            </v-card-text>
+            <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -89,7 +90,7 @@
                 outlined
                 @click="dialogueEffacerBd = false"
               >
-              {{ $t("bd.visBD.இல்லை") }}
+                {{ $t("bd.visBD.இல்லை") }}
               </v-btn>
               <v-btn color="error" depressed @click="effacerBd">
                 {{ $t("bd.visBD.நீக்கவும்") }}
@@ -122,11 +123,12 @@
           />
         </v-menu>
       </v-card-subtitle>
-       <v-divider />
+      <v-divider />
       <v-card-text>
         <v-card flat class="mx-3 mb-3">
           <p class="mb-0 text-overline">
-            {{ $t("bd.visBD.செய்தி") }}</p>
+            {{ $t("bd.visBD.செய்தி") }}
+          </p>
           <div class="d-flex flex-wrap">
             <v-card flat width="200" class="mb-3">
               <dialogueQualité
@@ -146,7 +148,9 @@
                           score ? couleurScore(score.total).couleur : 'primary'
                         "
                       >
-                    {{ score ? formatterChiffre(Math.round(score.total)) : "" }}
+                        {{
+                          score ? formatterChiffre(Math.round(score.total)) : ""
+                        }}
                       </v-progress-circular>
                     </v-list-item-avatar>
                     <v-list-item-content>
@@ -156,14 +160,16 @@
                         :style="`color:${couleurScore(score.total).couleur}`"
                         class="font-weight-bold"
                       >
-                        {{ $t("carteBD.note." + couleurScore(score.total).note) }}
+                        {{
+                          $t("carteBD.note." + couleurScore(score.total).note)
+                        }}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
                 </template>
               </dialogueQualité>
             </v-card>
-             <v-card flat width="200" class="mb-3">
+            <v-card flat width="200" class="mb-3">
               <dialogue-auteurs
                 :idBd="idBd"
                 :auteurs="auteurs"
@@ -177,7 +183,13 @@
                     <v-list-item-content>
                       <v-skeleton-loader v-if="auteurs === null" type="chip" />
                       <span v-else>
-                       {{auteurs ? $t("bd.visBD.எழுத்தாளர்கள்",{n:formatterChiffre(auteurs.length)}) : ""}}
+                        {{
+                          auteurs
+                            ? $t("bd.visBD.எழுத்தாளர்கள்", {
+                                n: formatterChiffre(auteurs.length),
+                              })
+                            : ""
+                        }}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -198,7 +210,7 @@
                         :color="
                           licence && !licenceApprouvée ? 'error' : 'secondary'
                         "
-                        >
+                      >
                         mdi-scale-balance
                       </v-icon>
                     </v-list-item-avatar>
@@ -236,7 +248,13 @@
                         type="chip"
                       />
                       <span v-else>
-                      {{réplications ? $t("bd.visBD.நகல்கள்",{n:formatterChiffre(réplications.length)}) : ""}}
+                        {{
+                          réplications
+                            ? $t("bd.visBD.நகல்கள்", {
+                                n: formatterChiffre(réplications.length),
+                              })
+                            : ""
+                        }}
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -249,7 +267,8 @@
           <div class="d-flex flex-wrap">
             <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">
-                {{ $t("bd.visBD.மாறிகள்") }}</p>
+                {{ $t("bd.visBD.மாறிகள்") }}
+              </p>
               <p v-if="!variables.length" class="text--disabled">
                 {{ $t("bd.visBD.மாறி") }}
               </p>
@@ -277,7 +296,7 @@
                 </dialogue-mots-clefs>
               </p>
               <p v-if="!motsClefs.length" class="text--disabled">
-              {{ $t("bd.visBD.இல்லை") }}
+                {{ $t("bd.visBD.இல்லை") }}
               </p>
               <jeton-mot-clef
                 v-for="m in motsClefs"
@@ -317,9 +336,10 @@
           <v-skeleton-loader v-if="tableaux === null" type="paragraph" />
           <div v-else-if="!tableaux.length" class="text-center">
             <p class="text-h5 mt-5">
-              {{ $t("bd.visBD.அட்டவணைகள்") }} </p>
+              {{ $t("bd.visBD.அட்டவணைகள்") }}
+            </p>
             <v-img :src="image('vide')" class="my-5" contain height="175px" />
-             <v-btn
+            <v-btn
               v-if="permissionÉcrire"
               color="primary"
               class="mx-2"
@@ -327,7 +347,7 @@
               text
               @click="ajouterTableau"
             >
-            {{ $t("bd.visBD.சேர்க்கவும்") }}
+              {{ $t("bd.visBD.சேர்க்கவும்") }}
             </v-btn>
             <v-btn
               v-if="permissionÉcrire"
@@ -337,8 +357,8 @@
               text
               @click="importer"
             >
-            {{ $t("bd.visBD.இறக்குமதி") }}
-           </v-btn>
+              {{ $t("bd.visBD.இறக்குமதி") }}
+            </v-btn>
           </div>
           <transition-group
             v-else
@@ -364,13 +384,12 @@
       </v-card-text>
     </v-card>
   </v-container>
- </template>
+</template>
+
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { MODÉRATEUR } from "@constl/ipa/lib/accès/consts";
-import { infoAuteur, infoScore } from "@constl/ipa/lib/bds";
-import { infoRéplication } from "@constl/ipa/lib/reseau";
+import { accès, bds, réseau, utils } from "@constl/ipa";
 
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 
@@ -391,6 +410,11 @@ import mixinImage from "@/mixins/images";
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 import mixinLicences from "@/mixins/licences";
+
+const { infoRéplications } = réseau;
+const { infoScore } = bds;
+const { MODÉRATEUR } = accès;
+const { infoAuteur } = utils.types;
 
 export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
   {
@@ -423,7 +447,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         logo: null as null | string,
         score: null as null | infoScore,
         variables: [] as string[],
-        réplications: null as null | infoRéplication[],
+        réplications: null as null | infoRéplications,
 
         géog: [] as string[],
         motsClefs: [] as string[],
@@ -461,8 +485,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       permissionModerateur: function (): boolean {
         if (!this.auteurs) return false;
         const accèsMod = this.auteurs.find(
-          (a: infoAuteur) =>
-            a.idBdRacine === this.idBdRacine && a.rôle === MODÉRATEUR
+          (a) => a.idBdRacine === this.idBdRacine && a.rôle === MODÉRATEUR
         );
         return Boolean(accèsMod);
       },
@@ -482,19 +505,23 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         await this.$ipa.bds!.effacerBd(this.idBd);
         this.$router.push("/bd");
       },
-      onFilePicked: function ():void {
-        let fileInput = this.$refs.fileInput
+      onFilePicked: function (): void {
+        let fileInput = this.$refs.fileInput;
         //@ts-ignore  let imgFile = fileInput.files
-         {
+        {
           let reader = new FileReader();
-          reader.addEventListener("load", function () {
-          // this.$ipa.bds!.sauvegarderImage(this.idBd, reader.result);
-          }, false);
+          reader.addEventListener(
+            "load",
+            function () {
+              // this.$ipa.bds!.sauvegarderImage(this.idBd, reader.result);
+            },
+            false
+          );
           //@ts-ignore  reader.readAsDataURL(imgFile[0])
         }
       },
-      onPickFile: function ():void {
-      //@ts-ignore    this.$refs.fileInput.click()
+      onPickFile: function (): void {
+        //@ts-ignore    this.$refs.fileInput.click()
       },
       sauvegarderNom: async function ({
         langue,
@@ -568,7 +595,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
           (permission) => (this.permissionÉcrire = permission)
         );
 
-        const oublierIdBdRacine = await this.$ipa.suivreIdBdRacine(
+        const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte(
           (id: string | undefined) => (this.idBdRacine = id)
         );
 
@@ -580,7 +607,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         );
         const oublierAuteurs = await this.$ipa.bds!.suivreAuteurs(
           this.idBd,
-          (auteurs: infoAuteur[]) => {
+          (auteurs) => {
             this.auteurs = auteurs;
           }
         );
@@ -604,7 +631,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         );
         const oublierScore = await this.$ipa.bds!.suivreScoreBd(
           this.idBd,
-          (score: infoScore) => (this.score = score)
+          (score) => (this.score = score)
         );
         const oublierVariables = await this.$ipa.bds!.suivreVariablesBd(
           this.idBd,
@@ -614,12 +641,13 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
           this.idBd,
           (motsClefs: string[]) => (this.motsClefs = motsClefs)
         );
-        const oublierRéplications = await this.$ipa.réseau!.suivreRéplications(
-          this.idBd,
-          (réplications: infoRéplication[]) => {
-            this.réplications = réplications;
-          }
-        );
+        const { fOublier: oublierRéplications } =
+          await this.$ipa.réseau!.suivreRéplications(
+            this.idBd,
+            (réplications) => {
+              this.réplications = réplications;
+            }
+          );
         this.suivre([
           oublierPermissionÉcrire,
           oublierIdBdRacine,

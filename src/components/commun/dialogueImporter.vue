@@ -4,28 +4,28 @@
       <slot name="activator" v-bind="{ on, attrs }"></slot>
     </template>
     <v-card>
-     <v-card-title class="headline mb-3">
-      {{ $t("importer.titre") }}
-       <v-spacer />
-         <v-btn icon @click="dialogue = false">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </v-card-title>
-  <v-divider />
+      <v-card-title class="headline mb-3">
+        {{ $t("importer.titre") }}
+        <v-spacer />
+        <v-btn icon @click="dialogue = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-divider />
 
-  <template>
-    <v-stepper v-model="e6" horizontal >
-      <v-stepper-header>
-        <v-stepper-step :complete="e6 > 1" step="1">
-          {{ $t("importer.தேர்வுசெய்க") }}
-        </v-stepper-step>
-        <v-stepper-step :complete="e6 > 2" step="2">
-          {{ $t("importer.நெடுவரிசை") }}
-        </v-stepper-step>
-        <v-stepper-step :complete="e6 > 3" step="3">
-          {{ $t("importer.பதிவேற்றம்") }}
-        </v-stepper-step>
-    </v-stepper-header>
+      <template>
+        <v-stepper v-model="e6" horizontal>
+          <v-stepper-header>
+            <v-stepper-step :complete="e6 > 1" step="1">
+              {{ $t("importer.தேர்வுசெய்க") }}
+            </v-stepper-step>
+            <v-stepper-step :complete="e6 > 2" step="2">
+              {{ $t("importer.நெடுவரிசை") }}
+            </v-stepper-step>
+            <v-stepper-step :complete="e6 > 3" step="3">
+              {{ $t("importer.பதிவேற்றம்") }}
+            </v-stepper-step>
+          </v-stepper-header>
 
     <v-stepper-items>
      <v-stepper-content step="1">
@@ -142,7 +142,7 @@
 </template>
 
 <script lang="ts">
-import ImportateurFeuilleCalcul from "@/components/commun/xlsx"
+import ImportateurFeuilleCalcul from "@/components/commun/xlsx";
 import mixins from "vue-typed-mixins";
 import XLSX from "xlsx";
 import mixinLangues from "@/mixins/langues";
@@ -166,9 +166,9 @@ export default mixins(mixinLangues).extend({
   },
 
   methods: {
-    onFilePicked: async function(): Promise<void> {
-      const fichiers = this.$refs.fileInput as HTMLInputElement // தேர்ந்தெடுத்தப்பட்டு கோப்பு
-      if (!fichiers.files) return
+    onFilePicked: async function (): Promise<void> {
+      const fichiers = this.$refs.fileInput as HTMLInputElement; // தேர்ந்தெடுத்தப்பட்டு கோப்பு
+      if (!fichiers.files) return;
       const données = await fichiers!.files[0].arrayBuffer(); // கோப்பில் உள்ள தகவல்கள்
       const doc = XLSX.read(données); // கோப்பை யாவாக்கிறீட்டில் திறக்கவும்
 

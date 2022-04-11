@@ -52,7 +52,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" icon>
               <v-icon>mdi-download</v-icon>
-              </v-btn>
+            </v-btn>
           </template>
         </dialogue-exporter>
         <dialogue-Importer :id="idTableau" type="tableau">

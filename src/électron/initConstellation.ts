@@ -1,10 +1,10 @@
 import { BrowserWindow, ipcMain } from "electron";
 
-import GestionnaireClient from "@constl/ipa/lib/proxy/gestionnaireClient";
+import GestionnaireClient from "@constl/ipa/proxy/gestionnaireClient";
 import {
   MessageDeTravailleur,
   MessageErreurDeTravailleur,
-} from "@constl/ipa/lib/proxy/proxy";
+} from "@constl/ipa/proxy/proxy";
 
 export default (win: BrowserWindow): (() => Promise<void>) => {
   const client = new GestionnaireClient(

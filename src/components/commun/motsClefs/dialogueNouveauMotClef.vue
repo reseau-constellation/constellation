@@ -7,7 +7,7 @@
     <v-card>
       <v-card-title class="headline">
         {{ $t("dialogueNouveauMotClef.motclef") }}
-       </v-card-title>
+      </v-card-title>
       <v-divider />
 
       <v-card-text class="mt-3">
