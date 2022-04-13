@@ -87,13 +87,13 @@
               cla
               ss="py-2 ma-2"
               dense
-              @click="copier(idBdRacine)"
+              @click="copier(idBdCompte)"
             >
               <v-list-item-avatar
                 ><v-icon>mdi-content-copy</v-icon></v-list-item-avatar
               >
               <v-list-item-content>{{
-                couper(idBdRacine || "", 30)
+                couper(idBdCompte || "", 30)
               }}</v-list-item-content>
             </v-list-item>
           </v-window-item>
@@ -138,7 +138,7 @@
               </v-list-item-content>
             </v-list-item>
             <v-text-field
-              v-model="idBdRacineNouveau"
+              v-model="idBdCompteNouveau"
               outlined
               dense
               :rules="règlesValide.adresseBdRacine"
@@ -155,21 +155,21 @@
               </p>
               <p>{{ idOrbiteNouveau }}</p>
             </span>
-            <span v-else-if="idBdRacineNouveau">
+            <span v-else-if="idBdCompteNouveau">
               <p class="text-h5 mt-5">
                 {{ $t("dialogueAjouterDispositif.கணக்கில்_இணைப்பு") }}
               </p>
               <v-list-item class="text-left">
                 <v-list-item-avatar>
-                  <avatar-profil :id="idBdRacineNouveau" />
+                  <avatar-profil :id="idBdCompteNouveau" />
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{ couper(nomNouveauCompte || idBdRacineNouveau, 25) }}
+                    {{ couper(nomNouveauCompte || idBdCompteNouveau, 25) }}
                   </v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-action>
-                  <lien-orbite :lien="idBdRacineNouveau" />
+                  <lien-orbite :lien="idBdCompteNouveau" />
                 </v-list-item-action>
               </v-list-item>
               <v-divider />
@@ -229,10 +229,9 @@ import { copier, couper, traduireNom } from "@/utils";
 import avatarProfil from "@/components/commun/avatarProfil.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 
-import { client, réseau } from "@constl/ipa";
+import { réseau, utils } from "@constl/ipa";
 
-const { adresseOrbiteValide, schémaFonctionOublier } = client;
-const { statutDispositif } = réseau;
+const { adresseOrbiteValide } = utils;
 
 export default mixins(mixinIPA, mixinLangues).extend({
   name: "dialogueAjouterDispositif",
@@ -244,15 +243,15 @@ export default mixins(mixinIPA, mixinLangues).extend({
       étape: 1,
 
       idOrbiteNouveau: undefined as undefined | string,
-      idBdRacineNouveau: undefined as undefined | string,
-      idBdRacine: undefined as undefined | string,
+      idBdCompteNouveau: undefined as undefined | string,
+      idBdCompte: undefined as undefined | string,
       idDispositif: undefined as undefined | string,
 
       cestParti: false,
       nomsNouveauCompte: {},
-      oublierNoms: undefined as undefined | schémaFonctionOublier,
+      oublierNoms: undefined as undefined | utils.schémaFonctionOublier,
       dispositifsDeCeCompte: [] as string[],
-      dispositifs: [] as statutDispositif[],
+      dispositifs: [] as réseau.statutDispositif[],
       règlesValide: {
         adresseBdRacine: [
           (val: string) =>
@@ -267,7 +266,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
   },
   computed: {
     idsOrbite: function (): string[] {
-      return this.dispositifs.map((d) => d.info.idOrbite);
+      return this.dispositifs.map((d) => d.infoDispositif.idOrbite);
     },
     nomNouveauCompte: function (): string | null {
       return Object.keys(this.nomsNouveauCompte).length
@@ -279,9 +278,9 @@ export default mixins(mixinIPA, mixinLangues).extend({
         return Boolean(this.idOrbiteNouveau);
       } else if (this.étape === 3) {
         return Boolean(
-          this.idBdRacineNouveau &&
+          this.idBdCompteNouveau &&
             this.règlesValide.adresseBdRacine.every(
-              (r) => r(this.idBdRacineNouveau!) === true
+              (r) => r(this.idBdCompteNouveau!) === true
             )
         );
       }
@@ -315,7 +314,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
   },
 
   watch: {
-    idBdRacineNouveau: async function (val) {
+    idBdCompteNouveau: async function (val) {
       if (
         val &&
         this.règlesValide.adresseBdRacine.every((r) => r(val) === true)
@@ -338,19 +337,19 @@ export default mixins(mixinIPA, mixinLangues).extend({
     retourAuDébut: function () {
       this.étape = 1;
       this.idOrbiteNouveau = undefined;
-      this.idBdRacineNouveau = undefined;
+      this.idBdCompteNouveau = undefined;
     },
     auSuivant: function () {
       this.étape = 4;
     },
     confirmer: async function () {
-      if (!this.idBdRacineNouveau) return;
+      if (!this.idBdCompteNouveau) return;
       this.cestParti = true;
       if (this.idOrbiteNouveau) {
         await this.$ipa.ajouterDispositif(this.idOrbiteNouveau);
       } else {
-        localStorage.setItem("idBdRacine", this.idBdRacineNouveau);
-        await this.$ipa.rejoindreCompte(this.idBdRacineNouveau);
+        localStorage.setItem("idBdCompte", this.idBdCompteNouveau);
+        await this.$ipa.rejoindreCompte(this.idBdCompteNouveau);
       }
       this.cestParti = false;
       this.fermer();
@@ -362,8 +361,8 @@ export default mixins(mixinIPA, mixinLangues).extend({
     initialiserSuivi: async function () {
       this.idDispositif = await this.$ipa.obtIdOrbite();
 
-      const oublierIdBdRacine = await this.$ipa.suivreIdBdRacine(
-        (id) => (this.idBdRacine = id)
+      const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte(
+        (id) => (this.idBdCompte = id)
       );
 
       const oublierDispositifsEnLigne =

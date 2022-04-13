@@ -1,18 +1,14 @@
 import { BrowserWindow, ipcMain } from "electron";
 
-import GestionnaireClient from "@constl/ipa/proxy/gestionnaireClient";
-import {
-  MessageDeTravailleur,
-  MessageErreurDeTravailleur,
-} from "@constl/ipa/proxy/proxy";
+import { proxy } from "@constl/ipa";
 
 export default (win: BrowserWindow): (() => Promise<void>) => {
-  const client = new GestionnaireClient(
-    (m: MessageDeTravailleur) => {
+  const client = new proxy.gestionnaireClient.default(
+    (m: proxy.messages.MessageDeTravailleur) => {
       win.webContents.send("message", m);
     },
     (e: Error) => {
-      const messageErreur: MessageErreurDeTravailleur = {
+      const messageErreur: proxy.messages.MessageErreurDeTravailleur = {
         type: "erreur",
         erreur: e,
       };

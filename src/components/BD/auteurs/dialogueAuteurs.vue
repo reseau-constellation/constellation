@@ -33,8 +33,8 @@
 
             <item-auteur
               v-for="auteur in auteurs"
-              :key="auteur.idBdRacine"
-              :id="auteur.idBdRacine"
+              :key="auteur.idBdCompte"
+              :id="auteur.idBdCompte"
               :mod="auteur.rôle === MODÉRATEUR"
               :accepté="auteur.accepté"
             />

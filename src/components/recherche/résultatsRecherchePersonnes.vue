@@ -3,8 +3,8 @@
     <v-slide-x-transition group class="d-flex flex-wrap justify-center">
       <carte-membre
         v-for="membre in membres"
-        :key="membre.idBdRacine"
-        :id="membre.idBdRacine"
+        :key="membre.idBdCompte"
+        :id="membre.idBdCompte"
         :vuIlyA="membre.vuIlyA"
       />
     </v-slide-x-transition>
@@ -18,7 +18,7 @@ import mixinIPA from "@/mixins/ipa";
 
 import carteMembre from "@/components/commun/carteMembre.vue";
 
-import { infoMembreEnLigne } from "@constl/ipa/reseau";
+import { utils } from "@constl/ipa";
 
 export default mixins(mixinIPA).extend({
   name: "résultatsRecherchePersonnes",
@@ -26,16 +26,15 @@ export default mixins(mixinIPA).extend({
   components: { carteMembre },
   data: function () {
     return {
-      membres: [] as infoMembreEnLigne[],
+      membres: [] as utils.résultatObjectifRecherche<utils.infoRésultat>[],
     };
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierMembres = await this.$ipa.réseau!.suivreMembres(
-        (membres) => {
+      const { fOublier: oublierMembres } =
+        await this.$ipa.réseau!.rechercherMembres((membres) => {
           this.membres = membres;
-        }
-      );
+        }, 5);
 
       this.suivre([oublierMembres]);
     },

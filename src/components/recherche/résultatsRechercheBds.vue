@@ -17,20 +17,23 @@ import mixins from "vue-typed-mixins";
 import mixinIPA from "@/mixins/ipa";
 import carteBd from "@/components/BD/carteBD.vue";
 
+import { utils } from "@constl/ipa";
+
 export default mixins(mixinIPA).extend({
   name: "résultatsRecherchePersonnes",
   mixins: [mixinIPA],
   components: { carteBd },
   data: function () {
     return {
-      bds: [] as string[],
+      bds: [] as utils.résultatObjectifRecherche<utils.infoRésultat>[],
     };
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierBds = await this.$ipa.réseau!.suivreBds((bds) => {
-        this.bds = bds;
-      });
+      const { fOublier: oublierBds } = await this.$ipa.réseau!.rechercherBds(
+        (bds) => (this.bds = bds),
+        5
+      );
 
       this.suivre([oublierBds]);
     },

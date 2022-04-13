@@ -138,7 +138,7 @@ import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 
 import mixinLangues from "@/mixins/langues";
 
-import { catégorieVariables } from "@constl/ipa/variables";
+import { variables } from "@constl/ipa";
 
 import {
   traduireNom,
@@ -154,7 +154,7 @@ export default mixins(mixinLangues).extend({
     return {
       dialogue: false,
 
-      catégorie: undefined as undefined | catégorieVariables,
+      catégorie: undefined as undefined | variables.catégorieVariables,
       noms: {} as { [key: string]: string },
       descriptions: {} as { [key: string]: string },
       unités: undefined as undefined | string,

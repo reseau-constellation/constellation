@@ -38,7 +38,10 @@
       style="max-height: 300px"
       class="overflow-y-auto"
     >
-      <item-erreur-constellation :erreur="nouvelleErreur" :sousGroupe="false" />
+      <item-erreur-constellation
+        :erreur="nouvelleErreur.erreur"
+        :sousGroupe="false"
+      />
       <v-divider />
       <v-list-group
         v-show="autresErreurs.length"
@@ -56,7 +59,7 @@
         <item-erreur-constellation
           v-for="(err, i) in autresErreurs"
           :key="i"
-          :erreur="err"
+          :erreur="err.erreur"
           sousGroupe
         />
       </v-list-group>
@@ -90,15 +93,15 @@ export default mixins().extend({
       détails: false,
       voirToutes: false,
 
-      nouvelleErreur: undefined as Error | undefined,
-      toutesLesErreurs: [] as Error[],
+      nouvelleErreur: undefined as { erreur: Error; id?: string } | undefined,
+      toutesLesErreurs: [] as { erreur: Error; id?: string }[],
 
       fOublierErreurs: undefined as undefined | (() => void),
     };
   },
 
   computed: {
-    autresErreurs: function (): Error[] {
+    autresErreurs: function (): { erreur: Error; id?: string }[] {
       if (this.toutesLesErreurs.length <= 1) return [];
       return this.toutesLesErreurs.slice(1, this.toutesLesErreurs.length);
     },
@@ -112,8 +115,8 @@ export default mixins().extend({
       if (!this.nouvelleErreur) return;
 
       const titre = this.$t("alerteErreurConstellation.பிழை") as string;
-      const erreur = this.nouvelleErreur.toString();
-      const tracéErreur = this.nouvelleErreur.stack;
+      const erreur = this.nouvelleErreur.erreur.toString();
+      const tracéErreur = this.nouvelleErreur.erreur.stack;
       //const autresErreurs = this.autresErreurs.length ? "\n*Erreurs précédentes* :\n" + this.autresErreurs.map(e=>`\n${e.toString()}\n\`\`\`${e.stack}\`\`\``).join("\n") : ""
       const contenu = this.$t("alerteErreurConstellation.பிழை_இருக்கிறது", {
         அ: isElectron() ? "X" : " ",
@@ -129,8 +132,10 @@ export default mixins().extend({
   },
 
   mounted: async function () {
-    const fSuivreErreurs = (erreurs: { nouvelle: Error; toutes: Error[] }) => {
-      console.log({ erreurs });
+    const fSuivreErreurs = (erreurs: {
+      nouvelle: { erreur: Error; id?: string };
+      toutes: { erreur: Error; id?: string }[];
+    }) => {
       this.active = true;
 
       const { nouvelle, toutes } = erreurs;

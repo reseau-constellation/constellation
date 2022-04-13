@@ -36,7 +36,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   },
   computed: {
     idAuteur: function (): string {
-      return this.suggestion.idBdAuteur;
+      return this.suggestion.idBdCompte;
     },
     traduction: function (): string {
       return this.suggestion.élément.données[ID_COL_TRADUCTION];

@@ -23,10 +23,10 @@
           hide-details
         >
           <template v-slot:item="{ item, on, attrs }">
-            <item-membre v-bind="attrs" v-on="on" :id="item.idBdRacine" />
+            <item-membre v-bind="attrs" v-on="on" :id="item.value" />
           </template>
           <template v-slot:selection="{ item }">
-            <jeton-membre :id="item.idBdRacine" />
+            <jeton-membre :id="item.value" />
           </template>
         </v-select>
         <v-checkbox
@@ -65,11 +65,11 @@ import itemMembre from "@/components/commun/itemMembre.vue";
 
 import mixinIPA from "@/mixins/ipa";
 
-import { accès, réseau } from "@constl/ipa";
+import { accès } from "@constl/ipa";
 
 const { MODÉRATEUR, MEMBRE } = accès;
 
-interface Membre extends réseau.infoMembreEnLigne {
+interface Membre {
   value: string;
 }
 
@@ -82,7 +82,7 @@ export default mixins(mixinIPA).extend({
     return {
       dialogue: false,
       enProgrès: false,
-      membres: null as null | réseau.infoMembreEnLigne[],
+      membresRéseau: null as null | string[],
       auteurSélectionné: null as null | string,
       donnerPermissionModérateur: false,
 
@@ -91,9 +91,9 @@ export default mixins(mixinIPA).extend({
   },
   computed: {
     listeMembres: function (): Membre[] {
-      return this.membres
-        ? this.membres.map((m: réseau.infoMembreEnLigne) => {
-            return { ...m, value: m.idBdRacine };
+      return this.membresRéseau
+        ? this.membresRéseau.map((m: string) => {
+            return { value: m };
           })
         : [];
     },
@@ -117,11 +117,11 @@ export default mixins(mixinIPA).extend({
       this.annuler();
     },
     initialiserSuivi: async function () {
-      const oublierMembres = await this.$ipa.réseau!.suivreMembres(
-        (membres) => {
-          this.membres = membres;
-        }
-      );
+      const { fOublier: oublierMembres } =
+        await this.$ipa.réseau!.rechercherMembres((membres) => {
+          // À faire - probablement une erreur dans m.de
+          this.membresRéseau = membres.map((m) => m.de).filter((c) => c);
+        }, 10);
 
       this.suivre([oublierMembres]);
     },

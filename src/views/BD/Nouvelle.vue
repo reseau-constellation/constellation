@@ -222,7 +222,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { licences as _licences } from "@constl/ipa/";
+import { licences as _licences } from "@constl/ipa";
 
 import mixinLangues from "@/mixins/langues";
 import mixinImages from "@/mixins/images";
@@ -427,10 +427,7 @@ export default mixins(
       }
 
       //On ajoute la nouvelle BD aux favoris automatiquement
-      await this.$ipa.favoris!.épinglerFavori(
-        id,
-        "TOUS"
-      );
+      await this.$ipa.favoris!.épinglerFavori(id, "TOUS");
 
       this.enCréation = false;
       this.$router.push(`/bd/visualiser/${encodeURIComponent(id)}`);

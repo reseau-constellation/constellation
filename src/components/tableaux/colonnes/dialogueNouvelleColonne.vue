@@ -69,8 +69,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { schémaFonctionOublier } from "@constl/ipa/client";
-import { règleVariable } from "@constl/ipa/valid";
+import { utils, valid } from "@constl/ipa";
 
 import dialogueNouvelleVariable from "@/components/commun/dialogueNouvelleVariable.vue";
 import itemVariable from "@/components/tableaux/colonnes/itemVariable.vue";
@@ -88,9 +87,11 @@ export default mixins(mixinIPA).extend({
 
       variable: undefined as string | undefined,
       variablesDisponibles: [] as string[],
-      règlesVariable: [] as règleVariable[],
-      règlesPropre: [] as règleVariable[],
-      oublierRèglesVariable: undefined as schémaFonctionOublier | undefined,
+      règlesVariable: [] as valid.règleVariable[],
+      règlesPropre: [] as valid.règleVariable[],
+      oublierRèglesVariable: undefined as
+        | utils.schémaFonctionOublier
+        | undefined,
     };
   },
   watch: {
@@ -100,7 +101,7 @@ export default mixins(mixinIPA).extend({
         this.oublierRèglesVariable =
           await this.$ipa.variables.suivreRèglesVariable(
             val,
-            (règles: règleVariable[]) => {
+            (règles: valid.règleVariable[]) => {
               this.règlesVariable = règles;
             }
           );

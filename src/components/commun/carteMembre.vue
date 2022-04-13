@@ -98,7 +98,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
   methods: {
     couper,
     initialiserSuivi: async function () {
-      const oublierIdBdRacine = await this.$ipa.suivreIdBdRacine(
+      const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte(
         (id) => (this.monIdBdRacine = id)
       );
 

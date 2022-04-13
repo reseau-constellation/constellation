@@ -80,14 +80,14 @@ import { PropType } from "vue";
 
 import mixinLangues from "@/mixins/langues";
 
-import { infoRéplication } from "@constl/ipa/reseau";
+import { favoris, réseau } from "@constl/ipa";
 
 const DÉLAI_EN_LIGNE = 10000;
 
 export default mixins(mixinLangues).extend({
   name: "dialogueRéplications",
   props: {
-    replications: Array as PropType<infoRéplication[]>,
+    replications: Object as PropType<réseau.infoRéplications>,
   },
   mixins: [mixinLangues],
   data: function () {
@@ -97,30 +97,24 @@ export default mixins(mixinLangues).extend({
     };
   },
   computed: {
-    dispositifs: function (): infoRéplication[] {
-      return this.replications || [];
+    dispositifs: function (): (favoris.épingleDispositif & {
+      idDispositif: string;
+      vuÀ?: number;
+    })[] {
+      return this.replications.dispositifs;
     },
-    dispositifsEnLigne: function (): infoRéplication[] {
+    dispositifsEnLigne: function (): (favoris.épingleDispositif & {
+      idDispositif: string;
+      vuÀ?: number;
+    })[] {
       return this.dispositifs.filter((d) =>
         d.vuÀ ? this.maintenant - d.vuÀ <= DÉLAI_EN_LIGNE : false
       );
     },
-    membres: function (): infoRéplication[] {
-      const répsMembresUniques: infoRéplication[] = [];
-      const déjàVues = [];
-      this.dispositifs.forEach((r) => {
-        const existant = répsMembresUniques.find(
-          (x) => x.idOrbite === r.idOrbite
-        );
-        if (!existant || !existant.vuÀ || (r.vuÀ && r.vuÀ < existant.vuÀ)) {
-          répsMembresUniques.push(Object.assign({}, r)); //Copie de r pour permettre les modifications
-          if (existant) existant.vuÀ = r.vuÀ;
-          else déjàVues.push(r.idOrbite);
-        }
-      });
-      return répsMembresUniques;
+    membres: function (): réseau.statutMembre[] {
+      return this.replications.membres;
     },
-    membresEnLigne: function (): infoRéplication[] {
+    membresEnLigne: function (): réseau.statutMembre[] {
       return this.membres.filter((m) =>
         m.vuÀ ? this.maintenant - m.vuÀ <= DÉLAI_EN_LIGNE : false
       );

@@ -411,10 +411,7 @@ import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 import mixinLicences from "@/mixins/licences";
 
-const { infoRéplications } = réseau;
-const { infoScore } = bds;
 const { MODÉRATEUR } = accès;
-const { infoAuteur } = utils.types;
 
 export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
   {
@@ -438,20 +435,20 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       return {
         dialogueEffacerBd: false,
 
-        idBdRacine: undefined as undefined | string,
+        idBdCompte: undefined as undefined | string,
         licence: null as null | string,
         descriptionsBD: {} as { [key: string]: string },
         nomsBD: {} as { [key: string]: string },
         permissionÉcrire: false,
         tableaux: null as null | string[],
         logo: null as null | string,
-        score: null as null | infoScore,
+        score: null as null | bds.infoScore,
         variables: [] as string[],
-        réplications: null as null | infoRéplications,
+        réplications: null as null | réseau.infoRéplications,
 
         géog: [] as string[],
         motsClefs: [] as string[],
-        auteurs: null as null | infoAuteur[],
+        auteurs: null as null | utils.infoAuteur[],
       };
     },
     computed: {
@@ -485,7 +482,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       permissionModerateur: function (): boolean {
         if (!this.auteurs) return false;
         const accèsMod = this.auteurs.find(
-          (a) => a.idBdRacine === this.idBdRacine && a.rôle === MODÉRATEUR
+          (a) => a.idBdCompte === this.idBdCompte && a.rôle === MODÉRATEUR
         );
         return Boolean(accèsMod);
       },
@@ -596,7 +593,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         );
 
         const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte(
-          (id: string | undefined) => (this.idBdRacine = id)
+          (id: string | undefined) => (this.idBdCompte = id)
         );
 
         const oublierLicence = await this.$ipa.bds!.suivreLicence(
@@ -605,7 +602,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
             this.licence = licence;
           }
         );
-        const oublierAuteurs = await this.$ipa.bds!.suivreAuteurs(
+        const oublierAuteurs = await this.$ipa.réseau!.suivreAuteursBd(
           this.idBd,
           (auteurs) => {
             this.auteurs = auteurs;

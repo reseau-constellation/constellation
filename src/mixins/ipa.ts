@@ -1,10 +1,10 @@
 import Vue from "vue";
-import { schémaFonctionOublier } from "@constl/ipa/client";
+import { utils } from "@constl/ipa";
 
 export default Vue.extend({
   data: function () {
     return {
-      crochets: [] as schémaFonctionOublier[],
+      crochets: [] as utils.schémaFonctionOublier[],
       crochetIPA: () => {
         //Fonction vide pour l'instant
       },
@@ -14,7 +14,9 @@ export default Vue.extend({
     async initialiserSuivi(): Promise<void> {
       // À implémenter dans le composant
     },
-    suivre(crochet: schémaFonctionOublier | schémaFonctionOublier[]): void {
+    suivre(
+      crochet: utils.schémaFonctionOublier | utils.schémaFonctionOublier[]
+    ): void {
       if (!Array.isArray(crochet)) {
         crochet = [crochet];
       }

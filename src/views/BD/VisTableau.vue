@@ -116,10 +116,10 @@ export default mixins(mixinLangues, mixinIPA).extend({
         ? traduireNom(this.nomsBD, this.languesPréférées)
         : this.idBd;
     },
-    idBd: function () {
+    idBd: function (): string {
       return decodeURIComponent(this.$route.params.id);
     },
-    idTableau: function () {
+    idTableau: function (): string {
       return decodeURIComponent(this.$route.params.idTableau);
     },
     petitPousset: function (): {

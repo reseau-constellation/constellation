@@ -27,115 +27,85 @@
             </v-stepper-step>
           </v-stepper-header>
 
-    <v-stepper-items>
-     <v-stepper-content step="1">
-       <v-card
-       class="mb-2"
-       height="200px"
-       >
-       <v-btn
-          color="primary"
-          text
-          outlined
-          :loading="enProgrès"
-          @click="onPickFile"
-          >
-          {{ $t("communs.fichier") }}
-          <input
-          type="file"
-          style="display: none"
-          ref="fileInput"
-          accept=".csv,.ods,.xls,.xlsx"
-          @change="onFilePicked"/>
-       </v-btn>
-       <v-container fluid>
-         <v-row align="center">
-           <v-col
-           cols="12"
-           sm="12">
-           <v-select
-           v-model="e7"
-           :items="அட்டவணை"
-           :menu-props="{ maxHeight: '50' }"
-           :label="$t('communs.தேர்ந்தெடுக்கவும்')"
-           multiple
-           hint="பயனாளர் ஒரு அட்டவணையை தேர்ந்தெடுக்கவும்"
-           ></v-select>
-         </v-col>
-       </v-row>
-       </v-container>
-
-       <v-btn
-       color="primary"
-       @click="e6 = 2"
-       :disabled="!onPickFile"
-       >
-       {{ $t("communs.suivante") }}
-      </v-btn>
-
-
-  </v-card>
- </v-stepper-content>
-   <v-stepper-content step="2">
-     <v-card
-       class="mb-2"
-       height="70px"
-       >
-
-          color="primary"
-            text
-            outlined
-            :loading="enProgrès"
-            @click="() => colonne()"
-            >
-            {{ $t("communs.colonne") }}
-
-         <v-btn
-         color="primary"
-         @click="e6 = 3"
-         :disabled="!colonne"
-         >
-        {{ $t("communs.suivante") }}
-         </v-btn>
-       </v-card>
-     </v-stepper-content>
-     <v-stepper-content step="3">
-       <v-card
-         class="mb-2"
-         height="70px"
-         >
-       <v-btn
-         color="primary"
-         text
-         outlined
-         :loading="enProgrès"
-         @click="() => téléverser()"
-         >
-         {{ $t("communs.téléverser") }}
-        <v-icon right>mdi-upload</v-icon>
-        </v-btn>
-        <v-btn
-        color="primary"
-        @click="e6 = 1"
-        :disabled="!téléverser"
-        >
-        {{ $t("communs.suivante") }}
-         </v-btn>
-      </v-card>
-     </v-stepper-content>
-          <v-card-actions>
-           <v-spacer></v-spacer>
-                <v-btn color="secondary" text outlined @click="dialogue = false">
-                {{ $t("communs.annuler") }}
-                </v-btn>
-                <v-btn color="secondary" text outlined @click="dialogue = false"
+          <v-stepper-items>
+            <v-stepper-content step="1">
+              <v-card class="mb-2" height="200px">
+                <v-btn
+                  color="primary"
+                  text
+                  outlined
+                  :loading="enProgrès"
+                  @click="onPickFile"
                 >
-                {{ $t("communs.fermer") }}
+                  {{ $t("communs.fichier") }}
+                  <input
+                    type="file"
+                    style="display: none"
+                    ref="fileInput"
+                    accept=".csv,.ods,.xls,.xlsx"
+                    @change="onFilePicked"
+                  />
                 </v-btn>
-              </v-card-actions>
-            </v-stepper-items>
-          </v-stepper>
-        </template>
+                <v-container fluid>
+                  <v-row align="center">
+                    <v-col cols="12" sm="12">
+                      <v-select
+                        v-model="e7"
+                        :items="அட்டவணை"
+                        :menu-props="{ maxHeight: '50' }"
+                        :label="$t('communs.தேர்ந்தெடுக்கவும்')"
+                        multiple
+                        hint="பயனாளர் ஒரு அட்டவணையை தேர்ந்தெடுக்கவும்"
+                      ></v-select>
+                    </v-col>
+                  </v-row>
+                </v-container>
+
+                <v-btn color="primary" @click="e6 = 2" :disabled="!onPickFile">
+                  {{ $t("communs.suivante") }}
+                </v-btn>
+              </v-card>
+            </v-stepper-content>
+            <v-stepper-content step="2">
+              <v-card class="mb-2" height="70px">
+                color="primary" text outlined :loading="enProgrès" @click="() =>
+                colonne()" >
+                {{ $t("communs.colonne") }}
+
+                <v-btn color="primary" @click="e6 = 3" :disabled="!colonne">
+                  {{ $t("communs.suivante") }}
+                </v-btn>
+              </v-card>
+            </v-stepper-content>
+            <v-stepper-content step="3">
+              <v-card class="mb-2" height="70px">
+                <v-btn
+                  color="primary"
+                  text
+                  outlined
+                  :loading="enProgrès"
+                  @click="() => téléverser()"
+                >
+                  {{ $t("communs.téléverser") }}
+                  <v-icon right>mdi-upload</v-icon>
+                </v-btn>
+                <v-btn color="primary" @click="e6 = 1" :disabled="!téléverser">
+                  {{ $t("communs.suivante") }}
+                </v-btn>
+              </v-card>
+            </v-stepper-content>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="secondary" text outlined @click="dialogue = false">
+                {{ $t("communs.annuler") }}
+              </v-btn>
+              <v-btn color="secondary" text outlined @click="dialogue = false">
+                {{ $t("communs.fermer") }}
+              </v-btn>
+            </v-card-actions>
+          </v-stepper-items>
+        </v-stepper>
+      </template>
       <v-divider></v-divider>
     </v-card>
   </v-dialog>
@@ -161,7 +131,7 @@ export default mixins(mixinLangues).extend({
       importateur: undefined as ImportateurFeuilleCalcul | undefined,
       colonnesFichier: undefined as string[] | undefined,
       e7: [],
-      அட்டவணை:['colonnesFichier'],
+      அட்டவணை: ["colonnesFichier"],
     };
   },
 
@@ -172,25 +142,22 @@ export default mixins(mixinLangues).extend({
       const données = await fichiers!.files[0].arrayBuffer(); // கோப்பில் உள்ள தகவல்கள்
       const doc = XLSX.read(données); // கோப்பை யாவாக்கிறீட்டில் திறக்கவும்
 
-      this.importateur = new ImportateurFeuilleCalcul(doc)  // விண்மீன் மூலம் பகுப்பாய்வு செய்யலாம்
-      },
-     onPickFile: function ():void {
+      this.importateur = new ImportateurFeuilleCalcul(doc); // விண்மீன் மூலம் பகுப்பாய்வு செய்யலாம்
+    },
+    onPickFile: function (): void {
       //@ts-ignor
-       const fileInput = this.$refs.fileInput as HTMLInputElement;
-       fileInput.click()
+      const fileInput = this.$refs.fileInput as HTMLInputElement;
+      fileInput.click();
+    },
+    watch: {
+      importateur: async function (val: ImportateurFeuilleCalcul | undefined) {
+        if (val) {
+          this.colonnesFichier = val.obtNomsTableaux();
+        } else {
+          this.colonnesFichier = undefined;
+        }
       },
-      watch: {
-        importateur: async function (val: ImportateurFeuilleCalcul | undefined )
-        {
-         if (val) {
-           this.colonnesFichier = val.obtNomsTableaux();
-            }
-            else {
-              this.colonnesFichier = undefined;
-           }
-
-          },
-       },
+    },
     téléverser: async function () {
       this.enProgrès = true;
       try {
