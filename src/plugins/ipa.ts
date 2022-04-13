@@ -20,7 +20,7 @@ export default {
     }) => proxy.proxy.ProxyClientConstellation;
     if (estÉlectron()) {
       throw "À faire";
-      // ipa = clientConstellationÉlectron;
+      // ipa = clientConstellationÉlectron;
     } else {
       ipa = TRAVAILLEUR ? clientTravailleur : clientProc;
     }
