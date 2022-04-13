@@ -17,7 +17,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "@constl/ipa": "0.1.11",
+    "@constl/ipa": "^0.2.0",
     "abortable-iterator": "^3.0.0",
     "axios": "^0.21.1",
     "bufferutil": "^4.0.3",
