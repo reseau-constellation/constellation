@@ -4,7 +4,7 @@ import estÉlectron from "is-electron";
 
 import { proxy } from "@constl/ipa";
 
-import clientConstellationÉlectron from "@/plugins/clientÉlectronPrincipal";
+// import clientConstellationÉlectron from "@/plugins/clientÉlectronPrincipal";
 
 const clientProc = proxy.ipa.default;
 const clientTravailleur = proxy.ipaTravailleur.default;
@@ -19,7 +19,8 @@ export default {
       compte?: string;
     }) => proxy.proxy.ProxyClientConstellation;
     if (estÉlectron()) {
-      ipa = clientConstellationÉlectron;
+      throw "À faire";
+      // ipa = clientConstellationÉlectron;
     } else {
       ipa = TRAVAILLEUR ? clientTravailleur : clientProc;
     }
