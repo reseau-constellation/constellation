@@ -4,7 +4,7 @@ import estÉlectron from "is-electron";
 
 import { proxy } from "@constl/ipa";
 
-import clientConstellationÉlectron from "./clientÉlectronPrincipal";
+import clientConstellationÉlectron from "@/plugins/clientÉlectronPrincipal";
 
 const clientProc = proxy.ipa.default;
 const clientTravailleur = proxy.ipaTravailleur.default;
