@@ -69,7 +69,7 @@
           small-chips
           dense
           :label="$t('compte.onglets.compte.image')"
-          :error="$t('compte.onglets.compte.fichierTropGrand')"
+          :error="fichierTropGrand"
           :error-messages="
             fichierTropGrand ? $t('compte.onglets.compte.பட_அளவு') : []
           "
