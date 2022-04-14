@@ -218,10 +218,16 @@ export default mixins(mixinIPA, mixinImages).extend({
         await this.$ipa.profil!.effacerImage();
       }
     },
-    sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
+    sauvegarderNom: function ({
+      langue,
+      nom,
+    }: {
+      langue: string;
+      nom: string;
+    }) {
       this.$ipa.profil!.sauvegarderNom(langue, nom);
     },
-    changerLangueNom({
+    changerLangueNom: function ({
       langueOriginale,
       langue,
       nom,
@@ -235,9 +241,6 @@ export default mixins(mixinIPA, mixinImages).extend({
     },
     effacerNom({ langue }: { langue: string }) {
       this.$ipa.profil!.effacerNom(langue);
-    },
-    ajouterDispositif() {
-      console.warn("À faire");
     },
   },
 });
