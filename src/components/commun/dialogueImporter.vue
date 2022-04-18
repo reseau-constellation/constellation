@@ -48,6 +48,19 @@
           accept=".csv,.ods,.xls,.xlsx"
           @change="onFilePicked"/>
        </v-btn>
+       <div class="text-center">
+        <v-chip
+        v-if="nomFichier"
+        class="ma-2"
+        close
+        color="green"
+        outlined
+        @click:close="nomFichier= false"
+         >
+        nomFichier
+        </v-chip>
+      </div>
+
        <v-container fluid>
          <v-row align="center">
            <v-col
@@ -56,7 +69,7 @@
            <v-select
            v-model="e7"
            :items="அட்டவணை"
-           :menu-props="{ maxHeight: '50' }"
+           :menu-props="{ maxHeight: '75' }"
            :label="$t('communs.தேர்ந்தெடுக்கவும்')"
            multiple
            hint="பயனாளர் ஒரு அட்டவணையை தேர்ந்தெடுக்கவும்"
@@ -65,40 +78,15 @@
        </v-row>
        </v-container>
 
-       <v-btn
+     <v-btn
        color="primary"
        @click="e6 = 2"
        :disabled="!onPickFile"
        >
        {{ $t("communs.suivante") }}
-      </v-btn>
-
-
+    </v-btn>
   </v-card>
  </v-stepper-content>
-   <v-stepper-content step="2">
-     <v-card
-       class="mb-2"
-       height="70px"
-       >
-
-          color="primary"
-            text
-            outlined
-            :loading="enProgrès"
-            @click="() => colonne()"
-            >
-            {{ $t("communs.colonne") }}
-
-         <v-btn
-         color="primary"
-         @click="e6 = 3"
-         :disabled="!colonne"
-         >
-        {{ $t("communs.suivante") }}
-         </v-btn>
-       </v-card>
-     </v-stepper-content>
      <v-stepper-content step="3">
        <v-card
          class="mb-2"
@@ -159,9 +147,10 @@ export default mixins(mixinLangues).extend({
       langueColonnes: undefined,
       e6: 1,
       importateur: undefined as ImportateurFeuilleCalcul | undefined,
-      colonnesFichier: undefined as string[] | undefined,
+      tableauxFichier: undefined as string[] | undefined,
       e7: [],
-      அட்டவணை:['colonnesFichier'],
+      அட்டவணை:['sheet1','sheet2','sheet3','sheet4','sheet5',],
+      nomFichier: undefined as string | undefined,
     };
   },
 
@@ -169,24 +158,25 @@ export default mixins(mixinLangues).extend({
     onFilePicked: async function(): Promise<void> {
       const fichiers = this.$refs.fileInput as HTMLInputElement // தேர்ந்தெடுத்தப்பட்டு கோப்பு
       if (!fichiers.files) return
-      const données = await fichiers!.files[0].arrayBuffer(); // கோப்பில் உள்ள தகவல்கள்
-      const doc = XLSX.read(données); // கோப்பை யாவாக்கிறீட்டில் திறக்கவும்
+      const données = await fichiers!.files[0].arrayBuffer() // கோப்பில் உள்ள தகவல்கள்
+      const doc = XLSX.read(données) // கோப்பை யாவாக்கிறீட்டில் திறக்கவும்
 
-      this.importateur = new ImportateurFeuilleCalcul(doc)  // விண்மீன் மூலம் பகுப்பாய்வு செய்யலாம்
+      this.importateur = new ImportateurFeuilleCalcul(doc) // விண்மீன் மூலம் பகுப்பாய்வு செய்யலாம்
+      this.nomFichier = fichiers!.files[0].name
+      console.log("வணக்கம்", this.nomFichier)
       },
      onPickFile: function ():void {
-      //@ts-ignor
-       const fileInput = this.$refs.fileInput as HTMLInputElement;
-       fileInput.click()
+        const fileInput = this.$refs.fileInput as HTMLInputElement
+        fileInput.click()
       },
       watch: {
         importateur: async function (val: ImportateurFeuilleCalcul | undefined )
         {
          if (val) {
-           this.colonnesFichier = val.obtNomsTableaux();
+           this.tableauxFichier = val.obtNomsTableaux()
             }
             else {
-              this.colonnesFichier = undefined;
+              this.tableauxFichier = undefined
            }
 
           },
