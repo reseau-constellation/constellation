@@ -1,4 +1,5 @@
 import { rajilanïkChabäl as numLangue } from "nuchabal";
+import { முறைமைகள் as systèmesNum } from "ennikkai"
 
 const state = {
   langue: null as null | string,
@@ -29,9 +30,15 @@ export default {
   },
   actions: {},
   getters: {
+    choixNumération: (_state: typeof state): string | null => {
+      return _state.numération;
+    },
     systèmeNumération: (_state: typeof state): string => {
       const num = _state.numération;
-      return num === null ? numLangue(_state.langue) || "latin" : num;
+      if (num === null) {
+        return numLangue(_state.langue) || (systèmesNum.includes(_state.langue) ? _state.langue! : "latin")
+      }
+      return num;
     },
   },
   modules: {},

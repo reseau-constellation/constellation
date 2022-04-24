@@ -37,7 +37,7 @@
           {{ $t("compte.onglets.thème.langue") }}
         </p>
         <v-divider class="mb-4" />
-        <v-select
+        <v-autocomplete
           :items="
             langues.map((l) => {
               return { text: codeÀNomLangue(l) || l, value: l };
@@ -52,16 +52,17 @@
           class="pb-5"
           @change="changerLangue"
         >
-          <template v-slot:item="{ item }">
+          <template v-slot:item="{ on, item }">
             <op-langue
+              v-on="on"
               :code="item.value"
               :sélectionnée="item.value === langue"
               :progrès="progrès(item.value)"
             />
           </template>
-        </v-select>
-        <v-select
-          :value="systèmeNumération"
+        </v-autocomplete>
+        <v-autocomplete
+          :value="choixNumération"
           :items="[{ text: $t('communs.auto'), value: null }, ...systèmesNum]"
           :label="$t('compte.options.numération')"
           outlined
@@ -80,13 +81,13 @@
                 {{
                   chifreÀTexte(
                     123.45,
-                    item.value === null ? numLangue(langue) || "latin" : item
+                    item.value === null ? systèmeNumération : item
                   )
                 }}
               </v-list-item-action>
             </v-list-item>
           </template>
-        </v-select>
+        </v-autocomplete>
       </v-card>
     </div>
   </v-card>
