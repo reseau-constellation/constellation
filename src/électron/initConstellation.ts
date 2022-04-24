@@ -1,4 +1,5 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow, ipcMain, app } from "electron";
+import path from "path";
 
 import { proxy } from "@constl/ipa";
 
@@ -27,7 +28,17 @@ export default (win: BrowserWindow): (() => Promise<void>) => {
         client = new proxy.gestionnaireClient.default(
           fMessage,
           fErreur,
-          message.opts
+          Object.assign(
+            message.opts,
+            {
+              orbite: {
+                sfip: {
+                  dossier: path.join(app.getPath("userData"), "sfip")
+                },
+                dossier: path.join(app.getPath("userData"), "sfip")
+              }
+            }
+          )
         );
       } else {
         throw Error("Client non initialisé");
