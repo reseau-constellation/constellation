@@ -10,7 +10,7 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "déployer": "node ./scripts/gh-pages-deploy.js",
-    "electron:build": "NODE_OPTIONS=--max_old_space_size=4096 vue-cli-service electron:build",
+    "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"

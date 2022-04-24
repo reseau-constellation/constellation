@@ -5,7 +5,6 @@ node_modules
 
 /tests/e2e/videos/
 /tests/e2e/screenshots/
-/sfip-cnstl
 
 # local env files
 .env.local
@@ -39,5 +38,3 @@ pnpm-debug.log*
 !.yarn/versions
 
 .nyc_output
-tests/ipa/_temp
-_stockageTemp
