@@ -2,26 +2,29 @@ import _Vue from "vue";
 
 import estÉlectron from "is-electron";
 
-import clientProc from "@constl/ipa/lib/proxy/ipaProc";
-import clientTravailleur from "@constl/ipa/lib/proxy/ipaTravailleur";
+import { proxy } from "@constl/ipa";
 
-import clientConstellationÉlectron from "./clientÉlectronPrincipal";
+// import clientConstellationÉlectron from "@/plugins/clientÉlectronPrincipal";
 
-import { ProxyClientConstellation } from "@constl/ipa/lib/proxy/proxy";
+const clientProc = proxy.ipa.default;
+const clientTravailleur = proxy.ipaTravailleur.default;
 
 const TRAVAILLEUR = false;
 
 export default {
   install(Vue: typeof _Vue): void {
-    const idBdRacine = localStorage.getItem("idBdRacine") || undefined;
+    const idBdCompte = localStorage.getItem("idBdCompte") || undefined;
 
-    let ipa: (id?: string) => ProxyClientConstellation;
+    let ipa: (opts: {
+      compte?: string;
+    }) => proxy.proxy.ProxyClientConstellation;
     if (estÉlectron()) {
-      ipa = clientConstellationÉlectron;
+      throw "À faire";
+      // ipa = clientConstellationÉlectron;
     } else {
       ipa = TRAVAILLEUR ? clientTravailleur : clientProc;
     }
-    const client: ProxyClientConstellation = ipa(idBdRacine);
+    const client = ipa({ compte: idBdCompte });
 
     Vue.prototype.$ipa = client;
   },

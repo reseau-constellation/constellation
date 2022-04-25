@@ -6,17 +6,19 @@
 
     <v-card>
       <v-card-title class="headline mb-2">
-      {{$t("dialogueRéplications.நகல்கள்")}} </v-card-title>
+        {{ $t("dialogueRéplications.நகல்கள்") }}
+      </v-card-title>
       <v-card-subtitle>
-      {{ $t("dialogueRéplications.விண்மீன்_தரவு") }}
+        {{ $t("dialogueRéplications.விண்மீன்_தரவு") }}
       </v-card-subtitle>
       <v-divider />
-       <v-card-text>
+      <v-card-text>
         <div class="mt-3">
           <v-skeleton-loader v-if="!replications" type="paragraph@2" />
           <div v-else>
             <p class="mb-0 text-overline">
-             {{ $t("dialogueRéplications.நகலெடுக்கப்பட்டது") }} </p>
+              {{ $t("dialogueRéplications.நகலெடுக்கப்பட்டது") }}
+            </p>
             <v-list-item two-line>
               <v-avatar class="me-3 text-h3">
                 {{ dispositifs.length }}
@@ -27,25 +29,34 @@
                   <v-icon right>mdi-monitor-cellphone</v-icon>
                 </v-list-item-title>
                 <v-list-item-subtitle class="success--text">
-                  {{ $t("dialogueRéplications.enLigne", { n: dispositifsEnLigne.length }) }}
-                  </v-list-item-subtitle>
+                  {{
+                    $t("dialogueRéplications.enLigne", {
+                      n: dispositifsEnLigne.length,
+                    })
+                  }}
+                </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
 
             <p class="mb-0 text-overline">
-              {{ $t("dialogueRéplications.Représentant") }}</p>
+              {{ $t("dialogueRéplications.Représentant") }}
+            </p>
             <v-list-item two-line>
               <v-avatar class="me-3 text-h3">
                 {{ membres.length }}
               </v-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                {{ $t("dialogueRéplications.Membres") }}
-                <v-icon right>mdi-account</v-icon>
+                  {{ $t("dialogueRéplications.Membres") }}
+                  <v-icon right>mdi-account</v-icon>
                 </v-list-item-title>
                 <v-list-item-subtitle class="success--text"
-                  >{{ $t("dialogueRéplications.enLigne", { n: membresEnLigne.length }) }}
-                  </v-list-item-subtitle>
+                  >{{
+                    $t("dialogueRéplications.enLigne", {
+                      n: membresEnLigne.length,
+                    })
+                  }}
+                </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </div>
@@ -69,14 +80,14 @@ import { PropType } from "vue";
 
 import mixinLangues from "@/mixins/langues";
 
-import { infoRéplication } from "@constl/ipa/lib/reseau";
+import { favoris, réseau } from "@constl/ipa";
 
 const DÉLAI_EN_LIGNE = 10000;
 
 export default mixins(mixinLangues).extend({
   name: "dialogueRéplications",
   props: {
-    replications: Array as PropType<infoRéplication[]>,
+    replications: Object as PropType<réseau.infoRéplications>,
   },
   mixins: [mixinLangues],
   data: function () {
@@ -86,30 +97,24 @@ export default mixins(mixinLangues).extend({
     };
   },
   computed: {
-    dispositifs: function (): infoRéplication[] {
-      return this.replications || [];
+    dispositifs: function (): (favoris.épingleDispositif & {
+      idDispositif: string;
+      vuÀ?: number;
+    })[] {
+      return this.replications.dispositifs;
     },
-    dispositifsEnLigne: function (): infoRéplication[] {
+    dispositifsEnLigne: function (): (favoris.épingleDispositif & {
+      idDispositif: string;
+      vuÀ?: number;
+    })[] {
       return this.dispositifs.filter((d) =>
         d.vuÀ ? this.maintenant - d.vuÀ <= DÉLAI_EN_LIGNE : false
       );
     },
-    membres: function (): infoRéplication[] {
-      const répsMembresUniques: infoRéplication[] = [];
-      const déjàVues = [];
-      this.dispositifs.forEach((r) => {
-        const existant = répsMembresUniques.find(
-          (x) => x.idOrbite === r.idOrbite
-        );
-        if (!existant || !existant.vuÀ || (r.vuÀ && r.vuÀ < existant.vuÀ)) {
-          répsMembresUniques.push(Object.assign({}, r)); //Copie de r pour permettre les modifications
-          if (existant) existant.vuÀ = r.vuÀ;
-          else déjàVues.push(r.idOrbite);
-        }
-      });
-      return répsMembresUniques;
+    membres: function (): réseau.statutMembre[] {
+      return this.replications.membres;
     },
-    membresEnLigne: function (): infoRéplication[] {
+    membresEnLigne: function (): réseau.statutMembre[] {
       return this.membres.filter((m) =>
         m.vuÀ ? this.maintenant - m.vuÀ <= DÉLAI_EN_LIGNE : false
       );

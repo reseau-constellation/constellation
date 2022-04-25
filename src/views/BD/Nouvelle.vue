@@ -108,7 +108,8 @@
               <div class="d-flex flex-wrap">
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
                   <p class="mb-0 text-overline">
-                    {{ $t("bd.nouvelle.Permissions") }}</p>
+                    {{ $t("bd.nouvelle.Permissions") }}
+                  </p>
                   <p v-if="!droits.length" class="text--disabled">
                     {{ $t("licences.droits.aucune") }}
                   </p>
@@ -116,7 +117,8 @@
                 </v-card>
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
                   <p class="mb-0 text-overline">
-                    {{ $t("bd.nouvelle.Conditions") }}</p>
+                    {{ $t("bd.nouvelle.Conditions") }}
+                  </p>
                   <p v-if="!conditions.length" class="text--disabled">
                     {{ $t("licences.conditions.aucune") }}
                   </p>
@@ -128,7 +130,8 @@
                 </v-card>
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
                   <p class="mb-0 text-overline">
-                    {{ $t("bd.nouvelle.Limitations") }}</p>
+                    {{ $t("bd.nouvelle.Limitations") }}
+                  </p>
                   <p v-if="!limitations.length" class="text--disabled">
                     {{ $t("licences.limitations.aucune") }}
                   </p>
@@ -200,7 +203,8 @@
 
       <v-card-actions>
         <v-btn :disabled="étape === 1" text @click="étape--">
-          {{ $t("bd.nouvelle.Retour") }} </v-btn>
+          {{ $t("bd.nouvelle.Retour") }}
+        </v-btn>
         <v-spacer></v-spacer>
         <v-btn
           :disabled="(étape === 3 && !licence) || étape === 4"
@@ -218,7 +222,8 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { licences, infoLicences, catégories } from "@constl/ipa/lib/licences";
+import { licences as _licences } from "@constl/ipa";
+
 import mixinLangues from "@/mixins/langues";
 import mixinImages from "@/mixins/images";
 import mixinLicences from "@/mixins/licences";
@@ -229,6 +234,8 @@ import itemNouveauNom from "@/components/commun/boîteNoms/itemNouveauNom.vue";
 import jetonDroit from "@/components/commun/licences/jetonDroit.vue";
 import jetonLimitation from "@/components/commun/licences/jetonLimitation.vue";
 import jetonCondition from "@/components/commun/licences/jetonCondition.vue";
+
+const { licences, infoLicences, catégories } = _licences;
 
 export default mixins(
   mixinLangues,
@@ -287,7 +294,10 @@ export default mixins(
         divider?: boolean;
         value?: string;
         text?: string;
-      }[] = [{ header: this.$t("bd.nouvelle.Licences") as string }, { divider: true }];
+      }[] = [
+        { header: this.$t("bd.nouvelle.Licences") as string },
+        { divider: true },
+      ];
       const licences: string[] = this.licences.filter((l: string) =>
         this.licencesSpécilisées ? true : !infoLicences[l].spécialisée
       );
@@ -335,8 +345,9 @@ export default mixins(
         (l) => infoLicences[l].catégorie === catégories.AUTRE
       );
       if (licencesAutres.length) {
-        licencesFinales.push({ header: this.$t("bd.nouvelle. வேறு_உரிமங்கள்") as string,
-      });
+        licencesFinales.push({
+          header: this.$t("bd.nouvelle. வேறு_உரிமங்கள்") as string,
+        });
         licencesFinales.push({ divider: true });
         licencesFinales.push(...générerÉléments(licencesAutres));
       }
@@ -416,7 +427,7 @@ export default mixins(
       }
 
       //On ajoute la nouvelle BD aux favoris automatiquement
-      await this.$ipa.favoris!.épinglerFavori(id);
+      await this.$ipa.favoris!.épinglerFavori(id, "TOUS");
 
       this.enCréation = false;
       this.$router.push(`/bd/visualiser/${encodeURIComponent(id)}`);

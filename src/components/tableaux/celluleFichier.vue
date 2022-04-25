@@ -77,7 +77,7 @@
               append
               @click="() => télécharger()"
             >
-             {{ $t("communs.télécharger") }}
+              {{ $t("communs.télécharger") }}
               <v-icon right> mdi-download </v-icon>
             </v-btn>
           </div>
@@ -93,7 +93,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { formatsFichiers as formats } from "@constl/ipa/lib/valid";
+import { valid } from "@constl/ipa";
 import {
   itérableÀFlux,
   téléchargerFlux,
@@ -102,6 +102,8 @@ import {
 } from "@/utils";
 
 import mixinImage from "@/mixins/images";
+
+const { formatsFichiers } = valid;
 
 export default mixins(mixinImage).extend({
   name: "celluleFichier",
@@ -123,11 +125,11 @@ export default mixins(mixinImage).extend({
     },
     formatFichier: function () {
       const ext = this.val.ext.toLowerCase();
-      if (formats.images.includes(ext)) {
+      if (formatsFichiers.images.includes(ext)) {
         return "image";
-      } else if (formats.vidéo.includes(ext)) {
+      } else if (formatsFichiers.vidéo.includes(ext)) {
         return "vidéo";
-      } else if (formats.audio.includes(ext)) {
+      } else if (formatsFichiers.audio.includes(ext)) {
         return "audio";
       } else {
         return "autre";

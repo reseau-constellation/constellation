@@ -56,7 +56,7 @@ export default mixins(mixinImage, mixinIPA).extend({
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierImage = await this.$ipa.compte!.suivreImage((image) => {
+      const oublierImage = await this.$ipa.profil!.suivreImage((image) => {
         if (image) {
           const url = URL.createObjectURL(
             new Blob([image.buffer], { type: "image/png" })

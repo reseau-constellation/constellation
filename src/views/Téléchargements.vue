@@ -34,7 +34,7 @@
               color="primary"
               @click="ouvrirLien(URL_TÉLÉCHARGEMENTS)"
             >
-            {{ $t("téléchargements.பார்க்கவும்") }}
+              {{ $t("téléchargements.பார்க்கவும்") }}
               <v-icon right>mdi-open-in-new</v-icon>
             </v-btn>
           </v-col>

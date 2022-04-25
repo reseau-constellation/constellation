@@ -6,13 +6,12 @@
 
     <v-card>
       <v-card-title class="headline mb-2">
-      {{ $t("dialogueNouvelAuteur.புதிய_அங்கீகாரம்") }}
+        {{ $t("dialogueNouvelAuteur.புதிய_அங்கீகாரம்") }}
       </v-card-title>
       <v-card-subtitle
         ><v-icon small left>mdi-information-outline</v-icon>
         {{ $t("dialogueNouvelAuteur.எச்சரிக்கை") }}
-        </v-card-subtitle
-      >
+      </v-card-subtitle>
       <v-divider />
 
       <v-card-text class="mt-3">
@@ -24,10 +23,10 @@
           hide-details
         >
           <template v-slot:item="{ item, on, attrs }">
-          <item-membre v-bind="attrs" v-on="on" :id="item.idBdRacine" />
+            <item-membre v-bind="attrs" v-on="on" :id="item.value" />
           </template>
           <template v-slot:selection="{ item }">
-          <jeton-membre :id="item.idBdRacine" />
+            <jeton-membre :id="item.value" />
           </template>
         </v-select>
         <v-checkbox
@@ -66,10 +65,11 @@ import itemMembre from "@/components/commun/itemMembre.vue";
 
 import mixinIPA from "@/mixins/ipa";
 
-import { MODÉRATEUR, MEMBRE } from "@constl/ipa/lib/accès/consts";
-import { infoMembreEnLigne } from "@constl/ipa/lib/reseau";
+import { accès } from "@constl/ipa";
 
-interface Membre extends infoMembreEnLigne {
+const { MODÉRATEUR, MEMBRE } = accès;
+
+interface Membre {
   value: string;
 }
 
@@ -82,7 +82,7 @@ export default mixins(mixinIPA).extend({
     return {
       dialogue: false,
       enProgrès: false,
-      membres: null as null | infoMembreEnLigne[],
+      membresRéseau: null as null | string[],
       auteurSélectionné: null as null | string,
       donnerPermissionModérateur: false,
 
@@ -91,9 +91,9 @@ export default mixins(mixinIPA).extend({
   },
   computed: {
     listeMembres: function (): Membre[] {
-      return this.membres
-        ? this.membres.map((m: infoMembreEnLigne) => {
-            return { ...m, value: m.idBdRacine };
+      return this.membresRéseau
+        ? this.membresRéseau.map((m: string) => {
+            return { value: m };
           })
         : [];
     },
@@ -117,11 +117,11 @@ export default mixins(mixinIPA).extend({
       this.annuler();
     },
     initialiserSuivi: async function () {
-      const oublierMembres = await this.$ipa.réseau!.suivreMembres(
-        (membres) => {
-          this.membres = membres;
-        }
-      );
+      const { fOublier: oublierMembres } =
+        await this.$ipa.réseau!.rechercherMembres((membres) => {
+          // À faire - probablement une erreur dans m.de
+          this.membresRéseau = membres.map((m) => m.de).filter((c) => c);
+        }, 10);
 
       this.suivre([oublierMembres]);
     },

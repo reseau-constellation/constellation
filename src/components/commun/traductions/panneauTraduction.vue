@@ -4,7 +4,7 @@
       {{
         clef
           ? $t("traduction.பரிந்துரைக்கவும்")
-          :$t("traduction.தேர்ந்தெடுக்கவும்")
+          : $t("traduction.தேர்ந்தெடுக்கவும்")
       }}
     </v-card-title>
     <v-card-text>
@@ -45,7 +45,11 @@
       <v-divider />
       <v-card v-if="clef" flat>
         <v-card-title>
-          {{$t("traduction.பரிந்துரைகள்",{n:formatterChiffre(suggestions.length)})}}
+          {{
+            $t("traduction.பரிந்துரைகள்", {
+              n: formatterChiffre(suggestions.length),
+            })
+          }}
         </v-card-title>
         <v-card-text>
           <v-list style="max-height: 200px" class="overflow-y-auto">
@@ -67,7 +71,7 @@ import mixins from "vue-typed-mixins";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
-import { schémaBd } from "@constl/ipa/lib/reseau";
+import { bds } from "@constl/ipa";
 
 import itemTradCommunauté from "@/components/commun/traductions/itemTradCommunauté.vue";
 
@@ -93,7 +97,7 @@ const ID_MOTCLEF_TRAD =
 const ID_MOTCLEF_TRADS_CONSTELLATION =
   "/orbitdb/zdpuAuk6kRoPQKfwuWi5qMYMSyUMeiTjtcFE23AaHy9MQsXcs/93c94a56-f681-4512-8c4b-5c213119ab4b";
 
-const schémaBdTrads: schémaBd = {
+const schémaBdTrads: bds.schémaSpécificationBd = {
   motsClefs: [ID_MOTCLEF_TRAD, ID_MOTCLEF_TRADS_CONSTELLATION],
   licence: "ODbl-1_0",
   tableaux: [
@@ -137,7 +141,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   data: function () {
     return {
       idTableau: undefined as undefined | string,
-      idBdRacine: undefined as undefined | string,
+      idBdCompte: undefined as undefined | string,
 
       traduction: "",
       traductionExistante: undefined as undefined | suggestionTrad,
@@ -169,7 +173,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
         const { [ID_COL_CLEF]: clef, [ID_COL_LANGUE_CIBLE]: langueCible } =
           sugg;
         return (
-          s.idBdAuteur === this.idBdRacine &&
+          s.idBdCompte === this.idBdCompte &&
           clef === this.clef &&
           langueCible === this.langueCible
         );
@@ -184,7 +188,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     utiliserSuggestion: function (suggestion: suggestionTrad) {
       this.traduction = suggestion.élément.données[ID_COL_TRADUCTION];
 
-      if (suggestion.idBdAuteur === this.idBdRacine)
+      if (suggestion.idBdCompte === this.idBdCompte)
         this.traductionExistante = suggestion;
       else this.traductionExistante = undefined;
     },
@@ -213,8 +217,8 @@ export default mixins(mixinLangues, mixinIPA).extend({
       }
     },
     initialiserSuivi: async function () {
-      const oublierIdBdRacine = await this.$ipa.suivreIdBdRacine(
-        (id) => (this.idBdRacine = id)
+      const oublierIdBdCompte = await this.$ipa.suivreIdBdCompte(
+        (id) => (this.idBdCompte = id)
       );
 
       const oublierTableauBdTrads =
@@ -224,14 +228,14 @@ export default mixins(mixinLangues, mixinIPA).extend({
           "trads",
           (idTableau) => (this.idTableau = idTableau)
         );
-      const oublierSuggestionsTrads =
+      const { fOublier: oublierSuggestionsTrads } =
         await this.$ipa.réseau!.suivreÉlémentsDeTableauxUniques<élémentBdTraduction>(
           ID_MOTCLEF_TRADS_CONSTELLATION,
           "trads",
           (suggestions) => (this.suggestions = suggestions)
         );
       this.suivre([
-        oublierIdBdRacine,
+        oublierIdBdCompte,
         oublierTableauBdTrads,
         oublierSuggestionsTrads,
       ]);

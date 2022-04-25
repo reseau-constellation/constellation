@@ -49,6 +49,7 @@
           @change="onFilePicked"/>
        </v-btn>
        <div class="text-center">
+
         <v-chip
         v-if="nomFichier"
         class="ma-2"
@@ -87,6 +88,31 @@
     </v-btn>
   </v-card>
  </v-stepper-content>
+   <v-stepper-content step="2">
+     <v-card
+       class="mb-2"
+       height="70px"
+       >
+       <v-btn
+          color="primary"
+            text
+            outlined
+            :loading="enProgrès"
+            @click="() => obtColsTableau()"
+            >
+            {{ $t("communs.colonne") }}
+
+         </v-btn>
+
+         <v-btn
+         color="primary"
+         @click="e6 = 3"
+         :disabled="!colonne"
+         >
+        {{ $t("communs.suivante") }}
+         </v-btn>
+       </v-card>
+     </v-stepper-content>
      <v-stepper-content step="3">
        <v-card
          class="mb-2"
@@ -130,7 +156,7 @@
 </template>
 
 <script lang="ts">
-import ImportateurFeuilleCalcul from "@/components/commun/xlsx"
+import ImportateurFeuilleCalcul from "@/components/commun/xlsx";
 import mixins from "vue-typed-mixins";
 import XLSX from "xlsx";
 import mixinLangues from "@/mixins/langues";
@@ -177,10 +203,10 @@ export default mixins(mixinLangues).extend({
             }
             else {
               this.tableauxFichier = undefined
-           }
-
+            }
           },
        },
+
     téléverser: async function () {
       this.enProgrès = true;
       try {

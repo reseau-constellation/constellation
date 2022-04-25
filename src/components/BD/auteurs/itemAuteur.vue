@@ -14,9 +14,9 @@
           color="secondary"
           >{{ $t("itemAuteur.Invité") }}</v-chip
         >
-        <v-chip v-if="mod" class="mx-2" outlined label small color="success"
-          >{{ $t("itemAuteur.Modérateur") }}</v-chip
-        >
+        <v-chip v-if="mod" class="mx-2" outlined label small color="success">{{
+          $t("itemAuteur.Modérateur")
+        }}</v-chip>
       </span>
     </v-list-item-content>
     <v-list-item-action>

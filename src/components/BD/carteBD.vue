@@ -46,7 +46,11 @@
                   couleurScore(score ? score.total : null).couleur
                 }`"
                 class="font-weight-bold"
-              >{{ score ? $t("carteBD.note."+ couleurScore(score.total).note) : $t("communs.pointIntérogation") }}
+                >{{
+                  score
+                    ? $t("carteBD.note." + couleurScore(score.total).note)
+                    : $t("communs.pointIntérogation")
+                }}
               </span>
             </span>
           </v-chip>
@@ -99,9 +103,8 @@
           </v-btn>
         </template>
         <span>
-        {{
-          épinglée ? $t("carteBD.அகற்று") : $t("carteBD.பொருத்து")
-        }}</span>
+          {{ épinglée ? $t("carteBD.அகற்று") : $t("carteBD.பொருத்து") }}</span
+        >
       </v-tooltip>
     </v-card-actions>
   </v-card>
@@ -110,7 +113,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { infoScore } from "@constl/ipa/lib/bds";
+import { bds, favoris } from "@constl/ipa";
 
 import { traduireNom, couper, couleurScore } from "@/utils";
 
@@ -127,10 +130,10 @@ export default mixins(mixinIPA, mixinLicences).extend({
   mixins: [mixinIPA, mixinLicences],
   data: function () {
     return {
-      épinglée: null as null | boolean,
+      épinglée: null as undefined | null | favoris.ÉlémentFavoris,
       licence: null as null | string,
       logo: null as null | string,
-      score: null as null | infoScore,
+      score: null as null | bds.infoScore,
       permissionÉcrire: false,
       nomsBD: {} as { [key: string]: string },
       détailsBD: {} as { [key: string]: string },
@@ -157,7 +160,7 @@ export default mixins(mixinIPA, mixinLicences).extend({
     couper,
     couleurScore,
     épingler: async function () {
-      await this.$ipa.favoris!.épinglerFavori(this.bd);
+      await this.$ipa.favoris!.épinglerFavori(this.bd, "TOUS");
     },
     désépingler: async function () {
       await this.$ipa.favoris!.désépinglerFavori(this.bd);

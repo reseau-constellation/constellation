@@ -52,7 +52,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" icon>
               <v-icon>mdi-download</v-icon>
-              </v-btn>
+            </v-btn>
           </template>
         </dialogue-exporter>
         <dialogue-Importer :id="idTableau" type="tableau">
@@ -116,10 +116,10 @@ export default mixins(mixinLangues, mixinIPA).extend({
         ? traduireNom(this.nomsBD, this.languesPréférées)
         : this.idBd;
     },
-    idBd: function () {
+    idBd: function (): string {
       return decodeURIComponent(this.$route.params.id);
     },
-    idTableau: function () {
+    idTableau: function (): string {
       return decodeURIComponent(this.$route.params.idTableau);
     },
     petitPousset: function (): {

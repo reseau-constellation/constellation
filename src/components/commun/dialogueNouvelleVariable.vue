@@ -12,7 +12,8 @@
 
       <v-card-text class="mt-3">
         <p class="text-overline mb-2">
-          {{ $t("dialogueNouvelleVariable.nom") }}</p>
+          {{ $t("dialogueNouvelleVariable.nom") }}
+        </p>
         <v-menu
           offset-x
           :close-on-content-click="false"
@@ -41,7 +42,8 @@
         </v-menu>
 
         <p class="text-overline mb-2">
-          {{ $t("dialogueNouvelleVariable.Description") }}</p>
+          {{ $t("dialogueNouvelleVariable.Description") }}
+        </p>
         <v-menu
           offset-x
           :close-on-content-click="false"
@@ -56,7 +58,7 @@
               v-bind="attrs"
               :readonly="true"
               :value="descr"
-              :label= "$t('dialogueNouvelleVariable.Description')"
+              :label="$t('dialogueNouvelleVariable.Description')"
             />
           </template>
           <boîteNoms
@@ -70,8 +72,9 @@
         </v-menu>
 
         <p class="text-overline mb-2">
-          {{ $t("dialogueNouvelleVariable.Catégorie") }}</p>
-         <v-select v-model="catégorie" :items="optionsCatégories" outlined dense>
+          {{ $t("dialogueNouvelleVariable.Catégorie") }}
+        </p>
+        <v-select v-model="catégorie" :items="optionsCatégories" outlined dense>
           <template v-slot:item="{ on, item }">
             <v-list-item v-on="on">
               <v-list-item-avatar>
@@ -80,7 +83,7 @@
               <v-list-item-content>
                 {{ $t(`variables.catégories.${item.text}`) }}
                 <v-list-item-subtitle>
-                  {{$t("variables.catégories.info."+item.text)}}
+                  {{ $t("variables.catégories.info." + item.text) }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -91,10 +94,11 @@
               {{ $t(`variables.catégories.${item.text}`) }}
             </v-chip>
           </template>
-         </v-select>
+        </v-select>
 
         <p class="text-overline mb-0">
-          {{ $t("dialogueNouvelleVariable.கட்டுப்பாடு") }}</p>
+          {{ $t("dialogueNouvelleVariable.கட்டுப்பாடு") }}
+        </p>
         <v-list>
           <v-list-item @click="ajouterRègle;">
             <v-list-item-avatar>
@@ -102,7 +106,7 @@
             </v-list-item-avatar>
             <v-list-item-content>
               {{ $t("dialogueNouvelleVariable.சேர்க்க") }}
-             </v-list-item-content>
+            </v-list-item-content>
           </v-list-item>
           <v-list-item
             v-for="r in [...règlesCatégorie, ...règlesPropre]"
@@ -134,7 +138,7 @@ import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 
 import mixinLangues from "@/mixins/langues";
 
-import { catégorieVariables } from "@constl/ipa/lib/variables";
+import { variables } from "@constl/ipa";
 
 import {
   traduireNom,
@@ -150,7 +154,7 @@ export default mixins(mixinLangues).extend({
     return {
       dialogue: false,
 
-      catégorie: undefined as undefined | catégorieVariables,
+      catégorie: undefined as undefined | variables.catégorieVariables,
       noms: {} as { [key: string]: string },
       descriptions: {} as { [key: string]: string },
       unités: undefined as undefined | string,
@@ -225,7 +229,6 @@ export default mixins(mixinLangues).extend({
       );
     },
     changerLangueDescr: function ({
-
       langueOriginale,
       langue,
       nom,
@@ -239,7 +242,9 @@ export default mixins(mixinLangues).extend({
     },
     sauvegarder: async function () {
       if (!this.catégorie)
-        throw new Error(this.$t("dialogueNouvelleVariable.குறிப்பிடப்படாதவை")as string);
+        throw new Error(
+          this.$t("dialogueNouvelleVariable.குறிப்பிடப்படாதவை") as string
+        );
       const idVariable = await this.$ipa.variables!.créerVariable(
         this.catégorie
       );

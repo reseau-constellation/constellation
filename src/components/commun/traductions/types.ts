@@ -1,4 +1,4 @@
-import { élémentDeMembre } from "@constl/ipa/lib/reseau";
+import { réseau } from "@constl/ipa";
 
 export const ID_VAR_CLEF =
   "/orbitdb/zdpuAximNmZyUWXGCaLmwSEGDeWmuqfgaoogA7KNSa1B2DAAF/dd77aec3-e7b8-4695-b068-49ce4227b360";
@@ -20,7 +20,7 @@ export const ID_COL_TEXTE_ORIGINAL = "texte original";
 export const ID_COL_TRADUCTION = "traduction";
 export const ID_COL_DATE = "date";
 
-export type suggestionTrad = élémentDeMembre<élémentBdTraduction>;
+export type suggestionTrad = réseau.élémentDeMembre<élémentBdTraduction>;
 
 export type élémentBdTraduction = {
   [ID_COL_CLEF]: string;

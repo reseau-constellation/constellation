@@ -5,7 +5,8 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline"> {{ $t("dialogueAuteurs.entête") }}
+      <v-card-title class="headline">
+        {{ $t("dialogueAuteurs.entête") }}
       </v-card-title>
       <v-divider />
 
@@ -24,7 +25,7 @@
                     <v-icon>mdi-plus</v-icon>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                  {{ $t("dialogueAuteurs.அங்கீகாரம்") }}
+                    {{ $t("dialogueAuteurs.அங்கீகாரம்") }}
                   </v-list-item-content>
                 </v-list-item>
               </template>
@@ -32,8 +33,8 @@
 
             <item-auteur
               v-for="auteur in auteurs"
-              :key="auteur.idBdRacine"
-              :id="auteur.idBdRacine"
+              :key="auteur.idBdCompte"
+              :id="auteur.idBdCompte"
               :mod="auteur.rôle === MODÉRATEUR"
               :accepté="auteur.accepté"
             />
@@ -54,7 +55,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { MODÉRATEUR } from "@constl/ipa/lib/accès/consts";
+import { accès } from "@constl/ipa";
 
 import itemAuteur from "@/components/BD/auteurs/itemAuteur.vue";
 import dialogueNouvelAuteur from "@/components/BD/auteurs/dialogueNouvelAuteur.vue";
@@ -66,7 +67,7 @@ export default Vue.extend({
   data: function () {
     return {
       dialogue: false,
-      MODÉRATEUR,
+      MODÉRATEUR: accès.MODÉRATEUR,
     };
   },
 });

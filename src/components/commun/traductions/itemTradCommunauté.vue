@@ -36,7 +36,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   },
   computed: {
     idAuteur: function (): string {
-      return this.suggestion.idBdAuteur;
+      return this.suggestion.idBdCompte;
     },
     traduction: function (): string {
       return this.suggestion.élément.données[ID_COL_TRADUCTION];
@@ -48,7 +48,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     nom: function (): string {
       return Object.keys(this.nomsAuteur).length
         ? traduireNom(this.nomsAuteur, this.languesPréférées)
-        :this.$t("traduction.மறைமுகம்")as string;
+        : (this.$t("traduction.மறைமுகம்") as string);
     },
   },
   methods: {

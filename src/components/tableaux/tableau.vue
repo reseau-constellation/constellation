@@ -213,13 +213,7 @@ import celluleHeure from "@/components/tableaux/celluleHeure.vue";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
-import { InfoColAvecCatégorie } from "@constl/ipa/lib/tableaux";
-import {
-  règleVariable,
-  élémentDonnées,
-  élémentBdListeDonnées,
-} from "@constl/ipa/lib/valid";
-import { élémentsBd } from "@constl/ipa/lib/client";
+import { tableaux, utils, valid } from "@constl/ipa/";
 
 type typeEntête = {
   text: string;
@@ -248,8 +242,8 @@ export default mixins(mixinIPA, mixinLangues).extend({
   data: function () {
     return {
       permissionÉcrire: false,
-      colonnes: null as null | InfoColAvecCatégorie[],
-      données: null as null | élémentDonnées[],
+      colonnes: null as null | tableaux.InfoColAvecCatégorie[],
+      données: null as null | valid.élémentDonnées[],
       nouvelleLigne: false,
       éditer: false,
       valsNouvelleLigne: {},
@@ -274,7 +268,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
       }
       return entêtes;
     },
-    éléments: function (): élémentBdListeDonnées[] {
+    éléments: function (): tableaux.élémentBdListeDonnées[] {
       const données = (this.données || [])
         .sort((x, y) => (x.empreinte > y.empreinte ? 1 : -1))
         .map((d) => {
@@ -282,7 +276,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
         });
 
       if (this.nouvelleLigne) {
-        const premièreLigne: élémentBdListeDonnées = {
+        const premièreLigne: tableaux.élémentBdListeDonnées = {
           ...this.valsNouvelleLigne,
           empreinte: "-1",
         };
@@ -298,7 +292,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
       règles,
     }: {
       idVariable: string;
-      règles: règleVariable[];
+      règles: valid.règleVariable[];
     }) {
       const idColonne = await this.$ipa.tableaux!.ajouterColonneTableau(
         this.idTableau,
@@ -313,7 +307,11 @@ export default mixins(mixinIPA, mixinLangues).extend({
       }
     },
 
-    valÉditée: function (empreinte: string, variable: string, val: élémentsBd) {
+    valÉditée: function (
+      empreinte: string,
+      variable: string,
+      val: utils.élémentsBd
+    ) {
       console.log("valÉditée", { empreinte, variable, val });
       if (empreinte === "-1") {
         this.valsNouvelleLigne = Object.assign({}, this.valsNouvelleLigne, {

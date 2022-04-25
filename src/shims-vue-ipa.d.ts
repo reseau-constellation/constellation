@@ -1,7 +1,7 @@
-import { ProxyClientConstellation } from "@constl/ipa/lib/proxy/proxy";
+import { proxy } from "@constl/ipa";
 
 declare module "vue/types/vue" {
   interface Vue {
-    $ipa: ProxyClientConstellation;
+    $ipa: proxy.proxy.ProxyClientConstellation;
   }
 }

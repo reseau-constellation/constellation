@@ -5,11 +5,15 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline"> {{ $t("dialogueNouvelleColonne.நெடுவரிசை") }} </v-card-title>
+      <v-card-title class="headline">
+        {{ $t("dialogueNouvelleColonne.நெடுவரிசை") }}
+      </v-card-title>
       <v-divider />
 
       <v-card-text class="mt-3">
-        <p class="text-overline mb-2">{{ $t("dialogueNouvelleColonne.மாறி") }}</p>
+        <p class="text-overline mb-2">
+          {{ $t("dialogueNouvelleColonne.மாறி") }}
+        </p>
         <v-select
           v-model="variable"
           :items="variablesDisponibles"
@@ -34,13 +38,15 @@
         </v-select>
 
         <p class="text-overline mb-0">
-          {{ $t("dialogueNouvelleColonne.சோதனைகள்") }}</p>
+          {{ $t("dialogueNouvelleColonne.சோதனைகள்") }}
+        </p>
         <v-list>
           <v-list-item v-for="r in règlesVariable" :key="r"> </v-list-item>
         </v-list>
 
         <p class="text-overline mb-0">
-        {{ $t("dialogueNouvelleColonne.கட்டுப்பாடுகள்") }} </p>
+          {{ $t("dialogueNouvelleColonne.கட்டுப்பாடுகள்") }}
+        </p>
         <v-list>
           <v-list-item v-for="r in règlesPropre" :key="r"> </v-list-item>
         </v-list>
@@ -63,8 +69,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { schémaFonctionOublier } from "@constl/ipa/lib/client";
-import { règleVariable } from "@constl/ipa/lib/valid";
+import { utils, valid } from "@constl/ipa";
 
 import dialogueNouvelleVariable from "@/components/commun/dialogueNouvelleVariable.vue";
 import itemVariable from "@/components/tableaux/colonnes/itemVariable.vue";
@@ -82,9 +87,11 @@ export default mixins(mixinIPA).extend({
 
       variable: undefined as string | undefined,
       variablesDisponibles: [] as string[],
-      règlesVariable: [] as règleVariable[],
-      règlesPropre: [] as règleVariable[],
-      oublierRèglesVariable: undefined as schémaFonctionOublier | undefined,
+      règlesVariable: [] as valid.règleVariable[],
+      règlesPropre: [] as valid.règleVariable[],
+      oublierRèglesVariable: undefined as
+        | utils.schémaFonctionOublier
+        | undefined,
     };
   },
   watch: {
@@ -94,7 +101,7 @@ export default mixins(mixinIPA).extend({
         this.oublierRèglesVariable =
           await this.$ipa.variables.suivreRèglesVariable(
             val,
-            (règles: règleVariable[]) => {
+            (règles: valid.règleVariable[]) => {
               this.règlesVariable = règles;
             }
           );

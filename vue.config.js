@@ -16,6 +16,13 @@ module.exports = {
       ignored: /node_modules/,
     },
   },
+  chainWebpack: (config) => {
+    config.module
+      .rule("node")
+      .test(/\.node/)
+      .use("node-loader")
+      .loader("node-loader");
+  },
   pluginOptions: {
     electronBuilder: {
       chainWebpackMainProcess: (config) => {

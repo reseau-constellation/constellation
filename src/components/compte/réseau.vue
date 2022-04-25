@@ -30,21 +30,22 @@ import mixins from "vue-typed-mixins";
 
 import mixinIPA from "@/mixins/ipa";
 
+import { réseau } from "@constl/ipa";
+
 export default mixins(mixinIPA).extend({
   name: "ongletRéseau",
   mixins: [mixinIPA],
   data: function () {
     return {
-      connexions: [] as { addr: string; peer: string }[],
+      connexions: [] as réseau.statutDispositif[],
     };
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierConnexions = await this.$ipa.réseau!.suivreConnexionsPostes(
-        (connexions) => {
+      const oublierConnexions =
+        await this.$ipa.réseau!.suivreConnexionsDispositifs((connexions) => {
           this.connexions = connexions;
-        }
-      );
+        });
 
       this.suivre([oublierConnexions]);
     },

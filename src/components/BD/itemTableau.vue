@@ -26,7 +26,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="error" text outlined @click="dialogue = false">
-            {{ $t("itemTableau.Non") }}
+              {{ $t("itemTableau.Non") }}
             </v-btn>
             <v-btn color="error" depressed @click="effacerTableau">
               {{ $t("itemTableau.effacer") }}
