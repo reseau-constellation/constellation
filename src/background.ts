@@ -5,14 +5,15 @@ import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 const enDéveloppement = process.env.NODE_ENV !== "production";
 import Store from "electron-store";
-import initConstellation from "@/électron/initConstellation";
-
 import path from "path";
+
+import initConstellation from "@/électron/initConstellation";
 
 let fermerConstellation: () => Promise<void>;
 
-async function test() {
+async function test(win: BrowserWindow) {
   console.log("Test processus principal Électron");
+  fermerConstellation = initConstellation(win);
   /*const DOSSIER_STOCKAGE_LOCAL = "./_stockageTemp";
   const LocalStorage = require("node-localstorage").LocalStorage;
   final = new LocalStorage(DOSSIER_STOCKAGE_LOCAL);
@@ -46,8 +47,7 @@ async function createWindow() {
     },
   });
 
-  test();
-  fermerConstellation = initConstellation(win);
+  test(win);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode

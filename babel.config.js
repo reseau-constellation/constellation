@@ -9,7 +9,7 @@ const plugins = [
   [
     "add-module-exports",
     {
-      addDefaultProperty: true,
+      addDefaultProperty: false,
     },
   ],
 ];

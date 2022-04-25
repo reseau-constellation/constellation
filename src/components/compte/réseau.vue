@@ -37,13 +37,13 @@ export default mixins(mixinIPA).extend({
   mixins: [mixinIPA],
   data: function () {
     return {
-      connexions: [] as réseau.statutDispositif[],
+      connexions: [] as {addr: string, peer: string}[],
     };
   },
   methods: {
     initialiserSuivi: async function () {
       const oublierConnexions =
-        await this.$ipa.réseau!.suivreConnexionsDispositifs((connexions) => {
+        await this.$ipa.réseau!.suivreConnexionsPostesSFIP((connexions) => {
           this.connexions = connexions;
         });
 

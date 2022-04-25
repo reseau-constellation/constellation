@@ -36,7 +36,12 @@ import mixinIPA from "@/mixins/ipa";
 
 export default mixins(mixinImage, mixinIPA).extend({
   name: "Compte",
-  components: { titre, réseau, thème, paramètres },
+  components: {
+    titre,
+    réseau,
+    thème,
+    paramètres
+  },
   mixins: [mixinImage, mixinIPA],
   data: function () {
     return {

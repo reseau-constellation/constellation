@@ -141,7 +141,7 @@ export default mixins(mixinIPA, mixinImages).extend({
   name: "ongletParamètresCompte",
   data: function () {
     return {
-      imageProfil: undefined as undefined | string,
+      imageProfil: undefined as undefined | File,
       courrielOrig: undefined as undefined | null | string,
       courriel: "",
 
@@ -152,7 +152,10 @@ export default mixins(mixinIPA, mixinImages).extend({
     };
   },
   mixins: [mixinIPA, mixinImages],
-  components: { boîteNoms, dialogueAjouterDispositif },
+  components: {
+    boîteNoms,
+    dialogueAjouterDispositif
+  },
   computed: {
     nom: function (): string {
       const languesPréférées = [this.$i18n.locale];
@@ -166,7 +169,8 @@ export default mixins(mixinIPA, mixinImages).extend({
           this.fichierTropGrand = true;
         } else {
           this.fichierTropGrand = false;
-          await this.$ipa.profil!.sauvegarderImage(fichier);
+          const contenu = await fichier.arrayBuffer();
+          await this.$ipa.profil!.sauvegarderImage(contenu);
         }
       } else {
         this.effacerImage();

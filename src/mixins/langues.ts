@@ -46,6 +46,7 @@ export default Vue.extend({
     },
     ...mapGetters({
       systèmeNumération: "paramètres/systèmeNumération",
+      choixNumération: "paramètres/choixNumération",
     }),
   },
   methods: {

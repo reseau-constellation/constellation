@@ -61,12 +61,6 @@ export default mixins(mixinIPA).extend({
           page: "compte",
           icône: "mdi-account",
         },
-        /*
-        {
-          page: "projets",
-          icône: "mdi-folder"
-        },
-        */
         {
           page: "bd",
           icône: "mdi-database",
@@ -92,6 +86,7 @@ export default mixins(mixinIPA).extend({
   },
   methods: {
     initialiserSuivi: async function () {
+      console.log("initialiserSuivi Navigation")
       const oublierImage = await this.$ipa.profil!.suivreImage((image) => {
         if (image) {
           const url = URL.createObjectURL(
