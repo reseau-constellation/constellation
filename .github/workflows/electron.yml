@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Variables d'environnement
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
-          
+
       - name: Ouvrir le projet
         uses: actions/checkout@v2
 
