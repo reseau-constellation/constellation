@@ -10245,6 +10245,13 @@ k-bucket@^5.1.0:
   dependencies:
     randombytes "^2.1.0"
 
+kairegai@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/kairegai/-/kairegai-0.0.2.tgz#4af316e4ac51a888c6a4f64bfceab6dd77953413"
+  integrity sha512-BGndsnCsdvzCkVUTWQxxJzU4IHi+wKOX2djlZQa+sj14g4hf4Q1cMbezp+NmprL2ZVh6I7qohXE4Su31kb4frg==
+  dependencies:
+    multiformats "^9.6.4"
+
 keypair@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/keypair/-/keypair-1.0.3.tgz#4314109d94052a0acfd6b885695026ad29529c80"
@@ -11753,7 +11760,7 @@ multiformats@^9.0.0, multiformats@^9.0.2, multiformats@^9.0.4, multiformats@^9.1
   resolved "https://registry.yarnpkg.com/multiformats/-/multiformats-9.4.8.tgz#46f74ec116f7871f2a334cc6d4ad3d810dbac341"
   integrity sha512-EOJL02/kv+FD5hoItMhKgkYUUruJYMYFq4NQ6YkCh3jVQ5CuHo+OKdHeR50hAxEQmXQ9yvrM9BxLIk42xtfwnQ==
 
-multiformats@^9.5.1, multiformats@^9.5.4:
+multiformats@^9.5.1, multiformats@^9.5.4, multiformats@^9.6.4:
   version "9.6.4"
   resolved "https://registry.yarnpkg.com/multiformats/-/multiformats-9.6.4.tgz#5dce1f11a407dbb69aa612cb7e5076069bb759ca"
   integrity sha512-fCCB6XMrr6CqJiHNjfFNGT0v//dxOBMrOMqUIzpPc/mmITweLEyhvMpY9bF+jZ9z3vaMAau5E8B68DW77QMXkg==

@@ -109,7 +109,7 @@
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
-            {{ $t("compte.onglets.compte.Id") }} {{ d }}
+            {{ $t("compte.onglets.compte.Id") }} {{ எழுத்து_மாறு({ d: "z" + கைரேகை, எழுத்து: écriture }) }}
           </v-list-item-title>
           <v-list-item-subtitle class="success--text">
             {{
@@ -123,12 +123,15 @@
 </template>
 
 <script lang="ts">
+import { எழுத்து_மாறு } from "kairegai";
+
 import mixins from "vue-typed-mixins";
 
 import { profil } from "@constl/ipa";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinImages from "@/mixins/images";
+import mixinLangues from "@/mixins/langues";
 
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import dialogueAjouterDispositif from "@/components/compte/dialogueAjouterDispositif.vue";
@@ -149,9 +152,10 @@ export default mixins(mixinIPA, mixinImages).extend({
       fichierTropGrand: false,
       dispositifs: null as null | string[],
       idDispositif: undefined as undefined | string,
+      எழுத்து_மாறு
     };
   },
-  mixins: [mixinIPA, mixinImages],
+  mixins: [mixinIPA, mixinImages, mixinLangues],
   components: {
     boîteNoms,
     dialogueAjouterDispositif
