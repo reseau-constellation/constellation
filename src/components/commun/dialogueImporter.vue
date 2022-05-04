@@ -55,7 +55,6 @@
         close
         color="green"
         outlined
-        :disabled="!Sélectionner"
         @click:close="nomFichier= false"
        >
       {{nomFichier}}
@@ -70,14 +69,13 @@
            v-model="Sélectionner"
            :items="itemsSélectionner"
            :menu-props="{ maxHeight: '75' }"
+            :disabled="!nomFichier"
            :label="$t('communs.தேர்ந்தெடுக்கவும்')"
-           multiple
-           :disabled="!suivante"
+            multiple
            ></v-select>
          </v-col>
        </v-row>
        </v-container>
-
      <v-btn
        color="primary"
        @click="e6 = 2"
