@@ -10,7 +10,7 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "déployer": "node ./scripts/gh-pages-deploy.js",
-    "electron:build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vue-cli-service electron:build",
+    "electron:build": "cross-env NODE_OPTIONS=--max-old-space-size=16000 vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve"
   },
   "main": "background.js",
