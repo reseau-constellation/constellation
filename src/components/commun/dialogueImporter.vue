@@ -14,15 +14,15 @@
   <v-divider />
 
   <template>
-    <v-stepper v-model="e6" horizontal >
+    <v-stepper v-model="étape" horizontal >
       <v-stepper-header>
-        <v-stepper-step :complete="e6 > 1" step="1">
+        <v-stepper-step :complete="étape > 1" step="1">
           {{ $t("importer.தேர்வுசெய்க") }}
         </v-stepper-step>
-        <v-stepper-step :complete="e6 > 2" step="2">
+        <v-stepper-step :complete="étape > 2" step="2">
           {{ $t("importer.நெடுவரிசை") }}
         </v-stepper-step>
-        <v-stepper-step :complete="e6 > 3" step="3">
+        <v-stepper-step :complete="étape > 3" step="3">
           {{ $t("importer.பதிவேற்றம்") }}
         </v-stepper-step>
     </v-stepper-header>
@@ -66,10 +66,10 @@
            cols="12"
            sm="12">
            <v-select
-           v-model="Sélectionner"
-           :items="itemsSélectionner"
+           v-model="tableauSélectionné"
+           :items="tableauxFichier"
            :menu-props="{ maxHeight: '75' }"
-            :disabled="!nomFichier"
+           :disabled="!nomFichier"
            :label="$t('communs.தேர்ந்தெடுக்கவும்')"
             multiple
            ></v-select>
@@ -78,9 +78,11 @@
        </v-container>
      <v-btn
        color="primary"
-       @click="e6 = 2"
+       click="étape = 2"
+       :disabled="!téléverser"
+       @click="Prochain()"
        >
-       {{ $t("communs.suivante") }}
+       {{ $t("communs.Prochain") }}
     </v-btn>
   </v-card>
  </v-stepper-content>
@@ -95,14 +97,13 @@
        outlined
        :loading="enProgrès"
        @click="() => obtColsTableau()"
-       :disabled="!suivante"
        >
        {{ $t("communs.colonne") }}
     </v-btn>
     <v-btn
     color="primary"
-    @click="e6 = 3"
-    :disabled="!colonne"
+    @click="étape = 3"
+
     >
    {{ $t("communs.suivante") }}
     </v-btn>
@@ -125,7 +126,7 @@
         </v-btn>
         <v-btn
         color="primary"
-        @click="e6 = 1"
+        @click="étape = 1"
         :disabled="!téléverser"
         >
         {{ $t("communs.suivante") }}
@@ -166,11 +167,10 @@ export default mixins(mixinLangues).extend({
       formatDoc: "ods" as XLSX.BookType | "xls",
       inclureMédias: false,
       langueColonnes: undefined,
-      e6: 1,
+      étape: 1,
       importateur: undefined as ImportateurFeuilleCalcul | undefined,
       tableauxFichier: undefined as string[] | undefined,
-      Sélectionner: [],
-      itemsSélectionner:['sheet1','sheet2','sheet3','sheet4','sheet5',],
+      tableauSélectionné:  undefined as string | undefined,
       nomFichier: undefined as string | undefined,
     };
   },
@@ -198,7 +198,10 @@ export default mixins(mixinLangues).extend({
         const fileInput = this.$refs.fileInput as HTMLInputElement
         fileInput.click()
       },
-    },
+     Prochain: function () {
+        this.étape = 3;
+      },
+  },
 
   watch: {
     importateur: async function (val: ImportateurFeuilleCalcul | undefined )
