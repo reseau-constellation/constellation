@@ -9,6 +9,12 @@
       <v-tab>{{ $t("compte.onglets.compte.entête") }}</v-tab>
       <v-tab>{{ $t("compte.onglets.thème.entête") }}</v-tab>
       <v-tab>{{ $t("compte.onglets.réseau.entête") }}</v-tab>
+      <v-spacer />
+      <v-switch v-model="serveur" v-if="électron" dense inset>
+        <template v-slot:label>
+          <v-icon> {{ serveur ? "mdi-server" : "mdi-server-off" }} </v-icon>
+        </template>
+      </v-switch>
     </v-tabs>
     <v-tabs-items v-model="onglet">
       <v-tab-item>
@@ -25,6 +31,7 @@
 </template>
 
 <script lang="ts">
+import oùSommesNous from "wherearewe";
 import mixins from "vue-typed-mixins";
 
 import titre from "@/components/commun/Titre.vue";
@@ -35,18 +42,20 @@ import mixinImage from "@/mixins/images";
 import mixinIPA from "@/mixins/ipa";
 
 export default mixins(mixinImage, mixinIPA).extend({
-  name: "Compte",
+  name: "PageCompte",
   components: {
     titre,
     réseau,
     thème,
-    paramètres
+    paramètres,
   },
   mixins: [mixinImage, mixinIPA],
   data: function () {
     return {
       onglet: null,
       imageCompte: null as null | string,
+      serveur: false,
+      électron: oùSommesNous.isElectron,
     };
   },
   computed: {
@@ -57,6 +66,11 @@ export default mixins(mixinImage, mixinIPA).extend({
       const options = [this.image("profilFemme"), this.image("profilHomme")];
       // Dans le doute, on garde ça équitable :)
       return options[Math.floor(Math.random() * options.length)];
+    },
+  },
+  watch: {
+    serveur: function (val) {
+      window.ipa.send("àPrincipal:serveur", { type: "activer" });
     },
   },
   methods: {
