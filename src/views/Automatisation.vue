@@ -13,7 +13,7 @@ import Titre from "@/components/commun/Titre";
 import mixinImage from "@/mixins/images";
 
 export default {
-  name: "Compte",
+  name: "PageAutomatisation",
   components: { Titre },
   mixins: [mixinImage],
 };
