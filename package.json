@@ -18,6 +18,7 @@
   "main": "background.js",
   "dependencies": {
     "@constl/ipa": "^0.3.0",
+    "@constl/serveur": "^0.1.0",
     "@types/uuid": "^8.3.4",
     "abortable-iterator": "^3.0.0",
     "axios": "^0.21.1",
