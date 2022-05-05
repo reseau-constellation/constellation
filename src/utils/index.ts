@@ -1,6 +1,6 @@
 import isElectron from "is-electron";
 import DOMPurify from "dompurify";
-import marked from "marked";
+import { marked } from "marked";
 import streamSaver from "streamsaver";
 import { WritableStream } from "web-streams-polyfill/ponyfill";
 
