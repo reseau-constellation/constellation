@@ -26,7 +26,7 @@ export default mixins(mixinIPA).extend({
   components: { carteMembre },
   data: function () {
     return {
-      membres: [] as utils.résultatObjectifRecherche<utils.infoRésultat>[],
+      membres: [] as utils.résultatRecherche<utils.infoRésultat>[],
     };
   },
   methods: {
