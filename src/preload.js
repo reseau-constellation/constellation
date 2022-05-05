@@ -6,20 +6,32 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("ipa", {
   send: (channel, data) => {
     // whitelist channels
-    let validChannels = ["toMain"];
-    console.log("preload.js, toMain", channel, data)
+    let validChannels = [
+      "àPrincipal:constellation",
+      "àPrincipal:serveurLocal",
+      "àPrincipal:réinitialiser",
+    ];
+    console.log("preload.js,", channel, data);
     if (validChannels.includes(channel)) {
-      console.log("message envoyé !")
+      console.log("message envoyé !");
       ipcRenderer.send(channel, data);
     }
   },
   receive: (channel, func) => {
-    let validChannels = ["fromMain"];
+    let validChannels = [
+      "dePrincipal:constellation",
+      "dePrincipal:serveurLocal",
+      "dePrincipal:miseÀJourDisponible",
+      "dePrincipal:miseÀJourTéléchargée",
+    ];
     if (validChannels.includes(channel)) {
-      console.log("preload.js, fromMain", channel, func)
+      console.log("preload.js", channel, func);
 
       // Deliberately strip event as it includes `sender`
-      ipcRenderer.on(channel, (event, ...args) => {console.log("preload.js, fromMain, f", channel, args); func(...args)});
+      ipcRenderer.on(channel, (event, ...args) => {
+        console.log("preload.js, f", channel, args);
+        func(...args);
+      });
     }
   },
 });

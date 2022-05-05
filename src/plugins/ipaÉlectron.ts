@@ -1,6 +1,5 @@
 import _Vue from "vue";
-import { client } from "@constl/ipa";
-import générerProxy, { téléClient } from "@/électron/proxy";
+import { client, proxy } from "@constl/ipa";
 import {
   MessagePourTravailleur,
   MessageDeTravailleur,
@@ -15,27 +14,32 @@ declare global {
         m:
           | MessagePourTravailleur
           | { type: "init"; opts: client.optsConstellation }
+          | any
       ) => void;
     };
   }
 }
 
-export class IPAÉlectronPrincipal extends téléClient {
-  constructor(opts: client.optsConstellation = {}) {
-    super();
-    console.log("IPAÉlectronPrincipal")
+export class ProxyClientÉlectronPrincipal extends proxy.proxy
+  .ClientProxifiable {
+  constructor(opts: client.optsConstellation = {}, souleverErreurs = false) {
+    super(souleverErreurs);
+    console.log("IPAÉlectronPrincipal");
 
-    window.ipa.receive("fromMain", (m: MessageDeTravailleur) => {
-      console.log(`Received ${m} from main process`);
-      this.emit("message", m);
-    });
+    window.ipa.receive(
+      "dePrincipal:constellation",
+      (m: MessageDeTravailleur) => {
+        console.log(`Message ${m} reçu du processus principal`);
+        this.événements.emit("message", m);
+      }
+    );
 
-    window.ipa.send("toMain", { type: "init", opts });
+    window.ipa.send("àPrincipal:constellation", { type: "init", opts });
   }
 
-  recevoirMessage(message: MessagePourTravailleur): void {
-    console.log("IPAÉlectronPrincipal toMain", message);
-    window.ipa.send("toMain", message);
+  envoyerMessage(message: MessagePourTravailleur): void {
+    console.log("IPAÉlectronPrincipal àPrincipal:constellation", message);
+    window.ipa.send("àPrincipal:constellation", message);
   }
 }
 
@@ -45,9 +49,9 @@ export default {
     const opts: client.optsConstellation = {
       compte: idBdCompte,
     };
-    const ipa = générerProxy(new IPAÉlectronPrincipal(opts), false);
+    const ipa = proxy.proxy.générerProxy(
+      new ProxyClientÉlectronPrincipal(opts, false)
+    );
     Vue.prototype.$ipa = ipa;
-    //@ts-ignore
-    window.$ipa = ipa
   },
 };
