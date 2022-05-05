@@ -23,7 +23,9 @@
           :label="$t('exporter.formatFichier')"
           :items="['ods', 'csv', 'txt', 'xls', 'xlsx']"
         />
-        <v-checkbox v-model="inclureMédias"></v-checkbox>
+        <v-checkbox v-model="inclureMédias">{{
+          $t("exporter.inclureMédias")
+        }}</v-checkbox>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -51,7 +53,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import XLSX from "xlsx";
+import { BookType } from "xlsx";
 
 import mixinLangues from "@/mixins/langues";
 
@@ -64,7 +66,7 @@ export default mixins(mixinLangues).extend({
       dialogue: false,
       enProgrès: false,
 
-      formatDoc: "ods" as XLSX.BookType | "xls",
+      formatDoc: "ods" as BookType | "xls",
       inclureMédias: false,
       langueColonnes: undefined,
     };
