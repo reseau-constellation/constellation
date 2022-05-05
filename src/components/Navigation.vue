@@ -86,7 +86,7 @@ export default mixins(mixinIPA).extend({
   },
   methods: {
     initialiserSuivi: async function () {
-      console.log("initialiserSuivi Navigation")
+      console.log("initialiserSuivi Navigation");
       const oublierImage = await this.$ipa.profil!.suivreImage((image) => {
         if (image) {
           const url = URL.createObjectURL(
