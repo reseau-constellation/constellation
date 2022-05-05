@@ -14,6 +14,11 @@ jobs:
       - name: Variables d'environnement
         run: echo "NODE_OPTIONS=--max_old_space_size=8192" >> $GITHUB_ENV
 
+      - name: Augmenter mémoire disponible
+          uses: pierotofy/set-swap-space@master
+          with:
+            swap-size-gb: 10
+
       - name: Ouvrir le projet
         uses: actions/checkout@v2
 
