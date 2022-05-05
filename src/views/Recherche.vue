@@ -29,7 +29,7 @@ import résultatsRechercheBds from "@/components/recherche/résultatsRechercheBd
 import mixinImage from "@/mixins/images";
 
 export default Vue.extend({
-  name: "Recherche",
+  name: "PageRecherche",
   components: { Titre, résultatsRecherchePersonnes, résultatsRechercheBds },
   mixins: [mixinImage],
   data: function () {

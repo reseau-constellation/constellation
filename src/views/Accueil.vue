@@ -84,7 +84,7 @@
         </v-btn>
       </v-col>
     </v-row>
-    <message-installer v-if="false" />
+    <message-installer v-if="!isElectron" />
   </v-container>
 </template>
 

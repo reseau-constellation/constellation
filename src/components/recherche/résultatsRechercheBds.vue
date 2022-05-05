@@ -25,7 +25,7 @@ export default mixins(mixinIPA).extend({
   components: { carteBd },
   data: function () {
     return {
-      bds: [] as utils.résultatObjectifRecherche<utils.infoRésultat>[],
+      bds: [] as utils.résultatRecherche<utils.infoRésultat>[],
     };
   },
   methods: {

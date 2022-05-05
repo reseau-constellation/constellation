@@ -23,7 +23,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "Titre",
+  name: "TitrePage",
   props: ["entête", "soustitre", "image", "imageRonde"],
 });
 </script>

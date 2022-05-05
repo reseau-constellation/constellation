@@ -3,14 +3,14 @@
     <v-list-item-content>
       <v-row>
         <v-col cols="4">
-          <v-select
+          <v-autocomplete
             v-model="lng"
             outlined
             dense
             hide-details
             :items="itemsLangues"
             @change="changerLangue"
-          ></v-select>
+          ></v-autocomplete>
         </v-col>
         <v-col cols="8">
           <v-text-field

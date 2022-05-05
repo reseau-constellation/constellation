@@ -119,8 +119,7 @@ export default mixins(mixinIPA).extend({
     initialiserSuivi: async function () {
       const { fOublier: oublierMembres } =
         await this.$ipa.réseau!.rechercherMembres((membres) => {
-          // À faire - probablement une erreur dans m.de
-          this.membresRéseau = membres.map((m) => m.de).filter((c) => c);
+          this.membresRéseau = membres.map((m) => m.id).filter((c) => c);
         }, 10);
 
       this.suivre([oublierMembres]);

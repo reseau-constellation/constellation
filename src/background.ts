@@ -3,22 +3,18 @@
 import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
-const enDéveloppement = process.env.NODE_ENV !== "production";
+
 import Store from "electron-store";
 import path from "path";
 
-import initConstellation from "@/électron/initConstellation";
+import {
+  fermerConstellation,
+  connecterFenêtreÀConstellation,
+} from "@/électron/initConstellation";
 
-let fermerConstellation: () => Promise<void>;
+const enDéveloppement = process.env.NODE_ENV !== "production";
 
-async function test(win: BrowserWindow) {
-  console.log("Test processus principal Électron");
-  fermerConstellation = initConstellation(win);
-  /*const DOSSIER_STOCKAGE_LOCAL = "./_stockageTemp";
-  const LocalStorage = require("node-localstorage").LocalStorage;
-  final = new LocalStorage(DOSSIER_STOCKAGE_LOCAL);
-  */
-}
+app.setAsDefaultProtocolClient("constl");
 
 async function fermerApli() {
   if (fermerConstellation) await fermerConstellation();
@@ -31,10 +27,38 @@ protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
 ]);
 
+let win: BrowserWindow;
+
+// Deep linked url
+let deeplinkingUrl: string;
+
+// Force Single Instance Application
+const gotTheLock = app.requestSingleInstanceLock();
+if (gotTheLock) {
+  app.on("second-instance", (_, argv) => {
+    // Someone tried to run a second instance, we should focus our window.
+
+    // Protocol handler for win32
+    // argv: An array of the second instance’s (command line / deep linked) arguments
+    if (process.platform == "win32") {
+      // Keep only command line / deep linked arguments
+      deeplinkingUrl = argv.slice(1)[0];
+      console.log(deeplinkingUrl);
+    }
+
+    if (win) {
+      if (win.isMinimized()) win.restore();
+      win.focus();
+    }
+  });
+} else {
+  app.quit();
+}
+
 async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
-    width: 800,
+  win = new BrowserWindow({
+    width: 1000,
     height: 600,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -47,11 +71,22 @@ async function createWindow() {
     },
   });
 
-  test(win);
+  // const deeplink = new Deeplink({ app, mainWindow: win, protocol: "constl", isDev: enDéveloppement, electronPath: '../node_modules/electron/dist/Electron.app' });
+  /*deeplink.on('received', (lien: string) => {
+      console.log(lien);
+      // mainWindow.webContents.send('received-link', lien);
+  });*/
+  // Protocol handler for win32
+  if (process.platform == "win32") {
+    // Keep only command line / deep linked arguments
+    deeplinkingUrl = process.argv.slice(1)[0];
+    console.log({ deeplinkingUrl });
+  }
+  const déconnecterFenêtreDeConstellation = connecterFenêtreÀConstellation(win);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
+    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
     if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
@@ -61,16 +96,31 @@ async function createWindow() {
   win.once("ready-to-show", () => {
     // autoUpdater.checkForUpdatesAndNotify();
   });
+
+  win.once("close", () => {
+    console.log("fenêtre fermée");
+    déconnecterFenêtreDeConstellation();
+  });
+
   autoUpdater.on("update-available", () => {
-    win.webContents.send("update_available");
+    win.webContents.send("dePrincipal:miseÀJourDisponible");
   });
   autoUpdater.on("update-downloaded", () => {
-    win.webContents.send("update_downloaded");
+    win.webContents.send("dePrincipal:miseÀJourTéléchargée");
   });
-  ipcMain.on("restart_app", () => {
+  ipcMain.on("àPrincipal:réinitialiser", () => {
     autoUpdater.quitAndInstall();
   });
 }
+
+app.on("will-finish-launching", function () {
+  // Protocol handler for osx
+  app.on("open-url", function (event, url) {
+    event.preventDefault();
+    deeplinkingUrl = url;
+    console.log({ deeplinkingUrl });
+  });
+});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {

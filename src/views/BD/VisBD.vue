@@ -502,19 +502,13 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         await this.$ipa.bds!.effacerBd(this.idBd);
         this.$router.push("/bd");
       },
-      onFilePicked: function (): void {
-        let fileInput = this.$refs.fileInput;
-        //@ts-ignore  let imgFile = fileInput.files
-        {
-          let reader = new FileReader();
-          reader.addEventListener(
-            "load",
-            function () {
-              // this.$ipa.bds!.sauvegarderImage(this.idBd, reader.result);
-            },
-            false
-          );
-          //@ts-ignore  reader.readAsDataURL(imgFile[0])
+      onFilePicked: async function (): Promise<void> {
+        const fichiers = this.$refs.fileInput as HTMLInputElement;
+        if (fichiers.files) {
+          const image = await fichiers!.files[0].arrayBuffer();
+          // this.$ipa.bds!.sauvegarderImage(this.idBd, image);
+        } else {
+          // this.$ipa.bds!.effacerImage();
         }
       },
       onPickFile: function (): void {

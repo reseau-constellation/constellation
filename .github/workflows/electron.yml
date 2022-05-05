@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Variables d'environnement
         run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
-          
+
       - name: Ouvrir le projet
         uses: actions/checkout@v2
 
@@ -31,7 +31,7 @@ jobs:
           snapcraft_token: ${{ secrets.snapcraft_token }}
 
       - name: Compiler et publier l'application Électron
-        uses: samuelmeuli/action-electron-builder@v1
+        uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)

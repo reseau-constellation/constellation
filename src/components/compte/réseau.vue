@@ -30,14 +30,12 @@ import mixins from "vue-typed-mixins";
 
 import mixinIPA from "@/mixins/ipa";
 
-import { réseau } from "@constl/ipa";
-
 export default mixins(mixinIPA).extend({
   name: "ongletRéseau",
   mixins: [mixinIPA],
   data: function () {
     return {
-      connexions: [] as {addr: string, peer: string}[],
+      connexions: [] as { addr: string; peer: string }[],
     };
   },
   methods: {

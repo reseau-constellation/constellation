@@ -3,25 +3,26 @@
     <v-list-item-content>
       <v-row>
         <v-col cols="4">
-          <v-select
-            :label="$t('boîteNoms.étiquetteLangue')"
+          <v-autocomplete
             v-model="langueNouveauNom"
+            :items="itemsLangues"
+            :label="$t(etiquetteLangue)"
             outlined
             dense
             hide-details
             offset-x
-            :items="itemsLangues"
-          ></v-select>
+          ></v-autocomplete>
         </v-col>
         <v-col cols="8">
           <v-text-field
             v-model="nouveauNom"
-            :label="$t('boîteNoms.étiquetteNom')"
+            :label="$t(etiquetteNom)"
             :dir="droiteÀGauche(langueNouveauNom) ? 'rtl' : 'ltr'"
             outlined
             dense
             hide-details
-            @keydown.enter="ajouter(langueNouveauNom, nouveauNom)"
+            @keydown.enter="ajouter"
+            @blur="ajouter"
           />
         </v-col>
       </v-row>
@@ -31,7 +32,7 @@
       <v-btn
         icon
         color="success"
-        :disabled="!langueNouveauNom || !nouveauNom"
+        :disabled="!prêt"
         @click="ajouter(langueNouveauNom, nouveauNom)"
       >
         <v-icon>mdi-check</v-icon>
@@ -56,6 +57,9 @@ export default mixins(mixinLangues).extend({
     };
   },
   computed: {
+    prêt: function (): boolean {
+      return Boolean(this.langueNouveauNom && this.nouveauNom);
+    },
     itemsLangues: function (): { text: string; value: string }[] {
       return this.langues
         .filter((lng) => {
@@ -70,9 +74,12 @@ export default mixins(mixinLangues).extend({
     },
   },
   methods: {
-    ajouter(langue: string, nom: string) {
-      if (!langue || !nom) return; //Éviter de sauvegarder si tout n'est pas prêt
-      this.$emit("sauvegarder", { langue, nom });
+    ajouter() {
+      if (!this.prêt) return; // Éviter de sauvegarder si tout n'est pas prêt
+      this.$emit("sauvegarder", {
+        langue: this.langueNouveauNom,
+        nom: this.nouveauNom,
+      });
       this.langueNouveauNom = this.nouveauNom = "";
     },
   },

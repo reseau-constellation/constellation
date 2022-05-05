@@ -31,7 +31,7 @@ import Titre from "@/components/commun/Titre.vue";
 import mixinImage from "@/mixins/images";
 
 export default Vue.extend({
-  name: "Signalements",
+  name: "PageSignalements",
   components: { Titre },
   mixins: [mixinImage],
   data: function () {

@@ -1,31 +1,41 @@
 <template>
-  <v-card max-width="500">
-    <v-card-title>
-      {{ $t(titre) }}
-    </v-card-title>
-    <v-card-subtitle>
-      {{ $t(sousTitre) }}
-    </v-card-subtitle>
-    <v-divider></v-divider>
-    <item-nouveau-nom
-      :languesExistantes="Object.keys(this.noms)"
-      :etiquetteLangue="$t(étiquetteLangue)"
-      :etiquetteNom="$t(étiquetteNom)"
-      @sauvegarder="(e) => $emit('sauvegarder', e)"
-    />
-    <v-divider />
-    <v-list style="max-height: 300px" class="overflow-y-auto">
-      <item-nom
-        v-for="(nom, langue) in noms"
-        :key="langue"
-        :nomOriginal="nom"
-        :langueOriginaleNom="langue"
+  <v-dialog v-model="dialogue" max-width="400">
+    <template v-slot:activator="{ on, attrs }">
+      <slot name="activator" v-bind="{ on, attrs }"></slot>
+    </template>
+
+    <v-card max-width="500">
+      <v-card-title>
+        {{ $t(titre) }}
+      </v-card-title>
+      <v-card-subtitle>
+        {{ $t(sousTitre) }}
+      </v-card-subtitle>
+      <v-divider></v-divider>
+      <item-nouveau-nom
+        :languesExistantes="Object.keys(this.noms)"
+        :etiquetteLangue="etiquetteLangue"
+        :etiquetteNom="etiquetteNom"
         @sauvegarder="(e) => $emit('sauvegarder', e)"
-        @effacer="(e) => $emit('effacer', e)"
-        @changerLangue="(e) => $emit('changerLangue', e)"
       />
-    </v-list>
-  </v-card>
+      <v-divider />
+      <v-list style="max-height: 300px" class="overflow-y-auto">
+        <item-nom
+          v-for="(nom, langue) in noms"
+          :key="langue"
+          :nomOriginal="nom"
+          :langueOriginaleNom="langue"
+          @sauvegarder="(e) => $emit('sauvegarder', e)"
+          @effacer="(e) => $emit('effacer', e)"
+          @changerLangue="(e) => $emit('changerLangue', e)"
+        />
+        <v-list-item v-if="!Object.keys(noms).length">
+          Vous êtes anonyme ! Ajoutez un nom (ou plus !) ci-dessus pour qu'on
+          sache comment vous appeler.
+        </v-list-item>
+      </v-list>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -36,7 +46,7 @@ import itemNom from "./itemNom.vue";
 import itemNouveauNom from "./itemNouveauNom.vue";
 
 export default mixins(mixinLangues).extend({
-  name: "BoîteNoms",
+  name: "DialogueNoms",
   components: { itemNom, itemNouveauNom },
   props: {
     noms: Object,
@@ -60,8 +70,7 @@ export default mixins(mixinLangues).extend({
   mixins: [mixinLangues],
   data: function () {
     return {
-      langueNouveauNom: "",
-      nouveauNom: "",
+      dialogue: false,
     };
   },
   computed: {

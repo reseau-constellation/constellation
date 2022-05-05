@@ -10,18 +10,16 @@
     </p>
     <div class="d-flex flex-wrap">
       <v-card flat width="300" class="mx-3 my-3">
-        <v-menu
-          offset-x
-          :close-on-content-click="false"
-          :disabled="noms === null"
-          transition="slide-y-transition"
+        <boîteNoms
+          :noms="noms || {}"
+          titre="compte.onglets.compte.titreBoîteNoms"
+          sousTitre="compte.onglets.compte.sousTitreBoîteNoms"
+          @sauvegarder="sauvegarderNom"
+          @changerLangue="changerLangueNom"
+          @effacer="effacerNom"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              flat
-              dense
-              hide-details
-              prepend-icon="mdi-account"
               v-on="on"
               v-bind="attrs"
               :readonly="true"
@@ -31,17 +29,13 @@
                 noms ? (nom ? nom : $t('compte.onglets.compte.aucunNom')) : ''
               "
               :label="$t('compte.onglets.compte.nom')"
+              outlined
+              dense
+              hide-details
+              prepend-icon="mdi-account"
             />
           </template>
-          <boîteNoms
-            :noms="noms || {}"
-            titre="compte.onglets.compte.titreBoîteNoms"
-            sousTitre="compte.onglets.compte.sousTitreBoîteNoms"
-            @sauvegarder="sauvegarderNom"
-            @changerLangue="changerLangueNom"
-            @effacer="effacerNom"
-          />
-        </v-menu>
+        </boîteNoms>
       </v-card>
 
       <v-card flat width="300" class="mx-3 my-3">
@@ -109,7 +103,8 @@
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
-            {{ $t("compte.onglets.compte.Id") }} {{ d }}
+            {{ $t("compte.onglets.compte.Id")
+            }}<!-- {{ எழுத்து_மாறு({ d: "z" + கைரேகை, எழுத்து: écriture }) }}-->
           </v-list-item-title>
           <v-list-item-subtitle class="success--text">
             {{
@@ -123,12 +118,15 @@
 </template>
 
 <script lang="ts">
+// import { எழுத்து_மாறு } from "kairegai";
+
 import mixins from "vue-typed-mixins";
 
 import { profil } from "@constl/ipa";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinImages from "@/mixins/images";
+import mixinLangues from "@/mixins/langues";
 
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import dialogueAjouterDispositif from "@/components/compte/dialogueAjouterDispositif.vue";
@@ -149,12 +147,13 @@ export default mixins(mixinIPA, mixinImages).extend({
       fichierTropGrand: false,
       dispositifs: null as null | string[],
       idDispositif: undefined as undefined | string,
+      //      எழுத்து_மாறு
     };
   },
-  mixins: [mixinIPA, mixinImages],
+  mixins: [mixinIPA, mixinImages, mixinLangues],
   components: {
     boîteNoms,
-    dialogueAjouterDispositif
+    dialogueAjouterDispositif,
   },
   computed: {
     nom: function (): string {

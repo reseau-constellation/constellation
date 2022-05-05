@@ -1,20 +1,12 @@
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const WorkerPlugin = require("worker-plugin");
-const webpack = require("webpack");
 
 module.exports = {
   publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
   transpileDependencies: ["vuetify"],
   productionSourceMap: false,
   configureWebpack: {
-    plugins: [
-      new NodePolyfillPlugin(),
-      new WorkerPlugin(),
-      new webpack.NormalModuleReplacementPlugin(
-        /orbit-db\/src\/fs-shim\.js/,
-        '../../../src/tiers/orbit-db-fs-shim.js'
-      ),
-    ],
+    plugins: [new NodePolyfillPlugin(), new WorkerPlugin()],
     resolve: {
       fallback: {
         fs: false,
@@ -36,14 +28,8 @@ module.exports = {
     electronBuilder: {
       preload: "src/preload.js",
       rendererProcessFile: "src/mainElectron.ts",
-
       chainWebpackMainProcess: (config) => {
-        // Mystère et boule de gomme
-        //  config.resolve.alias.set(
-        //   "multiformats/hashes/sha2",
-        //   "multiformats/cjs/src/hashes/sha2.js"
-        // );
-
+        config.experiments = { topLevelAwait: true };
         config.module
           .rule("compile")
           .test(/\.(t|j)s$/)
@@ -64,14 +50,31 @@ module.exports = {
                   addDefaultProperty: false,
                 },
               ],
+              "@babel/plugin-syntax-top-level-await",
             ],
           });
-
+        config.module
+          .rule("esm")
+          .test(/\.m?jsx?$/)
+          .resolve.set("fullySpecified", false);
         config.module
           .rule("node")
           .test(/\.node$/)
           .use("node-loader")
           .loader("node-loader");
+
+        // Je ne peux pas croire que ceci c'est la « vraie » façon de faire fonctionner
+        // topLevelAwait dans le processus principal d'électron.
+        // Mais les options de configureWebpack ne sont pas utilisés pour la
+        // compilation du processus principal et je n'ai pas pu trouver une
+        // option pour experiments dans webpack-chain. Donc, quelques heures plus
+        // tard, nous voici...
+        const toConfigOrig = config.toConfig;
+        config.toConfig = function toConfig() {
+          const configOrig = toConfigOrig.apply(this);
+          configOrig.experiments = { topLevelAwait: true };
+          return configOrig;
+        };
       },
     },
   },
