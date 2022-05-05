@@ -184,7 +184,7 @@
               :loading="cestParti"
               color="primary"
               @click="confirmer"
-              >Confirmer</v-btn
+              >{{ $t("dialogueAjouterDispositif.Confirmer") }}</v-btn
             >
           </v-window-item>
         </v-window>
@@ -256,10 +256,10 @@ export default mixins(mixinIPA, mixinLangues).extend({
         adresseBdRacine: [
           (val: string) =>
             adresseOrbiteValide(val || "") ||
-            "Le code doit être une adresse Orbite valide.",
-          (val: string) =>
+            this.$t("dialogueAjouterDispositif.முகவரி") as string,
+            (val: string) =>
             (val || "").slice(-7) === "/racine" ||
-            "L'adresse Orbite doit terminer en `/racine`.",
+            this.$t("dialogueAjouterDispositif.சுற்றுப்பாதையின்_முகவரி") as string,
         ],
       },
     };
