@@ -26,7 +26,7 @@ export default Vue.extend({
     languesPréférées: function (): string[] {
       return [this.$i18n.locale, ...(this.$i18n.fallbackLocale as Locale[])];
     },
-    écriture: function(): string {
+    écriture: function (): string {
       return écriture(this.langue);
     },
     langues: function (): string[] {
