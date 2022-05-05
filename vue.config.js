@@ -1,20 +1,12 @@
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const WorkerPlugin = require("worker-plugin");
-const webpack = require("webpack");
 
 module.exports = {
   publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
   transpileDependencies: ["vuetify"],
   productionSourceMap: false,
   configureWebpack: {
-    plugins: [
-      new NodePolyfillPlugin(),
-      new WorkerPlugin(),
-      new webpack.NormalModuleReplacementPlugin(
-        /orbit-db\/src\/fs-shim\.js/,
-        '../../../src/tiers/orbit-db-fs-shim.js'
-      ),
-    ],
+    plugins: [new NodePolyfillPlugin(), new WorkerPlugin()],
     resolve: {
       fallback: {
         fs: false,
