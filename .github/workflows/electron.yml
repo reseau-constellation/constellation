@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-latest, ubuntu-latest]
 
     steps:
       - name: Variables d'environnement
@@ -30,8 +30,8 @@ jobs:
           # Log in to Snap Store
           snapcraft_token: ${{ secrets.snapcraft_token }}
 
-      - name: Compiler et publier l'application Électron
-        if: startsWith(matrix.os, 'ubuntu')
+      - name: Compiler et publier l'application Électron - macOS & Windows
+        if: startsWith(matrix.os, 'macos')
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
           # GitHub token, automatically provided to the action
