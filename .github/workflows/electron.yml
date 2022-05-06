@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest]
 
     steps:
       - name: Variables d'environnement
@@ -16,6 +16,10 @@ jobs:
 
       - name: Ouvrir le projet
         uses: actions/checkout@v2
+
+      - name: Vérifier la mémoire disponible
+        if: startsWith(matrix.os, 'windows')
+        run: Get-WmiObject -Class Win32_logicaldisk
 
       - name: Installer Node.js, NPM et Yarn
         uses: actions/setup-node@v1
@@ -42,3 +46,4 @@ jobs:
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
           use_vue_cli: true
+          args: ${{ startsWith(matrix.os, 'macos') ? "-mw" : "" }}
