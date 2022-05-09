@@ -4,98 +4,12 @@
       :entête="$t('compte.entête')"
       :imageRonde="true"
     />
-
-    <v-row class="mt-3 text-center">
-      <input
-        type="file"
-        style="display: none"
-        ref="choixFichier"
-        accept="image/*"
-        @change="imageChoisie"
-      />
-      <v-snackbar
-        v-model="fichierTropGrand"
-        timeout="5000"
-        color="error"
-        outlined
-      >
-        {{ $t('compte.onglets.compte.பட_அளவு') }}
-
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            icon
-            v-bind="attrs"
-            @click="fichierTropGrand = false"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
-      <v-col cols="12">
-        <v-hover v-slot="{ hover }">
-          <v-avatar
-            size="175"
-            :elevation="hover ? 12 : 2"
-            class="mb-3"
-          >
-            <v-img :src="imageProfil">
-              <v-row
-                :class="{
-                  'on-hover': hover,
-                  'align-self-center': true,
-                  'fill-height': true,
-                  'flex-column': true,
-                  'fond': true
-                }"
-                style="background-color: black"
-              >
-                <div class="align-self-center" style="height: 100%;">
-                  <v-row
-                    class="flex-column fill-height ma-0"
-                  >
-                    <div class="my-auto">
-                      <v-btn
-                        :class="{ 'show-btns': hover  }"
-                        color="rgba(255, 255, 255, 0)"
-                        class="align-self-center"
-                        icon
-                        large
-                        @click="choisirImage"
-                      >
-                        <v-icon
-                          :class="{ 'show-btns': hover, 'mx-4': true }"
-                          color="rgba(255, 255, 255, 0)"
-                          large
-                        >
-                          mdi-camera-outline
-                        </v-icon>
-                      </v-btn>
-                      <v-btn
-                        :class="{ 'show-btns': hover  }"
-                        color="rgba(255, 255, 255, 0)"
-                        class="align-self-center"
-                        icon
-                        large
-                        @click="effacerImageProfil"
-                      >
-                        <v-icon
-                          :class="{ 'show-btns': hover, 'mx-4': true }"
-                          color="rgba(255, 255, 255, 0)"
-                          large
-                        >
-                          mdi-close
-                        </v-icon>
-                      </v-btn>
-                    </div>
-                  </v-row>
-                </div>
-              </v-row>
-            </v-img>
-          </v-avatar>
-        </v-hover>
-
-      </v-col>
-    </v-row>
+    <imageÉditable
+      :srcImage="imageProfil"
+      :MAX_TAILLE_IMAGE="MAX_TAILLE_IMAGE"
+      @imageChoisie="imageChoisie"
+      @effacerImage="effacerImageProfil"
+    />
 
     <v-tabs v-model="onglet">
       <v-tab>{{ $t("compte.onglets.compte.entête") }}</v-tab>
@@ -130,6 +44,8 @@ import titre from "@/components/commun/Titre.vue";
 import paramètres from "@/components/compte/paramètres.vue";
 import réseau from "@/components/compte/réseau.vue";
 import thème from "@/components/compte/thème.vue";
+import imageÉditable from "@/components/commun/imageÉditable.vue";
+
 import mixinImage from "@/mixins/images";
 import mixinIPA from "@/mixins/ipa";
 
@@ -144,15 +60,16 @@ export default mixins(mixinImage, mixinIPA).extend({
     réseau,
     thème,
     paramètres,
+    imageÉditable
   },
   mixins: [mixinImage, mixinIPA],
   data: function () {
     return {
       onglet: null,
       imageCompte: null as null | string,
-      fichierTropGrand: false,
       serveur: false,
       électron: oùSommesNous.isElectron,
+      MAX_TAILLE_IMAGE,
     };
   },
   computed: {
@@ -171,28 +88,12 @@ export default mixins(mixinImage, mixinIPA).extend({
     },
   },
   methods: {
-    choisirImage: async function () {
-      const choixFichier = this.$refs.choixFichier as HTMLInputElement
-      choixFichier.click();
-    },
     effacerImageProfil: async function () {
       await this.$ipa.profil!.effacerImage();
     },
-    imageChoisie: async function(): Promise<void> {
-      const choixFichier = this.$refs.choixFichier as HTMLInputElement;
-      if (!choixFichier.files?.length) return
-
-      const fichier = choixFichier.files[0];
-      if (fichier.size > MAX_TAILLE_IMAGE) {
-        this.fichierTropGrand = true;
-        return
-      } else {
-        this.fichierTropGrand = false;
-      }
-
-      const données = await fichier.arrayBuffer();
+    imageChoisie: async function({données}: {données: Uint8Array}): Promise<void> {
       await this.$ipa.profil!.sauvegarderImage(données);
-      },
+    },
     initialiserSuivi: async function () {
       const oublierImage = await this.$ipa.profil!.suivreImage((image) => {
         if (image) {
