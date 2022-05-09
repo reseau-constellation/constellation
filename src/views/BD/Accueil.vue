@@ -12,29 +12,33 @@
       </v-col>
       <v-col cols="12">
         <v-slide-x-transition group class="d-flex flex-wrap justify-center">
-          <v-card
-            :key="0"
-            class="mx-4 my-5 px-3 py-5 justify-start text-start"
-            min-height="200px"
-            max-width="300px"
-            @click="$router.push('/bd/nouvelle')"
-          >
-            <v-img
-              :src="require('@/assets/undraw/undraw_blank_canvas_3rbb.svg')"
-              height="100px"
-              contain
-            ></v-img>
+          <nouvelle-bd :key="0">
+            <template v-slot:activator="{ on, attrs }">
+              <v-card
+                v-bind="attrs" v-on="on"
+                class="mx-4 my-5 px-3 py-5 justify-start text-start"
+                min-height="200px"
+                max-width="300px"
+              >
+                <v-img
+                  :src="require('@/assets/undraw/undraw_blank_canvas_3rbb.svg')"
+                  height="100px"
+                  contain
+                ></v-img>
 
-            <v-card-title
-              >{{ $t("bd.nouvelle.entêteCarte") }}
-              <v-spacer />
-            </v-card-title>
-            <v-divider />
-            <v-card-subtitle>
-              {{ $t("bd.nouvelle.détailsCarte") }}</v-card-subtitle
-            >
-            <v-card-text></v-card-text>
-          </v-card>
+                <v-card-title
+                  >{{ $t("bd.nouvelle.entêteCarte") }}
+                  <v-spacer />
+                </v-card-title>
+                <v-divider />
+                <v-card-subtitle>
+                  {{ $t("bd.nouvelle.détailsCarte") }}</v-card-subtitle
+                >
+                <v-card-text></v-card-text>
+              </v-card>
+            </template>
+          </nouvelle-bd>
+
           <carte-bd
             v-for="id in idsBds"
             :key="id"
@@ -50,14 +54,15 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import carteBd from "@/components/BD/carteBD.vue";
 import Titre from "@/components/commun/Titre.vue";
+import carteBd from "@/components/BD/carteBD.vue";
+import nouvelleBd from "@/components/BD/NouvelleBD.vue";
 
 import mixinIPA from "@/mixins/ipa";
 
 export default mixins(mixinIPA).extend({
   name: "BD",
-  components: { carteBd, Titre },
+  components: { Titre, carteBd, nouvelleBd },
   mixins: [mixinIPA],
   data: function () {
     return {
