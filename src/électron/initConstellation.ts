@@ -3,6 +3,8 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { client, proxy } from "@constl/ipa";
 
+const enDéveloppement = process.env.NODE_ENV !== "production";
+
 let clientConstellation: proxy.gestionnaireClient.default | undefined =
   undefined;
 
@@ -84,9 +86,9 @@ export const connecterFenêtreÀConstellation = (
           Object.assign(message.opts, {
             orbite: {
               sfip: {
-                dossier: path.join(app.getPath("userData"), "sfip"),
+                dossier: path.join(app.getPath("userData"),  enDéveloppement ? path.join("dév", "sfip") : "sfip"),
               },
-              dossier: path.join(app.getPath("userData"), "orbite"),
+              dossier: path.join(app.getPath("userData"), enDéveloppement ? path.join("dév", "orbite") : "orbite"),
             },
           })
         );
