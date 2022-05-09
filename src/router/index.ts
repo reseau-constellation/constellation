@@ -26,10 +26,6 @@ const routes: Array<RouteConfig> = [
     component: () => import("@/views/BD/Accueil.vue"),
   },
   {
-    path: "/bd/nouvelle",
-    component: () => import("@/views/BD/Nouvelle.vue"),
-  },
-  {
     path: "/bd/visualiser/:id",
     component: () => import("@/views/BD/VisBD.vue"),
   },
