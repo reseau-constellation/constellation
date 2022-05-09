@@ -55,7 +55,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" text outlined @click="fermer">
+        <v-btn color="secondary" text outlined @click="annuler">
           {{ $t("communs.annuler") }}
         </v-btn>
         <v-btn color="primary" :disabled="!prêt" depressed @click="sauvegarder">

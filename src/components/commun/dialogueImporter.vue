@@ -78,19 +78,26 @@
        </v-container>
      <v-btn
        color="primary"
-       click="étape = 2"
-       :disabled="!téléverser"
-       @click="Prochain()"
+       @click="étape = 2"
+       :disabled="!tableauSélectionné"
        >
        {{ $t("communs.Prochain") }}
     </v-btn>
-  </v-card>
- </v-stepper-content>
- <v-stepper-content step="2">
+    <v-card-actions>
+      <v-spacer></v-spacer>
+           <v-btn color="secondary" text outlined
+           @click="() => reculer()"
+           :disabled="!Prochain"
+           >
+           {{ $t("communs.reculer") }}
+           </v-btn>
+         </v-card-actions>
+      </v-card>
+   </v-stepper-content>
+  <v-stepper-content step="2">
 <v-card
   class="mb-2"
-  height="70px"
-  >
+  height="100px">
   <v-btn
      color="primary"
        text
@@ -101,48 +108,45 @@
        {{ $t("communs.colonne") }}
     </v-btn>
     <v-btn
-    color="primary"
-    @click="étape = 3"
-
-    >
-   {{ $t("communs.suivante") }}
+     color="primary"
+     @click="étape = 3">
+     {{ $t("communs.Prochain") }}
     </v-btn>
+     <v-card-actions>
+      <v-spacer></v-spacer>
+       <v-btn color="secondary" text outlined
+         @click="() => reculer()"
+         :disabled="!Prochain">
+           {{ $t("communs.reculer") }}
+       </v-btn>
+     </v-card-actions>
   </v-card>
 </v-stepper-content>
      <v-stepper-content step="3">
        <v-card
          class="mb-2"
-         height="70px"
-         >
-       <v-btn
-         color="primary"
-         text
-         outlined
-         :loading="enProgrès"
-         @click="() => téléverser()"
-         >
-         {{ $t("communs.téléverser") }}
-        <v-icon right>mdi-upload</v-icon>
-        </v-btn>
-        <v-btn
-        color="primary"
-        @click="étape = 1"
-        :disabled="!téléverser"
-        >
-        {{ $t("communs.suivante") }}
-         </v-btn>
-      </v-card>
-     </v-stepper-content>
-          <v-card-actions>
-           <v-spacer></v-spacer>
-                <v-btn color="secondary" text outlined @click="dialogue = false">
-                {{ $t("communs.annuler") }}
-                </v-btn>
-                <v-btn color="secondary" text outlined @click="dialogue = false"
-                >
-                {{ $t("communs.fermer") }}
-                </v-btn>
-              </v-card-actions>
+         height="100px">
+         <v-btn
+          color="primary"
+          text
+          outlined
+          :loading="enProgrès"
+          @click="() => téléverser()"
+          >
+          {{ $t("communs.téléverser") }}
+           <v-icon right>mdi-upload</v-icon>
+            </v-btn>
+               <v-card-actions>
+                  <v-spacer></v-spacer>
+                   <v-btn color="secondary" text outlined
+                   @click="étape = 2"
+                   :disabled="!Prochain"
+                     >
+                    {{ $t("communs.reculer") }}
+                   </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-stepper-content>
             </v-stepper-items>
           </v-stepper>
         </template>
@@ -201,6 +205,9 @@ export default mixins(mixinLangues).extend({
      Prochain: function () {
         this.étape = 3;
       },
+    reculer: function() {
+      this.étape = 1;
+    },
   },
 
   watch: {
