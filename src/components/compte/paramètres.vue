@@ -52,26 +52,6 @@
         />
       </v-card>
 
-      <v-card flat width="300" class="mx-3 my-3">
-        <v-file-input
-          v-model="imageProfil"
-          accept="image/*"
-          prepend-icon="mdi-camera-outline"
-          append-icon="mdi-close"
-          :clearable="false"
-          outlined
-          small-chips
-          dense
-          :label="$t('compte.onglets.compte.image')"
-          :error="fichierTropGrand"
-          :error-messages="
-            fichierTropGrand ? $t('compte.onglets.compte.பட_அளவு') : []
-          "
-          @click:append="effacerImage"
-        ></v-file-input>
-      </v-card>
-
-      <v-card flat width="300" class="mb-3"> </v-card>
     </div>
     <p class="px-0 my-0 text-overline">
       {{ $t("compte.onglets.compte.dispositifs") }}
@@ -133,21 +113,16 @@ import dialogueAjouterDispositif from "@/components/compte/dialogueAjouterDispos
 
 import { traduireNom } from "@/utils";
 
-const { MAX_TAILLE_IMAGE } = profil;
-
 export default mixins(mixinIPA, mixinImages).extend({
   name: "ongletParamètresCompte",
   data: function () {
     return {
-      imageProfil: undefined as undefined | File,
       courrielOrig: undefined as undefined | null | string,
       courriel: "",
 
       noms: null as null | { [key: string]: string },
-      fichierTropGrand: false,
       dispositifs: null as null | string[],
       idDispositif: undefined as undefined | string,
-      //      எழுத்து_மாறு
     };
   },
   mixins: [mixinIPA, mixinImages, mixinLangues],
@@ -162,19 +137,6 @@ export default mixins(mixinIPA, mixinImages).extend({
     },
   },
   watch: {
-    imageProfil: async function (fichier) {
-      if (fichier) {
-        if (fichier.size > MAX_TAILLE_IMAGE) {
-          this.fichierTropGrand = true;
-        } else {
-          this.fichierTropGrand = false;
-          const contenu = await fichier.arrayBuffer();
-          await this.$ipa.profil!.sauvegarderImage(contenu);
-        }
-      } else {
-        this.effacerImage();
-      }
-    },
     courrielOrig: function (courriel) {
       this.courriel = courriel;
     },
@@ -212,14 +174,6 @@ export default mixins(mixinIPA, mixinImages).extend({
       );
 
       this.suivre([oublierCourriel, oublierNoms, oublierDispositifs]);
-    },
-    effacerImage: async function () {
-      if (this.fichierTropGrand) {
-        this.imageProfil = undefined;
-        this.fichierTropGrand = false;
-      } else {
-        await this.$ipa.profil!.effacerImage();
-      }
     },
     sauvegarderNom: function ({
       langue,
