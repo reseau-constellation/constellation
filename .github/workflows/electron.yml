@@ -8,11 +8,11 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest]
 
     steps:
       - name: Variables d'environnement
-        run: echo "NODE_OPTIONS=--max_old_space_size=4096" >> $GITHUB_ENV
+        run: echo "NODE_OPTIONS=--max_old_space_size=16000" >> $GITHUB_ENV
 
       - name: Ouvrir le projet
         uses: actions/checkout@v2
@@ -30,7 +30,23 @@ jobs:
           # Log in to Snap Store
           snapcraft_token: ${{ secrets.snapcraft_token }}
 
+      - name: Compiler et publier l'application Électron - macOS & Windows
+        if: startsWith(matrix.os, 'macos')
+        uses: samuelmeuli/action-electron-builder@v1.6.0
+        with:
+          # GitHub token, automatically provided to the action
+          # (No need to define this secret in the repo settings)
+          github_token: ${{ secrets.github_token }}
+
+          # If the commit is tagged with a version (e.g. "v1.0.0"),
+          # release the app after building
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+          use_vue_cli: true
+          args: "-mw"
+
       - name: Compiler et publier l'application Électron
+        if: startsWith(matrix.os, 'ubuntu')
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
           # GitHub token, automatically provided to the action

@@ -16,7 +16,7 @@ const enDéveloppement = process.env.NODE_ENV !== "production";
 
 app.setAsDefaultProtocolClient("constl");
 
-async function fermerApli() {
+async function fermerAppli() {
   if (fermerConstellation) await fermerConstellation();
   app.quit();
 }
@@ -123,11 +123,11 @@ app.on("will-finish-launching", function () {
 });
 
 // Quit when all windows are closed.
-app.on("window-all-closed", () => {
+app.on("window-all-closed", async () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
-    fermerApli();
+    await fermerAppli();
   }
 });
 
@@ -144,17 +144,21 @@ app.on("ready", async () => {
   createWindow();
 });
 
+app.on("will-quit", async () => {
+  await fermerAppli();
+})
+
 // Exit cleanly on request from parent process in development mode.
 if (enDéveloppement) {
   if (process.platform === "win32") {
-    process.on("message", (data) => {
+    process.on("message", async (data) => {
       if (data === "graceful-exit") {
-        fermerApli();
+        await fermerAppli();
       }
     });
   } else {
-    process.on("SIGTERM", () => {
-      fermerApli();
+    process.on("SIGTERM", async () => {
+      await fermerAppli();
     });
   }
 }
