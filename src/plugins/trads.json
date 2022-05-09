@@ -39,7 +39,8 @@
     },
     "exporter": {
       "titre": "Exporter une copie des données",
-      "formatFichier": "Format du fichier"
+      "formatFichier": "Format du fichier",
+      "inclureMédias": "Inclure les documents externes (photos, vidéos)"
     },
     "importer": {
       "titre": "Importer des données",
@@ -316,7 +317,6 @@
         "Conditions": "Conditions",
         "compris": "J'ai compris",
         "தேர்ந்தெடுக்கவும்": "Choisissez un nom",
-        "சேர்க்கவும்": "Ajoutez une description (optionnel)",
         "தேர்வுசெய்க": "Choisissez une licence",
         "Suivant": "Suivant",
         "வெல்வோம்": "C'est parti !",
