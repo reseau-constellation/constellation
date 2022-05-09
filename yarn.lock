@@ -10583,7 +10583,7 @@ libp2p-record@^0.10.3, libp2p-record@^0.10.4:
     protobufjs "^6.11.2"
     uint8arrays "^3.0.0"
 
-libp2p-tcp@^0.17.1:
+libp2p-tcp@^0.17.1, libp2p-tcp@^0.17.2:
   version "0.17.2"
   resolved "https://registry.yarnpkg.com/libp2p-tcp/-/libp2p-tcp-0.17.2.tgz#cf2caceee032d4e1aecac843b451477c3b6cf0d9"
   integrity sha512-SAdgDB4Rm0olPbyvanKP5JBaiRwbIOo0Nt++WYe1U2B6akg2uatsDOtulfpnc1gsL1B5vamnOpOzKaDj4kkt8g==

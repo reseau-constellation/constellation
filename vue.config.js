@@ -10,6 +10,8 @@ module.exports = {
     resolve: {
       fallback: {
         fs: false,
+        net: false,
+        dgram: false,
       },
     },
     experiments: { topLevelAwait: true },
