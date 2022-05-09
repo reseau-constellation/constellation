@@ -23,9 +23,10 @@
           :label="$t('exporter.formatFichier')"
           :items="['ods', 'csv', 'txt', 'xls', 'xlsx']"
         />
-        <v-checkbox v-model="inclureMédias">{{
-          $t("exporter.inclureMédias")
-        }}</v-checkbox>
+        <v-checkbox
+          v-model="inclureMédias"
+          :label="$t('exporter.inclureMédias')"
+        />
       </v-card-text>
 
       <v-divider></v-divider>
