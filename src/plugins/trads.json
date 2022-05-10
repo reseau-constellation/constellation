@@ -19,6 +19,7 @@
       "sousTitre": "Spécifiez autant que langues que vous voudrez.",
       "étiquetteLangue": "Langue",
       "étiquetteNom": "Nom",
+      "étiquetteAucunNom": "Vous êtes anonyme ! Ajoutez un nom (ou plus !) ci-dessus pour qu'on sache comment vous appeler.",
       "noms": "noms",
       "descriptions": "descriptions"
     },
@@ -56,8 +57,8 @@
       "bdsExtra": "+ { n } autre(s)"
     },
     "dialogueAuteurs": {
-      "entête": "entête",
-      "அங்கீகாரம்": "Reconnaissance de l'auteur"
+      "entête": "Auteurs",
+      "அங்கீகாரம்": "Autoriser des co-auteurs"
     },
     "dialogueNouvelAuteur": {
       "புதிய_அங்கீகாரம்": "Autoriser un nouvel auteur",
@@ -317,7 +318,9 @@
         "Conditions": "Conditions",
         "compris": "J'ai compris",
         "தேர்ந்தெடுக்கவும்": "Choisissez un nom",
+        "காண்பிக்க": "Rédigez une description",
         "தேர்வுசெய்க": "Choisissez une licence",
+        "உறுதிசெய்க": "Confirmer",
         "Suivant": "Suivant",
         "வெல்வோம்": "C'est parti !",
         "Limitations": "Limitations",
@@ -341,7 +344,7 @@
       "மாறிகள்": "Variables",
       "மாறி": "Aucune variable",
       "வார்த்தைகள்": "Mots-clefs",
-      "இல்லை": "Aucun mot clef",
+      "சிறப்பு_சொற்_இல்லை": "Aucun mot clef",
       "கண்டறிதல்": "Aucune région détectée",
       "சித்திரங்கள்": "Tableaux",
       "அட்டவணைகள்": "Il n'y a aucun tableau pour l'instant",
@@ -354,11 +357,12 @@
     },
     "vis": {
       "boîteNoms": {
-        "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données."
-        },
-        "boîteDescr": {
-          "titre": "Ajoutez des descriptions."
-        }
+        "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données.",
+        "aucunNom": "Aucun nom...cette base de données est anonmye !"
+      },
+      "boîteDescr": {
+        "titre": "Ajoutez des descriptions."
+      }
       }
     },
     "licences": {
@@ -1036,9 +1040,9 @@
        "மாறிகள்": "மாறிகள்",
        "மாறி": "மாறிகள் இல்லை",
        "வார்த்தைகள்": "முக்கிய வார்த்தைகள்",
-       "இல்லை": "முக்கிய வார்த்தைகள் இல்லை",
+       "சிறப்பு_சொற்_இல்லை": "சிறப்பு சொற்கள் இல்லை",
        "கண்டறிதல்": "எந்த பகுதியும் கண்டறியப்படவில்லை",
-       "சித்திரங்கள்": "சித்திரங்கள்",
+       "சித்திரங்கள்": "அட்டவணைகள்",
        "அட்டவணைகள்": "தற்போது அட்டவணைகள் இல்லை",
        "சேர்க்கவும்": "ஒரு அட்டவணையைச் சேர்க்கவும்",
        "இறக்குமதி": "தரவு இறக்குமதி",
