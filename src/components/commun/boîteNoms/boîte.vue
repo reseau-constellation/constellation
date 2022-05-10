@@ -1,12 +1,19 @@
 <template>
-  <v-dialog v-model="dialogue" max-width="400">
+  <v-dialog v-model="dialogue">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
     </template>
 
-    <v-card max-width="500">
+    <v-card>
       <v-card-title>
         {{ $t(titre) }}
+        <v-spacer />
+        <v-btn
+          icon
+          @click="dialogue = false"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-card-subtitle>
         {{ $t(sousTitre) }}
@@ -29,10 +36,12 @@
           @effacer="(e) => $emit('effacer', e)"
           @changerLangue="(e) => $emit('changerLangue', e)"
         />
-        <v-list-item v-if="!Object.keys(noms).length">
-          Vous êtes anonyme ! Ajoutez un nom (ou plus !) ci-dessus pour qu'on
-          sache comment vous appeler.
-        </v-list-item>
+        <div v-if="!Object.keys(noms).length" class="text-center">
+          <p class="text-h5 mt-5">
+            {{ $t(etiquetteAucunNom) }}
+          </p>
+          <v-img :src="image('vide')" class="my-5" contain height="175px" />
+        </div>
       </v-list>
     </v-card>
   </v-dialog>
@@ -42,10 +51,11 @@
 import mixins from "vue-typed-mixins";
 
 import mixinLangues from "@/mixins/langues";
+import mixinImages from "@/mixins/images";
 import itemNom from "./itemNom.vue";
 import itemNouveauNom from "./itemNouveauNom.vue";
 
-export default mixins(mixinLangues).extend({
+export default mixins(mixinLangues, mixinImages).extend({
   name: "DialogueNoms",
   components: { itemNom, itemNouveauNom },
   props: {
@@ -66,6 +76,10 @@ export default mixins(mixinLangues).extend({
       type: String,
       default: "boîteNoms.étiquetteLangue",
     },
+    etiquetteAucunNom: {
+      type: String,
+      default: "boîteNoms.étiquetteAucunNom"
+    }
   },
   mixins: [mixinLangues],
   data: function () {
