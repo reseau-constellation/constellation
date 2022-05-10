@@ -18,7 +18,7 @@
         <v-select
           v-model="auteurSélectionné"
           outlined
-          :loading="membres === null"
+          :loading="membresRéseau === null"
           :items="listeMembres"
           hide-details
         >
