@@ -126,6 +126,7 @@ export default mixins(mixinLangues).extend({
       } catch {
         // Rien à faire
       }
+      this.dialogue = false;
       this.enProgrès = false;
     },
   },
