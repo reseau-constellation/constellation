@@ -239,7 +239,7 @@
                         {{
                           réplications
                             ? $t("bd.visBD.நகல்கள்", {
-                                n: formatterChiffre(Object.keys(réplications).length),
+                                n: formatterChiffre(réplications.dispositifs.length),
                               })
                             : ""
                         }}
