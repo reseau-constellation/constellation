@@ -21,7 +21,7 @@
             </p>
             <v-list-item two-line>
               <v-avatar class="me-3 text-h3">
-                {{ dispositifs.length }}
+                {{ formatterChiffre(dispositifs.length) }}
               </v-avatar>
               <v-list-item-content>
                 <v-list-item-title>
@@ -31,7 +31,7 @@
                 <v-list-item-subtitle class="success--text">
                   {{
                     $t("dialogueRéplications.enLigne", {
-                      n: dispositifsEnLigne.length,
+                      n: formatterChiffre(dispositifsEnLigne.length),
                     })
                   }}
                 </v-list-item-subtitle>
@@ -43,7 +43,7 @@
             </p>
             <v-list-item two-line>
               <v-avatar class="me-3 text-h3">
-                {{ membres.length }}
+                {{ formatterChiffre(membres.length) }}
               </v-avatar>
               <v-list-item-content>
                 <v-list-item-title>
@@ -53,7 +53,7 @@
                 <v-list-item-subtitle class="success--text"
                   >{{
                     $t("dialogueRéplications.enLigne", {
-                      n: membresEnLigne.length,
+                      n: formatterChiffre(membresEnLigne.length),
                     })
                   }}
                 </v-list-item-subtitle>
@@ -82,7 +82,7 @@ import mixinLangues from "@/mixins/langues";
 
 import { favoris, réseau } from "@constl/ipa";
 
-const DÉLAI_EN_LIGNE = 10000;
+const DÉLAI_EN_LIGNE = 1000 * 60 * 3;
 
 export default mixins(mixinLangues).extend({
   name: "dialogueRéplications",
@@ -123,7 +123,7 @@ export default mixins(mixinLangues).extend({
   mounted: function () {
     setInterval(() => {
       this.maintenant = new Date().getTime();
-    }, 1000);
+    }, DÉLAI_EN_LIGNE / 2);
   },
 });
 </script>
