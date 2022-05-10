@@ -21,6 +21,7 @@
 
       <imageÉditable
         :srcImage="imageBd"
+        :editable="permissionÉcrire"
         :MAX_TAILLE_IMAGE="MAX_TAILLE_IMAGE"
         @imageChoisie="imageBdChoisie"
         @effacerImage="effacerImageBd"
@@ -51,28 +52,51 @@
         <span>
           <dialogue-exporter :id="idBd" type="bd">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn v-bind="attrs" v-on="on" icon>
-                <v-icon>mdi-download</v-icon>
-              </v-btn>
+              <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
+                <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
+                  <span v-bind="tooltipAttrs" v-on="tooltipOn" >
+                    <v-btn v-bind="attrs" v-on="on" icon>
+                      <v-icon>mdi-download</v-icon>
+                    </v-btn>
+                  </span>
+                </template>
+                <span>{{ $t("bd.vis.indiceTélécharger") }}</span>
+              </v-tooltip>
             </template>
           </dialogue-exporter>
+
           <dialogue-copier-bd :id="idBd">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn v-bind="attrs" v-on="on" icon>
-                <v-icon>mdi-card-multiple-outline</v-icon>
-              </v-btn>
+              <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
+                <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
+                  <span v-bind="tooltipAttrs" v-on="tooltipOn" >
+                    <v-btn v-bind="attrs" v-on="on" icon>
+                      <v-icon>mdi-card-multiple-outline</v-icon>
+                    </v-btn>
+                  </span>
+                </template>
+                <span>{{ $t("bd.vis.indiceCopier") }}</span>
+              </v-tooltip>
             </template>
           </dialogue-copier-bd>
         </span>
+
         <v-dialog
           v-if="permissionÉcrire"
           v-model="dialogueEffacerBd"
           width="500"
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" icon color="error">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
+            <v-tooltip open-delay="200" bottom>
+              <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
+                <span v-bind="tooltipAttrs" v-on="tooltipOn" >
+                  <v-btn v-bind="attrs" v-on="on" icon color="error">
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </span>
+              </template>
+              <span>{{ $t("bd.vis.indiceEffacer") }}</span>
+            </v-tooltip>
           </template>
           <v-card>
             <v-card-title class="headline red--text">
