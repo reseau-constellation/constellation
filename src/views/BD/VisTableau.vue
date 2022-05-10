@@ -26,24 +26,20 @@
       <v-card-title>
         {{ couper(nom, 45) }}
         <span v-if="permissionÉcrire">
-          <v-menu
-            offset-x
-            :close-on-content-click="false"
-            transition="slide-y-transition"
+          <boîteNoms
+            :noms="nomsTableau"
+            sousTitre="bd.vis.boîteNoms.sousTitre"
+            etiquetteAucunNom="bd.vis.boîteNoms.aucunNom"
+            @sauvegarder="sauvegarderNom"
+            @changerLangue="changerLangueNom"
+            @effacer="effacerNom"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon small v-on="on" v-bind="attrs">
                 <v-icon small>mdi-pencil</v-icon>
               </v-btn>
             </template>
-            <boîteNoms
-              :noms="nomsTableau"
-              sousTitre="bd.vis.boîteNoms.sousTitre"
-              @sauvegarder="sauvegarderNom"
-              @changerLangue="changerLangueNom"
-              @effacer="effacerNom"
-            />
-          </v-menu>
+          </boîteNoms>
         </span>
         <lien-orbite :lien="idBd" />
 

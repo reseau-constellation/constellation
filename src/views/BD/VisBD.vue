@@ -18,38 +18,30 @@
           </template>
         </v-breadcrumbs>
       </v-card-subtitle>
-      <v-img :src="logoBD" height="100px" contain />
+
+      <imageÉditable
+        :srcImage="imageBd"
+        :MAX_TAILLE_IMAGE="MAX_TAILLE_IMAGE"
+        @imageChoisie="imageBdChoisie"
+        @effacerImage="effacerImageBd"
+      />
+
       <v-card-title>
         {{ couper(nom, 40) }}
         <span v-if="permissionÉcrire">
-          <v-menu
-            offset-x
-            :close-on-content-click="false"
-            transition="slide-y-transition"
+          <boîteNoms
+            :noms="nomsBD"
+            sousTitre="bd.vis.boîteNoms.sousTitre"
+            @sauvegarder="sauvegarderNom"
+            @changerLangue="changerLangueNom"
+            @effacer="effacerNom"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon small v-on="on" v-bind="attrs">
                 <v-icon small>mdi-pencil</v-icon>
               </v-btn>
             </template>
-            <boîteNoms
-              :noms="nomsBD"
-              sousTitre="bd.vis.boîteNoms.sousTitre"
-              @sauvegarder="sauvegarderNom"
-              @changerLangue="changerLangueNom"
-              @effacer="effacerNom"
-            />
-          </v-menu>
-          <v-btn icon small @click="onPickFile">
-            <v-icon small>mdi-camera-outline</v-icon>
-            <input
-              type="file"
-              style="display: none"
-              ref="fileInput"
-              accept="image/*"
-              @change="onFilePicked"
-            />
-          </v-btn>
+          </boîteNoms>
         </span>
         <span>
           <lien-orbite :lien="idBd" />
@@ -103,25 +95,21 @@
         <span v-if="descriptionsBD">
           {{ description ? description : $t("bd.visBD.விளக்கம்") }}
         </span>
-        <v-menu
-          v-if="permissionÉcrire"
-          offset-x
-          :close-on-content-click="false"
-          transition="slide-y-transition"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon small v-on="on" v-bind="attrs">
-              <v-icon small>mdi-pencil</v-icon>
-            </v-btn>
-          </template>
+        <span v-if="permissionÉcrire">
           <boîteNoms
             :noms="descriptionsBD"
             titre="bd.vis.boîteDescr.titre"
             @sauvegarder="sauvegarderDescr"
             @changerLangue="changerLangueDescr"
             @effacer="effacerDescr"
-          />
-        </v-menu>
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon small v-on="on" v-bind="attrs">
+                <v-icon small>mdi-pencil</v-icon>
+              </v-btn>
+            </template>
+          </boîteNoms>
+        </span>
       </v-card-subtitle>
       <v-divider />
       <v-card-text>
@@ -251,7 +239,7 @@
                         {{
                           réplications
                             ? $t("bd.visBD.நகல்கள்", {
-                                n: formatterChiffre(réplications.length),
+                                n: formatterChiffre(Object.keys(réplications).length),
                               })
                             : ""
                         }}
@@ -296,7 +284,7 @@
                 </dialogue-mots-clefs>
               </p>
               <p v-if="!motsClefs.length" class="text--disabled">
-                {{ $t("bd.visBD.இல்லை") }}
+                {{ $t("bd.visBD.சிறப்பு_சொற்_இல்லை") }}
               </p>
               <jeton-mot-clef
                 v-for="m in motsClefs"
@@ -355,7 +343,6 @@
               class="mx-2"
               outlined
               text
-              @click="importer"
             >
               {{ $t("bd.visBD.இறக்குமதி") }}
             </v-btn>
@@ -393,6 +380,7 @@ import { accès, bds, réseau, utils } from "@constl/ipa";
 
 import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 
+import imageÉditable from "@/components/commun/imageÉditable.vue";
 import dialogueQualité from "@/components/commun/dialogueQualité.vue";
 import dialogueExporter from "@/components/commun/dialogueExporter.vue";
 import dialogueImporter from "@/components/commun/dialogueImporter.vue";
@@ -411,6 +399,7 @@ import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 import mixinLicences from "@/mixins/licences";
 
+const { MAX_TAILLE_IMAGE } = bds;
 const { MODÉRATEUR } = accès;
 
 export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
@@ -421,6 +410,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       lienOrbite,
       jetonVariable,
       jetonMotClef,
+      imageÉditable,
       dialogueQualité,
       dialogueExporter,
       dialogueImporter,
@@ -449,6 +439,8 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         géog: [] as string[],
         motsClefs: [] as string[],
         auteurs: null as null | utils.infoAuteur[],
+
+        MAX_TAILLE_IMAGE,
       };
     },
     computed: {
@@ -463,6 +455,9 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       description: function (): string {
         return traduireNom(this.descriptionsBD, this.langues);
       },
+      imageBd: function (): string {
+        return this.logo || this.image("logoBD");
+      },
       idBd: function (): string {
         return decodeURIComponent(this.$route.params.id);
       },
@@ -475,9 +470,6 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
           { text: this.$t("bd.visBD.தகவல்கள்") as string, href: "/bd" },
           { text: couper(this.nom, 35), disabled: true },
         ];
-      },
-      logoBD: function (): string {
-        return this.logo || this.image("logoBD");
       },
       permissionModerateur: function (): boolean {
         if (!this.auteurs) return false;
@@ -502,17 +494,11 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         await this.$ipa.bds!.effacerBd(this.idBd);
         this.$router.push("/bd");
       },
-      onFilePicked: async function (): Promise<void> {
-        const fichiers = this.$refs.fileInput as HTMLInputElement;
-        if (fichiers.files) {
-          const image = await fichiers!.files[0].arrayBuffer();
-          // this.$ipa.bds!.sauvegarderImage(this.idBd, image);
-        } else {
-          // this.$ipa.bds!.effacerImage();
-        }
+      effacerImageBd: async function () {
+        await this.$ipa.bds!.effacerImage(this.idBd);
       },
-      onPickFile: function (): void {
-        //@ts-ignore    this.$refs.fileInput.click()
+      imageBdChoisie: async function({données}: {données: Uint8Array}): Promise<void> {
+        await this.$ipa.bds!.sauvegarderImage(this.idBd, données);
       },
       sauvegarderNom: async function ({
         langue,
@@ -590,6 +576,20 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
           (id: string | undefined) => (this.idBdCompte = id)
         );
 
+        const oublierImage = await this.$ipa.bds!.suivreImage(
+          this.idBd,
+          (logo) => {
+            if (logo) {
+              const url = URL.createObjectURL(
+                new Blob([logo.buffer], { type: "image/png" })
+              );
+              this.logo = url;
+            } else {
+              this.logo = null;
+            }
+          }
+        );
+
         const oublierLicence = await this.$ipa.bds!.suivreLicence(
           this.idBd,
           (licence: string) => {
@@ -642,6 +642,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         this.suivre([
           oublierPermissionÉcrire,
           oublierIdBdRacine,
+          oublierImage,
           oublierLicence,
           oublierAuteurs,
           oublierNoms,
