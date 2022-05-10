@@ -174,6 +174,20 @@ export default mixins(mixinIPA, mixinLicences).extend({
         (permission) => (this.permissionÉcrire = permission)
       );
 
+      const oublierImage = await this.$ipa.bds!.suivreImage(
+        this.idBd,
+        (logo) => {
+          if (logo) {
+            const url = URL.createObjectURL(
+              new Blob([logo.buffer], { type: "image/png" })
+            );
+            this.logo = url;
+          } else {
+            this.logo = null;
+          }
+        }
+      );
+
       const oublierLicence = await this.$ipa.bds!.suivreLicence(
         this.idBd,
         (licence) => {
@@ -202,6 +216,7 @@ export default mixins(mixinIPA, mixinLicences).extend({
       );
       this.suivre([
         oublierPermissionÉcrire,
+        oublierImage,
         oublierLicence,
         oublierNoms,
         oublierDétails,
