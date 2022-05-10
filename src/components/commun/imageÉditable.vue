@@ -32,7 +32,7 @@
           :elevation="hover ? 12 : 2"
           class="mb-3"
         >
-          <v-img :src="srcImage">
+          <v-img :src="srcImage" contain>
             <v-row
               :class="{
                 'on-hover': hover,
