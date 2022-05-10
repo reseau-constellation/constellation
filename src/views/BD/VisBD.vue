@@ -56,6 +56,13 @@
               </v-btn>
             </template>
           </dialogue-exporter>
+          <dialogue-copier-bd :id="idBd">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-bind="attrs" v-on="on" icon>
+                <v-icon>mdi-card-multiple-outline</v-icon>
+              </v-btn>
+            </template>
+          </dialogue-copier-bd>
         </span>
         <v-dialog
           v-if="permissionÉcrire"
@@ -384,8 +391,8 @@ import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
 
 import imageÉditable from "@/components/commun/imageÉditable.vue";
 import dialogueQualité from "@/components/commun/dialogueQualité.vue";
+import dialogueCopierBd from "@/components/BD/dialogueCopier.vue";
 import dialogueExporter from "@/components/commun/dialogueExporter.vue";
-import dialogueImporter from "@/components/commun/dialogueImporter.vue";
 import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
 import dialogueMotsClefs from "@/components/commun/motsClefs/dialogueMotsClefs.vue";
 import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications.vue";
@@ -414,8 +421,8 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       jetonMotClef,
       imageÉditable,
       dialogueQualité,
+      dialogueCopierBd,
       dialogueExporter,
-      dialogueImporter,
       dialogueLicence,
       dialogueAuteurs,
       dialogueMotsClefs,
