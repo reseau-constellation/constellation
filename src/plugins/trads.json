@@ -332,38 +332,46 @@
         "logiciels": "Licences pour logiciels (non recommendées)",
         "artistiques": "Licences artistiques (non recommendées)",
         "வேறு_உரிமங்கள்": "Autres licences (non recommendées)"
-    },
-    "visBD": {
-      "நீக்கம்": "Voulez-vous vraiment effacer cette base de données ?",
-      "தரவுத்தளம்_அகற்றல்": "Ceci enlevera la base de données de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées.",
-      "விளக்கம்": "Aucune description",
-      "செய்தி": "Information Générale",
-      "மதிப்பெண்": "Score de qualité",
-      "எழுத்தாளர்கள்": "{n} auteurs",
-      "நகல்கள்": "{n} Réplications",
-      "மாறிகள்": "Variables",
-      "மாறி": "Aucune variable",
-      "வார்த்தைகள்": "Mots-clefs",
-      "சிறப்பு_சொற்_இல்லை": "Aucun mot clef",
-      "கண்டறிதல்": "Aucune région détectée",
-      "சித்திரங்கள்": "Tableaux",
-      "அட்டவணைகள்": "Il n'y a aucun tableau pour l'instant",
-      "சேர்க்கவும்": "Ajouter un tableau",
-      "இறக்குமதி": "Importer des données",
-      "நிலவியல்": "Géographie",
-      "நீக்கவும்": "Oui, effacer",
-      "இல்லை": "Non !",
-      "தகவல்கள்": "Données"
-    },
-    "vis": {
-      "boîteNoms": {
-        "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données.",
-        "aucunNom": "Aucun nom...cette base de données est anonmye !",
-        "aucuneDescription": "Aucune description disponible."
       },
-      "boîteDescr": {
-        "titre": "Ajoutez des descriptions."
-      }
+      "visBD": {
+        "நீக்கம்": "Voulez-vous vraiment effacer cette base de données ?",
+        "தரவுத்தளம்_அகற்றல்": "Ceci enlevera la base de données de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées.",
+        "விளக்கம்": "Aucune description",
+        "செய்தி": "Information Générale",
+        "மதிப்பெண்": "Score de qualité",
+        "எழுத்தாளர்கள்": "{n} auteurs",
+        "நகல்கள்": "{n} Réplications",
+        "மாறிகள்": "Variables",
+        "மாறி": "Aucune variable",
+        "வார்த்தைகள்": "Mots-clefs",
+        "சிறப்பு_சொற்_இல்லை": "Aucun mot clef",
+        "கண்டறிதல்": "Aucune région détectée",
+        "சித்திரங்கள்": "Tableaux",
+        "அட்டவணைகள்": "Il n'y a aucun tableau pour l'instant",
+        "சேர்க்கவும்": "Ajouter un tableau",
+        "இறக்குமதி": "Importer des données",
+        "நிலவியல்": "Géographie",
+        "நீக்கவும்": "Oui, effacer",
+        "இல்லை": "Non !",
+        "தகவல்கள்": "Données"
+      },
+      "vis": {
+        "boîteNoms": {
+          "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données.",
+          "aucunNom": "Aucun nom...cette base de données est anonmye !",
+          "aucuneDescription": "Aucune description disponible."
+        },
+        "boîteDescr": {
+          "titre": "Ajoutez des descriptions."
+        },
+        "indiceTélécharger": "Exporer les données",
+        "indiceCopier": "Copier cette BD",
+        "indiceEffacer": "Effacer cette BD"
+      },
+      "copierBd": {
+        "titre": "Copier cette base de données",
+        "inclureDonnées": "Inclure les données",
+        "copier": "Copier"
       }
     },
     "licences": {
