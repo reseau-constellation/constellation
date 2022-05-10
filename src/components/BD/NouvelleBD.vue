@@ -260,6 +260,8 @@ export default mixins(
           return this.$t("bd.nouvelle.காண்பிக்க") as string;
         case 3:
           return this.$t("bd.nouvelle.தேர்வுசெய்க") as string;
+        case 4:
+          return this.$t("bd.nouvelle.உறுதிசெய்க") as string; 
         default:
           return "";
       }
