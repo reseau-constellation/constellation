@@ -26,7 +26,7 @@
       </template>
     </v-snackbar>
     <v-col cols="12">
-      <v-hover v-slot="{ hover }">
+      <v-hover v-slot="{ hover }" :disable="!editable">
         <v-avatar
           size="175"
           :elevation="hover ? 12 : 2"
@@ -99,7 +99,7 @@ import mixinImage from "@/mixins/images";
 export default mixins(mixinImage).extend({
   name: "ImageÉditable",
   mixins: [mixinImage],
-  props: ["srcImage", "MAX_TAILLE_IMAGE"],
+  props: ["srcImage", "MAX_TAILLE_IMAGE", "editable"],
   data: function () {
     return {
       fichierTropGrand: false,
