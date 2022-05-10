@@ -32,6 +32,7 @@
           <boîteNoms
             :noms="nomsBD"
             sousTitre="bd.vis.boîteNoms.sousTitre"
+            etiquetteAucunNom="bd.vis.boîteNoms.aucunNom"
             @sauvegarder="sauvegarderNom"
             @changerLangue="changerLangueNom"
             @effacer="effacerNom"
@@ -99,6 +100,7 @@
           <boîteNoms
             :noms="descriptionsBD"
             titre="bd.vis.boîteDescr.titre"
+            etiquetteAucunNom="bd.vis.boîteNoms.aucuneDescription"
             @sauvegarder="sauvegarderDescr"
             @changerLangue="changerLangueDescr"
             @effacer="effacerDescr"

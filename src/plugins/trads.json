@@ -358,7 +358,8 @@
     "vis": {
       "boîteNoms": {
         "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données.",
-        "aucunNom": "Aucun nom...cette base de données est anonmye !"
+        "aucunNom": "Aucun nom...cette base de données est anonmye !",
+        "aucuneDescription": "Aucune description disponible."
       },
       "boîteDescr": {
         "titre": "Ajoutez des descriptions."
