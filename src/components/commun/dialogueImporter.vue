@@ -31,7 +31,7 @@
      <v-stepper-content step="1">
        <v-card
        class="mb-2"
-       height="300px"
+       height="200px"
        >
        <v-btn
           color="primary"
@@ -75,29 +75,29 @@
            ></v-select>
          </v-col>
        </v-row>
-       </v-container>
-     <v-btn
-       color="primary"
-       @click="étape = 2"
-       :disabled="!tableauSélectionné"
+     </v-container>
+     </v-card>
+
+     <v-card-actions>
+       <v-btn :disabled="étape === 1" text @click="étape--">
+         {{ $t("bd.nouvelle.Retour") }}
+       </v-btn>
+       <v-spacer></v-spacer>
+       <v-btn
+         :disabled="!tableauSélectionné"
+         color="primary"
+         outlined
+         @click="étape++"
        >
-       {{ $t("communs.Prochain") }}
-    </v-btn>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-           <v-btn color="secondary" text outlined
-           @click="() => reculer()"
-           :disabled="!Prochain"
-           >
-           {{ $t("communs.reculer") }}
-           </v-btn>
-         </v-card-actions>
-      </v-card>
+          {{ $t("bd.nouvelle.Suivant") }}
+       </v-btn>
+     </v-card-actions>
+
    </v-stepper-content>
   <v-stepper-content step="2">
 <v-card
   class="mb-2"
-  height="100px">
+  height="125px">
   <v-btn
      color="primary"
        text
@@ -105,22 +105,38 @@
        :loading="enProgrès"
        @click="() => obtColsTableau()"
        >
-       {{ $t("communs.colonne") }}
-    </v-btn>
-    <v-btn
-     color="primary"
-     @click="étape = 3">
-     {{ $t("communs.Prochain") }}
-    </v-btn>
-     <v-card-actions>
+  </v-btn>
+   <v-container fluid>
+     <v-row align="center">
+       <v-col
+       cols="12"
+       sm="12">
+       <v-autocomplete
+       v-model="colonneSélectionné"
+       :items="obtColsTableau"
+       :menu-props="{ maxHeight: '75' }"
+       :label="$t('communs.பெறுக')"
+        multiple
+       ></v-autocomplete>
+      </v-col>
+    </v-row>
+  </v-container>
+</v-card>
+    <v-card-actions>
+      <v-btn :disabled="étape === 1" text @click="étape--">
+        {{ $t("bd.nouvelle.Retour") }}
+      </v-btn>
       <v-spacer></v-spacer>
-       <v-btn color="secondary" text outlined
-         @click="() => reculer()"
-         :disabled="!Prochain">
-           {{ $t("communs.reculer") }}
-       </v-btn>
-     </v-card-actions>
-  </v-card>
+      <v-btn
+        :disabled="!obtColsTableau"
+        color="primary"
+        outlined
+        @click="étape++"
+      >
+        {{ $t("bd.nouvelle.Suivant") }}
+      </v-btn>
+    </v-card-actions>
+
 </v-stepper-content>
      <v-stepper-content step="3">
        <v-card
@@ -136,22 +152,27 @@
           {{ $t("communs.téléverser") }}
            <v-icon right>mdi-upload</v-icon>
             </v-btn>
-               <v-card-actions>
-                  <v-spacer></v-spacer>
-                   <v-btn color="secondary" text outlined
-                   @click="étape = 2"
-                   :disabled="!Prochain"
-                     >
-                    {{ $t("communs.reculer") }}
-                   </v-btn>
-                  </v-card-actions>
-                </v-card>
+            </v-card>
+
+            <v-card-actions>
+              <v-btn :disabled="étape === 1" text @click="étape--">
+                {{ $t("bd.nouvelle.Retour") }}
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                :disabled="(étape === 3 && !licence) || étape === 4"
+                color="primary"
+                outlined
+                @click="étape++"
+                 >
+                 {{ $t("bd.nouvelle.Suivant") }}
+                 </v-btn>
+                </v-card-actions>
               </v-stepper-content>
             </v-stepper-items>
           </v-stepper>
         </template>
-      <v-divider></v-divider>
-    </v-card>
+     </v-card>
   </v-dialog>
 </template>
 
@@ -176,6 +197,7 @@ export default mixins(mixinLangues).extend({
       tableauxFichier: undefined as string[] | undefined,
       tableauSélectionné:  undefined as string | undefined,
       nomFichier: undefined as string | undefined,
+      obtColsTableau: undefined as string | undefined,
     };
   },
 
@@ -202,14 +224,7 @@ export default mixins(mixinLangues).extend({
         const fileInput = this.$refs.fileInput as HTMLInputElement
         fileInput.click()
       },
-     Prochain: function () {
-        this.étape = 3;
-      },
-    reculer: function() {
-      this.étape = 1;
-    },
-  },
-
+   },
   watch: {
     importateur: async function (val: ImportateurFeuilleCalcul | undefined )
         {
