@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialogue" scrollable max-width="600">
+  <v-dialog v-model="dialogue" scrollable max-width="1000">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
     </template>
@@ -71,56 +71,70 @@
            :menu-props="{ maxHeight: '75' }"
            :disabled="!nomFichier"
            :label="$t('communs.தேர்ந்தெடுக்கவும்')"
-            multiple
-           ></v-select>
+          ></v-select>
          </v-col>
        </v-row>
      </v-container>
-     </v-card>
-
+   </v-card>
      <v-card-actions>
        <v-btn :disabled="étape === 1" text @click="étape--">
          {{ $t("bd.nouvelle.Retour") }}
        </v-btn>
        <v-spacer></v-spacer>
-       <v-btn
+        <v-btn
          :disabled="!tableauSélectionné"
          color="primary"
          outlined
          @click="étape++"
-       >
+         >
           {{ $t("bd.nouvelle.Suivant") }}
        </v-btn>
      </v-card-actions>
+  </v-stepper-content>
 
-   </v-stepper-content>
-  <v-stepper-content step="2">
-<v-card
-  class="mb-2"
-  height="125px">
-  <v-btn
-     color="primary"
-       text
-       outlined
-       :loading="enProgrès"
-       @click="() => obtColsTableau()"
-       >
-  </v-btn>
-   <v-container fluid>
+    <v-stepper-content step="2">
+    <v-card flat max-width="1000px" height="300px">
+   <v-form>
+    <v-container>
      <v-row align="center">
-       <v-col
+      <v-col
+      v-for="n in 1"
+      :key="n"
        cols="12"
-       sm="12">
-       <v-autocomplete
-       v-model="colonneSélectionné"
-       :items="obtColsTableau"
-       :menu-props="{ maxHeight: '75' }"
-       :label="$t('communs.பெறுக')"
-        multiple
-       ></v-autocomplete>
-      </v-col>
-    </v-row>
-  </v-container>
+       sm="12"
+       md="3"
+       >
+       <v-text-field
+       :menu-props="{ maxHeight: '50' }"
+       :label="$t('communs.colonne')"
+      ></v-text-field>
+    </v-col>
+    <v-col
+     cols="12"
+     sm="12"
+     md="3"
+     >
+      <v-autocomplete
+      v-model="colonneSélectionné"
+      :items="colonneFichier"
+      :menu-props="{ maxHeight: '250' }"
+      :label="$t('communs.பெறுக')"
+      >
+   </v-autocomplete>
+     </v-col>
+     <v-col
+      cols="12"
+      sm="6"
+      md="3"
+      >
+     <v-btn
+     @click="save">
+     {{ $t("communs.save") }}
+    </v-btn>
+   </v-col>
+  </v-row>
+ </v-container>
+</v-form>
 </v-card>
     <v-card-actions>
       <v-btn :disabled="étape === 1" text @click="étape--">
@@ -128,7 +142,7 @@
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn
-        :disabled="!obtColsTableau"
+
         color="primary"
         outlined
         @click="étape++"
@@ -197,7 +211,8 @@ export default mixins(mixinLangues).extend({
       tableauxFichier: undefined as string[] | undefined,
       tableauSélectionné:  undefined as string | undefined,
       nomFichier: undefined as string | undefined,
-      obtColsTableau: undefined as string | undefined,
+      colonneFichier: undefined as string[] | undefined,
+      colonneSélectionné:undefined as string | undefined,
     };
   },
 
@@ -235,6 +250,15 @@ export default mixins(mixinLangues).extend({
               this.tableauxFichier = undefined
            }
         },
+        tableauSélectionné: async function (val: string| undefined )
+           {
+             if (val) {
+               this.colonneFichier = this.importateur!.obtColsTableau(val)
+                }
+                else {
+                  this.colonneFichier = undefined
+               }
+           },
      },
   });
 </script>
