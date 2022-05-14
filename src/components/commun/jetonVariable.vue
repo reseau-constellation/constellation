@@ -56,20 +56,20 @@ export default mixins(mixinIPA, mixinLangues).extend({
   methods: {
     couper,
     initialiserSuivi: async function () {
-      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable(
-        this.id,
-        (noms) => {
+      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable({
+        id: this.id,
+        f: (noms) => {
           this.noms = noms;
-        }
-      );
+        },
+      });
 
       const oublierCatégorie =
-        await this.$ipa.variables!.suivreCatégorieVariable(
-          this.id,
-          (catégorie) => {
+        await this.$ipa.variables!.suivreCatégorieVariable({
+          id: this.id,
+          f: (catégorie) => {
             this.catégorie = catégorie;
-          }
-        );
+          },
+        });
 
       this.suivre([oublierNoms, oublierCatégorie]);
     },

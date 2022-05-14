@@ -256,10 +256,12 @@ export default mixins(mixinIPA, mixinLangues).extend({
         adresseBdRacine: [
           (val: string) =>
             adresseOrbiteValide(val || "") ||
-            this.$t("dialogueAjouterDispositif.முகவரி") as string,
-            (val: string) =>
+            (this.$t("dialogueAjouterDispositif.முகவரி") as string),
+          (val: string) =>
             (val || "").slice(-7) === "/racine" ||
-            this.$t("dialogueAjouterDispositif.சுற்றுப்பாதையின்_முகவரி") as string,
+            (this.$t(
+              "dialogueAjouterDispositif.சுற்றுப்பாதையின்_முகவரி"
+            ) as string),
         ],
       },
     };
@@ -319,12 +321,12 @@ export default mixins(mixinIPA, mixinLangues).extend({
         val &&
         this.règlesValide.adresseBdRacine.every((r) => r(val) === true)
       ) {
-        const oublierNoms = await this.$ipa.réseau!.suivreNomsMembre(
-          val,
-          (noms) => {
+        const oublierNoms = await this.$ipa.réseau!.suivreNomsMembre({
+          idCompte: val,
+          f: (noms) => {
             this.nomsNouveauCompte = noms;
-          }
-        );
+          },
+        });
         if (this.oublierNoms) this.oublierNoms();
         this.oublierNoms = oublierNoms;
         this.suivre([oublierNoms]);
@@ -346,10 +348,10 @@ export default mixins(mixinIPA, mixinLangues).extend({
       if (!this.idBdCompteNouveau) return;
       this.cestParti = true;
       if (this.idOrbiteNouveau) {
-        await this.$ipa.ajouterDispositif(this.idOrbiteNouveau);
+        await this.$ipa.ajouterDispositif({ idOrbite: this.idOrbiteNouveau });
       } else {
         localStorage.setItem("idBdCompte", this.idBdCompteNouveau);
-        await this.$ipa.rejoindreCompte(this.idBdCompteNouveau);
+        await this.$ipa.rejoindreCompte({ idBdCompte: this.idBdCompteNouveau });
       }
       this.cestParti = false;
       this.fermer();
@@ -361,20 +363,22 @@ export default mixins(mixinIPA, mixinLangues).extend({
     initialiserSuivi: async function () {
       this.idDispositif = await this.$ipa.obtIdOrbite();
 
-      const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte(
-        (id) => (this.idBdCompte = id)
-      );
+      const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte({
+        f: (id) => (this.idBdCompte = id),
+      });
 
       const oublierDispositifsEnLigne =
-        await this.$ipa.réseau!.suivreConnexionsDispositifs((dispositifs) => {
-          this.dispositifs = dispositifs;
+        await this.$ipa.réseau!.suivreConnexionsDispositifs({
+          f: (dispositifs) => {
+            this.dispositifs = dispositifs;
+          },
         });
 
-      const oublierDispositifsDeCeCompte = await this.$ipa.suivreDispositifs(
-        (dispositifs) => {
+      const oublierDispositifsDeCeCompte = await this.$ipa.suivreDispositifs({
+        f: (dispositifs) => {
           this.dispositifsDeCeCompte = dispositifs;
-        }
-      );
+        },
+      });
       this.suivre([
         oublierIdBdRacine,
         oublierDispositifsEnLigne,

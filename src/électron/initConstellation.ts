@@ -86,9 +86,15 @@ export const connecterFenêtreÀConstellation = (
           Object.assign(message.opts, {
             orbite: {
               sfip: {
-                dossier: path.join(app.getPath("userData"),  enDéveloppement ? path.join("dév", "sfip") : "sfip"),
+                dossier: path.join(
+                  app.getPath("userData"),
+                  enDéveloppement ? path.join("dév", "sfip") : "sfip"
+                ),
               },
-              dossier: path.join(app.getPath("userData"), enDéveloppement ? path.join("dév", "orbite") : "orbite"),
+              dossier: path.join(
+                app.getPath("userData"),
+                enDéveloppement ? path.join("dév", "orbite") : "orbite"
+              ),
             },
           })
         );

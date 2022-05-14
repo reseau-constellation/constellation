@@ -13,25 +13,17 @@
       color="error"
       outlined
     >
-      {{ $t('compte.onglets.compte.பட_அளவு') }}
+      {{ $t("compte.onglets.compte.பட_அளவு") }}
 
       <template v-slot:action="{ attrs }">
-        <v-btn
-          icon
-          v-bind="attrs"
-          @click="fichierTropGrand = false"
-        >
+        <v-btn icon v-bind="attrs" @click="fichierTropGrand = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </template>
     </v-snackbar>
     <v-col cols="12">
       <v-hover v-slot="{ hover }" :disable="!editable">
-        <v-avatar
-          size="175"
-          :elevation="hover ? 12 : 2"
-          class="mb-3"
-        >
+        <v-avatar size="175" :elevation="hover ? 12 : 2" class="mb-3">
           <v-img :src="srcImage" contain>
             <v-row
               :class="{
@@ -39,17 +31,15 @@
                 'align-self-center': true,
                 'fill-height': true,
                 'flex-column': true,
-                'fond': true
+                fond: true,
               }"
               style="background-color: black"
             >
-              <div class="align-self-center" style="height: 100%;">
-                <v-row
-                  class="flex-column fill-height ma-0"
-                >
+              <div class="align-self-center" style="height: 100%">
+                <v-row class="flex-column fill-height ma-0">
                   <div class="my-auto">
                     <v-btn
-                      :class="{ 'show-btns': hover  }"
+                      :class="{ 'show-btns': hover }"
                       color="rgba(255, 255, 255, 0)"
                       class="align-self-center"
                       icon
@@ -65,7 +55,7 @@
                       </v-icon>
                     </v-btn>
                     <v-btn
-                      :class="{ 'show-btns': hover  }"
+                      :class="{ 'show-btns': hover }"
                       color="rgba(255, 255, 255, 0)"
                       class="align-self-center"
                       icon
@@ -107,20 +97,20 @@ export default mixins(mixinImage).extend({
   },
   methods: {
     choisirImage: async function () {
-      const choixFichier = this.$refs.choixFichier as HTMLInputElement
+      const choixFichier = this.$refs.choixFichier as HTMLInputElement;
       choixFichier.click();
     },
     effacerImage: async function () {
       await this.$emit("effacerImage");
     },
-    imageChoisie: async function(): Promise<void> {
+    imageChoisie: async function (): Promise<void> {
       const choixFichier = this.$refs.choixFichier as HTMLInputElement;
-      if (!choixFichier.files?.length) return
+      if (!choixFichier.files?.length) return;
 
       const fichier = choixFichier.files[0];
       if (fichier.size > this.MAX_TAILLE_IMAGE) {
         this.fichierTropGrand = true;
-        return
+        return;
       } else {
         this.fichierTropGrand = false;
       }
@@ -134,7 +124,7 @@ export default mixins(mixinImage).extend({
 
 <style scoped>
 .fond {
-  transition: opacity .4s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
 }
 
 .fond:not(.on-hover) {
@@ -142,7 +132,7 @@ export default mixins(mixinImage).extend({
 }
 
 .fond.on-hover {
- opacity: 0.5;
+  opacity: 0.5;
 }
 
 .show-btns {

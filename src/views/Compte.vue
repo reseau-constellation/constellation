@@ -1,9 +1,6 @@
 <template>
   <v-container>
-    <titre
-      :entête="$t('compte.entête')"
-      :imageRonde="true"
-    />
+    <titre :entête="$t('compte.entête')" :imageRonde="true" />
     <imageÉditable
       :srcImage="imageProfil"
       :MAX_TAILLE_IMAGE="MAX_TAILLE_IMAGE"
@@ -60,7 +57,7 @@ export default mixins(mixinImage, mixinIPA).extend({
     réseau,
     thème,
     paramètres,
-    imageÉditable
+    imageÉditable,
   },
   mixins: [mixinImage, mixinIPA],
   data: function () {
@@ -91,19 +88,25 @@ export default mixins(mixinImage, mixinIPA).extend({
     effacerImageProfil: async function () {
       await this.$ipa.profil!.effacerImage();
     },
-    imageChoisie: async function({données}: {données: Uint8Array}): Promise<void> {
-      await this.$ipa.profil!.sauvegarderImage(données);
+    imageChoisie: async function ({
+      données,
+    }: {
+      données: Uint8Array;
+    }): Promise<void> {
+      await this.$ipa.profil!.sauvegarderImage({ image: données });
     },
     initialiserSuivi: async function () {
-      const oublierImage = await this.$ipa.profil!.suivreImage((image) => {
-        if (image) {
-          const url = URL.createObjectURL(
-            new Blob([image.buffer], { type: "image/png" })
-          );
-          this.imageCompte = url;
-        } else {
-          this.imageCompte = null;
-        }
+      const oublierImage = await this.$ipa.profil!.suivreImage({
+        f: (image) => {
+          if (image) {
+            const url = URL.createObjectURL(
+              new Blob([image.buffer], { type: "image/png" })
+            );
+            this.imageCompte = url;
+          } else {
+            this.imageCompte = null;
+          }
+        },
       });
       this.suivre(oublierImage);
     },
@@ -113,7 +116,7 @@ export default mixins(mixinImage, mixinIPA).extend({
 
 <style scoped>
 .fond {
-  transition: opacity .4s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
 }
 
 .fond:not(.on-hover) {
@@ -121,7 +124,7 @@ export default mixins(mixinImage, mixinIPA).extend({
 }
 
 .fond.on-hover {
- opacity: 0.5;
+  opacity: 0.5;
 }
 
 .show-btns {

@@ -60,7 +60,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
   methods: {
     couper,
     sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
-      this.$ipa.motsClefs!.sauvegarderNomMotClef(this.id, langue, nom);
+      this.$ipa.motsClefs!.sauvegarderNomMotClef({ id: this.id, langue, nom });
     },
     changerLangueNom({
       langueOriginale,
@@ -71,19 +71,22 @@ export default mixins(mixinIPA, mixinLangues).extend({
       langue: string;
       nom: string;
     }) {
-      this.$ipa.motsClefs!.effacerNomMotClef(this.id, langueOriginale);
-      this.$ipa.motsClefs!.sauvegarderNomMotClef(this.id, langue, nom);
+      this.$ipa.motsClefs!.effacerNomMotClef({
+        id: this.id,
+        langue: langueOriginale,
+      });
+      this.$ipa.motsClefs!.sauvegarderNomMotClef({ id: this.id, langue, nom });
     },
     effacerNom({ langue }: { langue: string }) {
-      this.$ipa.motsClefs!.effacerNomMotClef(this.id, langue);
+      this.$ipa.motsClefs!.effacerNomMotClef({ id: this.id, langue });
     },
     initialiserSuivi: async function () {
-      const oublierNoms = await this.$ipa.motsClefs!.suivreNomsMotClef(
-        this.id,
-        (noms) => {
+      const oublierNoms = await this.$ipa.motsClefs!.suivreNomsMotClef({
+        id: this.id,
+        f: (noms) => {
           this.noms = noms;
-        }
-      );
+        },
+      });
 
       this.suivre([oublierNoms]);
     },

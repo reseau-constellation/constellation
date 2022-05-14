@@ -108,19 +108,22 @@ export default mixins(mixinIPA).extend({
       if (!this.auteurSélectionné) return;
 
       this.enCours = true;
-      await this.$ipa.bds!.inviterAuteur(
-        this.idBd,
-        this.auteurSélectionné,
-        this.donnerPermissionModérateur ? MODÉRATEUR : MEMBRE
-      );
+      await this.$ipa.bds!.inviterAuteur({
+        idBd: this.idBd,
+        idBdCompteAuteur: this.auteurSélectionné,
+        rôle: this.donnerPermissionModérateur ? MODÉRATEUR : MEMBRE
+      });
       this.enCours = false;
       this.annuler();
     },
     initialiserSuivi: async function () {
       const { fOublier: oublierMembres } =
-        await this.$ipa.réseau!.rechercherMembres((membres) => {
-          this.membresRéseau = membres.map((m) => m.id).filter((c) => c);
-        }, 10);
+        await this.$ipa.réseau!.rechercherMembres({
+          f: (membres) => {
+            this.membresRéseau = membres.map((m) => m.id).filter((c) => c);
+          },
+          nRésultatsDésirés: 10,
+        });
 
       this.suivre([oublierMembres]);
     },

@@ -146,7 +146,7 @@ app.on("ready", async () => {
 
 app.on("will-quit", async () => {
   await fermerAppli();
-})
+});
 
 // Exit cleanly on request from parent process in development mode.
 if (enDéveloppement) {

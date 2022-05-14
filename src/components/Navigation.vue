@@ -86,15 +86,17 @@ export default mixins(mixinIPA).extend({
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierImage = await this.$ipa.profil!.suivreImage((image) => {
-        if (image) {
-          const url = URL.createObjectURL(
-            new Blob([image.buffer], { type: "image/png" })
-          );
-          this.imageCompte = url;
-        } else {
-          this.imageCompte = null;
-        }
+      const oublierImage = await this.$ipa.profil!.suivreImage({
+        f: (image) => {
+          if (image) {
+            const url = URL.createObjectURL(
+              new Blob([image.buffer], { type: "image/png" })
+            );
+            this.imageCompte = url;
+          } else {
+            this.imageCompte = null;
+          }
+        },
       });
       this.suivre(oublierImage);
     },

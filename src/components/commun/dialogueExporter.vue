@@ -79,44 +79,41 @@ export default mixins(mixinLangues).extend({
       try {
         switch (this.type) {
           case "bd": {
-            const données = await this.$ipa.bds!.exporterDonnées(
-              this.id,
-              this.languesPréférées
-            );
-            this.$ipa.bds!.exporterDocumentDonnées(
+            const données = await this.$ipa.bds!.exporterDonnées({
+              id: this.id,
+              langues: this.languesPréférées,
+            });
+            this.$ipa.bds!.exporterDocumentDonnées({
               données,
-              this.formatDoc,
-              undefined,
-              this.inclureMédias
-            );
+              formatDoc: this.formatDoc,
+              inclureFichiersSFIP: this.inclureMédias,
+            });
             break;
           }
 
           case "tableau": {
-            const données = await this.$ipa.tableaux!.exporterDonnées(
-              this.id,
-              this.languesPréférées
-            );
-            this.$ipa.bds!.exporterDocumentDonnées(
+            const données = await this.$ipa.tableaux!.exporterDonnées({
+              idTableau: this.id,
+              langues: this.languesPréférées,
+            });
+            this.$ipa.bds!.exporterDocumentDonnées({
               données,
-              this.formatDoc,
-              undefined,
-              this.inclureMédias
-            );
+              formatDoc: this.formatDoc,
+              inclureFichiersSFIP: this.inclureMédias,
+            });
             break;
           }
 
           case "projet": {
-            const données = await this.$ipa.projets!.exporterDonnées(
-              this.id,
-              this.languesPréférées
-            );
-            this.$ipa.projets!.exporterDocumentDonnées(
+            const données = await this.$ipa.projets!.exporterDonnées({
+              id: this.id,
+              langues: this.languesPréférées,
+            });
+            this.$ipa.projets!.exporterDocumentDonnées({
               données,
-              this.formatDoc,
-              undefined,
-              this.inclureMédias
-            );
+              formatDoc: this.formatDoc,
+              inclureFichiersSFIP: this.inclureMédias,
+            });
             break;
           }
 

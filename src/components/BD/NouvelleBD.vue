@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialogue">
+  <v-dialog v-model="dialogue" max-width="1000">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
     </template>
@@ -261,7 +261,7 @@ export default mixins(
         case 3:
           return this.$t("bd.nouvelle.தேர்வுசெய்க") as string;
         case 4:
-          return this.$t("bd.nouvelle.உறுதிசெய்க") as string; 
+          return this.$t("bd.nouvelle.உறுதிசெய்க") as string;
         default:
           return "";
       }
@@ -342,7 +342,7 @@ export default mixins(
       langue: string;
       nom: string;
     }) {
-      console.log("sauvegarder", { langue, nom })
+      console.log("sauvegarder", { langue, nom });
       this.noms = { ...this.noms, [langue]: nom };
     },
     effacerNom: function ({ langue }: { langue: string }) {
@@ -398,16 +398,16 @@ export default mixins(
       if (!this.licence) return;
       this.enCréation = true;
 
-      const id = await this.$ipa.bds!.créerBd(this.licence);
+      const id = await this.$ipa.bds!.créerBd({licence: this.licence});
       if (Object.keys(this.noms).length) {
-        await this.$ipa.bds!.ajouterNomsBd(id, this.noms);
+        await this.$ipa.bds!.ajouterNomsBd({id, noms: this.noms});
       }
       if (Object.keys(this.descriptions).length) {
-        await this.$ipa.bds!.ajouterDescriptionsBd(id, this.descriptions);
+        await this.$ipa.bds!.ajouterDescriptionsBd({id, descriptions: this.descriptions});
       }
 
       //On ajoute la nouvelle BD aux favoris automatiquement
-      await this.$ipa.favoris!.épinglerFavori(id, "TOUS");
+      await this.$ipa.favoris!.épinglerFavori({id, dispositifs: "TOUS"});
 
       this.enCréation = false;
       this.$router.push(`/bd/visualiser/${encodeURIComponent(id)}`);

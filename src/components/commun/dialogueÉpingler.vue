@@ -109,7 +109,7 @@ import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
 
-export default mixins(mixinLangues).extend({
+export default mixins(mixinLangues, mixinIPA).extend({
   name: "dialogueÉpingler",
   props: ["id"],
   mixins: [mixinIPA, mixinLangues],
@@ -126,11 +126,11 @@ export default mixins(mixinLangues).extend({
     };
   },
   computed: {
-    dispositifs: function (): favoris.typeDispositifs {
+    dispositifs: function (): favoris.typeDispositifs | undefined {
       if (this.typeDispositifs === "AUCUN") return undefined;
       return this.typeDispositifs === "SPÉCIFIQUES" ? this.dispositifsSpécifiques : this.typeDispositifs;
     },
-    dispositifsFichiers: function (): favoris.typeDispositifs {
+    dispositifsFichiers: function (): favoris.typeDispositifs | undefined {
       if (this.typeDispositifsFichiers === "AUCUN") return undefined;
       return this.typeDispositifsFichiers === "SPÉCIFIQUES" ? this.dispositifsFichiersSpécifiques : this.typeDispositifsFichiers
     },
@@ -146,7 +146,9 @@ export default mixins(mixinLangues).extend({
       this.enProgrès = true;
 
       if (this.dispositifs) {
-        const épingle = {
+        const épingle: {
+          id: string, dispositifs: favoris.typeDispositifs, dispositifsFichiers?: favoris.typeDispositifs, récursif: boolean
+        } = {
           id: this.id,
           dispositifs: this.dispositifs,
           récursif: this.récursif,
@@ -167,37 +169,42 @@ export default mixins(mixinLangues).extend({
     },
 
     initialiserSuivi: async function () {
-      const oublierÉtatFavoris = await this.$ipa.favoris!.suivreÉtatFavori(
-        this.id,
-        (état) => {
+      const oublierÉtatFavoris = await this.$ipa.favoris!.suivreÉtatFavori({
+        id: this.id,
+        f: (état) => {
           if (état) {
             this.récursif = état.récursif;
 
-            if (["TOUS", "INSTALLÉ", "AUCUN"].includes(état.dispositifs)) {
-              this.typeDispositifs = état.dispositifs;
+            if (typeof état.dispositifs === "string" && ["TOUS", "INSTALLÉ", "AUCUN"].includes(état.dispositifs)) {
+              this.typeDispositifs = état.dispositifs as "TOUS" | "AUCUN" | "INSTALLÉ";
             } else {
               this.typeDispositifs = "SPÉCIFIQUES";
-              this.dispositifsSpécifiques = état.dispositifs;
+              this.dispositifsSpécifiques = typeof état.dispositifs === "string" ? [état.dispositifs] : état.dispositifs;
             }
 
-            if (["TOUS", "INSTALLÉ", "AUCUN"].includes(état.dispositifsFichiers)) {
-              this.typeDispositifsFichiers = état.dispositifsFichiers;
+            if (typeof état.dispositifsFichiers === "string" && ["TOUS", "INSTALLÉ", "AUCUN"].includes(état.dispositifsFichiers)) {
+              this.typeDispositifsFichiers = état.dispositifsFichiers as "TOUS" | "AUCUN" | "INSTALLÉ";
             } else {
               this.typeDispositifsFichiers = "SPÉCIFIQUES";
-              this.dispositifsSpécifiquesFichiers = état.dispositifsFichiers;
+              if (état.dispositifsFichiers){
+                this.dispositifsFichiersSpécifiques = typeof état.dispositifsFichiers === "string" ? [état.dispositifsFichiers] : état.dispositifsFichiers;
+              } else {
+                this.typeDispositifsFichiers = "AUCUN"
+              }
             }
           } else {
             this.typeDispositifs = this.typeDispositifsFichiers = "AUCUN";
             this.dispositifsSpécifiques = [];
-            this.dispositifsSpécifiquesFichiers = [];
+            this.dispositifsFichiersSpécifiques = [];
           }
         }
-      );
+      });
 
       this.suivre([
         oublierÉtatFavoris,
       ]);
-    },
+    }
+  }
   }
 );
 </script>

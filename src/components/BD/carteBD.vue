@@ -160,23 +160,23 @@ export default mixins(mixinIPA, mixinLicences).extend({
     couper,
     couleurScore,
     épingler: async function () {
-      await this.$ipa.favoris!.épinglerFavori(this.bd, "TOUS");
+      await this.$ipa.favoris!.épinglerFavori({id: this.idBd, dispositifs: "TOUS"});
     },
     désépingler: async function () {
-      await this.$ipa.favoris!.désépinglerFavori(this.bd);
+      await this.$ipa.favoris!.désépinglerFavori({id: this.idBd});
     },
     changerLicence({ licence }: { licence: string }) {
-      this.$ipa.bds!.changerLicenceBd(this.idBd, licence);
+      this.$ipa.bds!.changerLicenceBd({idBd: this.idBd, licence});
     },
     initialiserSuivi: async function () {
-      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
-        this.idBd,
-        (permission) => (this.permissionÉcrire = permission)
-      );
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire({
+        id: this.idBd,
+        f: (permission) => (this.permissionÉcrire = permission)
+      });
 
-      const oublierImage = await this.$ipa.bds!.suivreImage(
-        this.idBd,
-        (logo) => {
+      const oublierImage = await this.$ipa.bds!.suivreImage({
+        idBd: this.idBd,
+        f: (logo) => {
           if (logo) {
             const url = URL.createObjectURL(
               new Blob([logo.buffer], { type: "image/png" })
@@ -186,34 +186,34 @@ export default mixins(mixinIPA, mixinLicences).extend({
             this.logo = null;
           }
         }
-      );
+      });
 
-      const oublierLicence = await this.$ipa.bds!.suivreLicence(
-        this.idBd,
-        (licence) => {
+      const oublierLicence = await this.$ipa.bds!.suivreLicence({
+        id: this.idBd,
+        f: (licence) => {
           this.licence = licence;
         }
-      );
-      const oublierNoms = await this.$ipa.bds!.suivreNomsBd(
-        this.idBd,
-        (noms) => {
+      });
+      const oublierNoms = await this.$ipa.bds!.suivreNomsBd({
+        id: this.idBd,
+        f: (noms) => {
           this.nomsBD = noms;
         }
-      );
-      const oublierDétails = await this.$ipa.bds!.suivreDescrBd(
-        this.idBd,
-        (détails) => {
+      });
+      const oublierDétails = await this.$ipa.bds!.suivreDescrBd({
+        id: this.idBd,
+        f: (détails) => {
           this.détailsBD = détails;
         }
-      );
-      const oublierScore = await this.$ipa.bds!.suivreScoreBd(
-        this.idBd,
-        (score) => (this.score = score)
-      );
-      const oublierFavori = await this.$ipa.favoris!.suivreÉtatFavori(
-        this.idBd,
-        (épinglée) => (this.épinglée = épinglée)
-      );
+      });
+      const oublierScore = await this.$ipa.bds!.suivreScoreBd({
+        id: this.idBd,
+        f: (score) => (this.score = score)
+      });
+      const oublierFavori = await this.$ipa.favoris!.suivreÉtatFavori({
+        id: this.idBd,
+        f: (épinglée) => (this.épinglée = épinglée)
+      });
       this.suivre([
         oublierPermissionÉcrire,
         oublierImage,

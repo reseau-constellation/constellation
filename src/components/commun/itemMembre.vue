@@ -43,12 +43,12 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     initialiserSuivi: async function () {
-      const oublierNoms = await this.$ipa.réseau!.suivreNomsMembre(
-        this.id,
-        (noms) => {
+      const oublierNoms = await this.$ipa.réseau!.suivreNomsMembre({
+        idCompte: this.id,
+        f: (noms) => {
           this.nomsAuteur = noms;
-        }
-      );
+        },
+      });
       this.suivre([oublierNoms]);
     },
   },

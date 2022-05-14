@@ -245,19 +245,22 @@ export default mixins(mixinLangues).extend({
         throw new Error(
           this.$t("dialogueNouvelleVariable.குறிப்பிடப்படாதவை") as string
         );
-      const idVariable = await this.$ipa.variables!.créerVariable(
-        this.catégorie
-      );
-      await this.$ipa.variables!.ajouterNomsVariable(idVariable, this.noms);
-      await this.$ipa.variables!.ajouterDescriptionsVariable(
-        idVariable,
-        this.descriptions
-      );
+      const idVariable = await this.$ipa.variables!.créerVariable({
+        catégorie: this.catégorie,
+      });
+      await this.$ipa.variables!.ajouterNomsVariable({
+        id: idVariable,
+        noms: this.noms,
+      });
+      await this.$ipa.variables!.ajouterDescriptionsVariable({
+        id: idVariable,
+        descriptions: this.descriptions,
+      });
       if (this.unités) {
-        await this.$ipa.variables!.sauvegarderUnitésVariable(
+        await this.$ipa.variables!.sauvegarderUnitésVariable({
           idVariable,
-          this.unités
-        );
+          idUnité: this.unités,
+        });
       }
       this.$emit("sauvegarde", { id: idVariable });
 

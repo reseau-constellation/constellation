@@ -23,7 +23,7 @@
             small
             class="mb-5"
             @click="$router.push('/accueil')"
-            >
+          >
             {{ $t("conditions.retour") }}
           </v-btn>
         </span>

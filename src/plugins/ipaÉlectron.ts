@@ -1,18 +1,17 @@
 import _Vue from "vue";
 import { client, proxy } from "@constl/ipa";
-import {
-  MessagePourTravailleur,
-  MessageDeTravailleur,
-} from "@/électron/messages";
 
 declare global {
   interface Window {
     ipa: {
-      receive: (canal: string, f: (m: MessageDeTravailleur) => void) => void;
+      receive: (
+        canal: string,
+        f: (m: proxy.messages.MessageDeTravailleur) => void
+      ) => void;
       send: (
         canal: string,
         m:
-          | MessagePourTravailleur
+          | proxy.messages.MessagePourTravailleur
           | { type: "init"; opts: client.optsConstellation }
           | any
       ) => void;
@@ -28,7 +27,7 @@ export class ProxyClientÉlectronPrincipal extends proxy.proxy
 
     window.ipa.receive(
       "dePrincipal:constellation",
-      (m: MessageDeTravailleur) => {
+      (m: proxy.messages.MessageDeTravailleur) => {
         console.log(`Message ${m} reçu du processus principal`);
         this.événements.emit("message", m);
       }
@@ -37,7 +36,7 @@ export class ProxyClientÉlectronPrincipal extends proxy.proxy
     window.ipa.send("àPrincipal:constellation", { type: "init", opts });
   }
 
-  envoyerMessage(message: MessagePourTravailleur): void {
+  envoyerMessage(message: proxy.messages.MessagePourTravailleur): void {
     console.log("IPAÉlectronPrincipal àPrincipal:constellation", message);
     window.ipa.send("àPrincipal:constellation", message);
   }

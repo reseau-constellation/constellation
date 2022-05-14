@@ -206,33 +206,38 @@ export default mixins(mixinLangues, mixinIPA).extend({
           [ID_COL_DATE]: new Date().getTime(),
         };
 
-        await this.$ipa.tableaux!.ajouterÉlément(this.idTableau, élément);
+        await this.$ipa.tableaux!.ajouterÉlément({
+          idTableau: this.idTableau,
+          vals: élément,
+        });
       }
 
       if (this.traductionExistante) {
-        await this.$ipa.tableaux!.effacerÉlément(
-          this.idTableau,
-          this.traductionExistante.élément.empreinte
-        );
+        await this.$ipa.tableaux!.effacerÉlément({
+          idTableau: this.idTableau,
+          empreinteÉlément: this.traductionExistante.élément.empreinte,
+        });
       }
     },
     initialiserSuivi: async function () {
-      const oublierIdBdCompte = await this.$ipa.suivreIdBdCompte(
-        (id) => (this.idBdCompte = id)
-      );
+      const oublierIdBdCompte = await this.$ipa.suivreIdBdCompte({
+        f: (id) => (this.idBdCompte = id),
+      });
 
       const oublierTableauBdTrads =
-        await this.$ipa.bds!.suivreTableauUniqueDeBdUnique(
-          schémaBdTrads,
-          ID_MOTCLEF_TRADS_CONSTELLATION,
-          "trads",
-          (idTableau) => (this.idTableau = idTableau)
-        );
+        await this.$ipa.bds!.suivreTableauUniqueDeBdUnique({
+          schémaBd: schémaBdTrads,
+          motClefUnique: ID_MOTCLEF_TRADS_CONSTELLATION,
+          idUniqueTableau: "trads",
+          f: (idTableau) => (this.idTableau = idTableau),
+        });
       const { fOublier: oublierSuggestionsTrads } =
         await this.$ipa.réseau!.suivreÉlémentsDeTableauxUniques<élémentBdTraduction>(
-          ID_MOTCLEF_TRADS_CONSTELLATION,
-          "trads",
-          (suggestions) => (this.suggestions = suggestions)
+          {
+            motClefUnique: ID_MOTCLEF_TRADS_CONSTELLATION,
+            idUniqueTableau: "trads",
+            f: (suggestions) => (this.suggestions = suggestions),
+          }
         );
       this.suivre([
         oublierIdBdCompte,

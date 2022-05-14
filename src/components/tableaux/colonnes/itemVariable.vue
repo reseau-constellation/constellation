@@ -56,27 +56,27 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     effacerVariable: async function () {
-      await this.$ipa.variables!.effacerVariable(this.id);
+      await this.$ipa.variables!.effacerVariable({ id: this.id });
     },
     initialiserSuivi: async function () {
-      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable(
-        this.id,
-        (noms) => (this.noms = noms)
-      );
+      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable({
+        id: this.id,
+        f: (noms) => (this.noms = noms),
+      });
 
       const oublierDescriptions =
-        await this.$ipa.variables!.suivreDescrVariable(
-          this.id,
-          (descrs) => (this.descriptions = descrs)
-        );
+        await this.$ipa.variables!.suivreDescrVariable({
+          id: this.id,
+          f: (descrs) => (this.descriptions = descrs),
+        });
 
       const oublierCatégorie =
-        await this.$ipa.variables!.suivreCatégorieVariable(
-          this.id,
-          (catégorie) => {
+        await this.$ipa.variables!.suivreCatégorieVariable({
+          id: this.id,
+          f: (catégorie) => {
             this.catégorie = catégorie;
-          }
-        );
+          },
+        });
 
       this.suivre([oublierCatégorie, oublierNoms, oublierDescriptions]);
     },

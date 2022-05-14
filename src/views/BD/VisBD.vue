@@ -53,8 +53,10 @@
           <dialogue-exporter :id="idBd" type="bd">
             <template v-slot:activator="{ on, attrs }">
               <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
-                <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
-                  <span v-bind="tooltipAttrs" v-on="tooltipOn" >
+                <template
+                  v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }"
+                >
+                  <span v-bind="tooltipAttrs" v-on="tooltipOn">
                     <v-btn v-bind="attrs" v-on="on" icon>
                       <v-icon>mdi-download</v-icon>
                     </v-btn>
@@ -68,8 +70,10 @@
           <dialogue-copier-bd :id="idBd">
             <template v-slot:activator="{ on, attrs }">
               <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
-                <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
-                  <span v-bind="tooltipAttrs" v-on="tooltipOn" >
+                <template
+                  v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }"
+                >
+                  <span v-bind="tooltipAttrs" v-on="tooltipOn">
                     <v-btn v-bind="attrs" v-on="on" icon>
                       <v-icon>mdi-card-multiple-outline</v-icon>
                     </v-btn>
@@ -88,8 +92,10 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-tooltip open-delay="200" bottom>
-              <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
-                <span v-bind="tooltipAttrs" v-on="tooltipOn" >
+              <template
+                v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }"
+              >
+                <span v-bind="tooltipAttrs" v-on="tooltipOn">
                   <v-btn v-bind="attrs" v-on="on" icon color="error">
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
@@ -272,7 +278,9 @@
                         {{
                           réplications
                             ? $t("bd.visBD.நகல்கள்", {
-                                n: formatterChiffre(réplications.dispositifs.length),
+                                n: formatterChiffre(
+                                  réplications.dispositifs.length
+                                ),
                               })
                             : ""
                         }}
@@ -518,20 +526,30 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       couleurScore,
       ouvrirLien,
       ajouterTableau: async function (): Promise<void> {
-        await this.$ipa.bds!.ajouterTableauBd(this.idBd);
+        await this.$ipa.bds!.ajouterTableauBd({ id: this.idBd });
       },
       ajouterMotClef: async function (idMotClef: string): Promise<void> {
-        await this.$ipa.bds!.ajouterMotsClefsBd(this.idBd, idMotClef);
+        await this.$ipa.bds!.ajouterMotsClefsBd({
+          idBd: this.idBd,
+          idsMotsClefs: idMotClef,
+        });
       },
       effacerBd: async function (): Promise<void> {
-        await this.$ipa.bds!.effacerBd(this.idBd);
+        await this.$ipa.bds!.effacerBd({ id: this.idBd });
         this.$router.push("/bd");
       },
       effacerImageBd: async function () {
-        await this.$ipa.bds!.effacerImage(this.idBd);
+        await this.$ipa.bds!.effacerImage({ idBd: this.idBd });
       },
-      imageBdChoisie: async function({données}: {données: Uint8Array}): Promise<void> {
-        await this.$ipa.bds!.sauvegarderImage(this.idBd, données);
+      imageBdChoisie: async function ({
+        données,
+      }: {
+        données: Uint8Array;
+      }): Promise<void> {
+        await this.$ipa.bds!.sauvegarderImage({
+          idBd: this.idBd,
+          image: données,
+        });
       },
       sauvegarderNom: async function ({
         langue,
@@ -540,7 +558,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         langue: string;
         nom: string;
       }): Promise<void> {
-        await this.$ipa.bds!.sauvegarderNomBd(this.idBd, langue, nom);
+        await this.$ipa.bds!.sauvegarderNomBd({ id: this.idBd, langue, nom });
       },
       changerLangueNom: async function ({
         langueOriginale,
@@ -551,15 +569,18 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         langue: string;
         nom: string;
       }): Promise<void> {
-        await this.$ipa.bds!.effacerNomBd(this.idBd, langueOriginale);
-        await this.$ipa.bds!.sauvegarderNomBd(this.idBd, langue, nom);
+        await this.$ipa.bds!.effacerNomBd({
+          id: this.idBd,
+          langue: langueOriginale,
+        });
+        await this.$ipa.bds!.sauvegarderNomBd({ id: this.idBd, langue, nom });
       },
       effacerNom: async function ({
         langue,
       }: {
         langue: string;
       }): Promise<void> {
-        await this.$ipa.bds!.effacerNomBd(this.idBd, langue);
+        await this.$ipa.bds!.effacerNomBd({ id: this.idBd, langue });
       },
       sauvegarderDescr: async function ({
         langue,
@@ -568,7 +589,11 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         langue: string;
         nom: string;
       }): Promise<void> {
-        await this.$ipa.bds!.sauvegarderDescrBd(this.idBd, langue, nom);
+        await this.$ipa.bds!.sauvegarderDescrBd({
+          id: this.idBd,
+          langue,
+          descr: nom,
+        });
       },
       changerLangueDescr: async function ({
         langueOriginale,
@@ -579,39 +604,49 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         langue: string;
         nom: string;
       }): Promise<void> {
-        await this.$ipa.bds!.effacerDescrBd(this.idBd, langueOriginale);
-        await this.$ipa.bds!.sauvegarderDescrBd(this.idBd, langue, nom);
+        await this.$ipa.bds!.effacerDescrBd({
+          id: this.idBd,
+          langue: langueOriginale,
+        });
+        await this.$ipa.bds!.sauvegarderDescrBd({
+          id: this.idBd,
+          langue,
+          descr: nom,
+        });
       },
       effacerDescr: async function ({
         langue,
       }: {
         langue: string;
       }): Promise<void> {
-        await this.$ipa.bds!.effacerDescrBd(this.idBd, langue);
+        await this.$ipa.bds!.effacerDescrBd({ id: this.idBd, langue });
       },
       effacerMotClef: async function ({ id }: { id: string }): Promise<void> {
-        await this.$ipa.bds!.effacerMotClefBd(this.idBd, id);
+        await this.$ipa.bds!.effacerMotClefBd({
+          idBd: this.idBd,
+          idMotClef: id,
+        });
       },
       changerLicence: async function ({
         licence,
       }: {
         licence: string;
       }): Promise<void> {
-        await this.$ipa.bds!.changerLicenceBd(this.idBd, licence);
+        await this.$ipa.bds!.changerLicenceBd({ idBd: this.idBd, licence });
       },
       initialiserSuivi: async function () {
-        const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
-          this.idBd,
-          (permission) => (this.permissionÉcrire = permission)
-        );
+        const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire({
+          id: this.idBd,
+          f: (permission) => (this.permissionÉcrire = permission),
+        });
 
-        const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte(
-          (id: string | undefined) => (this.idBdCompte = id)
-        );
+        const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte({
+          f: (id: string | undefined) => (this.idBdCompte = id),
+        });
 
-        const oublierImage = await this.$ipa.bds!.suivreImage(
-          this.idBd,
-          (logo) => {
+        const oublierImage = await this.$ipa.bds!.suivreImage({
+          idBd: this.idBd,
+          f: (logo) => {
             if (logo) {
               const url = URL.createObjectURL(
                 new Blob([logo.buffer], { type: "image/png" })
@@ -620,58 +655,58 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
             } else {
               this.logo = null;
             }
-          }
-        );
+          },
+        });
 
-        const oublierLicence = await this.$ipa.bds!.suivreLicence(
-          this.idBd,
-          (licence: string) => {
+        const oublierLicence = await this.$ipa.bds!.suivreLicence({
+          id: this.idBd,
+          f: (licence: string) => {
             this.licence = licence;
-          }
-        );
-        const oublierAuteurs = await this.$ipa.réseau!.suivreAuteursBd(
-          this.idBd,
-          (auteurs) => {
+          },
+        });
+        const oublierAuteurs = await this.$ipa.réseau!.suivreAuteursBd({
+          idBd: this.idBd,
+          f: (auteurs) => {
             this.auteurs = auteurs;
-          }
-        );
-        const oublierNoms = await this.$ipa.bds!.suivreNomsBd(
-          this.idBd,
-          (noms: { [key: string]: string }) => {
+          },
+        });
+        const oublierNoms = await this.$ipa.bds!.suivreNomsBd({
+          id: this.idBd,
+          f: (noms: { [key: string]: string }) => {
             this.nomsBD = noms;
-          }
-        );
-        const oublierDescriptions = await this.$ipa.bds!.suivreDescrBd(
-          this.idBd,
-          (descriptions: { [key: string]: string }) => {
+          },
+        });
+        const oublierDescriptions = await this.$ipa.bds!.suivreDescrBd({
+          id: this.idBd,
+          f: (descriptions: { [key: string]: string }) => {
             this.descriptionsBD = descriptions;
-          }
-        );
-        const oublierTableaux = await this.$ipa.bds!.suivreTableauxBd(
-          this.idBd,
-          (tableaux: string[]) => {
+          },
+        });
+        const oublierTableaux = await this.$ipa.bds!.suivreTableauxBd({
+          id: this.idBd,
+          f: (tableaux: string[]) => {
             this.tableaux = tableaux;
-          }
-        );
-        const oublierScore = await this.$ipa.bds!.suivreScoreBd(
-          this.idBd,
-          (score) => (this.score = score)
-        );
-        const oublierVariables = await this.$ipa.bds!.suivreVariablesBd(
-          this.idBd,
-          (variables: string[]) => (this.variables = variables)
-        );
-        const oublierMotsClefs = await this.$ipa.bds!.suivreMotsClefsBd(
-          this.idBd,
-          (motsClefs: string[]) => (this.motsClefs = motsClefs)
-        );
+          },
+        });
+        const oublierScore = await this.$ipa.bds!.suivreScoreBd({
+          id: this.idBd,
+          f: (score) => (this.score = score),
+        });
+        const oublierVariables = await this.$ipa.bds!.suivreVariablesBd({
+          id: this.idBd,
+          f: (variables: string[]) => (this.variables = variables),
+        });
+        const oublierMotsClefs = await this.$ipa.bds!.suivreMotsClefsBd({
+          id: this.idBd,
+          f: (motsClefs: string[]) => (this.motsClefs = motsClefs),
+        });
         const { fOublier: oublierRéplications } =
-          await this.$ipa.réseau!.suivreRéplications(
-            this.idBd,
-            (réplications) => {
+          await this.$ipa.réseau!.suivreRéplications({
+            idObjet: this.idBd,
+            f: (réplications) => {
               this.réplications = réplications;
-            }
-          );
+            },
+          });
         this.suivre([
           oublierPermissionÉcrire,
           oublierIdBdRacine,

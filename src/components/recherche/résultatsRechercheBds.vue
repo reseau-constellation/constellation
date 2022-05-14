@@ -30,10 +30,10 @@ export default mixins(mixinIPA).extend({
   },
   methods: {
     initialiserSuivi: async function () {
-      const { fOublier: oublierBds } = await this.$ipa.réseau!.rechercherBds(
-        (bds) => (this.bds = bds),
-        5
-      );
+      const { fOublier: oublierBds } = await this.$ipa.réseau!.rechercherBds({
+        f: (bds) => (this.bds = bds),
+        nRésultatsDésirés: 5,
+      });
 
       this.suivre([oublierBds]);
     },

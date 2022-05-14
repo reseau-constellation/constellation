@@ -38,8 +38,11 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     initialiserSuivi: async function () {
-      const oublierNoms = await this.$ipa.bds!.suivreNomsBd(this.id, (noms) => {
-        this.noms = noms;
+      const oublierNoms = await this.$ipa.bds!.suivreNomsBd({
+        id: this.id,
+        f: (noms) => {
+          this.noms = noms;
+        },
       });
 
       this.suivre([oublierNoms]);

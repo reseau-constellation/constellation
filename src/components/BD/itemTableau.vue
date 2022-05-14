@@ -80,26 +80,26 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     effacerTableau: async function () {
-      await this.$ipa.bds!.effacerTableauBd(this.idBd, this.idTableau);
+      await this.$ipa.bds!.effacerTableauBd({id: this.idBd, idTableau: this.idTableau});
     },
     initialiserSuivi: async function () {
-      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
-        this.idBd,
-        (permission) => (this.permissionÉcrire = permission)
-      );
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire({
+        id: this.idBd,
+        f: (permission) => (this.permissionÉcrire = permission)
+      });
 
-      const oublierNoms = await this.$ipa.tableaux!.suivreNomsTableau(
-        this.idTableau,
-        (noms) => {
+      const oublierNoms = await this.$ipa.tableaux!.suivreNomsTableau({
+        idTableau: this.idTableau,
+        f: (noms) => {
           this.nomsTableau = noms;
         }
-      );
-      const oublierVariables = await this.$ipa.tableaux!.suivreVariables(
-        this.idTableau,
-        (variables) => {
+      });
+      const oublierVariables = await this.$ipa.tableaux!.suivreVariables({
+        idTableau: this.idTableau,
+        f: (variables) => {
           this.variables = variables;
         }
-      );
+      });
       this.suivre([oublierPermissionÉcrire, oublierNoms, oublierVariables]);
     },
   },

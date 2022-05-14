@@ -112,11 +112,11 @@ export default mixins(mixinIPA, mixinImage).extend({
       this.récemmentAjouté = id; // Montrer le nouveau mot clef en haut de la liste
     },
     initialiserSuivi: async function () {
-      const oublierExistants = await this.$ipa.motsClefs!.suivreMotsClefs(
-        (existants) => {
+      const oublierExistants = await this.$ipa.motsClefs!.suivreMotsClefs({
+        f: (existants) => {
           this.existants = existants;
-        }
-      );
+        },
+      });
       this.suivre([oublierExistants]);
     },
   },

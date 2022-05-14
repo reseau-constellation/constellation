@@ -66,11 +66,11 @@ export default mixins(mixinLangues).extend({
     copier: async function () {
       this.enProgrès = true;
 
-      const nouvelId = await this.$ipa.bds!.copierBd(
-        this.id,
-        true,
-        this.inclureDonnées
-      );
+      const nouvelId = await this.$ipa.bds!.copierBd({
+        id: this.id,
+        ajouterÀMesBds: true,
+        copierDonnées: this.inclureDonnées
+      });
       this.$router.push(`/bd/visualiser/${encodeURIComponent(nouvelId)}`);
 
       this.dialogue = false;

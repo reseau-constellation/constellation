@@ -99,7 +99,10 @@ export default Vue.extend({
     },
     creerMotClef: async function () {
       const idMotClef = await this.$ipa.motsClefs!.créerMotClef();
-      await this.$ipa.motsClefs!.ajouterNomsMotClef(idMotClef, this.noms);
+      await this.$ipa.motsClefs!.ajouterNomsMotClef({
+        id: idMotClef,
+        noms: this.noms,
+      });
       this.$emit("cree", { id: idMotClef });
       this.dialogue = false;
     },

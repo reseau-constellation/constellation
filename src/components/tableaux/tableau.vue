@@ -294,16 +294,16 @@ export default mixins(mixinIPA, mixinLangues).extend({
       idVariable: string;
       règles: valid.règleVariable[];
     }) {
-      const idColonne = await this.$ipa.tableaux!.ajouterColonneTableau(
-        this.idTableau,
-        idVariable
-      );
+      const idColonne = await this.$ipa.tableaux!.ajouterColonneTableau({
+        idTableau: this.idTableau,
+        idVariable,
+      });
       for (const règle of règles) {
-        await this.$ipa.tableaux!.ajouterRègleTableau(
-          this.idTableau,
+        await this.$ipa.tableaux!.ajouterRègleTableau({
+          idTableau: this.idTableau,
           idColonne,
-          règle
-        );
+          règle,
+        });
       }
     },
 
@@ -312,51 +312,53 @@ export default mixins(mixinIPA, mixinLangues).extend({
       variable: string,
       val: utils.élémentsBd
     ) {
-      console.log("valÉditée", { empreinte, variable, val });
       if (empreinte === "-1") {
         this.valsNouvelleLigne = Object.assign({}, this.valsNouvelleLigne, {
           [variable]: val,
         });
       } else {
-        this.$ipa.tableaux!.modifierÉlément(
-          this.idTableau,
-          { [variable]: val },
-          empreinte
-        );
+        this.$ipa.tableaux!.modifierÉlément({
+          idTableau: this.idTableau,
+          vals: { [variable]: val },
+          empreintePrécédente: empreinte,
+        });
       }
     },
 
     ajouterÉlément: function () {
-      this.$ipa.tableaux!.ajouterÉlément(
-        this.idTableau,
-        this.valsNouvelleLigne
-      );
+      this.$ipa.tableaux!.ajouterÉlément({
+        idTableau: this.idTableau,
+        vals: this.valsNouvelleLigne,
+      });
       this.nouvelleLigne = false;
     },
 
     effacerÉlément: async function (empreinte: string) {
-      await this.$ipa.tableaux!.effacerÉlément(this.idTableau, empreinte);
+      await this.$ipa.tableaux!.effacerÉlément({
+        idTableau: this.idTableau,
+        empreinteÉlément: empreinte,
+      });
     },
 
     initialiserSuivi: async function () {
-      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
-        this.idTableau,
-        (permission) => (this.permissionÉcrire = permission)
-      );
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire({
+        id: this.idTableau,
+        f: (permission) => (this.permissionÉcrire = permission),
+      });
 
-      const oublierColonnes = await this.$ipa.tableaux!.suivreColonnes(
-        this.idTableau,
-        (cols) => {
+      const oublierColonnes = await this.$ipa.tableaux!.suivreColonnes({
+        idTableau: this.idTableau,
+        f: (cols) => {
           this.colonnes = cols;
-        }
-      );
+        },
+      });
 
-      const oublierDonnées = await this.$ipa.tableaux!.suivreDonnées(
-        this.idTableau,
-        (données) => {
+      const oublierDonnées = await this.$ipa.tableaux!.suivreDonnées({
+        idTableau: this.idTableau,
+        f: (données) => {
           this.données = données;
-        }
-      );
+        },
+      });
 
       this.suivre([oublierPermissionÉcrire, oublierColonnes, oublierDonnées]);
     },

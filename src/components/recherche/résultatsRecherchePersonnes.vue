@@ -32,9 +32,12 @@ export default mixins(mixinIPA).extend({
   methods: {
     initialiserSuivi: async function () {
       const { fOublier: oublierMembres } =
-        await this.$ipa.réseau!.rechercherMembres((membres) => {
-          this.membres = membres;
-        }, 5);
+        await this.$ipa.réseau!.rechercherMembres({
+          f: (membres) => {
+            this.membres = membres;
+          },
+          nRésultatsDésirés: 5,
+        });
 
       this.suivre([oublierMembres]);
     },

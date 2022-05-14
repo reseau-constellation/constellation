@@ -50,9 +50,9 @@ export default mixins(mixinIPA, mixinImage).extend({
     initialiserSuivi: async function () {
       this.imageCompte = null;
 
-      const oublierImage = await this.$ipa.réseau!.suivreImageMembre(
-        this.id,
-        (image) => {
+      const oublierImage = await this.$ipa.réseau!.suivreImageMembre({
+        idCompte: this.id,
+        f: (image) => {
           if (image) {
             const url = URL.createObjectURL(
               new Blob([image.buffer], { type: "image/png" })
@@ -62,7 +62,7 @@ export default mixins(mixinIPA, mixinImage).extend({
             this.imageCompte = null;
           }
         }
-      );
+      });
       this.suivre([oublierImage]);
     },
   },

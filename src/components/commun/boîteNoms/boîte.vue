@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialogue">
+  <v-dialog v-model="dialogue" max-width="900">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
     </template>
@@ -8,10 +8,7 @@
       <v-card-title>
         {{ $t(titre) }}
         <v-spacer />
-        <v-btn
-          icon
-          @click="dialogue = false"
-        >
+        <v-btn icon @click="dialogue = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -78,8 +75,8 @@ export default mixins(mixinLangues, mixinImages).extend({
     },
     etiquetteAucunNom: {
       type: String,
-      default: "boîteNoms.étiquetteAucunNom"
-    }
+      default: "boîteNoms.étiquetteAucunNom",
+    },
   },
   mixins: [mixinLangues],
   data: function () {

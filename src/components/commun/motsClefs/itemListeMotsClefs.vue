@@ -69,7 +69,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
-      this.$ipa.motsClefs!.sauvegarderNomMotClef(this.id, langue, nom);
+      this.$ipa.motsClefs!.sauvegarderNomMotClef({ id: this.id, langue, nom });
     },
     changerLangueNom({
       langueOriginale,
@@ -80,27 +80,30 @@ export default mixins(mixinLangues, mixinIPA).extend({
       langue: string;
       nom: string;
     }) {
-      this.$ipa.motsClefs!.effacerNomMotClef(this.id, langueOriginale);
-      this.$ipa.motsClefs!.sauvegarderNomMotClef(this.id, langue, nom);
+      this.$ipa.motsClefs!.effacerNomMotClef({
+        id: this.id,
+        langue: langueOriginale,
+      });
+      this.$ipa.motsClefs!.sauvegarderNomMotClef({ id: this.id, langue, nom });
     },
     effacerNom({ langue }: { langue: string }) {
-      this.$ipa.motsClefs!.effacerNomMotClef(this.id, langue);
+      this.$ipa.motsClefs!.effacerNomMotClef({ id: this.id, langue });
     },
     effacerMotClef() {
-      this.$ipa.motsClefs!.effacerMotClef(this.id);
+      this.$ipa.motsClefs!.effacerMotClef({ id: this.id });
     },
     initialiserSuivi: async function () {
-      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
-        this.id,
-        (permission) => (this.permissionÉcrire = permission)
-      );
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire({
+        id: this.id,
+        f: (permission) => (this.permissionÉcrire = permission),
+      });
 
-      const oublierNoms = await this.$ipa.motsClefs!.suivreNomsMotClef(
-        this.id,
-        (noms) => {
+      const oublierNoms = await this.$ipa.motsClefs!.suivreNomsMotClef({
+        id: this.id,
+        f: (noms) => {
           this.noms = noms;
-        }
-      );
+        },
+      });
       this.suivre([oublierPermissionÉcrire, oublierNoms]);
     },
   },

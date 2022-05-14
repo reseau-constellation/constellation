@@ -38,20 +38,20 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     effacerVariable: async function () {
-      await this.$ipa.variables!.effacerVariable(this.id);
+      await this.$ipa.variables!.effacerVariable({ id: this.id });
     },
     initialiserSuivi: async function () {
-      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
-        this.id,
-        (permission) => (this.permissionÉcrire = permission)
-      );
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire({
+        id: this.id,
+        f: (permission) => (this.permissionÉcrire = permission),
+      });
 
-      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable(
-        this.id,
-        (noms) => {
+      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable({
+        id: this.id,
+        f: (noms) => {
           this.noms = noms;
-        }
-      );
+        },
+      });
 
       this.suivre([oublierNoms, oublierPermissionÉcrire]);
     },

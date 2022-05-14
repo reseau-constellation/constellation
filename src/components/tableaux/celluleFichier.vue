@@ -176,7 +176,7 @@ export default mixins(mixinImage).extend({
       this.téléversementEnProgrès = true;
       const fichier = e.target.files[0];
       const extention = fichier.name.split(".").pop();
-      const idDoc = await this.$ipa.ajouterÀSFIP(fichier);
+      const idDoc = await this.$ipa.ajouterÀSFIP({ fichier });
       this.téléversementEnProgrès = false;
       this.$emit("edite", { val: { cid: idDoc, ext: extention } });
     },
@@ -197,7 +197,7 @@ export default mixins(mixinImage).extend({
         const url = (await this.obtURL()) as string;
         téléchargerURL(url, this.nomFichier);
       } else {
-        const itérable = this.$ipa.obtItérableAsyncSFIP(cid);
+        const itérable = this.$ipa.obtItérableAsyncSFIP({ id: cid });
         const flux = itérableÀFlux(itérable);
         téléchargerFlux(flux, this.nomFichier);
       }

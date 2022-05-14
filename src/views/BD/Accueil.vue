@@ -15,7 +15,8 @@
           <nouvelle-bd :key="0">
             <template v-slot:activator="{ on, attrs }">
               <v-card
-                v-bind="attrs" v-on="on"
+                v-bind="attrs"
+                v-on="on"
                 class="mx-4 my-5 px-3 py-5 justify-start text-start"
                 min-height="200px"
                 max-width="300px"
@@ -71,8 +72,10 @@ export default mixins(mixinIPA).extend({
   },
   methods: {
     initialiserSuivi: async function () {
-      const oublierListeBDs = await this.$ipa.bds!.suivreBds((bds) => {
-        this.idsBds = bds;
+      const oublierListeBDs = await this.$ipa.bds!.suivreBds({
+        f: (bds) => {
+          this.idsBds = bds;
+        },
       });
       this.suivre(oublierListeBDs);
     },

@@ -38,12 +38,12 @@ export default mixins(mixinIPA, mixinLangues).extend({
   methods: {
     couper,
     initialiserSuivi: async function () {
-      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable(
-        this.idVariable,
-        (noms) => {
+      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable({
+        id: this.idVariable,
+        f: (noms) => {
           this.noms = noms;
-        }
-      );
+        },
+      });
       this.suivre([oublierNoms]);
     },
   },

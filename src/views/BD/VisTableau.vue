@@ -139,7 +139,11 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
-      this.$ipa.tableaux!.sauvegarderNomTableau(this.idTableau, langue, nom);
+      this.$ipa.tableaux!.sauvegarderNomTableau({
+        idTableau: this.idTableau,
+        langue,
+        nom,
+      });
     },
     changerLangueNom({
       langueOriginale,
@@ -150,31 +154,41 @@ export default mixins(mixinLangues, mixinIPA).extend({
       langue: string;
       nom: string;
     }) {
-      this.$ipa.tableaux!.effacerNomTableau(this.idTableau, langueOriginale);
-      this.$ipa.tableaux!.sauvegarderNomTableau(this.idTableau, langue, nom);
+      this.$ipa.tableaux!.effacerNomTableau({
+        idTableau: this.idTableau,
+        langue: langueOriginale,
+      });
+      this.$ipa.tableaux!.sauvegarderNomTableau({
+        idTableau: this.idTableau,
+        langue,
+        nom,
+      });
     },
     effacerNom({ langue }: { langue: string }) {
-      this.$ipa.tableaux!.effacerNomTableau(this.idTableau, langue);
+      this.$ipa.tableaux!.effacerNomTableau({
+        idTableau: this.idTableau,
+        langue,
+      });
     },
     initialiserSuivi: async function () {
-      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
-        this.idTableau,
-        (permission) => (this.permissionÉcrire = permission)
-      );
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire({
+        id: this.idTableau,
+        f: (permission) => (this.permissionÉcrire = permission),
+      });
 
-      const oublierNoms = await this.$ipa.tableaux!.suivreNomsTableau(
-        this.idTableau,
-        (noms) => {
+      const oublierNoms = await this.$ipa.tableaux!.suivreNomsTableau({
+        idTableau: this.idTableau,
+        f: (noms) => {
           this.nomsTableau = noms;
-        }
-      );
+        },
+      });
 
-      const oublierNomsBD = await this.$ipa.bds!.suivreNomsBd(
-        this.idBd,
-        (noms) => {
+      const oublierNomsBD = await this.$ipa.bds!.suivreNomsBd({
+        id: this.idBd,
+        f: (noms) => {
           this.nomsBD = noms;
-        }
-      );
+        },
+      });
 
       this.suivre([oublierPermissionÉcrire, oublierNoms, oublierNomsBD]);
     },

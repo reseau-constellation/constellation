@@ -51,7 +51,6 @@
           @blur="sauvegarderCourriel"
         />
       </v-card>
-
     </div>
     <p class="px-0 my-0 text-overline">
       {{ $t("compte.onglets.compte.dispositifs") }}
@@ -146,7 +145,7 @@ export default mixins(mixinIPA, mixinImages).extend({
       const courriel = this.courriel.trim();
       if (courriel !== this.courrielOrig) {
         if (courriel.length) {
-          await this.$ipa.profil!.sauvegarderCourriel(courriel);
+          await this.$ipa.profil!.sauvegarderCourriel({ courriel });
         } else {
           await this.$ipa.profil!.effacerCourriel();
         }
@@ -155,23 +154,25 @@ export default mixins(mixinIPA, mixinImages).extend({
     initialiserSuivi: async function () {
       this.idDispositif = await this.$ipa.obtIdOrbite();
 
-      const oublierCourriel = await this.$ipa.profil!.suivreCourriel(
-        (courriel) => {
+      const oublierCourriel = await this.$ipa.profil!.suivreCourriel({
+        f: (courriel) => {
           this.courrielOrig = courriel;
-        }
-      );
-
-      const oublierNoms = await this.$ipa.profil!.suivreNoms((noms) => {
-        this.noms = noms;
+        },
       });
 
-      const oublierDispositifs = await this.$ipa.suivreDispositifs(
-        (dispositifs) => {
+      const oublierNoms = await this.$ipa.profil!.suivreNoms({
+        f: (noms) => {
+          this.noms = noms;
+        },
+      });
+
+      const oublierDispositifs = await this.$ipa.suivreDispositifs({
+        f: (dispositifs) => {
           this.dispositifs = dispositifs.sort((a) =>
             a === this.idDispositif ? -1 : 1
           );
-        }
-      );
+        },
+      });
 
       this.suivre([oublierCourriel, oublierNoms, oublierDispositifs]);
     },
@@ -182,7 +183,7 @@ export default mixins(mixinIPA, mixinImages).extend({
       langue: string;
       nom: string;
     }) {
-      this.$ipa.profil!.sauvegarderNom(langue, nom);
+      this.$ipa.profil!.sauvegarderNom({ langue, nom });
     },
     changerLangueNom: function ({
       langueOriginale,
@@ -193,11 +194,11 @@ export default mixins(mixinIPA, mixinImages).extend({
       langue: string;
       nom: string;
     }) {
-      this.$ipa.profil!.effacerNom(langueOriginale);
-      this.$ipa.profil!.sauvegarderNom(langue, nom);
+      this.$ipa.profil!.effacerNom({ langue: langueOriginale });
+      this.$ipa.profil!.sauvegarderNom({ langue, nom });
     },
     effacerNom({ langue }: { langue: string }) {
-      this.$ipa.profil!.effacerNom(langue);
+      this.$ipa.profil!.effacerNom({ langue });
     },
   },
 });

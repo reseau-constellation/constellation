@@ -98,34 +98,34 @@ export default mixins(mixinIPA, mixinLangues).extend({
   methods: {
     couper,
     initialiserSuivi: async function () {
-      const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte(
-        (id) => (this.monIdBdRacine = id)
-      );
+      const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte({
+        f: (id) => (this.monIdBdRacine = id),
+      });
 
-      const oublierNoms = await this.$ipa.réseau!.suivreNomsMembre(
-        this.id,
-        (noms) => {
+      const oublierNoms = await this.$ipa.réseau!.suivreNomsMembre({
+        idCompte: this.id,
+        f: (noms) => {
           this.noms = noms;
-        }
-      );
-      const oublierCourriel = await this.$ipa.réseau!.suivreCourrielMembre(
-        this.id,
-        (courriel) => {
+        },
+      });
+      const oublierCourriel = await this.$ipa.réseau!.suivreCourrielMembre({
+        idCompte: this.id,
+        f: (courriel) => {
           this.courriel = courriel;
-        }
-      );
-      const oublierBds = await this.$ipa.réseau!.suivreBdsMembre(
-        this.id,
-        (bds) => {
+        },
+      });
+      const oublierBds = await this.$ipa.réseau!.suivreBdsMembre({
+        idCompte: this.id,
+        f: (bds) => {
           this.bds = bds || [];
-        }
-      );
-      const oublierProjets = await this.$ipa.réseau!.suivreProjetsMembre(
-        this.id,
-        (projets) => {
+        },
+      });
+      const oublierProjets = await this.$ipa.réseau!.suivreProjetsMembre({
+        idCompte: this.id,
+        f: (projets) => {
           this.projets = projets || [];
-        }
-      );
+        },
+      });
       this.suivre([
         oublierIdBdRacine,
         oublierNoms,

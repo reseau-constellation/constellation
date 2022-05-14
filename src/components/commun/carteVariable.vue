@@ -136,12 +136,15 @@ export default mixins(mixinLangues, mixinIPA).extend({
       langue: string;
       nom: string;
     }) {
-      await this.$ipa.variables!.ajouterNomsVariable(this.id, {
-        [langue]: nom,
+      await this.$ipa.variables!.ajouterNomsVariable({
+        id: this.id,
+        noms: {
+          [langue]: nom,
+        },
       });
     },
     effacerNom: async function ({ langue }: { langue: string }) {
-      await this.$ipa.variables!.effacerNomVariable(this.id, langue);
+      await this.$ipa.variables!.effacerNomVariable({ id: this.id, langue });
     },
     changerLangueNom: async function ({
       langueOriginale,
@@ -152,9 +155,15 @@ export default mixins(mixinLangues, mixinIPA).extend({
       langue: string;
       nom: string;
     }) {
-      await this.$ipa.variables!.effacerNomVariable(this.id, langueOriginale);
-      await this.$ipa.variables!.ajouterNomsVariable(this.id, {
-        [langue]: nom,
+      await this.$ipa.variables!.effacerNomVariable({
+        id: this.id,
+        langue: langueOriginale,
+      });
+      await this.$ipa.variables!.ajouterNomsVariable({
+        id: this.id,
+        noms: {
+          [langue]: nom,
+        },
       });
     },
     sauvegarderDescr: async function ({
@@ -164,12 +173,15 @@ export default mixins(mixinLangues, mixinIPA).extend({
       langue: string;
       nom: string;
     }) {
-      await this.$ipa.variables!.ajouterDescriptionsVariable(this.id, {
-        [langue]: nom,
+      await this.$ipa.variables!.ajouterDescriptionsVariable({
+        id: this.id,
+        descriptions: {
+          [langue]: nom,
+        },
       });
     },
     effacerDescr: async function ({ langue }: { langue: string }) {
-      await this.$ipa.variables!.effacerDescrVariable(this.id, langue);
+      await this.$ipa.variables!.effacerDescrVariable({ id: this.id, langue });
     },
     changerLangueDescr: async function ({
       langueOriginale,
@@ -180,51 +192,60 @@ export default mixins(mixinLangues, mixinIPA).extend({
       langue: string;
       nom: string;
     }) {
-      await this.$ipa.variables!.effacerDescrVariable(this.id, langueOriginale);
-      await this.$ipa.variables!.ajouterDescriptionsVariable(this.id, {
-        [langue]: nom,
+      await this.$ipa.variables!.effacerDescrVariable({
+        id: this.id,
+        langue: langueOriginale,
+      });
+      await this.$ipa.variables!.ajouterDescriptionsVariable({
+        id: this.id,
+        descriptions: {
+          [langue]: nom,
+        },
       });
     },
     sauvegarderCategorie: async function (
       catégorie: variables.catégorieVariables
     ) {
-      await this.$ipa.variables!.sauvegarderCatégorieVariable(
-        this.id,
-        catégorie
-      );
+      await this.$ipa.variables!.sauvegarderCatégorieVariable({
+        idVariable: this.id,
+        catégorie,
+      });
     },
     initialiserSuivi: async function () {
-      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire(
-        this.id,
-        (permission) => (this.permissionÉcrire = permission)
-      );
+      const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire({
+        id: this.id,
+        f: (permission) => (this.permissionÉcrire = permission),
+      });
 
-      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable(
-        this.id,
-        (noms) => {
+      const oublierNoms = await this.$ipa.variables!.suivreNomsVariable({
+        id: this.id,
+        f: (noms) => {
           this.noms = noms;
-        }
-      );
+        },
+      });
 
       const oublierDescriptions =
-        await this.$ipa.variables!.suivreDescrVariable(this.id, (descrs) => {
-          this.descriptions = descrs;
+        await this.$ipa.variables!.suivreDescrVariable({
+          id: this.id,
+          f: (descrs) => {
+            this.descriptions = descrs;
+          },
         });
 
       const oublierCatégorie =
-        await this.$ipa.variables!.suivreCatégorieVariable(
-          this.id,
-          (catégorie) => {
+        await this.$ipa.variables!.suivreCatégorieVariable({
+          id: this.id,
+          f: (catégorie) => {
             this.catégorie = catégorie;
-          }
-        );
+          },
+        });
 
-      const oublierUnités = await this.$ipa.variables!.suivreUnitésVariable(
-        this.id,
-        (unités) => {
+      const oublierUnités = await this.$ipa.variables!.suivreUnitésVariable({
+        id: this.id,
+        f: (unités) => {
           this.unités = unités;
-        }
-      );
+        },
+      });
 
       this.suivre([
         oublierPermissionÉcrire,
