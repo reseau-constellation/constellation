@@ -23,7 +23,7 @@ const routes: Array<RouteConfig> = [
   {
     path: "/bd",
     name: "Bases de données",
-    component: () => import("@/views/BD/Accueil.vue"),
+    component: () => import("@/views/MesDonnées.vue"),
   },
   {
     path: "/bd/visualiser/:id",

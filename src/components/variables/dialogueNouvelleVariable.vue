@@ -14,62 +14,52 @@
         <p class="text-overline mb-2">
           {{ $t("dialogueNouvelleVariable.nom") }}
         </p>
-        <v-menu
-          offset-x
-          :close-on-content-click="false"
-          transition="slide-y-transition"
+        <boîteNoms
+          :noms="noms"
+          titre="dialogueNouvelleVariable.தேர்ந்தெடுக்கவும்"
+          sousTitre="dialogueNouvelleVariable.சிறந்தது"
+          @sauvegarder="sauvegarderNom"
+          @changerLangue="changerLangueNom"
+          @effacer="effacerNom"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
+              v-on="on"
+              v-bind="attrs"
               flat
               dense
               outlined
-              v-on="on"
-              v-bind="attrs"
               :readonly="true"
               :value="nom"
               :label="$t('dialogueNouvelleVariable.nom')"
             />
           </template>
-          <boîteNoms
-            :noms="noms"
-            :titre="$t('dialogueNouvelleVariable.தேர்ந்தெடுக்கவும்')"
-            :sousTitre="$t('dialogueNouvelleVariable.சிறந்தது')"
-            @sauvegarder="sauvegarderNom"
-            @changerLangue="changerLangueNom"
-            @effacer="effacerNom"
-          />
-        </v-menu>
+        </boîteNoms>
 
         <p class="text-overline mb-2">
           {{ $t("dialogueNouvelleVariable.Description") }}
         </p>
-        <v-menu
-          offset-x
-          :close-on-content-click="false"
-          transition="slide-y-transition"
+        <boîteNoms
+          :noms="descriptions"
+          titre="dialogueNouvelleVariable.எதைக்_குறிக்கிறது"
+          sousTitre="dialogueNouvelleVariable.சிறந்தது"
+          @sauvegarder="sauvegarderDescr"
+          @changerLangue="changerLangueDescr"
+          @effacer="effacerDescr"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
+              v-on="on"
+              v-bind="attrs"
               flat
               dense
               outlined
-              v-on="on"
-              v-bind="attrs"
               :readonly="true"
               :value="descr"
               :label="$t('dialogueNouvelleVariable.Description')"
             />
           </template>
-          <boîteNoms
-            :noms="descriptions"
-            :titre="$t('dialogueNouvelleVariable.எதைக்_குறிக்கிறது')"
-            :sousTitre="$t('dialogueNouvelleVariable.சிறந்தது')"
-            @sauvegarder="sauvegarderDescr"
-            @changerLangue="changerLangueDescr"
-            @effacer="effacerDescr"
-          />
-        </v-menu>
+        </boîteNoms>
 
         <p class="text-overline mb-2">
           {{ $t("dialogueNouvelleVariable.Catégorie") }}
@@ -123,7 +113,7 @@
         <v-btn color="secondary" text outlined @click="fermer">
           {{ $t("communs.annuler") }}
         </v-btn>
-        <v-btn color="primary" :disabled="!prêt" depressed @click="sauvegarder">
+        <v-btn color="primary" :disabled="!prêt" :loading="enProgrès" depressed outlined @click="sauvegarder">
           {{ $t("communs.sauvegarder") }}
         </v-btn>
       </v-card-actions>
@@ -153,6 +143,7 @@ export default mixins(mixinLangues).extend({
   data: function () {
     return {
       dialogue: false,
+      enProgrès: false,
 
       catégorie: undefined as undefined | variables.catégorieVariables,
       noms: {} as { [key: string]: string },
@@ -241,6 +232,7 @@ export default mixins(mixinLangues).extend({
       this.sauvegarderDescr({ langue, nom });
     },
     sauvegarder: async function () {
+      this.enProgrès=true;
       if (!this.catégorie)
         throw new Error(
           this.$t("dialogueNouvelleVariable.குறிப்பிடப்படாதவை") as string
@@ -265,6 +257,7 @@ export default mixins(mixinLangues).extend({
       this.$emit("sauvegarde", { id: idVariable });
 
       this.fermer();
+      this.enProgrès=false;
     },
     fermer: function () {
       this.catégorie = undefined;

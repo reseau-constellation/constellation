@@ -71,7 +71,7 @@ import mixins from "vue-typed-mixins";
 
 import { utils, valid } from "@constl/ipa";
 
-import dialogueNouvelleVariable from "@/components/commun/dialogueNouvelleVariable.vue";
+import dialogueNouvelleVariable from "@/components/variables/dialogueNouvelleVariable.vue";
 import itemVariable from "@/components/tableaux/colonnes/itemVariable.vue";
 import jetonVariable from "@/components/commun/jetonVariable.vue";
 

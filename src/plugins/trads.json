@@ -14,6 +14,14 @@
       "téléverser": "Téléverser",
       "pointInterogation": "?"
     },
+    "données": {
+      "choixTypeObjet": {
+        "bds": "Bases de données",
+        "mots-clefs": "Mots-clefs",
+        "projets": "Projets",
+        "variables": "Variables"
+      }
+    },
     "boîteNoms": {
       "titre": "Ajoutez des noms",
       "sousTitre": "Spécifiez autant que langues que vous voudrez.",
@@ -121,6 +129,7 @@
     },
     "dialogueNouvelleVariable": {
       "மாறி": "Nouvelle variable",
+      "sousTitre": "Créer une nouvelle variable",
       "nom": "Nom",
       "Description": "Description",
       "Catégorie": "Catégorie",
@@ -257,18 +266,18 @@
         "photo": "Photo",
         "fichier": "Fichier",
         "info": {
-          "numérique": "Numérique",
+          "numérique": "Un chiffre",
           "date": "Date",
           "heure": "Heure",
           "dateEtHeure": "Date et heure",
-          "chaîne": "Chaîne (text)",
-          "catégorique": "Catégorique",
-          "booléen": "Booléenne (Zéro ou un)",
-          "géojson": "Code sémantique pour Earth JavaScript (Format GéoJSON)",
+          "chaîne": "Du texte",
+          "catégorique": "Valeurs provenant d'une liste fixe de possibilités",
+          "booléen": "Zéro ou un",
+          "géojson": "Notation d'objet JavaScript géographique (Format GéoJSON)",
           "vidéo": "Vidéo",
-          "audio": "Audio",
-          "photo": "Photo",
-          "fichier": "Fichier"
+          "audio": "Fichier audio",
+          "photo": "Image ou photo",
+          "fichier": "N'importe quel fichier"
         }
       }
     },
