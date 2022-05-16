@@ -49,11 +49,14 @@
     "exporter": {
       "titre": "Exporter une copie des données",
       "formatFichier": "Format du fichier",
-      "inclureMédias": "Inclure les documents externes (photos, vidéos)"
+      "inclureMédias": "Inclure les documents externes (photos, vidéos)",
+      "langues": "Langues d'exportation (en ordre de préférence)"
     },
     "importer": {
       "titre": "Importer des données",
-      "தேர்வுசெய்க": "Choisissez",
+      "தேர்வுசெய்க": "Choisir un fichier",
+      "நெடுவரிசை": "Colonnes",
+      "பதிவேற்றம்": "Importation",
       "தேர்வுசெய்": "Sélectionnez le fichier à télécharger"
     },
     "carteMembre": {
@@ -762,7 +765,7 @@
     },
     "importer": {
       "titre": "தரவை இறக்குமதி செய்ய",
-      "தேர்வுசெய்க": "தேர்வு செய்க",
+      "தேர்வுசெய்க": "கோப்பைத் தேர்வு செய்க",
       "நெடுவரிசை": "நெடுவரிசை",
       "பதிவேற்றம்": "பதிவேற்றம்"
 
