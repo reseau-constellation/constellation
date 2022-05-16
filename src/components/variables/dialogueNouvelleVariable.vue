@@ -113,7 +113,14 @@
         <v-btn color="secondary" text outlined @click="fermer">
           {{ $t("communs.annuler") }}
         </v-btn>
-        <v-btn color="primary" :disabled="!prêt" :loading="enProgrès" depressed outlined @click="sauvegarder">
+        <v-btn
+          color="primary"
+          :disabled="!prêt"
+          :loading="enProgrès"
+          depressed
+          outlined
+          @click="sauvegarder"
+        >
           {{ $t("communs.sauvegarder") }}
         </v-btn>
       </v-card-actions>
@@ -232,7 +239,7 @@ export default mixins(mixinLangues).extend({
       this.sauvegarderDescr({ langue, nom });
     },
     sauvegarder: async function () {
-      this.enProgrès=true;
+      this.enProgrès = true;
       if (!this.catégorie)
         throw new Error(
           this.$t("dialogueNouvelleVariable.குறிப்பிடப்படாதவை") as string
@@ -257,7 +264,7 @@ export default mixins(mixinLangues).extend({
       this.$emit("sauvegarde", { id: idVariable });
 
       this.fermer();
-      this.enProgrès=false;
+      this.enProgrès = false;
     },
     fermer: function () {
       this.catégorie = undefined;

@@ -64,7 +64,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
         idCompte: this.id,
         f: (noms) => {
           this.nomsAuteur = noms;
-        }
+        },
       });
       this.suivre([oublierNoms]);
     },

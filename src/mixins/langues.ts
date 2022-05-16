@@ -25,7 +25,10 @@ export default Vue.extend({
       return this.$i18n.locale;
     },
     languesPréférées: function (): string[] {
-      return uniq([this.$i18n.locale, ...(this.$i18n.fallbackLocale as Locale[])]);
+      return uniq([
+        this.$i18n.locale,
+        ...(this.$i18n.fallbackLocale as Locale[]),
+      ]);
     },
     écriture: function (): string {
       return écriture(this.langue);

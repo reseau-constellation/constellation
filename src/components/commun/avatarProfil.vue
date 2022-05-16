@@ -61,7 +61,7 @@ export default mixins(mixinIPA, mixinImage).extend({
           } else {
             this.imageCompte = null;
           }
-        }
+        },
       });
       this.suivre([oublierImage]);
     },

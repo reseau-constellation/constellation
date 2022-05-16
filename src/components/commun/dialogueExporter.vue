@@ -8,7 +8,13 @@
       <v-card-title class="headline mb-3">
         {{ $t("exporter.titre") }}
         <v-spacer />
-        <v-btn icon @click="dialogue = false; enProgrès = false">
+        <v-btn
+          icon
+          @click="
+            dialogue = false;
+            enProgrès = false;
+          "
+        >
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -31,9 +37,8 @@
           v-model="languesPourExportation"
           :items="langues"
           :label="$t('exporter.langues')"
-
-          outlined multiple
-
+          outlined
+          multiple
         >
           <template v-slot:selection="data">
             <v-chip
@@ -48,7 +53,9 @@
           </template>
           <template v-slot:item="data">
             <v-list-item-content>
-              <v-list-item-title>{{ codeÀNomLangue(data.item) || data.item }}</v-list-item-title>
+              <v-list-item-title>{{
+                codeÀNomLangue(data.item) || data.item
+              }}</v-list-item-title>
             </v-list-item-content>
           </template>
         </v-autocomplete>
@@ -82,11 +89,7 @@ import mixins from "vue-typed-mixins";
 import { rubiChabäl as codeÀNomLangue } from "nuchabal";
 import { BookType, writeFile, writeXLSX } from "xlsx";
 import toBuffer from "it-to-buffer";
-import {
-  bds,
-  projets,
-  utils,
-} from "@constl/ipa";
+import { bds, projets, utils } from "@constl/ipa";
 
 import mixinLangues from "@/mixins/langues";
 
@@ -101,44 +104,46 @@ export default mixins(mixinLangues).extend({
 
       formatDoc: "ods" as BookType | "xls",
       inclureMédias: false,
-      languesPourExportation: [] as string[]
+      languesPourExportation: [] as string[],
     };
   },
   mounted: function () {
-    this.languesPourExportation = this.languesPréférées
+    this.languesPourExportation = this.languesPréférées;
   },
   methods: {
     codeÀNomLangue,
     enleverLangue: function (langue: string) {
-      const index = this.languesPourExportation.indexOf(langue)
-      if (index >= 0) this.languesPourExportation.splice(index, 1)
+      const index = this.languesPourExportation.indexOf(langue);
+      if (index >= 0) this.languesPourExportation.splice(index, 1);
     },
     télécharger: async function () {
       this.enProgrès = true;
 
       const conversionsTypes: { [key: string]: BookType } = {
-          xls: "biff8",
-        };
+        xls: "biff8",
+      };
       const bookType: BookType =
         conversionsTypes[this.formatDoc] || this.formatDoc;
 
-      const exporterFichierBd = async (données: bds.donnéesBdExportées): Promise<void> => {
+      const exporterFichierBd = async (
+        données: bds.donnéesBdExportées
+      ): Promise<void> => {
         const { doc, fichiersSFIP, nomFichier } = données;
         if (this.inclureMédias) {
           const fichierDoc = {
             octets: writeXLSX(doc, { bookType, type: "buffer" }),
             nom: `${nomFichier}.${this.formatDoc}`,
           };
-          const fichiersDeSFIP = await Promise.all([...fichiersSFIP].map(
-            async fichier => {
+          const fichiersDeSFIP = await Promise.all(
+            [...fichiersSFIP].map(async (fichier) => {
               return {
                 nom: `${fichier.cid}.${fichier.ext}`,
                 octets: await toBuffer(
                   this.$ipa.obtItérableAsyncSFIP({ id: fichier.cid })
                 ),
-              }
-            }
-          ));
+              };
+            })
+          );
 
           await utils.zipper([fichierDoc], fichiersDeSFIP, nomFichier);
         } else {
@@ -146,9 +151,11 @@ export default mixins(mixinLangues).extend({
             bookType,
           });
         }
-      }
+      };
 
-      const exporterFichierProjet = async (données: projets.donnéesProjetExportées): Promise<void> => {
+      const exporterFichierProjet = async (
+        données: projets.donnéesProjetExportées
+      ): Promise<void> => {
         const { docs, fichiersSFIP, nomFichier } = données;
 
         const fichiersDocs = docs.map((d) => {
@@ -157,19 +164,21 @@ export default mixins(mixinLangues).extend({
             octets: writeXLSX(d.doc, { bookType, type: "buffer" }),
           };
         });
-        const fichiersDeSFIP = this.inclureMédias ? await Promise.all([...fichiersSFIP].map(
-          async fichier => {
-            return {
-              nom: `${fichier.cid}.${fichier.ext}`,
-              octets: await toBuffer(
-                this.$ipa.obtItérableAsyncSFIP({ id: fichier.cid })
-              ),
-            }
-          }
-        )) : [];
+        const fichiersDeSFIP = this.inclureMédias
+          ? await Promise.all(
+              [...fichiersSFIP].map(async (fichier) => {
+                return {
+                  nom: `${fichier.cid}.${fichier.ext}`,
+                  octets: await toBuffer(
+                    this.$ipa.obtItérableAsyncSFIP({ id: fichier.cid })
+                  ),
+                };
+              })
+            )
+          : [];
 
         await utils.zipper(fichiersDocs, fichiersDeSFIP, nomFichier);
-      }
+      };
 
       try {
         switch (this.type) {

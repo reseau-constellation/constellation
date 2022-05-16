@@ -12,19 +12,21 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12">
-        <v-chip-group v-model="typeObjetSélectionné" class="mx-10" mandatory active-class="primary--text">
-          <v-chip
-            v-for="typeObjet in typesObjets"
-            :key="typeObjet"
-          >
+        <v-chip-group
+          v-model="typeObjetSélectionné"
+          class="mx-10"
+          mandatory
+          active-class="primary--text"
+        >
+          <v-chip v-for="typeObjet in typesObjets" :key="typeObjet">
             {{ $t("données.choixTypeObjet." + typeObjet) }}
           </v-chip>
         </v-chip-group>
       </v-col>
       <v-col cols="12">
         <v-slide-x-transition group class="d-flex flex-wrap mx-10">
-          <toutes-variables v-if="typeObjetSélectionné === 1" :key="1"/>
-          <toutes-bds v-if="typeObjetSélectionné === 2" :key="2"/>
+          <toutes-variables v-if="typeObjetSélectionné === 1" :key="1" />
+          <toutes-bds v-if="typeObjetSélectionné === 2" :key="2" />
         </v-slide-x-transition>
       </v-col>
     </v-row>

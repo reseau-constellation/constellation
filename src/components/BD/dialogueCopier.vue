@@ -69,7 +69,7 @@ export default mixins(mixinLangues).extend({
       const nouvelId = await this.$ipa.bds!.copierBd({
         id: this.id,
         ajouterÀMesBds: true,
-        copierDonnées: this.inclureDonnées
+        copierDonnées: this.inclureDonnées,
       });
       this.$router.push(`/bd/visualiser/${encodeURIComponent(nouvelId)}`);
 

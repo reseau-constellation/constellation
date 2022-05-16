@@ -111,7 +111,7 @@ export default mixins(mixinIPA).extend({
       await this.$ipa.bds!.inviterAuteur({
         idBd: this.idBd,
         idBdCompteAuteur: this.auteurSélectionné,
-        rôle: this.donnerPermissionModérateur ? MODÉRATEUR : MEMBRE
+        rôle: this.donnerPermissionModérateur ? MODÉRATEUR : MEMBRE,
       });
       this.enCours = false;
       this.annuler();

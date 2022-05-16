@@ -10,9 +10,16 @@
     <v-list-item-action>
       <span>
         <v-btn icon>
-          <v-icon>{{ épinglé && épinglé.bd ? "mdi-pin" : "mdi-pin-outline" }}</v-icon>
+          <v-icon>{{
+            épinglé && épinglé.bd ? "mdi-pin" : "mdi-pin-outline"
+          }}</v-icon>
         </v-btn>
-        <v-btn v-if="permissionÉcrire" icon color="error" @click.stop="effacerVariable">
+        <v-btn
+          v-if="permissionÉcrire"
+          icon
+          color="error"
+          @click.stop="effacerVariable"
+        >
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </span>
@@ -27,7 +34,7 @@ import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 import { traduireNom, couper } from "@/utils";
 
-import { favoris } from "@constl/ipa"
+import { favoris } from "@constl/ipa";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemListeVariables",
@@ -71,21 +78,28 @@ export default mixins(mixinLangues, mixinIPA).extend({
         },
       });
 
-      const oublierDescriptions = await this.$ipa.variables!.suivreDescrVariable({
-        id: this.id,
-        f: (descriptions) => {
-          this.descriptions = descriptions;
-        },
-      });
+      const oublierDescriptions =
+        await this.$ipa.variables!.suivreDescrVariable({
+          id: this.id,
+          f: (descriptions) => {
+            this.descriptions = descriptions;
+          },
+        });
 
-      const oublierÉpinglé = await this.$ipa.favoris!.suivreEstÉpingléSurDispositif({
-        idObjet: this.id,
-        f: (épinglé) => {
-          this.épinglé = épinglé;
-        },
-      });
+      const oublierÉpinglé =
+        await this.$ipa.favoris!.suivreEstÉpingléSurDispositif({
+          idObjet: this.id,
+          f: (épinglé) => {
+            this.épinglé = épinglé;
+          },
+        });
 
-      this.suivre([oublierPermissionÉcrire, oublierNoms, oublierDescriptions, oublierÉpinglé]);
+      this.suivre([
+        oublierPermissionÉcrire,
+        oublierNoms,
+        oublierDescriptions,
+        oublierÉpinglé,
+      ]);
     },
   },
 });

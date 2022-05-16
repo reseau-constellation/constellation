@@ -191,7 +191,9 @@ export default mixins(mixinLangues, mixinIPA).extend({
       colonneFichier: undefined as string[] | undefined,
       colonneSélectionné: undefined as string | undefined,
 
-      colonnesTableauConstellation: undefined as tableaux.InfoColAvecCatégorie[] | undefined,
+      colonnesTableauConstellation: undefined as
+        | tableaux.InfoColAvecCatégorie[]
+        | undefined,
     };
   },
 
@@ -220,10 +222,11 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
 
     initialiserSuivi: async function () {
-      const oublierColonnesTableauConstellation = await this.$ipa.tableaux!.suivreColonnes({
-        idTableau: this.id,
-        f: (colonnes) => (this.colonnesTableauConstellation = colonnes),
-      });
+      const oublierColonnesTableauConstellation =
+        await this.$ipa.tableaux!.suivreColonnes({
+          idTableau: this.id,
+          f: (colonnes) => (this.colonnesTableauConstellation = colonnes),
+        });
 
       this.suivre([oublierColonnesTableauConstellation]);
     },

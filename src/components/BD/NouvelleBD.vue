@@ -398,16 +398,19 @@ export default mixins(
       if (!this.licence) return;
       this.enCréation = true;
 
-      const id = await this.$ipa.bds!.créerBd({licence: this.licence});
+      const id = await this.$ipa.bds!.créerBd({ licence: this.licence });
       if (Object.keys(this.noms).length) {
-        await this.$ipa.bds!.ajouterNomsBd({id, noms: this.noms});
+        await this.$ipa.bds!.ajouterNomsBd({ id, noms: this.noms });
       }
       if (Object.keys(this.descriptions).length) {
-        await this.$ipa.bds!.ajouterDescriptionsBd({id, descriptions: this.descriptions});
+        await this.$ipa.bds!.ajouterDescriptionsBd({
+          id,
+          descriptions: this.descriptions,
+        });
       }
 
       //On ajoute la nouvelle BD aux favoris automatiquement
-      await this.$ipa.favoris!.épinglerFavori({id, dispositifs: "TOUS"});
+      await this.$ipa.favoris!.épinglerFavori({ id, dispositifs: "TOUS" });
 
       this.enCréation = false;
       this.$router.push(`/bd/visualiser/${encodeURIComponent(id)}`);
