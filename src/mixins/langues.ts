@@ -1,5 +1,6 @@
 import Vue from "vue";
 import { LocaleMessageObject, Locale } from "vue-i18n";
+import { uniq } from "lodash";
 
 import {
   rutzibChabäl as écriture,
@@ -24,7 +25,7 @@ export default Vue.extend({
       return this.$i18n.locale;
     },
     languesPréférées: function (): string[] {
-      return [this.$i18n.locale, ...(this.$i18n.fallbackLocale as Locale[])];
+      return uniq([this.$i18n.locale, ...(this.$i18n.fallbackLocale as Locale[])]);
     },
     écriture: function (): string {
       return écriture(this.langue);
