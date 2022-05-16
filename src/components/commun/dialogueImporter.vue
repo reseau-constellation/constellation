@@ -168,10 +168,14 @@ import ImportateurFeuilleCalcul from "@/components/commun/xlsx";
 import mixins from "vue-typed-mixins";
 import XLSX, { read as readXLSX } from "xlsx";
 import mixinLangues from "@/mixins/langues";
-export default mixins(mixinLangues).extend({
+import mixinIPA from "@/mixins/ipa";
+
+import { tableaux } from "@constl/ipa";
+
+export default mixins(mixinLangues, mixinIPA).extend({
   name: "dialogueTéléverser",
   props: ["id", "type"],
-  mixins: [mixinLangues],
+  mixins: [mixinLangues, mixinIPA],
   data: function () {
     return {
       dialogue: false,
@@ -186,6 +190,8 @@ export default mixins(mixinLangues).extend({
       nomFichier: undefined as string | undefined,
       colonneFichier: undefined as string[] | undefined,
       colonneSélectionné: undefined as string | undefined,
+
+      colonnesTableauConstellation: undefined as tableaux.InfoColAvecCatégorie[] | undefined,
     };
   },
 
@@ -211,6 +217,15 @@ export default mixins(mixinLangues).extend({
       console.log("onPickFile");
       const fileInput = this.$refs.fileInput as HTMLInputElement;
       fileInput.click();
+    },
+
+    initialiserSuivi: async function () {
+      const oublierColonnesTableauConstellation = await this.$ipa.tableaux!.suivreColonnes({
+        idTableau: this.id,
+        f: (colonnes) => (this.colonnesTableauConstellation = colonnes),
+      });
+
+      this.suivre([oublierColonnesTableauConstellation]);
     },
   },
   watch: {
