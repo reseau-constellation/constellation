@@ -84,6 +84,7 @@ import { BookType, writeFile, writeXLSX } from "xlsx";
 import toBuffer from "it-to-buffer";
 import {
   bds,
+  projets,
   utils,
 } from "@constl/ipa";
 
@@ -145,6 +146,29 @@ export default mixins(mixinLangues).extend({
             bookType,
           });
         }
+      }
+
+      const exporterFichierProjet = async (données: projets.donnéesProjetExportées): Promise<void> => {
+        const { docs, fichiersSFIP, nomFichier } = données;
+
+        const fichiersDocs = docs.map((d) => {
+          return {
+            nom: `${d.nom}.${this.formatDoc}`,
+            octets: writeXLSX(d.doc, { bookType, type: "buffer" }),
+          };
+        });
+        const fichiersDeSFIP = this.inclureMédias ? await Promise.all([...fichiersSFIP].map(
+          async fichier => {
+            return {
+              nom: `${fichier.cid}.${fichier.ext}`,
+              octets: await toBuffer(
+                this.$ipa.obtItérableAsyncSFIP({ id: fichier.cid })
+              ),
+            }
+          }
+        )) : [];
+
+        await utils.zipper(fichiersDocs, fichiersDeSFIP, nomFichier);
       }
 
       try {
