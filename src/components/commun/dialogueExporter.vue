@@ -8,7 +8,7 @@
       <v-card-title class="headline mb-3">
         {{ $t("exporter.titre") }}
         <v-spacer />
-        <v-btn icon @click="dialogue = false">
+        <v-btn icon @click="dialogue = false; enProgrès = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -27,6 +27,31 @@
           v-model="inclureMédias"
           :label="$t('exporter.inclureMédias')"
         />
+        <v-autocomplete
+          v-model="languesPourExportation"
+          :items="langues"
+          :label="$t('exporter.langues')"
+
+          outlined multiple
+
+        >
+          <template v-slot:selection="data">
+            <v-chip
+              v-bind="data.attrs"
+              :input-value="data.selected"
+              close
+              @click="data.select"
+              @click:close="enleverLangue(data.item)"
+            >
+              {{ codeÀNomLangue(data.item) || data.item }}
+            </v-chip>
+          </template>
+          <template v-slot:item="data">
+            <v-list-item-content>
+              <v-list-item-title>{{ codeÀNomLangue(data.item) || data.item }}</v-list-item-title>
+            </v-list-item-content>
+          </template>
+        </v-autocomplete>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -54,7 +79,13 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { BookType } from "xlsx";
+import { rubiChabäl as codeÀNomLangue } from "nuchabal";
+import { BookType, writeFile, writeXLSX } from "xlsx";
+import toBuffer from "it-to-buffer";
+import {
+  bds,
+  utils,
+} from "@constl/ipa";
 
 import mixinLangues from "@/mixins/langues";
 
@@ -69,45 +100,78 @@ export default mixins(mixinLangues).extend({
 
       formatDoc: "ods" as BookType | "xls",
       inclureMédias: false,
-      langueColonnes: undefined,
+      languesPourExportation: [] as string[]
     };
   },
+  mounted: function () {
+    this.languesPourExportation = this.languesPréférées
+  },
   methods: {
+    codeÀNomLangue,
+    enleverLangue: function (langue: string) {
+      const index = this.languesPourExportation.indexOf(langue)
+      if (index >= 0) this.languesPourExportation.splice(index, 1)
+    },
     télécharger: async function () {
       this.enProgrès = true;
+
+      const conversionsTypes: { [key: string]: BookType } = {
+          xls: "biff8",
+        };
+      const bookType: BookType =
+        conversionsTypes[this.formatDoc] || this.formatDoc;
+
+      const exporterFichierBd = async (données: bds.donnéesBdExportées): Promise<void> => {
+        const { doc, fichiersSFIP, nomFichier } = données;
+        if (this.inclureMédias) {
+          const fichierDoc = {
+            octets: writeXLSX(doc, { bookType, type: "buffer" }),
+            nom: `${nomFichier}.${this.formatDoc}`,
+          };
+          const fichiersDeSFIP = await Promise.all([...fichiersSFIP].map(
+            async fichier => {
+              return {
+                nom: `${fichier.cid}.${fichier.ext}`,
+                octets: await toBuffer(
+                  this.$ipa.obtItérableAsyncSFIP({ id: fichier.cid })
+                ),
+              }
+            }
+          ));
+
+          await utils.zipper([fichierDoc], fichiersDeSFIP, nomFichier);
+        } else {
+          writeFile(doc, `${nomFichier}.${this.formatDoc}`, {
+            bookType,
+          });
+        }
+      }
 
       try {
         switch (this.type) {
           case "bd": {
             const données = await this.$ipa.bds!.exporterDonnées({
               id: this.id,
-              langues: this.languesPréférées,
+              langues: this.languesPourExportation,
             });
-            this.$ipa.bds!.exporterDocumentDonnées({
-              données,
-              formatDoc: this.formatDoc,
-              inclureFichiersSFIP: this.inclureMédias,
-            });
+
+            await exporterFichierBd(données);
             break;
           }
 
           case "tableau": {
             const données = await this.$ipa.tableaux!.exporterDonnées({
               idTableau: this.id,
-              langues: this.languesPréférées,
+              langues: this.languesPourExportation,
             });
-            this.$ipa.bds!.exporterDocumentDonnées({
-              données,
-              formatDoc: this.formatDoc,
-              inclureFichiersSFIP: this.inclureMédias,
-            });
+            await exporterFichierBd(données);
             break;
           }
 
           case "projet": {
             const données = await this.$ipa.projets!.exporterDonnées({
               id: this.id,
-              langues: this.languesPréférées,
+              langues: this.languesPourExportation,
             });
             this.$ipa.projets!.exporterDocumentDonnées({
               données,
