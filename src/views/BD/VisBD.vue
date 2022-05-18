@@ -75,7 +75,7 @@
                 >
                   <span v-bind="tooltipAttrs" v-on="tooltipOn">
                     <v-btn v-bind="attrs" v-on="on" icon>
-                      <v-icon>mdi-card-multiple-outline</v-icon>
+                      <v-icon>mdi-content-copy</v-icon>
                     </v-btn>
                   </span>
                 </template>
