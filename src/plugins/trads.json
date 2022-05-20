@@ -282,6 +282,10 @@
           "photo": "Image ou photo",
           "fichier": "N'importe quel fichier"
         }
+      },
+      "effacer": {
+        "titre": "Voulez-vous vraiment effacer cette base de variable ?",
+        "explication": "Ceci effacera la variable de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées. Assurez-vous qu'aucune de vos bases de données n'utilise cette variable avant de l'effacer."
       }
     },
     "conditions": {

@@ -21,19 +21,19 @@
           <v-radio
             :label="$t('épingler.AUCUN')"
             value="AUCUN"
-          >
+          />
           <v-radio
             :label="$t('épingler.TOUS')"
             value="TOUS"
-          >
+          />
           <v-radio
             :label="$t('épingler.INSTALLÉ')"
             value="INSTALLÉ"
-          >
+          />
           <v-radio
             :label="$t('épingler.dispositifsSpécifiques')"
             value="SPÉCIFIQUES"
-          >
+          />
         </v-radio-group>
         <v-autocomplete
           v-model="dispositifsSpécifiques"
@@ -50,19 +50,19 @@
           <v-radio
             :label="$t('épingler.AUCUN')"
             value="AUCUN"
-          >
+          />
           <v-radio
             :label="$t('épingler.TOUS')"
             value="TOUS"
-          >
+          />
           <v-radio
             :label="$t('épingler.INSTALLÉ')"
             value="INSTALLÉ"
-          >
+          />
           <v-radio
             :label="$t('épingler.dispositifsSpécifiques')"
             value="SPÉCIFIQUES"
-          >
+          />
         </v-radio-group>
         <v-autocomplete
           v-model="dispositifsFichiersSpécifiques"

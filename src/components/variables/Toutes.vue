@@ -6,7 +6,7 @@
     >
       <nouvelle-variable :key="0">
         <template v-slot:activator="{ on, attrs }">
-          <v-list-item :key="0" v-bind="attrs" v-on="on">
+          <v-list-item v-bind="attrs" v-on="on">
             <v-list-item-avatar>
               <v-icon>mdi-plus</v-icon>
             </v-list-item-avatar>
@@ -21,8 +21,11 @@
           </v-list-item>
         </template>
       </nouvelle-variable>
-
-      <item-liste-variables v-for="id in idsVariables" :key="id" :id="id" />
+      <dialogue-info-variable v-for="id in idsVariables" :key="id + '!'" :id="id">
+        <template v-slot:activator="{ on, attrs }">
+          <item-liste-variables :id="id" v-bind="attrs" v-on="on" />
+        </template>
+      </dialogue-info-variable>
     </v-slide-x-transition>
     <v-skeleton-loader
       v-if="idsVariables === undefined"
@@ -37,11 +40,12 @@ import mixins from "vue-typed-mixins";
 import Titre from "@/components/commun/Titre.vue";
 import nouvelleVariable from "@/components/variables/dialogueNouvelleVariable.vue";
 import itemListeVariables from "@/components/variables/itemListeVariables.vue";
+import dialogueInfoVariable from "@/components/variables/dialogueInfoVariable.vue"
 import mixinIPA from "@/mixins/ipa";
 
 export default mixins(mixinIPA).extend({
   name: "BD",
-  components: { Titre, nouvelleVariable, itemListeVariables },
+  components: { Titre, nouvelleVariable, itemListeVariables, dialogueInfoVariable },
   mixins: [mixinIPA],
   data: function () {
     return {

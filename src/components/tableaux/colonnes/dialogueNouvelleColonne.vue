@@ -55,7 +55,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" text outlined @click="annuler">
+        <v-btn color="secondary" text outlined @click="fermer">
           {{ $t("communs.annuler") }}
         </v-btn>
         <v-btn color="primary" :disabled="!prêt" depressed @click="sauvegarder">
@@ -99,12 +99,12 @@ export default mixins(mixinIPA).extend({
       if (this.oublierRèglesVariable) this.oublierRèglesVariable();
       if (val) {
         this.oublierRèglesVariable =
-          await this.$ipa.variables.suivreRèglesVariable(
-            val,
-            (règles: valid.règleVariable[]) => {
+          await this.$ipa.variables.suivreRèglesVariable({
+            id: val,
+            f: (règles: valid.règleVariable[]) => {
               this.règlesVariable = règles;
             }
-          );
+          });
       }
     },
   },
@@ -130,11 +130,11 @@ export default mixins(mixinIPA).extend({
       this.dialogue = false;
     },
     initialiserSuivi: async function () {
-      const oublierVariables = await this.$ipa.variables.suivreVariables(
-        (variables: string[]) => {
+      const oublierVariables = await this.$ipa.variables!.suivreVariables({
+        f: (variables: string[]) => {
           this.variablesDisponibles = variables;
         }
-      );
+      });
 
       this.suivre([oublierVariables]);
     },

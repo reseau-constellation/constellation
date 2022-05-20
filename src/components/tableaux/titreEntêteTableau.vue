@@ -12,7 +12,8 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import carteVariable from "@/components/commun/carteVariable.vue";
+
+import dialogueInfoVariable from "@/components/variables/dialogueInfoVariable.vue";
 
 import { traduireNom, couper } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
@@ -22,7 +23,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
   name: "titreEntêteTableau",
   props: ["idVariable", "idColonne"],
   mixins: [mixinLangues, mixinIPA],
-  components: { carteVariable },
+  components: { dialogueInfoVariable },
   data: function () {
     return {
       noms: {},

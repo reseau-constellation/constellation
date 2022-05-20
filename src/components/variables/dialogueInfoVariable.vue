@@ -1,89 +1,95 @@
 <template>
-  <v-card min-width="300">
-    <v-card-title>
-      {{ couper(nom, 20) }}
-      <span v-if="permissionÉcrire">
-        <v-menu
-          offset-x
-          :close-on-content-click="false"
-          transition="slide-y-transition"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon small v-on="on" v-bind="attrs">
-              <v-icon small>mdi-pencil</v-icon>
-            </v-btn>
-          </template>
+  <v-dialog v-model="dialogue" scrollable max-width="400">
+    <template v-slot:activator="{ on, attrs }">
+      <slot name="activator" v-bind="{ on, attrs }"></slot>
+    </template>
+    <v-card>
+      <v-card-title>
+        {{ couper(nom, 20) }}
+        <span v-if="permissionÉcrire">
           <boîteNoms
-            :noms="$t('boîteNoms.noms')"
+            :noms="noms"
+            titre="bd.vis.boîteDescr.titre"
+            etiquetteAucunNom="bd.vis.boîteNoms.aucuneDescription"
             @sauvegarder="sauvegarderNom"
             @changerLangue="changerLangueNom"
             @effacer="effacerNom"
-          />
-        </v-menu>
-      </span>
-      <v-spacer />
-      <lien-orbite :lien="id" />
-    </v-card-title>
-    <v-card-subtitle>
-      {{ couper(description, 45) }}
-      <span v-if="permissionÉcrire">
-        <v-menu
-          offset-x
-          :close-on-content-click="false"
-          transition="slide-y-transition"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon small v-on="on" v-bind="attrs">
-              <v-icon small>mdi-pencil</v-icon>
-            </v-btn>
-          </template>
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon small v-on="on" v-bind="attrs">
+                <v-icon small>mdi-pencil</v-icon>
+              </v-btn>
+            </template>
+          </boîteNoms>
+        </span>
+        <v-spacer />
+        <lien-orbite :lien="id" />
+      </v-card-title>
+      <v-card-subtitle>
+        {{ description ? description : $t("bd.visBD.விளக்கம்") }}
+        <span v-if="permissionÉcrire">
           <boîteNoms
-            :noms="$t('boîteNoms.descriptions')"
+            :noms="descriptions"
+            titre="bd.vis.boîteDescr.titre"
+            etiquetteAucunNom="bd.vis.boîteNoms.aucuneDescription"
             @sauvegarder="sauvegarderDescr"
             @changerLangue="changerLangueDescr"
             @effacer="effacerDescr"
-          />
-        </v-menu>
-      </span>
-    </v-card-subtitle>
-    <v-divider />
-    <v-card-text>
-      <p class="mb-0 text-overline">
-        {{ $t("carteVariable.unités") }}
-        <v-chip label outlined small>
-          {{ unités ? unités : $t("carteVariable.Aucune_unité") }}
-        </v-chip>
-      </p>
-      <p class="mb-0 text-overline">
-        {{ $t("carteVariable.Catégorie") }}
-        <v-tooltip v-if="catégorie !== undefined" bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-chip label outlined small v-on="on" v-bind="attrs">
-              <v-icon left small>{{ icôneCatégorie }}</v-icon>
-              {{ $t("variables.catégories." + catégorie) }}
-            </v-chip>
-          </template>
-          <span>
-            {{ $t("variables.catégories.info." + catégorie) }}
-          </span>
-        </v-tooltip>
-        <v-select
-          v-else
-          outlined
-          dense
-          :items="catégoriesVariable"
-          @change="sauvegarderCategorie"
-        >
-        </v-select>
-      </p>
-    </v-card-text>
-  </v-card>
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon small v-on="on" v-bind="attrs">
+                <v-icon small>mdi-pencil</v-icon>
+              </v-btn>
+            </template>
+          </boîteNoms>
+        </span>
+      </v-card-subtitle>
+      <v-divider />
+      <v-card-text>
+        <p class="mb-0 text-overline">
+          {{ $t("carteVariable.unités") }}
+          <v-chip label outlined small>
+            {{ unités ? unités : $t("carteVariable.Aucune_unité") }}
+          </v-chip>
+        </p>
+        <p class="mb-0 text-overline">
+          {{ $t("carteVariable.Catégorie") }}
+          <v-tooltip v-if="catégorie !== undefined" bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-chip label outlined small v-on="on" v-bind="attrs">
+                <v-icon left small>{{ icôneCatégorie }}</v-icon>
+                {{ $t("variables.catégories." + catégorie) }}
+              </v-chip>
+            </template>
+            <span>
+              {{ $t("variables.catégories.info." + catégorie) }}
+            </span>
+          </v-tooltip>
+          <v-select
+            v-else
+            outlined
+            dense
+            :items="catégoriesVariable"
+            @change="sauvegarderCategorie"
+          >
+          </v-select>
+        </p>
+        <p class="text-overline mb-0">
+          {{ $t("dialogueNouvelleColonne.சோதனைகள்") }}
+        </p>
+        <v-list>
+          <itemListeRègle v-for="r in règles" :key="r.id"> </itemListeRègle>
+        </v-list>
+
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { variables } from "@constl/ipa";
+import { valid, variables } from "@constl/ipa";
 
 import {
   couper,
@@ -95,19 +101,24 @@ import lienOrbite from "@/components/commun/lienOrbite.vue";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
+import itemListeRègle from "@/components/règles/itemListeRègles.vue";
 
 export default mixins(mixinLangues, mixinIPA).extend({
-  name: "carteVariable",
+  name: "dialogueInfoVariable",
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
-  components: { lienOrbite, boîteNoms },
+  components: { lienOrbite, boîteNoms, itemListeRègle },
   data: function () {
     return {
+      dialogue: false,
+
       noms: {} as { [key: string]: string },
       descriptions: {} as { [key: string]: string },
       unités: undefined as undefined | string,
-      permissionÉcrire: false,
+      règles: [] as valid.règleVariableAvecId[],
       catégorie: undefined as undefined | string,
+
+      permissionÉcrire: false,
       catégoriesVariable,
     };
   },
@@ -246,6 +257,13 @@ export default mixins(mixinLangues, mixinIPA).extend({
           this.unités = unités;
         },
       });
+
+      const oublierRègles = await this.$ipa.variables!.suivreRèglesVariable({
+        id: this.id,
+        f: (règles) => {
+          this.règles = règles;
+        }
+      })
 
       this.suivre([
         oublierPermissionÉcrire,

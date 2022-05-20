@@ -20,7 +20,7 @@ import Vue from "vue";
 import jetonVariable from "@/components/commun/jetonVariable.vue";
 
 export default Vue.extend({
-  name: "listeVariables",
+  name: "listeJetonsVariables",
   props: ["variables", "nMax"],
   components: { jetonVariable },
   computed: {

@@ -1,13 +1,12 @@
 <template>
-  <v-menu offset-x :close-on-content-click="false">
+  <dialogue-info-variable :id="id">
     <template v-slot:activator="{ on, attrs }">
       <v-chip outlined label small v-bind="attrs" v-on="on" class="mx-1 my-1">
         <v-icon v-if="catégorie" left small>{{ icôneCatégorie }}</v-icon>
         {{ couper(nom, longueur) }}
       </v-chip>
     </template>
-    <carte-variable :id="id" />
-  </v-menu>
+  </dialogue-info-variable>
 </template>
 
 <script lang="ts">
@@ -15,7 +14,7 @@ import mixins from "vue-typed-mixins";
 
 import { traduireNom, couper, icôneCatégorieVariable } from "@/utils";
 
-import carteVariable from "@/components/commun/carteVariable.vue";
+import dialogueInfoVariable from "@/components/variables/dialogueInfoVariable.vue";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
@@ -29,7 +28,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
     id: String,
   },
-  components: { carteVariable },
+  components: { dialogueInfoVariable },
   mixins: [mixinLangues, mixinIPA],
   data: function () {
     return {

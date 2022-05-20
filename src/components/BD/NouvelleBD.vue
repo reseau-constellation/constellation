@@ -325,7 +325,7 @@ export default mixins(
       );
       if (licencesAutres.length) {
         licencesFinales.push({
-          header: this.$t("bd.nouvelle. வேறு_உரிமங்கள்") as string,
+          header: this.$t("bd.nouvelle.வேறு_உரிமங்கள்") as string,
         });
         licencesFinales.push({ divider: true });
         licencesFinales.push(...générerÉléments(licencesAutres));

@@ -16,8 +16,9 @@
 
       <v-card-text class="mt-3">
         <v-select
-          v-model="auteurSélectionné"
+          v-model="auteursSélectionnés"
           outlined
+          multiple
           :loading="membresRéseau === null"
           :items="listeMembres"
           hide-details
@@ -31,7 +32,7 @@
         </v-select>
         <v-checkbox
           v-model="donnerPermissionModérateur"
-          :disabled="!auteurSélectionné"
+          :disabled="!auteursSélectionnés.length"
           :label="$t('dialogueNouvelAuteur.அனுமதி_கொடுங்கள்')"
         />
       </v-card-text>
@@ -47,7 +48,7 @@
           text
           outlined
           :loading="enProgrès"
-          :disabled="!auteurSélectionné"
+          :disabled="!auteursSélectionnés.length"
           @click="confirmer"
         >
           {{ $t("communs.confirmer") }}
@@ -83,7 +84,7 @@ export default mixins(mixinIPA).extend({
       dialogue: false,
       enProgrès: false,
       membresRéseau: null as null | string[],
-      auteurSélectionné: null as null | string,
+      auteursSélectionnés: [] as string[],
       donnerPermissionModérateur: false,
 
       enCours: false,
@@ -100,19 +101,22 @@ export default mixins(mixinIPA).extend({
   },
   methods: {
     annuler: function (): void {
-      this.auteurSélectionné = null;
+      this.auteursSélectionnés = [];
       this.donnerPermissionModérateur = false;
       this.dialogue = false;
     },
     confirmer: async function (): Promise<void> {
-      if (!this.auteurSélectionné) return;
+      if (!this.auteursSélectionnés.length) return;
 
       this.enCours = true;
-      await this.$ipa.bds!.inviterAuteur({
-        idBd: this.idBd,
-        idBdCompteAuteur: this.auteurSélectionné,
-        rôle: this.donnerPermissionModérateur ? MODÉRATEUR : MEMBRE,
-      });
+      for (const auteur of this.auteursSélectionnés) {
+        await this.$ipa.bds!.inviterAuteur({
+          idBd: this.idBd,
+          idBdCompteAuteur: auteur,
+          rôle: this.donnerPermissionModérateur ? MODÉRATEUR : MEMBRE,
+        });
+      }
+
       this.enCours = false;
       this.annuler();
     },
