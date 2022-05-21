@@ -16,30 +16,38 @@
         {{ $t(sousTitre) }}
       </v-card-subtitle>
       <v-divider></v-divider>
-      <item-nouveau-nom
-        :languesExistantes="Object.keys(this.noms)"
-        :etiquetteLangue="etiquetteLangue"
-        :etiquetteNom="etiquetteNom"
-        @sauvegarder="(e) => $emit('sauvegarder', e)"
-      />
-      <v-divider />
-      <v-list style="max-height: 300px" class="overflow-y-auto">
-        <item-nom
-          v-for="(nom, langue) in noms"
-          :key="langue"
-          :nomOriginal="nom"
-          :langueOriginaleNom="langue"
+      <v-card-text>
+        <item-nouveau-nom
+          :languesExistantes="Object.keys(this.noms)"
+          :etiquetteLangue="etiquetteLangue"
+          :etiquetteNom="etiquetteNom"
           @sauvegarder="(e) => $emit('sauvegarder', e)"
-          @effacer="(e) => $emit('effacer', e)"
-          @changerLangue="(e) => $emit('changerLangue', e)"
         />
-        <div v-if="!Object.keys(noms).length" class="text-center">
-          <p class="text-h5 mt-5">
-            {{ $t(etiquetteAucunNom) }}
-          </p>
-          <v-img :src="image('vide')" class="my-5" contain height="175px" />
-        </div>
-      </v-list>
+        <v-divider />
+        <v-list style="max-height: 300px" class="overflow-y-auto">
+          <item-nom
+            v-for="(nom, langue) in noms"
+            :key="langue"
+            :nomOriginal="nom"
+            :langueOriginaleNom="langue"
+            @sauvegarder="(e) => $emit('sauvegarder', e)"
+            @effacer="(e) => $emit('effacer', e)"
+            @changerLangue="(e) => $emit('changerLangue', e)"
+          />
+          <div v-if="!Object.keys(noms).length" class="text-center">
+            <p class="text-h5 mt-5">
+              {{ $t(etiquetteAucunNom) }}
+            </p>
+            <v-img :src="image('vide')" class="my-5" contain height="175px" />
+          </div>
+        </v-list>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" depressed @click="dialogue = false">
+          {{ $t("communs.sauvegarder") }}
+        </v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>

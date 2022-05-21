@@ -13,6 +13,7 @@ import { எண்ணுக்கு as texteÀChiffre, உரைக்கு as
 import { mapGetters } from "vuex";
 
 const ORIG = "fr";
+let languesRécentes = [ORIG] as string[];
 
 export default Vue.extend({
   data() {
@@ -23,6 +24,9 @@ export default Vue.extend({
   computed: {
     langue: function (): string {
       return this.$i18n.locale;
+    },
+    languesRécentes: function(): string[] {
+      return languesRécentes
     },
     languesPréférées: function (): string[] {
       return uniq([
@@ -65,11 +69,16 @@ export default Vue.extend({
       return Boolean(orientation && orientation.includes("←"));
     },
     changerLangue(lng: string) {
+      this.sélectionnerLangue(lng);
       this.$i18n.fallbackLocale = [this.$i18n.locale, "fr"];
       this.$vuetify.lang.current = codeLangue(nomDeLangue(lng), "iso");
       this.$i18n.locale = lng;
       this.$vuetify.rtl = this.droiteÀGauche(lng);
       this.$store.commit("paramètres/changerLangue", { langue: lng });
+    },
+    sélectionnerLangue: function (langue: string): void {
+      languesRécentes.unshift(langue)
+      languesRécentes = uniq(this.languesRécentes)
     },
     clefsMessages(lng?: string): string[] {
       lng = lng || this.langueOriginale;

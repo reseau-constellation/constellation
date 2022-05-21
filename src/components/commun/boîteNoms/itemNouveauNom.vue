@@ -11,6 +11,8 @@
             dense
             hide-details
             offset-x
+            @keydown.enter="ajouter"
+            @blur="ajouter"
           ></v-autocomplete>
         </v-col>
         <v-col cols="8">
@@ -52,8 +54,8 @@ export default mixins(mixinLangues).extend({
   mixins: [mixinLangues],
   data: function () {
     return {
-      langueNouveauNom: null as null | string,
-      nouveauNom: null as null | string,
+      langueNouveauNom: undefined as undefined | string,
+      nouveauNom: undefined as undefined | string,
     };
   },
   computed: {
@@ -76,6 +78,7 @@ export default mixins(mixinLangues).extend({
   methods: {
     ajouter() {
       if (!this.prêt) return; // Éviter de sauvegarder si tout n'est pas prêt
+      this.sélectionnerLangue(this.langueNouveauNom!);
       this.$emit("sauvegarder", {
         langue: this.langueNouveauNom,
         nom: this.nouveauNom,
@@ -83,6 +86,14 @@ export default mixins(mixinLangues).extend({
       this.langueNouveauNom = this.nouveauNom = "";
     },
   },
+  mounted: function () {
+    console.log({récentes: this.languesRécentes})
+    this.langueNouveauNom = this.languesRécentes.find(l=>!this.languesExistantes.includes(l))
+  },
+  beforeUpdate: function () {
+    console.log({récentes: this.languesRécentes, langue: this.langueNouveauNom})
+    if (!this.langueNouveauNom) this.langueNouveauNom = this.languesRécentes.find(l=>!this.languesExistantes.includes(l))
+  }
 });
 </script>
 

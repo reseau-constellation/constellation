@@ -10,7 +10,7 @@
           <boîteNoms
             :noms="noms"
             titre="bd.vis.boîteDescr.titre"
-            etiquetteAucunNom="bd.vis.boîteNoms.aucuneDescription"
+            etiquetteAucunNom="variables.boîteNoms.aucunNom"
             @sauvegarder="sauvegarderNom"
             @changerLangue="changerLangueNom"
             @effacer="effacerNom"
