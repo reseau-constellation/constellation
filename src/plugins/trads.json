@@ -24,10 +24,10 @@
     },
     "boîteNoms": {
       "titre": "Ajoutez des noms",
-      "sousTitre": "Spécifiez autant que langues que vous voudrez.",
+      "sousTitre": "Spécifiez autant que langues que vous voudrez",
       "étiquetteLangue": "Langue",
       "étiquetteNom": "Nom",
-      "étiquetteAucunNom": "Vous êtes anonyme ! Ajoutez un nom (ou plus !) ci-dessus pour qu'on sache comment vous appeler.",
+      "étiquetteAucunNom": "Vous êtes anonyme ! Ajoutez un nom (ou plus !) ci-dessus pour qu'on sache comment vous appeler",
       "noms": "noms",
       "descriptions": "descriptions"
     },
