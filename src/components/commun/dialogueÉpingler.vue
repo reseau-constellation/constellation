@@ -40,6 +40,7 @@
           <v-autocomplete
             v-model="dispositifsSpécifiques"
             :disabled="typeDispositifs!=='SPÉCIFIQUES'"
+            :items="dispositifs"
             class="ms-8"
             hide-details
             chips
@@ -146,6 +147,8 @@ export default mixins(mixinLangues, mixinIPA).extend({
       dispositifsSpécifiques: [] as string[],
       dispositifsFichiersSpécifiques: [] as string[],
       récursif: true,
+
+      dispositifs: [] as string[],
     };
   },
   computed: {
@@ -191,6 +194,10 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
 
     initialiserSuivi: async function () {
+      const oublierDispositifs = await this.$ipa.suivreDispositifs({
+        f: (dispositifs) => this.dispositifs = dispositifs
+      });
+
       const oublierÉtatFavoris = await this.$ipa.favoris!.suivreÉtatFavori({
         id: this.id,
         f: (état) => {

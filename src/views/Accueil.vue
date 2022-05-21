@@ -104,11 +104,11 @@ import { URL_GIT, RACINE_URL_DOCS } from "@/utils/config";
     return {
       URL_GIT,
       liens: [
-        {
+        /*{
           text: "accueil.liens.docs",
           href: `${RACINE_URL_DOCS}/${this.$i18n.locale}/latest`,
           img: "docs",
-        },
+        },*/
         {
           text: "accueil.liens.recherche",
           page: "/recherche",
@@ -116,7 +116,7 @@ import { URL_GIT, RACINE_URL_DOCS } from "@/utils/config";
         },
         {
           text: "accueil.liens.projet",
-          page: "/projets",
+          page: "/bd",
           img: "constr",
         },
       ],

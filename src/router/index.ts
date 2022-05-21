@@ -16,11 +16,6 @@ const routes: Array<RouteConfig> = [
     component: () => import("@/views/Compte.vue"),
   },
   {
-    path: "/projets",
-    name: "Projets",
-    component: () => import("@/views/Projets/Projets.vue"),
-  },
-  {
     path: "/bd",
     name: "Bases de données",
     component: () => import("@/views/MesDonnées.vue"),
@@ -70,7 +65,7 @@ const router = new VueRouter({
   mode: process.env.IS_ELECTRON ? "hash" : "history",
   base: process.env.BASE_URL,
   routes,
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(_to, _from, savedPosition) {
     if (savedPosition) {
       return savedPosition;
     } else {

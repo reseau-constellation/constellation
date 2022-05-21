@@ -84,10 +84,10 @@
           </v-select>
         </p>
         <p class="text-overline mb-0">
-          {{ $t("dialogueNouvelleColonne.சோதனைகள்") }}
+          {{ $t("dialogueNouvelleVariable.règles") }}
         </p>
         <v-list>
-          <itemListeRègle v-for="r in règles" :key="r.id"> </itemListeRègle>
+          <itemListeRègle v-for="r in règles" :key="r.id" :regle="r" :nomVariable="nom"> </itemListeRègle>
         </v-list>
 
       </v-card-text>

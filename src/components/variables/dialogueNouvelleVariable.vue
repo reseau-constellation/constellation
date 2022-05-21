@@ -85,26 +85,27 @@
             </v-tooltip>
           </template>
         </v-select>
-
-        <p class="text-overline mb-0">
-          {{ $t("dialogueNouvelleVariable.கட்டுப்பாடு") }}
-        </p>
-        <v-list>
-          <v-list-item @click="ajouterRègle;">
-            <v-list-item-avatar>
-              <v-icon>mdi-plus</v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              {{ $t("dialogueNouvelleVariable.சேர்க்க") }}
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item
-            v-for="r in [...règlesCatégorie, ...règlesPropre]"
-            :key="r"
-            dense
-          >
-          </v-list-item>
-        </v-list>
+        <span v-if="false">
+          <p class="text-overline mb-0">
+            {{ $t("dialogueNouvelleVariable.règles") }}
+          </p>
+          <v-list>
+            <v-list-item @click="ajouterRègle;">
+              <v-list-item-avatar>
+                <v-icon>mdi-plus</v-icon>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                {{ $t("dialogueNouvelleVariable.சேர்க்க") }}
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item
+              v-for="r in [...règlesCatégorie, ...règlesPropre]"
+              :key="r"
+              dense
+            > {{ r}}
+            </v-list-item>
+          </v-list>
+        </span>
       </v-card-text>
       <v-divider></v-divider>
 

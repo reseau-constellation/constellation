@@ -37,7 +37,7 @@
       "sousTitre": "Spécifiez autant que langues que vous voudrez",
       "étiquetteLangue": "Langue",
       "étiquetteNom": "Nom",
-      "étiquetteAucunNom": "Vous êtes anonyme ! Ajoutez un nom (ou plus !) ci-dessus pour qu'on sache comment vous appeler",
+      "étiquetteAucunNom": "Aucun nom pour l'instant ! Ajoutez un nom (ou plus !) ci-dessus.",
       "noms": "noms",
       "descriptions": "descriptions"
     },
@@ -146,13 +146,18 @@
       "nom": "Nom",
       "Description": "Description",
       "Catégorie": "Catégorie",
-      "கட்டுப்பாடு":"Contrôles de qualité",
+      "règles":"Contrôles de qualité",
       "சேர்க்க": "Ajouter une règle",
       "Description": "Description",
       "எதைக்_குறிக்கிறது": "Que représente votre variable ?",
       "சிறந்தது": "Le plus de langues, le mieux !",
       "தேர்ந்தெடுக்கவும்": "Choisissez un nom pour votre variable",
       "குறிப்பிடப்படாதவை": "Catégorie de variable non spécifiée"
+    },
+    "itemListeRègles": {
+      "catégorie": {
+        "descr": "{nomVar} doit être de catégorie {cat}"
+      }
     },
     "qualité": {
       "titre": "Composition du score",
@@ -202,6 +207,7 @@
           "aucunNom": "Aucun nom",
           "titreBoîteNoms": "Internationalisez votre nom !",
           "sousTitreBoîteNoms": "Le plus de langues vous ajouterez, le plus de chances que les autres membres de Constellation sauront comment vous appeler.",
+          "étiquetteAucunNom": "Vous êtes anonyme ! Ajoutez un nom (ou plus !) ci-dessus pour qu'on sache comment vous appeler",
           "courriel": "Votre courriel",
           "image": "Votre image de profil",
           "dispositifs": "Dispositifs",
@@ -297,7 +303,7 @@
       "indiceNonÉpinglé": "Non épinglée sur ce dispositif",
       "indiceEffacer": "Effacer cette variable",
       "effacer": {
-        "titre": "Voulez-vous vraiment effacer cette base de variable ?",
+        "titre": "Voulez-vous vraiment effacer cette variable ?",
         "explication": "Ceci effacera la variable de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées. Assurez-vous qu'aucune de vos bases de données n'utilise cette variable avant de l'effacer."
       }
     },
@@ -666,6 +672,13 @@
       }
     },
     "motsclefs":{
+      "indiceÉpinglé": "Épinglé sur ce dispositif",
+      "indiceNonÉpinglé": "Non épinglé sur ce dispositif",
+      "effacer": {
+        "titre": "Voulez-vous vraiment effacer ce mot-clef ?",
+        "explication": "Ceci effacera le mot-clef de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient en avoir créées.",
+        "indiceEffacer": "Effacer ce mot-clef"
+      },
       "jeton":{
        "titreBoîteNoms": "Ajoutez un nom pour votre mot-clef",
        "sousTitreBoîteNoms": "Le plus de langues, le mieux !"
@@ -687,10 +700,9 @@
       "இல்லை": "Aucune traduction"
     },
     "dialogueNouveauMotClef": {
-      "motclef": "Nouveau mot clef",
-      "தேர்ந்தெடுக்க": "Choisissez un nom pour votre mot clef",
-      "Description": "Description",
-      "Langue": "Langue"
+      "motclef": "Nouveau mot-clef",
+      "sousTitre": "Ajoutez un nouveau mot-clef",
+      "தேர்ந்தெடுக்க": "Choisissez un nom pour votre mot-clef"
     },
     "carteFichierInstallation": {
       "பதிப்பு": "Constellation version"

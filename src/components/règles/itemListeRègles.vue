@@ -4,11 +4,17 @@
       <v-icon>{{ icône }}</v-icon>
     </v-list-item-avatar>
     <v-list-item-content>
-      <span v-if="règle.typeRègle === 'bornes'">
+      <span v-if="regle.règle.typeRègle === 'bornes'">
+        {{ regle}}
         {{ nomVariable }}
-        {{ règle.détails.op }}
+        {{ regle.règle.détails.op }}
         <v-text-input v-if="editable"></v-text-input>
-        <span v-else>{{ règle.détails.val }}</span>
+        <span v-else>{{ $t("itemListeRègles.catégorie.descr", { nomVariable, cat: regle.règle.détails.val }) }}</span>
+      </span>
+      <span v-if="regle.règle.typeRègle === 'catégorie'">
+        {{ nomVariable }}
+        <v-text-input v-if="editable"></v-text-input>
+        <span v-else>{{ $t("itemListeRègles.catégorie.descr", { nomVariable, cat: regle.règle.détails.catégorie }) }}</span>
       </span>
 
     </v-list-item-content>
@@ -35,17 +41,23 @@ import {
 export default mixins(mixinLangues).extend({
   name: "itemListeRègles",
   props: {
-    règle: {
+    regle: {
       type: Object as PropType<valid.règleVariableAvecId>,
     },
     editable: Boolean,
     nomVariable: String,
   },
+  data: function () {
+    return {
+      nomsVar: {} as { [key: string]: string },
+      icôneCatégorieVariable
+    };
+  },
   computed: {
     icône: function (): string {
-      switch (this.règle.règle.typeRègle) {
+      switch (this.regle.règle.typeRègle) {
         case "catégorie":
-          return "mdi-view-list"
+          return icôneCatégorieVariable(this.regle.règle.détails.catégorie as string)
 
         case "bornes":
           return "mdi-view-list"

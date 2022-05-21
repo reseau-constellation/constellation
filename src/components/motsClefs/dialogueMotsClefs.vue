@@ -65,8 +65,8 @@ import mixins from "vue-typed-mixins";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinImage from "@/mixins/images";
-import dialogueNouveauMotClef from "@/components/commun/motsClefs/dialogueNouveauMotClef.vue";
-import itemListeMotsClefs from "@/components/commun/motsClefs/itemListeMotsClefs.vue";
+import dialogueNouveauMotClef from "@/components/motsClefs/dialogueNouveauMotClef.vue";
+import itemListeMotsClefs from "@/components/motsClefs/itemListeMotsClefs.vue";
 
 export default mixins(mixinIPA, mixinImage).extend({
   name: "dialogueMotsClefs",

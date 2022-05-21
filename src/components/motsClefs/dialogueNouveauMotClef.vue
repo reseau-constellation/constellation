@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialogue" scrollable max-width="500">
+  <v-dialog v-model="dialogue" scrollable max-width="700">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
     </template>
@@ -11,27 +11,29 @@
       <v-divider />
 
       <v-card-text class="mt-3">
-        <span class="grey--text text--darken-1">
-          {{ $t("dialogueNouveauMotClef.தேர்ந்தெடுக்க") }}
-        </span>
-        <item-nouveau-nom
-          :languesExistantes="Object.keys(noms)"
-          :etiquetteNom="$t('dialogueNouveauMotClef.Description')"
-          :etiquetteLangue="$t('dialogueNouveauMotClef.Langue')"
+        <p class="grey--text text--darken-1">
+          {{ $t("dialogueNouveauMotClef.sousTitre") }}
+        </p>
+        <boîteNoms
+          :noms="noms"
+          sousTitre="dialogueNouveauMotClef.தேர்ந்தெடுக்க"
           @sauvegarder="sauvegarderNom"
-        />
-        <v-divider v-show="Object.keys(noms).length" />
-        <v-list style="max-height: 150px" class="overflow-y-auto">
-          <item-nom
-            v-for="(nom, langue) in noms"
-            :key="langue"
-            :nomOriginal="nom"
-            :langueOriginale="langue"
-            @sauvegarder="sauvegarderNom"
-            @effacer="effacerNom"
-            @changerLangue="changerLangueNom"
-          />
-        </v-list>
+          @changerLangue="changerLangueNom"
+          @effacer="effacerNom"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-on="on"
+              v-bind="attrs"
+              flat
+              dense
+              outlined
+              :readonly="true"
+              :value="nom"
+              :label="$t('dialogueNouvelleVariable.nom')"
+            />
+          </template>
+        </boîteNoms>
       </v-card-text>
       <v-divider></v-divider>
 
@@ -55,18 +57,30 @@
 
 <script lang="ts">
 import Vue from "vue";
+import mixins from "vue-typed-mixins";
+import mixinLangues from "@/mixins/langues";
 
-import itemNom from "@/components/commun/boîteNoms/itemNom.vue";
-import itemNouveauNom from "@/components/commun/boîteNoms/itemNouveauNom.vue";
+import {
+  traduireNom,
+} from "@/utils";
+import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 
-export default Vue.extend({
+export default mixins(mixinLangues).extend({
   name: "dialogueNouveauMotClef",
-  components: { itemNom, itemNouveauNom },
+  components: { boîteNoms },
+  mixins: [mixinLangues],
   data: function () {
     return {
       noms: {} as { [key: string]: string },
       dialogue: false,
     };
+  },
+  computed: {
+    nom: function (): string | undefined {
+      return Object.keys(this.noms).length
+        ? traduireNom(this.noms, this.languesPréférées)
+        : undefined;
+    },
   },
   methods: {
     sauvegarderNom: function ({

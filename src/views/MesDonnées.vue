@@ -2,7 +2,7 @@
   <v-container class="text-center">
     <titre :entête="$t('bd.entête')" />
     <v-row>
-      <v-col cols="12">
+      <v-col cols="12" v-if="false">
         <v-text-field
           outlined
           append-icon="mdi-filter"
@@ -25,6 +25,7 @@
       </v-col>
       <v-col cols="12">
         <v-slide-x-transition group class="d-flex flex-wrap mx-10">
+          <tous-motsclefs v-if="typeObjetSélectionné === 0" :key="0" />
           <toutes-variables v-if="typeObjetSélectionné === 1" :key="1" />
           <toutes-bds v-if="typeObjetSélectionné === 2" :key="2" />
         </v-slide-x-transition>
@@ -39,6 +40,7 @@ import mixins from "vue-typed-mixins";
 import Titre from "@/components/commun/Titre.vue";
 import carteBd from "@/components/BD/carteBD.vue";
 import nouvelleBd from "@/components/BD/NouvelleBD.vue";
+import tousMotsclefs from "@/components/motsClefs/tous.vue";
 import toutesVariables from "@/components/variables/Toutes.vue";
 import toutesBds from "@/components/BD/Toutes.vue";
 
@@ -46,12 +48,12 @@ import mixinIPA from "@/mixins/ipa";
 
 export default mixins(mixinIPA).extend({
   name: "BD",
-  components: { Titre, carteBd, nouvelleBd, toutesVariables, toutesBds },
+  components: { Titre, carteBd, nouvelleBd, tousMotsclefs, toutesVariables, toutesBds },
   mixins: [mixinIPA],
   data: function () {
     return {
       typeObjetSélectionné: 2,
-      typesObjets: ["mots-clefs", "variables", "bds", "projets"],
+      typesObjets: ["mots-clefs", "variables", "bds", ], // "projets"],
       idsBds: [] as string[],
     };
   },

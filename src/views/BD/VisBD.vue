@@ -426,14 +426,14 @@ import dialogueQualité from "@/components/commun/dialogueQualité.vue";
 import dialogueCopierBd from "@/components/BD/dialogueCopier.vue";
 import dialogueExporter from "@/components/commun/dialogueExporter.vue";
 import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
-import dialogueMotsClefs from "@/components/commun/motsClefs/dialogueMotsClefs.vue";
+import dialogueMotsClefs from "@/components/motsClefs/dialogueMotsClefs.vue";
 import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications.vue";
 import dialogueAuteurs from "@/components/BD/auteurs/dialogueAuteurs.vue";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import itemTableau from "@/components/BD/itemTableau.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import jetonVariable from "@/components/commun/jetonVariable.vue";
-import jetonMotClef from "@/components/commun/motsClefs/jetonMotClef.vue";
+import jetonMotClef from "@/components/motsClefs/jetonMotClef.vue";
 
 import mixinImage from "@/mixins/images";
 import mixinLangues from "@/mixins/langues";

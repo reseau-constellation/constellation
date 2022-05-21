@@ -14,6 +14,7 @@
           :noms="noms || {}"
           titre="compte.onglets.compte.titreBoîteNoms"
           sousTitre="compte.onglets.compte.sousTitreBoîteNoms"
+          etiquetteAucunNom="compte.onglets.compte.étiquetteAucunNom"
           @sauvegarder="sauvegarderNom"
           @changerLangue="changerLangueNom"
           @effacer="effacerNom"
@@ -59,7 +60,7 @@
     <v-divider v-if="dispositifs && dispositifs.length" />
     <v-skeleton-loader v-if="dispositifs === null" type="paragraph" />
     <v-list v-else two-line dense>
-      <dialogue-ajouter-dispositif>
+      <dialogue-ajouter-dispositif v-if="false">
         <template v-slot:activator="{ on, attrs }">
           <v-list-item v-bind="attrs" v-on="on">
             <v-list-item-avatar>
@@ -82,7 +83,7 @@
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
-            {{ $t("compte.onglets.compte.Id")
+            {{ $t("compte.onglets.compte.Id") + " : " + idDispositif
             }}<!-- {{ எழுத்து_மாறு({ d: "z" + கைரேகை, எழுத்து: écriture }) }}-->
           </v-list-item-title>
           <v-list-item-subtitle class="success--text">
