@@ -87,11 +87,9 @@ export default mixins(mixinLangues).extend({
     },
   },
   mounted: function () {
-    console.log({récentes: this.languesRécentes})
     this.langueNouveauNom = this.languesRécentes.find(l=>!this.languesExistantes.includes(l))
   },
   beforeUpdate: function () {
-    console.log({récentes: this.languesRécentes, langue: this.langueNouveauNom})
     if (!this.langueNouveauNom) this.langueNouveauNom = this.languesRécentes.find(l=>!this.languesExistantes.includes(l))
   }
 });
