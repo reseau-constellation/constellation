@@ -373,12 +373,13 @@
       },
       "vis": {
         "boîteNoms": {
+          "titre": "Ajoutez des noms",
           "sousTitre": "Le plus de langues le mieux ! Songez à prioriser les langues parlées là d'où proviennent vos données.",
           "aucunNom": "Aucun nom...cette base de données est anonmye !",
-          "aucuneDescription": "Aucune description disponible."
+          "aucuneDescription": "Aucune description disponible"
         },
         "boîteDescr": {
-          "titre": "Ajoutez des descriptions."
+          "titre": "Ajoutez des descriptions"
         },
         "indiceTélécharger": "Exporer les données",
         "indiceCopier": "Copier cette BD",
@@ -653,8 +654,8 @@
     },
     "motsclefs":{
       "jeton":{
-       "titreBoîteNoms": "titreBoîteNoms",
-       "sousTitreBoîteNoms": "sousTitreBoîteNoms"
+       "titreBoîteNoms": "Ajoutez un nom pour votre mot-clef",
+       "sousTitreBoîteNoms": "Le plus de langues, le mieux !"
       }
     },
     "dialogueMotsClefs": {
@@ -814,6 +815,9 @@
       "Aucune_unité": "அலகு இல்லை"
     },
     "variables": {
+      "boîteNoms": {
+        "aucunNom": "Aucun nom...cette variable est anonyme !"
+      },
       "catégories": {
         "numérique": "எண்முறை",
         "date": "தேதியிட்டது",
