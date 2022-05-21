@@ -22,6 +22,16 @@
         "variables": "Variables"
       }
     },
+    "épingler": {
+      "titre": "Épingler",
+      "dispositifsÉpingle": "Épingler ces données sur :",
+      "dispositifsÉpingleFichier": "Épingler les fichiers et médias sur :",
+      "AUCUN": "Aucun dispositif",
+      "TOUS": "Tous mes dispositifs",
+      "INSTALLÉ": "Tous sauf navigateur",
+      "dispositifsSpécifiques": "Les dispositifs suivants :",
+      "récursif": "Épingler de manière récursive"
+    },
     "boîteNoms": {
       "titre": "Ajoutez des noms",
       "sousTitre": "Spécifiez autant que langues que vous voudrez",
@@ -283,6 +293,9 @@
           "fichier": "N'importe quel fichier"
         }
       },
+      "indiceÉpinglé": "Épinglée sur ce dispositif",
+      "indiceNonÉpinglé": "Non épinglée sur ce dispositif",
+      "indiceEffacer": "Effacer cette variable",
       "effacer": {
         "titre": "Voulez-vous vraiment effacer cette base de variable ?",
         "explication": "Ceci effacera la variable de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient avoir créées. Assurez-vous qu'aucune de vos bases de données n'utilise cette variable avant de l'effacer."

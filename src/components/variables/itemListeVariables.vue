@@ -11,6 +11,7 @@
       <span>
         <dialogue-epingler
           :id="id"
+          :optionFichiers="false"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>

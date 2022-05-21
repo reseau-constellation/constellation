@@ -15,6 +15,9 @@
       <v-divider />
 
       <v-card-text class="mt-3 py-2">
+        <p class="mb-0 text-overline">
+          {{ $t("épingler.dispositifsÉpingle") }}
+        </p>
         <v-radio-group
           v-model="typeDispositifs"
         >
@@ -34,46 +37,60 @@
             :label="$t('épingler.dispositifsSpécifiques')"
             value="SPÉCIFIQUES"
           />
+          <v-autocomplete
+            v-model="dispositifsSpécifiques"
+            :disabled="typeDispositifs!=='SPÉCIFIQUES'"
+            class="ms-8"
+            hide-details
+            chips
+            deletable-chips
+            multiple
+            dense
+            outlined
+          />
         </v-radio-group>
-        <v-autocomplete
-          v-model="dispositifsSpécifiques"
-          :disable="typeDispositifs==='SPÉCIFIQUES'"
-          chips
-          deletable-chips
-          multiple
-        />
 
-        <v-radio-group
-          v-model="typeDispositifsFichiers"
-          :disable="typeDispositifs==='AUCUN'"
-        >
-          <v-radio
-            :label="$t('épingler.AUCUN')"
-            value="AUCUN"
+        <span v-if="optionFichiers">
+          <p class="mb-0 text-overline">
+            {{ $t("épingler.dispositifsÉpingleFichier") }}
+          </p>
+          <v-radio-group
+            v-model="typeDispositifsFichiers"
+            :disabled="typeDispositifs==='AUCUN'"
+          >
+            <v-radio
+              :label="$t('épingler.AUCUN')"
+              value="AUCUN"
+            />
+            <v-radio
+              :label="$t('épingler.TOUS')"
+              value="TOUS"
+            />
+            <v-radio
+              :label="$t('épingler.INSTALLÉ')"
+              value="INSTALLÉ"
+            />
+            <v-radio
+              :label="$t('épingler.dispositifsSpécifiques')"
+              value="SPÉCIFIQUES"
+            />
+          </v-radio-group>
+          <v-autocomplete
+            v-model="dispositifsFichiersSpécifiques"
+            :disabled="typeDispositifsFichiers !== 'SPÉCIFIQUES' || typeDispositifs === 'AUCUN'"
+            class="ms-8"
+            hide-details
+            chips
+            deletable-chips
+            dense
+            outlined
+            multiple
           />
-          <v-radio
-            :label="$t('épingler.TOUS')"
-            value="TOUS"
-          />
-          <v-radio
-            :label="$t('épingler.INSTALLÉ')"
-            value="INSTALLÉ"
-          />
-          <v-radio
-            :label="$t('épingler.dispositifsSpécifiques')"
-            value="SPÉCIFIQUES"
-          />
-        </v-radio-group>
-        <v-autocomplete
-          v-model="dispositifsFichiersSpécifiques"
-          :disable="typeDispositifsFichiers === 'SPÉCIFIQUES' || typeDispositifs === 'AUCUN'"
-          chips
-          deletable-chips
-          multiple
-        />
+        </span>
         <v-checkbox
           v-model="récursif"
           :label="$t('épingler.récursif')"
+          :disabled="typeDispositifs==='AUCUN'"
         />
       </v-card-text>
 
@@ -89,7 +106,7 @@
           text
           outlined
           :loading="enProgrès"
-          :disabled="prêtÀÉpingler"
+          :disabled="!prêtÀÉpingler"
           @click="() => épingler()"
         >
           {{ $t("communs.sauvegarder") }}
@@ -111,7 +128,13 @@ import mixinLangues from "@/mixins/langues";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "dialogueÉpingler",
-  props: ["id"],
+  props: {
+    id: String,
+    optionFichiers: {
+      type: Boolean,
+      default: true
+    }
+  },
   mixins: [mixinIPA, mixinLangues],
   data: function () {
     return {
@@ -122,7 +145,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
       typeDispositifsFichiers: "INSTALLÉ" as "AUCUN" | "TOUS" | "INSTALLÉ" | "SPÉCIFIQUES",
       dispositifsSpécifiques: [] as string[],
       dispositifsFichiersSpécifiques: [] as string[],
-      récursif: false,
+      récursif: true,
     };
   },
   computed: {
@@ -135,9 +158,8 @@ export default mixins(mixinLangues, mixinIPA).extend({
       return this.typeDispositifsFichiers === "SPÉCIFIQUES" ? this.dispositifsFichiersSpécifiques : this.typeDispositifsFichiers
     },
     prêtÀÉpingler: function (): boolean {
-      const dispositifsPrêts = Array.isArray(this.typeDispositifs) ? !!this.dispositifsSpécifiques.length : true;
-      const dispositifsFichiersPrêts = Array.isArray(this.typeDispositifsFichiers) ? !!this.dispositifsFichiersSpécifiques.length : true;
-
+      const dispositifsPrêts = this.typeDispositifs === "SPÉCIFIQUES" ? !!this.dispositifsSpécifiques.length : true;
+      const dispositifsFichiersPrêts = this.typeDispositifsFichiers === "SPÉCIFIQUES" ? !!this.dispositifsFichiersSpécifiques.length : true;
       return dispositifsPrêts && dispositifsFichiersPrêts;
     }
   },
@@ -165,7 +187,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
 
     désépingler: async function () {
-      await this.$ipa.favoris!.désépinglerFavori(this.id)
+      await this.$ipa.favoris!.désépinglerFavori({id: this.id})
     },
 
     initialiserSuivi: async function () {
@@ -184,16 +206,15 @@ export default mixins(mixinLangues, mixinIPA).extend({
 
             if (typeof état.dispositifsFichiers === "string" && ["TOUS", "INSTALLÉ", "AUCUN"].includes(état.dispositifsFichiers)) {
               this.typeDispositifsFichiers = état.dispositifsFichiers as "TOUS" | "AUCUN" | "INSTALLÉ";
-            } else {
-              this.typeDispositifsFichiers = "SPÉCIFIQUES";
-              if (état.dispositifsFichiers){
+            } else if (état.dispositifsFichiers){
+                this.typeDispositifsFichiers = "SPÉCIFIQUES";
                 this.dispositifsFichiersSpécifiques = typeof état.dispositifsFichiers === "string" ? [état.dispositifsFichiers] : état.dispositifsFichiers;
-              } else {
-                this.typeDispositifsFichiers = "AUCUN"
-              }
+            } else {
+              this.typeDispositifsFichiers = "AUCUN"
             }
           } else {
-            this.typeDispositifs = this.typeDispositifsFichiers = "AUCUN";
+            // On laisse this.typeDispositifsFichiers avec "INSTALLÉ" par défaut
+            this.typeDispositifs = "AUCUN";
             this.dispositifsSpécifiques = [];
             this.dispositifsFichiersSpécifiques = [];
           }
