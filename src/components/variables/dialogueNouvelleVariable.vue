@@ -64,25 +64,25 @@
         <p class="text-overline mb-2">
           {{ $t("dialogueNouvelleVariable.Catégorie") }}
         </p>
-        <v-select v-model="catégorie" :items="optionsCatégories" outlined dense>
-          <template v-slot:item="{ on, item }">
-            <v-list-item v-on="on">
-              <v-list-item-avatar>
-                <v-icon>{{ item.icône }}</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                {{ $t(`variables.catégories.${item.text}`) }}
-                <v-list-item-subtitle>
-                  {{ $t("variables.catégories.info." + item.text) }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
+        <v-select v-model="catégorie" :items="catégoriesVariable" outlined dense>
+          <template v-slot:item="{ on, item, attrs }">
+            <itemListeCatégories
+              v-on="on" v-bind="attrs"
+              :categorie="item"
+            />
           </template>
           <template v-slot:selection="{ item }">
-            <v-chip label outlined dense>
-              <v-icon left>{{ item.icône }}</v-icon>
-              {{ $t(`variables.catégories.${item.text}`) }}
-            </v-chip>
+            <v-tooltip v-if="catégorie !== undefined" bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-chip label outlined small v-on="on" v-bind="attrs">
+                  <v-icon left small>{{ icôneCatégorieVariable(item) }}</v-icon>
+                  {{ $t("variables.catégories." + catégorie) }}
+                </v-chip>
+              </template>
+              <span>
+                {{ $t("variables.catégories.info." + catégorie) }}
+              </span>
+            </v-tooltip>
           </template>
         </v-select>
 
@@ -136,6 +136,7 @@ import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import mixinLangues from "@/mixins/langues";
 
 import { variables } from "@constl/ipa";
+import itemListeCatégories from "@/components/variables/itemListeCatégories.vue"
 
 import {
   traduireNom,
@@ -145,7 +146,7 @@ import {
 
 export default mixins(mixinLangues).extend({
   name: "dialogueNouvelleVariable",
-  components: { boîteNoms },
+  components: { boîteNoms, itemListeCatégories },
   mixins: [mixinLangues],
   data: function () {
     return {
@@ -159,16 +160,14 @@ export default mixins(mixinLangues).extend({
 
       règlesCatégorie: [],
       règlesPropre: [],
+
+      catégoriesVariable,
+      icôneCatégorieVariable,
     };
   },
   computed: {
     prêt: function (): boolean {
       return Boolean(Object.keys(this.noms).length && this.catégorie);
-    },
-    optionsCatégories: (): { text: string; icône: string }[] => {
-      return catégoriesVariable.map((x) => {
-        return { text: x, icône: icôneCatégorieVariable(x) };
-      });
     },
     nom: function (): string | undefined {
       return Object.keys(this.noms).length

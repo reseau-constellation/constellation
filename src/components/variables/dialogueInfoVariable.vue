@@ -46,7 +46,7 @@
       </v-card-subtitle>
       <v-divider />
       <v-card-text>
-        <p class="mb-0 text-overline">
+        <p v-if="false" class="mb-0 text-overline">
           {{ $t("carteVariable.unités") }}
           <v-chip label outlined small>
             {{ unités ? unités : $t("carteVariable.Aucune_unité") }}
@@ -54,24 +54,33 @@
         </p>
         <p class="mb-0 text-overline">
           {{ $t("carteVariable.Catégorie") }}
-          <v-tooltip v-if="catégorie !== undefined" bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-chip label outlined small v-on="on" v-bind="attrs">
-                <v-icon left small>{{ icôneCatégorie }}</v-icon>
-                {{ $t("variables.catégories." + catégorie) }}
-              </v-chip>
-            </template>
-            <span>
-              {{ $t("variables.catégories.info." + catégorie) }}
-            </span>
-          </v-tooltip>
           <v-select
-            v-else
+            v-model="catégorie"
             outlined
             dense
             :items="catégoriesVariable"
+            :disable="!permissionÉcrire"
             @change="sauvegarderCategorie"
           >
+            <template v-slot:selection>
+              <v-tooltip v-if="catégorie !== undefined" bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-chip label outlined small v-on="on" v-bind="attrs">
+                    <v-icon left small>{{ icôneCatégorie }}</v-icon>
+                    {{ $t("variables.catégories." + catégorie) }}
+                  </v-chip>
+                </template>
+                <span>
+                  {{ $t("variables.catégories.info." + catégorie) }}
+                </span>
+              </v-tooltip>
+            </template>
+            <template v-slot:item="{ item, on, attrs }">
+              <itemListeCatégories
+                v-on="on" v-bind="attrs"
+                :categorie="item"
+              />
+            </template>
           </v-select>
         </p>
         <p class="text-overline mb-0">
@@ -82,6 +91,14 @@
         </v-list>
 
       </v-card-text>
+      <v-divider />
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="secondary" text outlined @click="dialogue=false">
+          {{ $t("communs.fermer") }}
+        </v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -102,12 +119,13 @@ import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import itemListeRègle from "@/components/règles/itemListeRègles.vue";
+import itemListeCatégories from "@/components/variables/itemListeCatégories.vue"
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "dialogueInfoVariable",
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
-  components: { lienOrbite, boîteNoms, itemListeRègle },
+  components: { lienOrbite, boîteNoms, itemListeRègle, itemListeCatégories },
   data: function () {
     return {
       dialogue: false,
