@@ -3,8 +3,8 @@
     <v-slide-x-transition group class="d-flex flex-wrap justify-center">
       <carte-membre
         v-for="membre in membres"
-        :key="membre.idBdCompte"
-        :id="membre.idBdCompte"
+        :key="membre.id"
+        :id="membre.id"
         :vuIlyA="membre.vuIlyA"
       />
     </v-slide-x-transition>

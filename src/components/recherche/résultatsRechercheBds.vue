@@ -3,9 +3,9 @@
     <v-slide-x-transition group class="d-flex flex-wrap justify-center">
       <carte-bd
         v-for="bd in bds"
-        :key="bd"
-        :bd="bd"
-        @click="$router.push(`/bd/visualiser/${encodeURIComponent(bd)}`)"
+        :key="bd.id"
+        :bd="bd.id"
+        @click="$router.push(`/bd/visualiser/${encodeURIComponent(bd.id)}`)"
       />
     </v-slide-x-transition>
   </v-col>
