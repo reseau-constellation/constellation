@@ -49,7 +49,7 @@
                 >{{
                   score
                     ? $t("carteBD.note." + couleurScore(score.total).note)
-                    : $t("communs.pointIntérogation")
+                    : $t("communs.pointInterrogation")
                 }}
               </span>
             </span>
