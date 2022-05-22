@@ -60,9 +60,7 @@ import Vue from "vue";
 import mixins from "vue-typed-mixins";
 import mixinLangues from "@/mixins/langues";
 
-import {
-  traduireNom,
-} from "@/utils";
+import { traduireNom } from "@/utils";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 
 export default mixins(mixinLangues).extend({

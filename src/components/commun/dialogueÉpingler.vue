@@ -18,28 +18,17 @@
         <p class="mb-0 text-overline">
           {{ $t("épingler.dispositifsÉpingle") }}
         </p>
-        <v-radio-group
-          v-model="typeDispositifs"
-        >
-          <v-radio
-            :label="$t('épingler.AUCUN')"
-            value="AUCUN"
-          />
-          <v-radio
-            :label="$t('épingler.TOUS')"
-            value="TOUS"
-          />
-          <v-radio
-            :label="$t('épingler.INSTALLÉ')"
-            value="INSTALLÉ"
-          />
+        <v-radio-group v-model="typeDispositifs">
+          <v-radio :label="$t('épingler.AUCUN')" value="AUCUN" />
+          <v-radio :label="$t('épingler.TOUS')" value="TOUS" />
+          <v-radio :label="$t('épingler.INSTALLÉ')" value="INSTALLÉ" />
           <v-radio
             :label="$t('épingler.dispositifsSpécifiques')"
             value="SPÉCIFIQUES"
           />
           <v-autocomplete
             v-model="dispositifsSpécifiques"
-            :disabled="typeDispositifs!=='SPÉCIFIQUES'"
+            :disabled="typeDispositifs !== 'SPÉCIFIQUES'"
             :items="dispositifs"
             class="ms-8"
             hide-details
@@ -57,20 +46,11 @@
           </p>
           <v-radio-group
             v-model="typeDispositifsFichiers"
-            :disabled="typeDispositifs==='AUCUN'"
+            :disabled="typeDispositifs === 'AUCUN'"
           >
-            <v-radio
-              :label="$t('épingler.AUCUN')"
-              value="AUCUN"
-            />
-            <v-radio
-              :label="$t('épingler.TOUS')"
-              value="TOUS"
-            />
-            <v-radio
-              :label="$t('épingler.INSTALLÉ')"
-              value="INSTALLÉ"
-            />
+            <v-radio :label="$t('épingler.AUCUN')" value="AUCUN" />
+            <v-radio :label="$t('épingler.TOUS')" value="TOUS" />
+            <v-radio :label="$t('épingler.INSTALLÉ')" value="INSTALLÉ" />
             <v-radio
               :label="$t('épingler.dispositifsSpécifiques')"
               value="SPÉCIFIQUES"
@@ -78,7 +58,10 @@
           </v-radio-group>
           <v-autocomplete
             v-model="dispositifsFichiersSpécifiques"
-            :disabled="typeDispositifsFichiers !== 'SPÉCIFIQUES' || typeDispositifs === 'AUCUN'"
+            :disabled="
+              typeDispositifsFichiers !== 'SPÉCIFIQUES' ||
+              typeDispositifs === 'AUCUN'
+            "
             class="ms-8"
             hide-details
             chips
@@ -91,7 +74,7 @@
         <v-checkbox
           v-model="récursif"
           :label="$t('épingler.récursif')"
-          :disabled="typeDispositifs==='AUCUN'"
+          :disabled="typeDispositifs === 'AUCUN'"
         />
       </v-card-text>
 
@@ -121,11 +104,10 @@
 import mixins from "vue-typed-mixins";
 
 import { BookType } from "xlsx";
-import { favoris } from "@constl/ipa"
+import { favoris } from "@constl/ipa";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
-
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "dialogueÉpingler",
@@ -133,8 +115,8 @@ export default mixins(mixinLangues, mixinIPA).extend({
     id: String,
     optionFichiers: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   mixins: [mixinIPA, mixinLangues],
   data: function () {
@@ -142,8 +124,12 @@ export default mixins(mixinLangues, mixinIPA).extend({
       dialogue: false,
       enProgrès: false,
 
-      typeDispositifs: "TOUS" as "AUCUN" |  "TOUS" | "INSTALLÉ" | "SPÉCIFIQUES",
-      typeDispositifsFichiers: "INSTALLÉ" as "AUCUN" | "TOUS" | "INSTALLÉ" | "SPÉCIFIQUES",
+      typeDispositifs: "TOUS" as "AUCUN" | "TOUS" | "INSTALLÉ" | "SPÉCIFIQUES",
+      typeDispositifsFichiers: "INSTALLÉ" as
+        | "AUCUN"
+        | "TOUS"
+        | "INSTALLÉ"
+        | "SPÉCIFIQUES",
       dispositifsSpécifiques: [] as string[],
       dispositifsFichiersSpécifiques: [] as string[],
       récursif: true,
@@ -152,35 +138,49 @@ export default mixins(mixinLangues, mixinIPA).extend({
     };
   },
   computed: {
-    dispositifs: function (): favoris.typeDispositifs | undefined {
+    dispositifsSélectionnés: function (): favoris.typeDispositifs | undefined {
       if (this.typeDispositifs === "AUCUN") return undefined;
-      return this.typeDispositifs === "SPÉCIFIQUES" ? this.dispositifsSpécifiques : this.typeDispositifs;
+      return this.typeDispositifs === "SPÉCIFIQUES"
+        ? this.dispositifsSpécifiques
+        : this.typeDispositifs;
     },
     dispositifsFichiers: function (): favoris.typeDispositifs | undefined {
       if (this.typeDispositifsFichiers === "AUCUN") return undefined;
-      return this.typeDispositifsFichiers === "SPÉCIFIQUES" ? this.dispositifsFichiersSpécifiques : this.typeDispositifsFichiers
+      return this.typeDispositifsFichiers === "SPÉCIFIQUES"
+        ? this.dispositifsFichiersSpécifiques
+        : this.typeDispositifsFichiers;
     },
     prêtÀÉpingler: function (): boolean {
-      const dispositifsPrêts = this.typeDispositifs === "SPÉCIFIQUES" ? !!this.dispositifsSpécifiques.length : true;
-      const dispositifsFichiersPrêts = this.typeDispositifsFichiers === "SPÉCIFIQUES" ? !!this.dispositifsFichiersSpécifiques.length : true;
+      const dispositifsPrêts =
+        this.typeDispositifs === "SPÉCIFIQUES"
+          ? !!this.dispositifsSpécifiques.length
+          : true;
+      const dispositifsFichiersPrêts =
+        this.typeDispositifsFichiers === "SPÉCIFIQUES"
+          ? !!this.dispositifsFichiersSpécifiques.length
+          : true;
       return dispositifsPrêts && dispositifsFichiersPrêts;
-    }
+    },
   },
   methods: {
     épingler: async function () {
       this.enProgrès = true;
 
-      if (this.dispositifs) {
+      if (this.dispositifsSélectionnés) {
         const épingle: {
-          id: string, dispositifs: favoris.typeDispositifs, dispositifsFichiers?: favoris.typeDispositifs, récursif: boolean
+          id: string;
+          dispositifs: favoris.typeDispositifs;
+          dispositifsFichiers?: favoris.typeDispositifs;
+          récursif: boolean;
         } = {
           id: this.id,
-          dispositifs: this.dispositifs,
+          dispositifs: this.dispositifsSélectionnés,
           récursif: this.récursif,
-        }
-        if (this.dispositifsFichiers) épingle.dispositifsFichiers = this.dispositifsFichiers;
+        };
+        if (this.dispositifsFichiers)
+          épingle.dispositifsFichiers = this.dispositifsFichiers;
 
-        await this.$ipa.favoris!.épinglerFavori(épingle)
+        await this.$ipa.favoris!.épinglerFavori(épingle);
       } else {
         await this.désépingler();
       }
@@ -190,12 +190,12 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
 
     désépingler: async function () {
-      await this.$ipa.favoris!.désépinglerFavori({id: this.id})
+      await this.$ipa.favoris!.désépinglerFavori({ id: this.id });
     },
 
     initialiserSuivi: async function () {
       const oublierDispositifs = await this.$ipa.suivreDispositifs({
-        f: (dispositifs) => this.dispositifs = dispositifs
+        f: (dispositifs) => (this.dispositifs = dispositifs),
       });
 
       const oublierÉtatFavoris = await this.$ipa.favoris!.suivreÉtatFavori({
@@ -204,20 +204,38 @@ export default mixins(mixinLangues, mixinIPA).extend({
           if (état) {
             this.récursif = état.récursif;
 
-            if (typeof état.dispositifs === "string" && ["TOUS", "INSTALLÉ", "AUCUN"].includes(état.dispositifs)) {
-              this.typeDispositifs = état.dispositifs as "TOUS" | "AUCUN" | "INSTALLÉ";
+            if (
+              typeof état.dispositifs === "string" &&
+              ["TOUS", "INSTALLÉ", "AUCUN"].includes(état.dispositifs)
+            ) {
+              this.typeDispositifs = état.dispositifs as
+                | "TOUS"
+                | "AUCUN"
+                | "INSTALLÉ";
             } else {
               this.typeDispositifs = "SPÉCIFIQUES";
-              this.dispositifsSpécifiques = typeof état.dispositifs === "string" ? [état.dispositifs] : état.dispositifs;
+              this.dispositifsSpécifiques =
+                typeof état.dispositifs === "string"
+                  ? [état.dispositifs]
+                  : état.dispositifs;
             }
 
-            if (typeof état.dispositifsFichiers === "string" && ["TOUS", "INSTALLÉ", "AUCUN"].includes(état.dispositifsFichiers)) {
-              this.typeDispositifsFichiers = état.dispositifsFichiers as "TOUS" | "AUCUN" | "INSTALLÉ";
-            } else if (état.dispositifsFichiers){
-                this.typeDispositifsFichiers = "SPÉCIFIQUES";
-                this.dispositifsFichiersSpécifiques = typeof état.dispositifsFichiers === "string" ? [état.dispositifsFichiers] : état.dispositifsFichiers;
+            if (
+              typeof état.dispositifsFichiers === "string" &&
+              ["TOUS", "INSTALLÉ", "AUCUN"].includes(état.dispositifsFichiers)
+            ) {
+              this.typeDispositifsFichiers = état.dispositifsFichiers as
+                | "TOUS"
+                | "AUCUN"
+                | "INSTALLÉ";
+            } else if (état.dispositifsFichiers) {
+              this.typeDispositifsFichiers = "SPÉCIFIQUES";
+              this.dispositifsFichiersSpécifiques =
+                typeof état.dispositifsFichiers === "string"
+                  ? [état.dispositifsFichiers]
+                  : état.dispositifsFichiers;
             } else {
-              this.typeDispositifsFichiers = "AUCUN"
+              this.typeDispositifsFichiers = "AUCUN";
             }
           } else {
             // On laisse this.typeDispositifsFichiers avec "INSTALLÉ" par défaut
@@ -225,16 +243,13 @@ export default mixins(mixinLangues, mixinIPA).extend({
             this.dispositifsSpécifiques = [];
             this.dispositifsFichiersSpécifiques = [];
           }
-        }
+        },
       });
 
-      this.suivre([
-        oublierÉtatFavoris,
-      ]);
-    }
-  }
-  }
-);
+      this.suivre([oublierÉtatFavoris]);
+    },
+  },
+});
 </script>
 
 <style></style>

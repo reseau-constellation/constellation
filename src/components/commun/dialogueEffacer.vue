@@ -1,8 +1,5 @@
 <template>
-  <v-dialog
-    v-model="dialogue"
-    width="500"
-  >
+  <v-dialog v-model="dialogue" width="500">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
     </template>
@@ -17,12 +14,7 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn
-          color="error"
-          text
-          outlined
-          @click="dialogue = false"
-        >
+        <v-btn color="error" text outlined @click="dialogue = false">
           {{ $t("bd.visBD.இல்லை") }}
         </v-btn>
         <v-btn color="error" depressed @click="effacer">
@@ -37,21 +29,20 @@
 import mixins from "vue-typed-mixins";
 
 import { BookType } from "xlsx";
-import { favoris } from "@constl/ipa"
+import { favoris } from "@constl/ipa";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
-
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "dialogueÉpingler",
   props: {
     titre: {
-      type: String
+      type: String,
     },
     explication: {
-      type: String
-    }
+      type: String,
+    },
   },
   mixins: [mixinIPA, mixinLangues],
   data: function () {
@@ -61,12 +52,11 @@ export default mixins(mixinLangues, mixinIPA).extend({
   },
   methods: {
     effacer: function () {
-      this.$emit('effacer');
+      this.$emit("effacer");
       this.dialogue = false;
     },
   },
-}
-);
+});
 </script>
 
 <style></style>

@@ -76,10 +76,7 @@
               </v-tooltip>
             </template>
             <template v-slot:item="{ item, on, attrs }">
-              <itemListeCatégories
-                v-on="on" v-bind="attrs"
-                :categorie="item"
-              />
+              <itemListeCatégories v-on="on" v-bind="attrs" :categorie="item" />
             </template>
           </v-select>
         </p>
@@ -87,15 +84,20 @@
           {{ $t("dialogueNouvelleVariable.règles") }}
         </p>
         <v-list>
-          <itemListeRègle v-for="r in règles" :key="r.id" :regle="r" :nomVariable="nom"> </itemListeRègle>
+          <itemListeRègle
+            v-for="r in règles"
+            :key="r.id"
+            :regle="r"
+            :nomVariable="nom"
+          >
+          </itemListeRègle>
         </v-list>
-
       </v-card-text>
       <v-divider />
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" text outlined @click="dialogue=false">
+        <v-btn color="secondary" text outlined @click="dialogue = false">
           {{ $t("communs.fermer") }}
         </v-btn>
       </v-card-actions>
@@ -119,7 +121,7 @@ import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import itemListeRègle from "@/components/règles/itemListeRègles.vue";
-import itemListeCatégories from "@/components/variables/itemListeCatégories.vue"
+import itemListeCatégories from "@/components/variables/itemListeCatégories.vue";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "dialogueInfoVariable",
@@ -280,8 +282,8 @@ export default mixins(mixinLangues, mixinIPA).extend({
         id: this.id,
         f: (règles) => {
           this.règles = règles;
-        }
-      })
+        },
+      });
 
       this.suivre([
         oublierPermissionÉcrire,

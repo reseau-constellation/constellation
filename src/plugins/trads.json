@@ -100,8 +100,8 @@
       "Membres": "Membres"
     },
     "carteBD": {
-      "அகற்று": "Enlever de mes favoris",
-      "பொருத்து": "Épingler dans mes favoris",
+      "indiceÉpinglé": "BD épinglée sur ce dispositif",
+      "indiceNonÉpinglé": "BD non épinglée sur ce dispositif",
       "note": {
         "A": "A",
         "A-": "A-",
@@ -917,8 +917,6 @@
       "Membres": "உறுப்பினர்கள்"
     },
     "carteBD": {
-      "அகற்று": "எனக்கு பிடித்தவற்றிலிருந்து அகற்று",
-      "பொருத்து": "எனக்குப் பிடித்தவற்றைப் பொருத்து",
       "note": {
           "A": "அ",
           "A-": "அ-",
@@ -1496,8 +1494,6 @@
       "Membres": "សមាជិក"
     },
     "carteBD": {
-      "அகற்று": "យកចេញពិចំណូលចិត្តរបស់ខ្ញុំ",
-      "பொருத்து": "​រក្សា​ទុក​គ្នុងចំណូលចិត្តរបស់ខ្ញុំ",
       "note": {
         "A": "A",
         "A-": "A-",

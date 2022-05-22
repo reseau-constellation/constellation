@@ -25,8 +25,8 @@ export default Vue.extend({
     langue: function (): string {
       return this.$i18n.locale;
     },
-    languesRécentes: function(): string[] {
-      return languesRécentes
+    languesRécentes: function (): string[] {
+      return languesRécentes;
     },
     languesPréférées: function (): string[] {
       return uniq([
@@ -77,8 +77,8 @@ export default Vue.extend({
       this.$store.commit("paramètres/changerLangue", { langue: lng });
     },
     sélectionnerLangue: function (langue: string): void {
-      languesRécentes.unshift(langue)
-      languesRécentes = uniq(this.languesRécentes)
+      languesRécentes.unshift(langue);
+      languesRécentes = uniq(this.languesRécentes);
     },
     clefsMessages(lng?: string): string[] {
       lng = lng || this.langueOriginale;

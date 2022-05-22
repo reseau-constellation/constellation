@@ -64,12 +64,14 @@
         <p class="text-overline mb-2">
           {{ $t("dialogueNouvelleVariable.Catégorie") }}
         </p>
-        <v-select v-model="catégorie" :items="catégoriesVariable" outlined dense>
+        <v-select
+          v-model="catégorie"
+          :items="catégoriesVariable"
+          outlined
+          dense
+        >
           <template v-slot:item="{ on, item, attrs }">
-            <itemListeCatégories
-              v-on="on" v-bind="attrs"
-              :categorie="item"
-            />
+            <itemListeCatégories v-on="on" v-bind="attrs" :categorie="item" />
           </template>
           <template v-slot:selection="{ item }">
             <v-tooltip v-if="catégorie !== undefined" bottom>
@@ -102,7 +104,8 @@
               v-for="r in [...règlesCatégorie, ...règlesPropre]"
               :key="r"
               dense
-            > {{ r}}
+            >
+              {{ r }}
             </v-list-item>
           </v-list>
         </span>
@@ -137,7 +140,7 @@ import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import mixinLangues from "@/mixins/langues";
 
 import { variables } from "@constl/ipa";
-import itemListeCatégories from "@/components/variables/itemListeCatégories.vue"
+import itemListeCatégories from "@/components/variables/itemListeCatégories.vue";
 
 import {
   traduireNom,

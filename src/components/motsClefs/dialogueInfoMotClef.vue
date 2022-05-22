@@ -27,14 +27,12 @@
       </v-card-title>
 
       <v-divider />
-      <v-card-text>
-
-      </v-card-text>
+      <v-card-text> </v-card-text>
       <v-divider />
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" text outlined @click="dialogue=false">
+        <v-btn color="secondary" text outlined @click="dialogue = false">
           {{ $t("communs.fermer") }}
         </v-btn>
       </v-card-actions>
@@ -45,10 +43,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import {
-  couper,
-  traduireNom,
-} from "@/utils";
+import { couper, traduireNom } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
@@ -127,10 +122,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
         },
       });
 
-      this.suivre([
-        oublierPermissionÉcrire,
-        oublierNoms,
-      ]);
+      this.suivre([oublierPermissionÉcrire, oublierNoms]);
     },
   },
 });

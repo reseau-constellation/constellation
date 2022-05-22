@@ -7,15 +7,10 @@
       {{ couper(nom, 30) }}
     </v-list-item-content>
     <v-list-item-action-text v-if="permissionÉcrire">
-      <dialogue-epingler
-        :id="id"
-        :optionFichiers="false"
-      >
+      <dialogue-epingler :id="id" :optionFichiers="false">
         <template v-slot:activator="{ on, attrs }">
           <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
-            <template
-              v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }"
-            >
+            <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
               <span v-bind="tooltipAttrs" v-on="tooltipOn">
                 <v-btn v-bind="attrs" v-on="on" icon>
                   <v-icon>{{
@@ -24,7 +19,13 @@
                 </v-btn>
               </span>
             </template>
-            <span>{{ $t(épinglé && épinglé.bd ? "motsclefs.indiceÉpinglé" : "motsclefs.indiceNonÉpinglé") }}</span>
+            <span>{{
+              $t(
+                épinglé && épinglé.bd
+                  ? "motsclefs.indiceÉpinglé"
+                  : "motsclefs.indiceNonÉpinglé"
+              )
+            }}</span>
           </v-tooltip>
         </template>
       </dialogue-epingler>
@@ -36,22 +37,15 @@
       >
         <template v-slot:activator="{ on, attrs }">
           <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
-            <template
-              v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }"
-            >
+            <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
               <span v-bind="tooltipAttrs" v-on="tooltipOn">
-                <v-btn
-                  v-bind="attrs" v-on="on"
-                  icon
-                  color="error"
-                >
+                <v-btn v-bind="attrs" v-on="on" icon color="error">
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </span>
             </template>
             <span>{{ $t("motsclefs.effacer.indiceEffacer") }}</span>
           </v-tooltip>
-
         </template>
       </dialogue-effacer>
     </v-list-item-action-text>
@@ -64,7 +58,7 @@ import mixins from "vue-typed-mixins";
 import { couper, traduireNom } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import dialogueEffacer from "@/components/commun/dialogueEffacer.vue";
-import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue"
+import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";

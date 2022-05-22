@@ -16,24 +16,21 @@
 import mixins from "vue-typed-mixins";
 import mixinLangues from "@/mixins/langues";
 
-import {
-  icôneCatégorieVariable,
-} from "@/utils";
+import { icôneCatégorieVariable } from "@/utils";
 
 export default mixins(mixinLangues).extend({
   name: "itemListeCatégories",
   props: {
     categorie: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     icône: function (): string {
-      return icôneCatégorieVariable(this.categorie)
-    }
-  }
-})
-
+      return icôneCatégorieVariable(this.categorie);
+    },
+  },
+});
 </script>
 
 <style></style>

@@ -87,11 +87,16 @@ export default mixins(mixinLangues).extend({
     },
   },
   mounted: function () {
-    this.langueNouveauNom = this.languesRécentes.find(l=>!this.languesExistantes.includes(l))
+    this.langueNouveauNom = this.languesRécentes.find(
+      (l) => !this.languesExistantes.includes(l)
+    );
   },
   beforeUpdate: function () {
-    if (!this.langueNouveauNom) this.langueNouveauNom = this.languesRécentes.find(l=>!this.languesExistantes.includes(l))
-  }
+    if (!this.langueNouveauNom)
+      this.langueNouveauNom = this.languesRécentes.find(
+        (l) => !this.languesExistantes.includes(l)
+      );
+  },
 });
 </script>
 

@@ -65,12 +65,12 @@ module.exports = {
           .use("node-loader")
           .loader("node-loader");
 
-        // Je ne peux pas croire que ceci c'est la « vraie » façon de faire fonctionner
+        // Je ne peux pas croire que ceci c'est la « vraie » façon de faire fonctionner
         // topLevelAwait dans le processus principal d'électron.
         // Mais les options de configureWebpack ne sont pas utilisés pour la
         // compilation du processus principal et je n'ai pas pu trouver une
         // option pour experiments dans webpack-chain. Donc, quelques heures plus
-        // tard, nous voici...
+        // tard, nous voici...
         const toConfigOrig = config.toConfig;
         config.toConfig = function toConfig() {
           const configOrig = toConfigOrig.apply(this);

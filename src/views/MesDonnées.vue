@@ -48,12 +48,19 @@ import mixinIPA from "@/mixins/ipa";
 
 export default mixins(mixinIPA).extend({
   name: "BD",
-  components: { Titre, carteBd, nouvelleBd, tousMotsclefs, toutesVariables, toutesBds },
+  components: {
+    Titre,
+    carteBd,
+    nouvelleBd,
+    tousMotsclefs,
+    toutesVariables,
+    toutesBds,
+  },
   mixins: [mixinIPA],
   data: function () {
     return {
       typeObjetSélectionné: 2,
-      typesObjets: ["mots-clefs", "variables", "bds", ], // "projets"],
+      typesObjets: ["mots-clefs", "variables", "bds"], // "projets"],
       idsBds: [] as string[],
     };
   },

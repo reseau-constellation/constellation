@@ -19,7 +19,7 @@
     <v-divider />
     <v-card-subtitle>{{ détails }}</v-card-subtitle>
     <v-card-text>
-      <dialogueQualité :score="score" :permissionModifier="permissionÉcrire">
+      <dialogueQualité v-if="false" :score="score" :permissionModifier="permissionÉcrire">
         <template v-slot:activator="{ on, attrs }">
           <v-chip
             outlined
@@ -90,22 +90,28 @@
 
     <v-card-actions>
       <v-spacer />
-      <v-tooltip bottom>
+      <dialogue-epingler :id="idBd" :optionFichiers="false">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            v-show="épinglée !== null"
-            icon
-            v-bind="attrs"
-            v-on="on"
-            @click.stop="épinglée ? désépingler() : épingler()"
-          >
-            <v-icon>{{ épinglée ? "mdi-pin" : "mdi-pin-outline" }}</v-icon>
-          </v-btn>
+          <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
+            <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
+              <span v-bind="tooltipAttrs" v-on="tooltipOn">
+                <v-btn v-bind="attrs" v-on="on" icon>
+                  <v-icon>{{
+                    épinglée && épinglée.bd ? "mdi-pin" : "mdi-pin-outline"
+                  }}</v-icon>
+                </v-btn>
+              </span>
+            </template>
+            <span>{{
+              $t(
+                épinglée && épinglée.bd
+                  ? "carteBD.indiceÉpinglé"
+                  : "carteBD.indiceNonÉpinglé"
+              )
+            }}</span>
+          </v-tooltip>
         </template>
-        <span>
-          {{ épinglée ? $t("carteBD.அகற்று") : $t("carteBD.பொருத்து") }}</span
-        >
-      </v-tooltip>
+      </dialogue-epingler>
     </v-card-actions>
   </v-card>
 </template>
@@ -120,17 +126,25 @@ import { traduireNom, couper, couleurScore } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
 import dialogueQualité from "@/components/commun/dialogueQualité.vue";
+import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
 import mixinIPA from "@/mixins/ipa";
 import mixinLicences from "@/mixins/licences";
 
 export default mixins(mixinIPA, mixinLicences).extend({
   name: "carteBD",
-  props: ["bd"],
-  components: { lienOrbite, dialogueLicence, dialogueQualité },
+  props: {
+    bd: String,
+  },
+  components: {
+    lienOrbite,
+    dialogueLicence,
+    dialogueQualité,
+    dialogueEpingler,
+  },
   mixins: [mixinIPA, mixinLicences],
   data: function () {
     return {
-      épinglée: null as undefined | null | favoris.ÉlémentFavoris,
+      épinglée: undefined as undefined | favoris.épingleDispositif,
       licence: null as null | string,
       logo: null as null | string,
       score: null as null | bds.infoScore,
@@ -159,15 +173,6 @@ export default mixins(mixinIPA, mixinLicences).extend({
   methods: {
     couper,
     couleurScore,
-    épingler: async function () {
-      await this.$ipa.favoris!.épinglerFavori({
-        id: this.idBd,
-        dispositifs: "TOUS",
-      });
-    },
-    désépingler: async function () {
-      await this.$ipa.favoris!.désépinglerFavori({ id: this.idBd });
-    },
     changerLicence({ licence }: { licence: string }) {
       this.$ipa.bds!.changerLicenceBd({ idBd: this.idBd, licence });
     },
@@ -213,10 +218,15 @@ export default mixins(mixinIPA, mixinLicences).extend({
         id: this.idBd,
         f: (score) => (this.score = score),
       });
-      const oublierFavori = await this.$ipa.favoris!.suivreÉtatFavori({
-        id: this.idBd,
-        f: (épinglée) => (this.épinglée = épinglée),
-      });
+
+      const oublierÉpinglé =
+        await this.$ipa.favoris!.suivreEstÉpingléSurDispositif({
+          idObjet: this.idBd,
+          f: (épinglée) => {
+            this.épinglée = épinglée;
+          },
+        });
+
       this.suivre([
         oublierPermissionÉcrire,
         oublierImage,
@@ -224,7 +234,7 @@ export default mixins(mixinIPA, mixinLicences).extend({
         oublierNoms,
         oublierDétails,
         oublierScore,
-        oublierFavori,
+        oublierÉpinglé,
       ]);
     },
   },

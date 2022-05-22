@@ -40,12 +40,17 @@ import mixins from "vue-typed-mixins";
 import Titre from "@/components/commun/Titre.vue";
 import nouvelleVariable from "@/components/variables/dialogueNouvelleVariable.vue";
 import itemListeVariables from "@/components/variables/itemListeVariables.vue";
-import dialogueInfoVariable from "@/components/variables/dialogueInfoVariable.vue"
+import dialogueInfoVariable from "@/components/variables/dialogueInfoVariable.vue";
 import mixinIPA from "@/mixins/ipa";
 
 export default mixins(mixinIPA).extend({
   name: "BD",
-  components: { Titre, nouvelleVariable, itemListeVariables, dialogueInfoVariable },
+  components: {
+    Titre,
+    nouvelleVariable,
+    itemListeVariables,
+    dialogueInfoVariable,
+  },
   mixins: [mixinIPA],
   data: function () {
     return {

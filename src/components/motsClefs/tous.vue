@@ -41,12 +41,16 @@ import mixinIPA from "@/mixins/ipa";
 import Titre from "@/components/commun/Titre.vue";
 import dialogueNouveauMotclef from "@/components/motsClefs/dialogueNouveauMotClef.vue";
 import itemListeMotsclefs from "@/components/motsClefs/itemListeMotsClefs.vue";
-import dialogueInfoMotclef from "@/components/motsClefs/dialogueInfoMotClef.vue"
-
+import dialogueInfoMotclef from "@/components/motsClefs/dialogueInfoMotClef.vue";
 
 export default mixins(mixinIPA).extend({
   name: "mesMotsClefs",
-  components: { Titre, dialogueNouveauMotclef, itemListeMotsclefs, dialogueInfoMotclef },
+  components: {
+    Titre,
+    dialogueNouveauMotclef,
+    itemListeMotsclefs,
+    dialogueInfoMotclef,
+  },
   mixins: [mixinIPA],
   data: function () {
     return {

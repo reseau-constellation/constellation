@@ -9,10 +9,7 @@
     </v-list-item-content>
     <v-list-item-action>
       <span>
-        <dialogue-epingler
-          :id="id"
-          :optionFichiers="false"
-        >
+        <dialogue-epingler :id="id" :optionFichiers="false">
           <template v-slot:activator="{ on, attrs }">
             <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
               <template
@@ -26,7 +23,13 @@
                   </v-btn>
                 </span>
               </template>
-              <span>{{ $t(épinglé && épinglé.bd ? "variables.indiceÉpinglé" : "variables.indiceNonÉpinglé") }}</span>
+              <span>{{
+                $t(
+                  épinglé && épinglé.bd
+                    ? "variables.indiceÉpinglé"
+                    : "variables.indiceNonÉpinglé"
+                )
+              }}</span>
             </v-tooltip>
           </template>
         </dialogue-epingler>
@@ -42,21 +45,15 @@
                 v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }"
               >
                 <span v-bind="tooltipAttrs" v-on="tooltipOn">
-                  <v-btn
-                    v-bind="attrs" v-on="on"
-                    icon
-                    color="error"
-                  >
+                  <v-btn v-bind="attrs" v-on="on" icon color="error">
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </span>
               </template>
               <span>{{ $t("variables.indiceEffacer") }}</span>
             </v-tooltip>
-
           </template>
         </dialogue-effacer>
-
       </span>
     </v-list-item-action>
   </v-list-item>
@@ -69,7 +66,7 @@ import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 import { traduireNom, couper, icôneCatégorieVariable } from "@/utils";
 import dialogueEffacer from "@/components/commun/dialogueEffacer.vue";
-import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue"
+import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
 
 import { favoris } from "@constl/ipa";
 
@@ -99,7 +96,9 @@ export default mixins(mixinLangues, mixinIPA).extend({
         : "";
     },
     icôneCatégorie: function (): string {
-      return this.catégorie ? icôneCatégorieVariable(this.catégorie) : "mdi-xml";
+      return this.catégorie
+        ? icôneCatégorieVariable(this.catégorie)
+        : "mdi-xml";
     },
   },
   methods: {
@@ -141,8 +140,8 @@ export default mixins(mixinLangues, mixinIPA).extend({
           id: this.id,
           f: (catégorie) => {
             this.catégorie = catégorie;
-          }
-        })
+          },
+        });
 
       this.suivre([
         oublierPermissionÉcrire,

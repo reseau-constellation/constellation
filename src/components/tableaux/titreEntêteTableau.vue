@@ -12,7 +12,6 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-
 import dialogueInfoVariable from "@/components/variables/dialogueInfoVariable.vue";
 
 import { traduireNom, couper } from "@/utils";

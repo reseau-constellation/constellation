@@ -103,7 +103,7 @@ export default mixins(mixinIPA).extend({
             id: val,
             f: (règles: valid.règleVariable[]) => {
               this.règlesVariable = règles;
-            }
+            },
           });
       }
     },
@@ -133,7 +133,7 @@ export default mixins(mixinIPA).extend({
       const oublierVariables = await this.$ipa.variables!.suivreVariables({
         f: (variables: string[]) => {
           this.variablesDisponibles = variables;
-        }
+        },
       });
 
       this.suivre([oublierVariables]);
