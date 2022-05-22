@@ -14,6 +14,7 @@
         <v-skeleton-loader v-if="existants === null" type="paragraph" />
         <div v-else class="mt-3">
           <v-text-field
+            v-if="false"
             v-model="recherche"
             outlined
             dense
@@ -35,7 +36,7 @@
           </dialogue-nouveau-mot-clef>
           <v-divider />
           <v-list scrollable style="max-height: 200px" class="overflow-y-auto">
-            <item-liste-mots-clefs
+            <item-liste-ajouter-mots-clefs
               v-for="m in motsClefsVisibles"
               :key="m"
               :id="m"
@@ -66,12 +67,12 @@ import mixins from "vue-typed-mixins";
 import mixinIPA from "@/mixins/ipa";
 import mixinImage from "@/mixins/images";
 import dialogueNouveauMotClef from "@/components/motsClefs/dialogueNouveauMotClef.vue";
-import itemListeMotsClefs from "@/components/motsClefs/itemListeMotsClefs.vue";
+import itemListeAjouterMotsClefs from "@/components/motsClefs/itemListeAjouterMotsClefs.vue";
 
 export default mixins(mixinIPA, mixinImage).extend({
   name: "dialogueMotsClefs",
   props: ["selectionnes"],
-  components: { itemListeMotsClefs, dialogueNouveauMotClef },
+  components: { itemListeAjouterMotsClefs, dialogueNouveauMotClef },
   mixins: [mixinIPA, mixinImage],
   data: function () {
     return {

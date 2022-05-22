@@ -306,7 +306,7 @@
             <v-card flat min-width="200" max-width="350" class="mb-3 me-3">
               <p class="mb-0 text-overline">
                 {{ $t("bd.visBD.வார்த்தைகள்") }}
-                <dialogue-mots-clefs
+                <dialogue-ajouter-mots-clefs
                   v-if="permissionÉcrire"
                   :selectionnes="motsClefs"
                   @ajouterMotClef="ajouterMotClef"
@@ -322,7 +322,7 @@
                       <v-icon small> mdi-plus </v-icon>
                     </v-btn>
                   </template>
-                </dialogue-mots-clefs>
+                </dialogue-ajouter-mots-clefs>
               </p>
               <p v-if="!motsClefs.length" class="text--disabled">
                 {{ $t("bd.visBD.சிறப்பு_சொற்_இல்லை") }}
@@ -426,7 +426,7 @@ import dialogueQualité from "@/components/commun/dialogueQualité.vue";
 import dialogueCopierBd from "@/components/BD/dialogueCopier.vue";
 import dialogueExporter from "@/components/commun/dialogueExporter.vue";
 import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
-import dialogueMotsClefs from "@/components/motsClefs/dialogueMotsClefs.vue";
+import dialogueAjouterMotsClefs from "@/components/motsClefs/dialogueAjouterMotsClefs.vue";
 import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications.vue";
 import dialogueAuteurs from "@/components/BD/auteurs/dialogueAuteurs.vue";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
@@ -457,7 +457,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       dialogueExporter,
       dialogueLicence,
       dialogueAuteurs,
-      dialogueMotsClefs,
+      dialogueAjouterMotsClefs,
       dialogueRéplications,
       boîteNoms,
     },
