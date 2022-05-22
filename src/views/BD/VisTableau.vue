@@ -18,11 +18,13 @@
           </template>
         </v-breadcrumbs>
       </v-card-subtitle>
-      <v-img
-        :src="logo || require('@/assets/undraw/undraw_Projections_re_1mrh.svg')"
-        height="100px"
-        contain
-      ></v-img>
+      <imageÉditable
+        :srcImage="imageBd"
+        :editable="permissionÉcrire"
+        :MAX_TAILLE_IMAGE="MAX_TAILLE_IMAGE"
+        @imageChoisie="imageBdChoisie"
+        @effacerImage="effacerImageBd"
+      />
       <v-card-title>
         {{ couper(nom, 45) }}
         <span v-if="permissionÉcrire">
@@ -72,9 +74,11 @@
 import mixins from "vue-typed-mixins";
 
 import { traduireNom, couper } from "@/utils";
+import { bds } from "@constl/ipa";
 
 import tableau from "@/components/tableaux/tableau.vue";
 
+import imageÉditable from "@/components/commun/imageÉditable.vue";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import dialogueExporter from "@/components/commun/dialogueExporter.vue";
@@ -82,23 +86,30 @@ import dialogueImporter from "@/components/commun/dialogueImporter.vue";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
+import mixinImage from "@/mixins/images";
 
-export default mixins(mixinLangues, mixinIPA).extend({
+const { MAX_TAILLE_IMAGE } = bds;
+
+
+export default mixins(mixinLangues, mixinIPA, mixinImage).extend({
   name: "visTableau",
   components: {
     lienOrbite,
     dialogueExporter,
     dialogueImporter,
     boîteNoms,
+    imageÉditable,
     tableau,
   },
-  mixins: [mixinLangues, mixinIPA],
+  mixins: [mixinLangues, mixinIPA, mixinImage],
   data: function () {
     return {
       permissionÉcrire: false,
       nomsTableau: {},
       nomsBD: {},
-      logo: null,
+      logoBd: null as null | string,
+
+      MAX_TAILLE_IMAGE,
     };
   },
   computed: {
@@ -114,6 +125,9 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
     idBd: function (): string {
       return decodeURIComponent(this.$route.params.id);
+    },
+    imageBd: function (): string {
+      return this.logoBd || this.image("logoBD");
     },
     idTableau: function (): string {
       return decodeURIComponent(this.$route.params.idTableau);
@@ -138,6 +152,19 @@ export default mixins(mixinLangues, mixinIPA).extend({
   },
   methods: {
     couper,
+    effacerImageBd: async function () {
+      await this.$ipa.bds!.effacerImage({ idBd: this.idBd });
+    },
+    imageBdChoisie: async function ({
+      données,
+    }: {
+      données: Uint8Array;
+    }): Promise<void> {
+      await this.$ipa.bds!.sauvegarderImage({
+        idBd: this.idBd,
+        image: données,
+      });
+    },
     sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
       this.$ipa.tableaux!.sauvegarderNomTableau({
         idTableau: this.idTableau,
@@ -183,14 +210,28 @@ export default mixins(mixinLangues, mixinIPA).extend({
         },
       });
 
-      const oublierNomsBD = await this.$ipa.bds!.suivreNomsBd({
+      const oublierNomsBd = await this.$ipa.bds!.suivreNomsBd({
         id: this.idBd,
         f: (noms) => {
           this.nomsBD = noms;
         },
       });
 
-      this.suivre([oublierPermissionÉcrire, oublierNoms, oublierNomsBD]);
+      const oublierImageBd = await this.$ipa.bds!.suivreImage({
+        idBd: this.idBd,
+        f: (logo) => {
+          if (logo) {
+            const url = URL.createObjectURL(
+              new Blob([logo.buffer], { type: "image/png" })
+            );
+            this.logoBd = url;
+          } else {
+            this.logoBd = null;
+          }
+        },
+      });
+
+      this.suivre([oublierPermissionÉcrire, oublierNoms, oublierNomsBd, oublierImageBd]);
     },
   },
 });
