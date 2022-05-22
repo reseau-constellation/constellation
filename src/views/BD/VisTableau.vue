@@ -90,7 +90,6 @@ import mixinImage from "@/mixins/images";
 
 const { MAX_TAILLE_IMAGE } = bds;
 
-
 export default mixins(mixinLangues, mixinIPA, mixinImage).extend({
   name: "visTableau",
   components: {
@@ -231,7 +230,12 @@ export default mixins(mixinLangues, mixinIPA, mixinImage).extend({
         },
       });
 
-      this.suivre([oublierPermissionÉcrire, oublierNoms, oublierNomsBd, oublierImageBd]);
+      this.suivre([
+        oublierPermissionÉcrire,
+        oublierNoms,
+        oublierNomsBd,
+        oublierImageBd,
+      ]);
     },
   },
 });

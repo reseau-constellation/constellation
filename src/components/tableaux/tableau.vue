@@ -87,8 +87,11 @@
         <titreEntêteTableau
           v-if="c.value !== 'actions'"
           :key="c.value"
+          :permissionModifier="permissionÉcrire"
           :idVariable="header.text"
           :idColonne="header.value"
+          :idTableau="idTableau"
+          :index="colonnesIndex && colonnesIndex.includes(header.value)"
         />
         <span v-else :key="c.value"> {{ c.text }} </span>
       </template>
@@ -243,6 +246,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
     return {
       permissionÉcrire: false,
       colonnes: null as null | tableaux.InfoColAvecCatégorie[],
+      colonnesIndex: null as null | string[],
       données: null as null | valid.élémentDonnées[],
       nouvelleLigne: false,
       éditer: false,
@@ -358,6 +362,11 @@ export default mixins(mixinIPA, mixinLangues).extend({
         f: (données) => {
           this.données = données;
         },
+      });
+
+      const oublierIndex = await this.$ipa.tableaux!.suivreIndex({
+        idTableau: this.idTableau,
+        f: (index) => (this.colonnesIndex = index),
       });
 
       this.suivre([oublierPermissionÉcrire, oublierColonnes, oublierDonnées]);

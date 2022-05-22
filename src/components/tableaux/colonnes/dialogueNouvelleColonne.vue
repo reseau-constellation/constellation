@@ -37,18 +37,26 @@
           </template>
         </v-select>
 
-        <p class="text-overline mb-0">
-          {{ $t("dialogueNouvelleColonne.சோதனைகள்") }}
-        </p>
-        <v-list>
-          <v-list-item v-for="r in règlesVariable" :key="r"> </v-list-item>
-        </v-list>
+        <span v-if="variable">
+          <p class="text-overline mb-0">
+            {{ $t("dialogueNouvelleColonne.சோதனைகள்") }}
+          </p>
+          <v-list>
+            <itemListeRègle
+              v-for="r in règlesVariable"
+              :key="r.id"
+              :regle="r"
+              :nomVariable="$t('dialogueNouvelleColonne.cetteColonne')"
+            >
+            </itemListeRègle>
+          </v-list>
+        </span>
 
-        <p class="text-overline mb-0">
+        <p v-if="false" class="text-overline mb-0">
           {{ $t("dialogueNouvelleColonne.கட்டுப்பாடுகள்") }}
         </p>
-        <v-list>
-          <v-list-item v-for="r in règlesPropre" :key="r"> </v-list-item>
+        <v-list v-if="false">
+          <v-list-item v-for="r in règlesPropre" :key="r.id"> </v-list-item>
         </v-list>
       </v-card-text>
       <v-divider></v-divider>
@@ -74,12 +82,13 @@ import { utils, valid } from "@constl/ipa";
 import dialogueNouvelleVariable from "@/components/variables/dialogueNouvelleVariable.vue";
 import itemVariable from "@/components/tableaux/colonnes/itemVariable.vue";
 import jetonVariable from "@/components/commun/jetonVariable.vue";
+import itemListeRègle from "@/components/règles/itemListeRègles.vue";
 
 import mixinIPA from "@/mixins/ipa";
 
 export default mixins(mixinIPA).extend({
   name: "dialogueNouvelleColonne",
-  components: { dialogueNouvelleVariable, itemVariable, jetonVariable },
+  components: { dialogueNouvelleVariable, itemVariable, jetonVariable, itemListeRègle },
   mixins: [mixinIPA],
   data: function () {
     return {

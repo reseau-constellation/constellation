@@ -1,18 +1,23 @@
 <template>
-  <v-menu offset-x :close-on-content-click="false">
+  <dialogue-info-colonne
+    :permissionModifier="permissionModifier"
+    :idColonne="idColonne"
+    :idVariable="idVariable"
+    :idTableau="idTableau"
+  >
     <template v-slot:activator="{ on, attrs }">
       <span v-bind="attrs" v-on="on">
+        <v-icon v-show="index" left small>mdi-crown-outline</v-icon>
         {{ couper(titre, 20) }}
       </span>
     </template>
-    <carte-variable :id="idVariable" />
-  </v-menu>
+  </dialogue-info-colonne>
 </template>
 
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import dialogueInfoVariable from "@/components/variables/dialogueInfoVariable.vue";
+import dialogueInfoColonne from "@/components/tableaux/dialogueInfoColonne.vue";
 
 import { traduireNom, couper } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
@@ -20,9 +25,15 @@ import mixinLangues from "@/mixins/langues";
 
 export default mixins(mixinIPA, mixinLangues).extend({
   name: "titreEntêteTableau",
-  props: ["idVariable", "idColonne"],
+  props: {
+    idVariable: String,
+    idColonne: String,
+    idTableau: String,
+    index: Boolean,
+    permissionModifier: Boolean,
+  },
   mixins: [mixinLangues, mixinIPA],
-  components: { dialogueInfoVariable },
+  components: { dialogueInfoColonne },
   data: function () {
     return {
       noms: {},

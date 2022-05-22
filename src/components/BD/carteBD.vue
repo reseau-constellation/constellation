@@ -19,7 +19,11 @@
     <v-divider />
     <v-card-subtitle>{{ détails }}</v-card-subtitle>
     <v-card-text>
-      <dialogueQualité v-if="false" :score="score" :permissionModifier="permissionÉcrire">
+      <dialogueQualité
+        v-if="false"
+        :score="score"
+        :permissionModifier="permissionÉcrire"
+      >
         <template v-slot:activator="{ on, attrs }">
           <v-chip
             outlined

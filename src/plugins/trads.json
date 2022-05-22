@@ -99,6 +99,10 @@
       "Représentant": "Représentant",
       "Membres": "Membres"
     },
+    "dialogueInfoColonne": {
+      "variable": "Variable",
+      "index": "Colonne index"
+    },
     "carteBD": {
       "indiceÉpinglé": "BD épinglée sur ce dispositif",
       "indiceNonÉpinglé": "BD non épinglée sur ce dispositif",
@@ -711,6 +715,7 @@
       "நெடுவரிசை": "Nouvelle colonne",
       "மாறி": "Variable",
       "சோதனைகள்": "Contrôles de qualité (hérités)",
+      "cetteColonne": "Cette colonne",
       "கட்டுப்பாடுகள்": "Contrôles de qualité (propres)"
     },
     "celluleFichier": {

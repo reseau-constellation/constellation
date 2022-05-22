@@ -6,10 +6,7 @@
     <v-list-item-content>
       {{ couper(nom, 30) }}
     </v-list-item-content>
-    <v-list-item-action-text v-if="permissionÉcrire">
-
-
-    </v-list-item-action-text>
+    <v-list-item-action-text v-if="permissionÉcrire"> </v-list-item-action-text>
   </v-list-item>
 </template>
 

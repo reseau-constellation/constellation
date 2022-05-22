@@ -34,15 +34,11 @@
 import mixins from "vue-typed-mixins";
 import { PropType } from "vue";
 
-import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
-
 import mixinLangues from "@/mixins/langues";
 
-import { valid, variables } from "@constl/ipa";
+import { valid } from "@constl/ipa";
 
 import {
-  traduireNom,
-  catégoriesVariable,
   icôneCatégorieVariable,
 } from "@/utils";
 
