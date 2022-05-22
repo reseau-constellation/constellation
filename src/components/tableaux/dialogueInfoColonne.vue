@@ -20,6 +20,7 @@
         <v-checkbox
           v-model="index"
           :label="$t('dialogueInfoColonne.index')"
+          :append-icon="index ? 'mdi-crown-outline' : ''"
           :disable="!permissionModifier"
           @change="changerColonneIndex"
         />
