@@ -12,8 +12,7 @@
         </v-btn>
       </v-card-title>
       <v-divider />
-
-      <template>
+      <v-card-text>
         <v-stepper v-model="étape" horizontal>
           <v-stepper-header>
             <v-stepper-step :complete="étape > 1" step="1">
@@ -30,62 +29,26 @@
           <v-stepper-items>
             <v-stepper-content step="1">
               <v-card class="mb-2" height="200px">
-                <v-btn
-                  color="primary"
-                  text
+                <v-file-input
+                  v-model="fichier"
+                  class="mt-2"
                   outlined
-                  :loading="enProgrès"
-                  @click="onPickFile"
+                  chips
+                  :label="$t('communs.fichier')"
                 >
-                  {{ $t("communs.fichier") }}
-                  <input
-                    type="file"
-                    style="display: none"
-                    ref="fileInput"
-                    accept=".csv,.ods,.xls,.xlsx"
-                    @change="onFilePicked"
-                  />
-                </v-btn>
-                <div class="text-center">
-                  <v-chip
-                    v-if="nomFichier"
-                    class="ma-2"
-                    close
-                    color="green"
-                    outlined
-                    @click:close="nomFichier = false"
-                  >
-                    {{ nomFichier }}
-                  </v-chip>
-                </div>
-                <v-container fluid>
-                  <v-row align="center">
-                    <v-col cols="12" sm="12">
-                      <v-select
-                        v-model="tableauSélectionné"
-                        :items="tableauxFichier"
-                        :menu-props="{ maxHeight: '75' }"
-                        :disabled="!nomFichier"
-                        :label="$t('communs.தேர்ந்தெடுக்கவும்')"
-                      ></v-select>
-                    </v-col>
-                  </v-row>
-                </v-container>
+                </v-file-input>
+
+                <v-select
+                  v-model="tableauSélectionné"
+                  :items="tableauxFichier"
+                  :menu-props="{ maxHeight: '75' }"
+                  :disabled="!fichier"
+                  :label="$t('importer.choisirTableau')"
+                  prepend-icon="mdi-table"
+                  outlined
+                ></v-select>
               </v-card>
-              <v-card-actions>
-                <v-btn :disabled="étape === 1" text @click="étape--">
-                  {{ $t("bd.nouvelle.Retour") }}
-                </v-btn>
-                <v-spacer></v-spacer>
-                <v-btn
-                  :disabled="!tableauSélectionné"
-                  color="primary"
-                  outlined
-                  @click="étape++"
-                >
-                  {{ $t("bd.nouvelle.Suivant") }}
-                </v-btn>
-              </v-card-actions>
+
             </v-stepper-content>
 
             <v-stepper-content step="2">
@@ -158,7 +121,22 @@
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
-      </template>
+      </v-card-text>
+
+      <v-card-actions>
+        <v-btn :disabled="étape === 1" text @click="étape--">
+          {{ $t("bd.nouvelle.Retour") }}
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn
+          :disabled="!tableauSélectionné"
+          color="primary"
+          outlined
+          @click="étape++"
+        >
+          {{ $t("bd.nouvelle.Suivant") }}
+        </v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -180,6 +158,9 @@ export default mixins(mixinLangues, mixinIPA).extend({
     return {
       dialogue: false,
       enProgrès: false,
+
+      fichier: undefined as undefined | File,
+
       formatDoc: "ods" as XLSX.BookType | "xls",
       inclureMédias: false,
       langueColonnes: undefined,
@@ -187,8 +168,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
       importateur: undefined as ImportateurFeuilleCalcul | undefined,
       tableauxFichier: undefined as string[] | undefined,
       tableauSélectionné: undefined as string | undefined,
-      nomFichier: undefined as string | undefined,
-      colonneFichier: undefined as string[] | undefined,
+      colonnesFichier: undefined as string[] | undefined,
       colonneSélectionné: undefined as string | undefined,
 
       colonnesTableauConstellation: undefined as
@@ -198,29 +178,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
   },
 
   methods: {
-    onFilePicked: async function (): Promise<void> {
-      console.log("onFilePicked");
-      const fichiers = this.$refs.fileInput as HTMLInputElement; // தேர்ந்தெடுத்தப்பட்டு கோப்பு
-      console.log("fichiers", fichiers);
-      if (!fichiers.files) return;
-      const données = await fichiers!.files[0].arrayBuffer(); // கோப்பில் உள்ள தகவல்கள்
-      console.log("données", données);
-      const doc = readXLSX(données, {
-        type: "buffer",
-        cellDates: true,
-      }); // கோப்பை யாவாக்கிறீட்டில் திறக்கவும்
-      console.log("doc", doc);
-      this.importateur = new ImportateurFeuilleCalcul(doc); // விண்மீன் மூலம் பகுப்பாய்வு செய்யலாம்
-      console.log("this.importateur", this.importateur);
-      this.nomFichier = fichiers!.files[0].name;
-      console.log("this.nomFichier", this.nomFichier);
-    },
-    onPickFile: function (): void {
-      console.log("onPickFile");
-      const fileInput = this.$refs.fileInput as HTMLInputElement;
-      fileInput.click();
-    },
-
     initialiserSuivi: async function () {
       const oublierColonnesTableauConstellation =
         await this.$ipa.tableaux!.suivreColonnes({
@@ -232,18 +189,27 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   watch: {
-    importateur: async function (val: ImportateurFeuilleCalcul | undefined) {
+    fichier: async function (val: File | undefined) {
       if (val) {
-        this.tableauxFichier = val.obtNomsTableaux();
+        const données = await val.arrayBuffer(); // கோப்பில் உள்ள தகவல்கள்
+        const doc = readXLSX(données, {
+          type: "buffer",
+          cellDates: true,
+        }); // கோப்பை யாவாக்கிறீட்டில் திறக்கவும்
+        this.importateur = new ImportateurFeuilleCalcul(doc); // விண்மீன் மூலம் பகுப்பாய்வு செய்யலாம்
+        this.tableauxFichier = this.importateur.obtNomsTableaux();
+        if (this.tableauxFichier.length===1) this.tableauSélectionné = this.tableauxFichier[0]
+        this.colonnesFichier = undefined;
       } else {
         this.tableauxFichier = undefined;
+        this.colonnesFichier = undefined;
       }
     },
     tableauSélectionné: async function (val: string | undefined) {
       if (val) {
-        this.colonneFichier = this.importateur!.obtColsTableau(val);
+        this.colonnesFichier = this.importateur!.obtColsTableau(val);
       } else {
-        this.colonneFichier = undefined;
+        this.colonnesFichier = undefined;
       }
     },
   },
