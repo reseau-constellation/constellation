@@ -157,7 +157,7 @@
             {{ $t("bd.visBD.செய்தி") }}
           </p>
           <div class="d-flex flex-wrap">
-            <v-card flat width="200" class="mb-3">
+            <v-card v-if="false" flat width="200" class="mb-3">
               <dialogueQualité
                 :score="score"
                 :permissionModifier="permissionÉcrire"
