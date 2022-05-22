@@ -1,10 +1,5 @@
 <template>
-  <v-menu
-    offset-x
-    :close-on-content-click="false"
-    :disabled="!permissionModifier"
-    transition="slide-y-transition"
-  >
+  <dialogue-info-motclef :id="id">
     <template v-slot:activator="{ on, attrs }">
       <v-chip
         v-on="on"
@@ -20,15 +15,7 @@
         {{ couper(nom, 15) }}
       </v-chip>
     </template>
-    <boîteNoms
-      :noms="noms"
-      :titre="$t('motsClefs.jeton.titreBoîteNoms')"
-      :sousTitre="$t('motsClefs.jeton.sousTitreBoîteNoms')"
-      @sauvegarder="sauvegarderNom"
-      @changerLangue="changerLangueNom"
-      @effacer="effacerNom"
-    />
-  </v-menu>
+  </dialogue-info-motclef>
 </template>
 
 <script lang="ts">
@@ -38,13 +25,13 @@ import { couper, traduireNom } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
-import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
+import dialogueInfoMotclef from "@/components/motsClefs/dialogueInfoMotClef.vue";
 
 export default mixins(mixinIPA, mixinLangues).extend({
   name: "jetonMotClef",
   props: ["id", "permissionModifier"],
   mixins: [mixinLangues, mixinIPA],
-  components: { boîteNoms },
+  components: { dialogueInfoMotclef },
   data: function () {
     return {
       noms: {} as { [key: string]: string },
@@ -59,27 +46,6 @@ export default mixins(mixinIPA, mixinLangues).extend({
   },
   methods: {
     couper,
-    sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
-      this.$ipa.motsClefs!.sauvegarderNomMotClef({ id: this.id, langue, nom });
-    },
-    changerLangueNom({
-      langueOriginale,
-      langue,
-      nom,
-    }: {
-      langueOriginale: string;
-      langue: string;
-      nom: string;
-    }) {
-      this.$ipa.motsClefs!.effacerNomMotClef({
-        id: this.id,
-        langue: langueOriginale,
-      });
-      this.$ipa.motsClefs!.sauvegarderNomMotClef({ id: this.id, langue, nom });
-    },
-    effacerNom({ langue }: { langue: string }) {
-      this.$ipa.motsClefs!.effacerNomMotClef({ id: this.id, langue });
-    },
     initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.motsClefs!.suivreNomsMotClef({
         id: this.id,
