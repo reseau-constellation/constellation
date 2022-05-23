@@ -22,13 +22,17 @@ build_script:
 
 test: off
 
+artifacts:
+  - path: '**\*.exe'
+    name: MyApp
+
 deploy:
   release: constellation-v$(APPVEYOR_BUILD_VERSION)
   description: 'Release description'
   provider: GitHub
   auth_token:
     secure: s7kJZxQutpKHRRZ1p3jA0zqEgiZXpKWRC2rJj8wkYDm97VJ2hizyxtJKtlDp8dLW # your encrypted token from GitHub
-  artifact: /**/*.exe/            # upload all exe files to release assets
+  artifact: /.*\.exe/            # upload all exe files to release assets
   draft: true
   force_update: true
   on:
