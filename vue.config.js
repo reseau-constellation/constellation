@@ -12,6 +12,7 @@ module.exports = {
         fs: false,
         net: false,
         dgram: false,
+        chokidar: false,
       },
     },
     experiments: { topLevelAwait: true },
