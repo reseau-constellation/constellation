@@ -1934,36 +1934,331 @@
       "p3_3": "Es gibt jedoch keinen zentralen Server und Sie teilen nur das, was Sie beitragen möchten. Ihre Online-Aktivitäten und persönlichen Daten werden also nicht weiter verfolgt! Ihre Nutzungsaktivitäten, Aktivitäten und Interessen verbleiben auf Ihrem Computer (auch wenn Sie die Internetversion dieser Software verwenden).",
       "t4": "Credits",
       "p4_1": "Diese Software wurde von Dr. Julien Malard entwickelt.",
-      "p4_2": "Bilder und Kunstwerke stammen von [unDraw] (https://undraw.co/) und [வள்ளுவர் வள்ளலார் வட்டம்] (https://commons.wikimedia.org/wiki/User:Valluvar_Vallalar_Vattam?uselang=ta). Diese sind unter der Lizenz [CC BY-SA 4.0] verfügbar (https://creativecommons.org/licenses/by-sa/4.0/deed.fr)."
+      "p4_2": "Bilder und Illustration stammen von [unDraw] (https://undraw.co/) und [வள்ளுவர் வள்ளலார் வட்டம்] (https://commons.wikimedia.org/wiki/User:Valluvar_Vallalar_Vattam?uselang=ta). Diese sind unter der Lizenz [CC BY-SA 4.0] verfügbar (https://creativecommons.org/licenses/by-sa/4.0/deed.fr)."
     },
     "licences": {
-      "CC-BY-SA-4_0": {
-        "nom": "CC BY SA 4.0",
-        "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr"
-      },
-      "CC-BY-4_0": {
-        "nom": "CC BY 4.0",
-        "lien": "https://creativecommons.org/licenses/by/4.0/deed.fr"
-      },
-      "CC-0-1_0": {
-        "nom": "CC 0 1.0",
-        "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.fr"
-      },
-      "ODbl-1_0": {
-        "nom": "ODbl 1.0",
-        "lien": "https://opendatacommons.org/licenses/odbl/summary/"
-      },
-      "ODC-BY-1_0": {
-        "nom": "ODC BY 1.0",
-        "lien": "https://opendatacommons.org/licenses/by/summary"
-      },
-      "PDDL": {
-        "nom": "PDDL",
-        "lien": "https://opendatacommons.org/licenses/pddl/summary"
-      },
-      "introuvable": {
-        "nom": "Lizenz nicht gefunden"
+      "droits": {
+        "sousTitre": "Droits",
+        "aucune": "Aucun droit",
+        "partager": "Partager",
+        "adapter": "Adapter",
+        "usageComercial": "Utilisation commercial",
+        "usagePrivé": "Utilisation privée",
+        "usageBrevets": "Brevets"
+    },
+    "conditions": {
+      "sousTitre": "Conditions",
+      "aucune": "Aucune condition",
+      "attribution": "Attribution",
+      "partageÉgal": "Même licence",
+      "inclureDroitDauteur": "Droit d'auteur",
+      "indiquerChangements": "Indiquer modifications",
+      "partagerCodeSource": "Code source",
+      "usageRéseau": "Usage réseau compris",
+      "aucune": "Aucune condition"
+    },
+    "limitations": {
+      "sousTitre": "Limitations",
+      "aucune": "Aucune limitation",
+      "aucuneResponsabilité": "Aucune resposabilité",
+      "aucuneGarantie": "Aucune garantie",
+      "marqueCommerce": "Marques de commerce",
+      "brevetExclu": "Brevets",
+      "sousLicence": "Sous-licence",
+      "aucune": "Aucune limitation"
+    },
+    "avertissement": "L'information ci-dessous n'est qu'un résumé de la licence, pourrait contenir des erreurs et n'est pas un avis légal. Nous vous recommandons vivement de lire la licence en entier.",
+     "lire": "Lire la licence",
+     "aucunLien": "Aucun lien disponible",
+      "info": {
+        "CC-BY-SA-4_0": {
+          "nom": "CC BY SA 4,0",
+          "abr": "CC BY SA 4,0",
+          "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr"
+        },
+        "CC-BY-4_0": {
+          "nom": "CC BY 4,0",
+          "abr": "CC BY 4,0",
+          "lien": "https://creativecommons.org/licenses/by/4.0/deed.fr"
+        },
+        "CC-0-1_0": {
+          "nom": "CC 0 1,0",
+          "abr": "CC 0 1,0",
+          "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.fr"
+        },
+        "ODbl-1_0": {
+          "nom": "Licence ouverte ODC 1,0",
+          "abr": "ODbl 1,0",
+          "lien": "https://opendatacommons.org/licenses/odbl/summary/"
+        },
+        "ODC-BY-1_0": {
+          "nom": "Licence attribution ODC 1,0",
+          "abr": "ODC BY 1,0",
+          "lien": "https://opendatacommons.org/licenses/by/summary"
+        },
+        "PDDL": {
+          "nom": "Domaine publique ODC",
+          "abr": "PDDL",
+          "lien": "https://opendatacommons.org/licenses/pddl/summary"
+        },
+        "rvca-open": {
+          "nom": "Licence de données ouvertes RVCA",
+          "abr": "RVCA",
+          "lien": "https://rvcagis.github.io/jkan/datasets/rvca-open-licence/"
+        },
+        "0bsd": {
+          "nom": "BSD Zéro Clause",
+          "abr": "0bsd",
+          "lien": "https://choosealicense.com/licenses/0bsd/"
+        },
+        "afl-3_0": {
+          "nom": "Licence libre académique",
+          "abr": "afl-3_0",
+          "lien": "https://choosealicense.com/licenses/afl-3.0/"
+        },
+        "agpl-3_0": {
+          "nom": "Licence Publique Générale GNU Affero 3,0",
+          "abr": "agpl-3_0",
+          "lien": "https://choosealicense.com/licenses/agpl-3.0/"
+        },
+        "apache-2_0": {
+          "nom": "Licence Apache 2.0",
+          "abr": "apache-2_0",
+          "lien": "https://choosealicense.com/licenses/apache-2.0/"
+        },
+        "artistic-2_0": {
+          "nom": "Licence Artistique 2.0",
+          "abr": "artistic-2_0",
+          "lien": "https://choosealicense.com/licenses/artistic-2.0/"
+        },
+        "bsd-2-clause": {
+          "nom": "Licence BSD 2-Clause simplifiée",
+          "abr": "BSD 2-Clause",
+          "lien": "https://choosealicense.com/licenses/bsd-2-clause/"
+        },
+        "bsd-3-clause-clear": {
+          "nom": "Licence BSD 3-Clause claire",
+          "abr": "BSD 3-Clause",
+          "lien": "https://choosealicense.com/licenses/bsd-3-clause-clear/"
+        },
+        "bsd-3-clause": {
+          "nom": "Licence BSD 3-Nouvelle clause",
+          "abr": "BSD 3-Nouvelle",
+          "lien": "https://choosealicense.com/licenses/bsd-3-clause/"
+        },
+        "bsd-4-clause": {
+          "nom": "Licence BSD 4-Clause originale",
+          "abr": "BSD 4-Clause",
+          "lien": "https://choosealicense.com/licenses/bsd-4-clause/"
+        },
+        "bsl-1_0": {
+          "nom": "Licence de logiciel Boost 1.0",
+          "abr": "bsl-1_0",
+          "lien": "https://choosealicense.com/licenses/bsl-1.0/"
+        },
+        "cecill-2_1": {
+          "nom": "Licence de logiciel libre CeCILL v2,1",
+          "abr": "cecill-2_1",
+          "lien": "https://choosealicense.com/licenses/cecill-2.1/"
+        },
+        "ecl-2_0": {
+          "nom": "Licence communauté éducationnelle 2,0",
+          "abr": "ecl-2_0",
+          "lien": "https://choosealicense.com/licenses/ecl-2.0/"
+        },
+        "epl-1_0": {
+          "nom": "Licence publique Eclipse 1,0",
+          "abr": "epl-1_0",
+          "lien": "https://choosealicense.com/licenses/epl-1.0/"
+        },
+        "epl-2_0": {
+          "nom": "Licence publique Eclipse 2,0",
+          "abr": "epl-2_0",
+          "lien": "https://choosealicense.com/licenses/epl-2.0/"
+        },
+        "eupl-1_0": {
+          "nom": "Licence publique de l'Union européenne 1,1",
+          "abr": "eupl-1_0",
+          "lien": "https://choosealicense.com/licenses/eupl-1.1/"
+        },
+        "eupl-1_2": {
+          "nom": "Licence publique de l'Union européenne 1,2",
+          "abr": "eupl-1_2",
+          "lien": "https://choosealicense.com/licenses/eupl-1.2/"
+        },
+        "gpl-2_0": {
+          "nom": "Licence générale publique GNU v2,0",
+          "abr": "gpl-2_0",
+          "lien": "https://choosealicense.com/licenses/gpl-2.0/"
+        },
+        "gpl-3_0": {
+          "nom": "Licence générale publique GNU v3,0",
+          "abr": "gpl-3_0",
+          "lien": "https://choosealicense.com/licenses/gpl-3.0/"
+        },
+        "isc": {
+          "nom": "Licence ISC",
+          "abr": "isc",
+          "lien": "https://choosealicense.com/licenses/isc/"
+        },
+        "lgpl-2_1": {
+          "nom": "Licence Générale Publique moindre GNU v2,1",
+          "abr": "lgpl-2_1",
+          "lien": "https://choosealicense.com/licenses/lgpl-2.1/"
+        },
+        "lgpl-3_0": {
+          "nom": "Licence Générale Publique moindre GNU v3,1",
+          "abr": "lgpl-3_0",
+          "lien": "https://choosealicense.com/licenses/lgpl-3.0/"
+        },
+        "lppl-1_3c": {
+          "nom": "Licence publique du projet LaTeX v1,3c",
+          "abr": "lppl-1_3c",
+          "lien": "https://choosealicense.com/licenses/lppl-1.3c/"
+        },
+        "mit-0": {
+          "nom": "MIT sans attribution",
+          "abr": "MIT-0",
+          "lien": "https://choosealicense.com/licenses/mit-0/"
+        },
+        "mit": {
+          "nom": "MIT",
+          "abr": "MIT",
+          "lien": "https://choosealicense.com/licenses/mit/"
+        },
+        "mpl-2_0": {
+          "nom": "Licence publique Mozilla 2,0",
+          "abr": "mpl-2_0",
+          "lien": "https://choosealicense.com/licenses/mpl-2.0/"
+        },
+        "ms-pl": {
+          "nom": "Licence publique Microsoft",
+          "abr": "ms-pl",
+          "lien": "https://choosealicense.com/licenses/ms-pl/"
+        },
+        "ms-rl": {
+          "nom": "Licence réciproque Microsoft",
+          "abr": "ms-rl",
+          "lien": "https://choosealicense.com/licenses/ms-rl/"
+        },
+        "mulanpsl-2_0": {
+          "nom": "Licence logiciel permissive Mulan, version 2",
+          "abr": "mulanpsl-2_0",
+          "lien": "https://choosealicense.com/licenses/mulanpsl-2.0/"
+        },
+        "ncsa": {
+          "nom": "Licence source ouverte NCSA/Université d'Illinois",
+          "abr": "ncsa",
+          "lien": "https://choosealicense.com/licenses/ncsa/"
+        },
+        "osl-3_0": {
+          "nom": "Licence logiciel ouverte 3,0",
+          "abr": "osl-3_0",
+          "lien": "https://choosealicense.com/licenses/osl-3.0/"
+        },
+        "postgresql": {
+          "nom": "Licence PostgreSQL",
+          "abr": "postgresql",
+          "lien": "https://choosealicense.com/licenses/postgresql/"
+        },
+        "unlicence": {
+          "nom": "Domaine publique",
+          "abr": "unlicence",
+          "lien": "https://choosealicense.com/licenses/unlicense/"
+        },
+        "upl-1_0": {
+          "nom": "Licence permissive universelle 1,0",
+          "abr": "upl-1_0",
+          "lien": "https://choosealicense.com/licenses/upl-1.0/"
+        },
+        "vim": {
+          "nom": "Licence VIM",
+          "abr": "vim",
+          "lien": "https://choosealicense.com/licenses/vim/"
+        },
+        "wtfpl": {
+          "nom": "Licence publique WTF",
+          "abr": "wtfpl",
+          "lien": "https://choosealicense.com/licenses/wtfpl/"
+        },
+        "zlib": {
+          "nom": "Licence zlib",
+          "abr": "zlib",
+          "lien": "https://choosealicense.com/licenses/zlib/"
+        },
+        "ofl-1_1": {
+          "nom": "Licence de police source ouverte SIL 1,1",
+          "abr": "ofl-1_1",
+          "lien": "https://choosealicense.com/licenses/ofl-1.1/"
+        },
+        "introuvable": {
+          "nom": "Licence introuvable",
+          "abr": "Introuvable"
+        }
       }
+    },
+    "motsclefs":{
+      "indiceÉpinglé": "Épinglé sur ce dispositif",
+      "indiceNonÉpinglé": "Non épinglé sur ce dispositif",
+      "effacer": {
+        "titre": "Voulez-vous vraiment effacer ce mot-clef ?",
+        "explication": "Ceci effacera le mot-clef de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient en avoir créées.",
+        "indiceEffacer": "Effacer ce mot-clef"
+      },
+      "jeton":{
+       "titreBoîteNoms": "Ajoutez un nom pour votre mot-clef",
+       "sousTitreBoîteNoms": "Le plus de langues, le mieux !"
+      }
+    },
+    "dialogueMotsClefs": {
+      "Motsclefs": "Mots clefs",
+      "motclef": "Nouveau mot clef",
+      "Aucunrésultat": "Aucun résultat"
+    },
+    "traduction": {
+      "பரிந்துரைக்கவும்": "Proposez un traduction",
+      "தேர்ந்தெடுக்கவும்": "Sélectionnez un item de la liste à gauche",
+      "நகலெடுக்கவும்": "Copier originale",
+      "பரிந்துரைகள்": "{n}Suggestions",
+      "மறைமுகம்": "Incognito"
+    },
+    "itemListeTrads": {
+      "இல்லை": "Aucune traduction"
+    },
+    "dialogueNouveauMotClef": {
+      "motclef": "Nouveau mot-clef",
+      "sousTitre": "Ajoutez un nouveau mot-clef",
+      "தேர்ந்தெடுக்க": "Choisissez un nom pour votre mot-clef"
+    },
+    "carteFichierInstallation": {
+      "பதிப்பு": "Constellation version"
+    },
+    "dialogueNouvelleColonne": {
+      "நெடுவரிசை": "Nouvelle colonne",
+      "மாறி": "Variable",
+      "சோதனைகள்": "Contrôles de qualité (hérités)",
+      "cetteColonne": "Cette colonne",
+      "கட்டுப்பாடுகள்": "Contrôles de qualité (propres)"
+    },
+    "celluleFichier": {
+      "முன்னோட்டம்": "Ce format de fichier ne peut pas être prévisualisé pour le moment."
+    },
+    "tableau": {
+      "vide": "Aucune donnée",
+      "சேர்க்கவும்": "Ajouter une colonne",
+      "சேர்க்க": "Ajouter une rangée"
+    },
+    "opsLangue": {
+      "Contribuer": "Contribuer"
+    },
+    "dialogueTraductionsInterface": {
+      "மொழிபெயர்க்கவும்": "Traduire Constellation",
+      "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0",
+      "Languesource": "Langue source",
+      "Languecible": "Langue cible",
+      "clefSélectionnée": "clef Sélectionnée",
+      "messageOriginal": "message Original"
+    }
     }
   },
   "Ch'orti'": {
