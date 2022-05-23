@@ -2621,28 +2621,27 @@
       "aucuneResponsabilité": "Ohne Gewehr",
       "aucuneGarantie": "Ohne Garantie",
       "marqueCommerce": "Markenzeichen",
-      "brevetExclu": "Brevets",
-      "sousLicence": "Sous-licence",
-      "aucune": "Aucune limitation"
+      "brevetExclu": "Patent",
+      "sousLicence": "Unterlizenz"
     },
-    "avertissement": "L'information ci-dessous n'est qu'un résumé de la licence, pourrait contenir des erreurs et n'est pas un avis légal. Nous vous recommandons vivement de lire la licence en entier.",
-     "lire": "Lire la licence",
-     "aucunLien": "Aucun lien disponible",
+    "avertissement": "Die folgenden Informationen sind nur eine Zusammenfassung der jewiligen Lizenzen. Dise können Fehler enthalten und sind keine Rechtberatung. Wir empfehlen Ihnen dringend die gesamte Lizenz zu lesen.",
+     "lire": "Lizenz lesen",
+     "aucunLien": "Kein Link verfügbar",
       "info": {
         "CC-BY-SA-4_0": {
           "nom": "CC BY SA 4,0",
           "abr": "CC BY SA 4,0",
-          "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr"
+          "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.de"
         },
         "CC-BY-4_0": {
           "nom": "CC BY 4,0",
           "abr": "CC BY 4,0",
-          "lien": "https://creativecommons.org/licenses/by/4.0/deed.fr"
+          "lien": "https://creativecommons.org/licenses/by/4.0/deed.de"
         },
         "CC-0-1_0": {
           "nom": "CC 0 1,0",
           "abr": "CC 0 1,0",
-          "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.fr"
+          "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.de"
         },
         "ODbl-1_0": {
           "nom": "Licence ouverte ODC 1,0",
