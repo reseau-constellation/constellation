@@ -2597,31 +2597,30 @@
     },
     "licences": {
       "droits": {
-        "sousTitre": "Droits",
-        "aucune": "Aucun droit",
-        "partager": "Partager",
-        "adapter": "Adapter",
-        "usageComercial": "Utilisation commercial",
-        "usagePrivé": "Utilisation privée",
-        "usageBrevets": "Brevets"
+        "sousTitre": "Rechte",
+        "aucune": "Keine Rechte",
+        "partager": "Teilen",
+        "adapter": "Anpassen",
+        "usageComercial": "Kommerzieller Gebrauch",
+        "usagePrivé": "Privater Gebrauch",
+        "usageBrevets": "Patente"
     },
     "conditions": {
-      "sousTitre": "Conditions",
-      "aucune": "Aucune condition",
+      "sousTitre": "Bedingung",
+      "aucune": "Keine Bedingungen",
       "attribution": "Attribution",
-      "partageÉgal": "Même licence",
-      "inclureDroitDauteur": "Droit d'auteur",
-      "indiquerChangements": "Indiquer modifications",
-      "partagerCodeSource": "Code source",
-      "usageRéseau": "Usage réseau compris",
-      "aucune": "Aucune condition"
+      "partageÉgal": "Gleiche Lizenz",
+      "inclureDroitDauteur": "Urheberrechte",
+      "indiquerChangements": "Veränderungen angeben",
+      "partagerCodeSource": "Quellcode",
+      "usageRéseau": "Netzwerknutzung inklusive"
     },
     "limitations": {
-      "sousTitre": "Limitations",
-      "aucune": "Aucune limitation",
-      "aucuneResponsabilité": "Aucune resposabilité",
-      "aucuneGarantie": "Aucune garantie",
-      "marqueCommerce": "Marques de commerce",
+      "sousTitre": "Ausnahmen",
+      "aucune": "Ohne Ausnahmen",
+      "aucuneResponsabilité": "Ohne Gewehr",
+      "aucuneGarantie": "Ohne Garantie",
+      "marqueCommerce": "Markenzeichen",
       "brevetExclu": "Brevets",
       "sousLicence": "Sous-licence",
       "aucune": "Aucune limitation"
