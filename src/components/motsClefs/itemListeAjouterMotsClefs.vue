@@ -24,7 +24,7 @@ import mixinLangues from "@/mixins/langues";
 import { favoris } from "@constl/ipa";
 
 export default mixins(mixinLangues, mixinIPA).extend({
-  name: "itemListeMotsClefs",
+  name: "itemListeAjouterMotsClefs",
   props: ["id"],
   mixins: [mixinIPA, mixinLangues],
   components: { lienOrbite, dialogueEffacer, dialogueEpingler },

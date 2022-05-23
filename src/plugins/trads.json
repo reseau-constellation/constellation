@@ -66,9 +66,11 @@
       "titre": "Importer des données",
       "தேர்வுசெய்க": "Choisir un fichier",
       "choisirTableau": "Choisir un tableau",
-      "choisirColonne": "Choisir une colonne",
+      "colonneImporter": "Colonne à importer",
+      "colonneCible": "Colonne cible",
       "நெடுவரிசை": "Colonnes",
-      "பதிவேற்றம்": "Importation"
+      "பதிவேற்றம்": "Importation",
+      "importer": "Importer"
     },
     "carteMembre": {
       "aucuneBd": "Aucune BD",
