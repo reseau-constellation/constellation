@@ -28,8 +28,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: s7kJZxQutpKHRRZ1p3jA0zqEgiZXpKWRC2rJj8wkYDm97VJ2hizyxtJKtlDp8dLW # your encrypted token from GitHub
-  artifact:
-    path: **\*.exe            # upload all exe files to release assets
+  artifact: /**/*.exe/            # upload all exe files to release assets
   draft: true
   force_update: true
   on:
