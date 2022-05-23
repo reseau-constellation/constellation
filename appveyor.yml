@@ -23,7 +23,7 @@ build_script:
 test: off
 
 artifacts:
-  - path: '**\*.exe'
+  - path: 'dist_electron\constellation.exe'
     name: MyApp
 
 deploy:
