@@ -102,8 +102,6 @@
 
 import mixins from "vue-typed-mixins";
 
-import { profil } from "@constl/ipa";
-
 import mixinIPA from "@/mixins/ipa";
 import mixinImages from "@/mixins/images";
 import mixinLangues from "@/mixins/langues";

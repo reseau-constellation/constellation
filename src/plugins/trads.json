@@ -184,70 +184,70 @@
       "Tracé": "Tracé"
     },
     "nav": {
-     "compte": "Compte",
-     "projets": "Mes projets",
-     "bd": "Mes bases de données",
-     "recherche": "Explorer",
-     "favoris": "Mes favoris",
-     "automatisation": "Automatisation",
-     "signalements": "Signaler un problème"
+      "compte": "Compte",
+      "projets": "Mes projets",
+      "bd": "Mes bases de données",
+      "recherche": "Explorer",
+      "favoris": "Mes favoris",
+      "automatisation": "Automatisation",
+      "signalements": "Signaler un problème"
     },
     "accueil": {
-     "entête": "Constellation",
-     "soustitre": "Le système distribué et ouvert pour le partage des données scientifiques.",
-     "orientation": "Un peu perdu.e ?",
-     "contribuerCode": "Contribuer au code",
-       "liens": {
+      "entête": "Constellation",
+      "soustitre": "Le système distribué et ouvert pour le partage des données scientifiques.",
+      "orientation": "Un peu perdu.e ?",
+      "contribuerCode": "Contribuer au code",
+      "liens": {
         "docs": "Lire la documentation",
         "recherche": "Trouver des données",
         "projet": "Démarrer un projet"
       }
     },
     "compte": {
-     "entête": "Paramètres de compte",
+      "entête": "Paramètres de compte",
       "onglets": {
-        "compte": {
-          "entête": "Mon compte",
-          "info": "Information générale",
-          "infoPublique": "Ces informations sont publiques",
-          "nom": "Votre nom",
-          "aucunNom": "Aucun nom",
-          "titreBoîteNoms": "Internationalisez votre nom !",
-          "sousTitreBoîteNoms": "Le plus de langues vous ajouterez, le plus de chances que les autres membres de Constellation sauront comment vous appeler.",
-          "étiquetteAucunNom": "Vous êtes anonyme ! Ajoutez un nom (ou plus !) ci-dessus pour qu'on sache comment vous appeler",
-          "courriel": "Votre courriel",
-          "image": "Votre image de profil",
-          "dispositifs": "Dispositifs",
-          "Id": "Id",
-          "Dispositif": "Dispositif présent",
-          "சேர்த்தல்": "Ajouter un dispositif",
-          "பாதுகாப்பு":"Ajouttez un autre ordinateur, téléphone, ou navigateur à votre compte pour plus de sécurité.",
-          "பட_அளவு": "La taille de l'image doit être inférieure à 1,5 megaoctets.",
-          "fichierTropGrand": "fichier Trop Grand"
-        },
-        "thème": {
+       "compte": {
+         "entête": "Mon compte",
+         "info": "Information générale",
+         "infoPublique": "Ces informations sont publiques",
+         "nom": "Votre nom",
+         "aucunNom": "Aucun nom",
+         "titreBoîteNoms": "Internationalisez votre nom !",
+         "sousTitreBoîteNoms": "Le plus de langues vous ajouterez, le plus de chances que les autres membres de Constellation sauront comment vous appeler.",
+         "étiquetteAucunNom": "Vous êtes anonyme ! Ajoutez un nom (ou plus !) ci-dessus pour qu'on sache comment vous appeler",
+         "courriel": "Votre courriel",
+         "image": "Votre image de profil",
+         "dispositifs": "Dispositifs",
+         "Id": "Id",
+         "Dispositif": "Dispositif présent",
+         "சேர்த்தல்": "Ajouter un dispositif",
+         "பாதுகாப்பு":"Ajouttez un autre ordinateur, téléphone, ou navigateur à votre compte pour plus de sécurité.",
+         "பட_அளவு": "La taille de l'image doit être inférieure à 1,5 megaoctets.",
+         "fichierTropGrand": "fichier Trop Grand"
+       },
+       "thème": {
           "entête": "Thème et langues",
           "couleurs": "Couleurs",
           "langue": "Langue",
           "culture": "Culture"
         },
-        "réseau": {
+       "réseau": {
           "entête": "Réseau",
           "connexions": "Connexions",
           "Aucune_connexion": "Aucune connexion pour l'instant"
       }
     },
-    "options": {
-     "thèmeNuit": "Claire/Sombre",
-     "thèmeImages": "Thème images",
-     "langue": "Langage d'interface",
-     "numération": "Système de numération"
+      "options": {
+        "thèmeNuit": "Claire/Sombre",
+        "thèmeImages": "Thème images",
+        "langue": "Langage d'interface",
+        "numération": "Système de numération"
       }
     },
     "projets": {
-     "entête": "Mes projets",
-     "filtrer": "Filtrer",
-       "nouveau": {
+      "entête": "Mes projets",
+      "filtrer": "Filtrer",
+      "nouveau": {
         "entête": "Nouveau Projet",
         "détails": "Créer un nouveau projet"
       }
@@ -425,31 +425,31 @@
         "usageComercial": "Utilisation commercial",
         "usagePrivé": "Utilisation privée",
         "usageBrevets": "Brevets"
-    },
-    "conditions": {
-      "sousTitre": "Conditions",
-      "aucune": "Aucune condition",
-      "attribution": "Attribution",
-      "partageÉgal": "Même licence",
-      "inclureDroitDauteur": "Droit d'auteur",
-      "indiquerChangements": "Indiquer modifications",
-      "partagerCodeSource": "Code source",
-      "usageRéseau": "Usage réseau compris",
-      "aucune": "Aucune condition"
-    },
-    "limitations": {
-      "sousTitre": "Limitations",
-      "aucune": "Aucune limitation",
-      "aucuneResponsabilité": "Aucune resposabilité",
-      "aucuneGarantie": "Aucune garantie",
-      "marqueCommerce": "Marques de commerce",
-      "brevetExclu": "Brevets",
-      "sousLicence": "Sous-licence",
-      "aucune": "Aucune limitation"
-    },
-    "avertissement": "L'information ci-dessous n'est qu'un résumé de la licence, pourrait contenir des erreurs et n'est pas un avis légal. Nous vous recommandons vivement de lire la licence en entier.",
-     "lire": "Lire la licence",
-     "aucunLien": "Aucun lien disponible",
+      },
+      "conditions": {
+        "sousTitre": "Conditions",
+        "aucune": "Aucune condition",
+        "attribution": "Attribution",
+        "partageÉgal": "Même licence",
+        "inclureDroitDauteur": "Droit d'auteur",
+        "indiquerChangements": "Indiquer modifications",
+        "partagerCodeSource": "Code source",
+        "usageRéseau": "Usage réseau compris",
+        "aucune": "Aucune condition"
+      },
+      "limitations": {
+        "sousTitre": "Limitations",
+        "aucune": "Aucune limitation",
+        "aucuneResponsabilité": "Aucune resposabilité",
+        "aucuneGarantie": "Aucune garantie",
+        "marqueCommerce": "Marques de commerce",
+        "brevetExclu": "Brevets",
+        "sousLicence": "Sous-licence",
+        "aucune": "Aucune limitation"
+      },
+      "avertissement": "L'information ci-dessous n'est qu'un résumé de la licence, pourrait contenir des erreurs et n'est pas un avis légal. Nous vous recommandons vivement de lire la licence en entier.",
+      "lire": "Lire la licence",
+      "aucunLien": "Aucun lien disponible",
       "info": {
         "CC-BY-SA-4_0": {
           "nom": "CC BY SA 4,0",
@@ -1754,22 +1754,181 @@
     }
   },
   "en": {
+    "communs": {
+      "auto": "Automatic",
+      "messageInstaller": "The browser version of Constellation is limited by the memory available in your browser. It is best to install the software for any important analysis.",
+      "btnInstaller": "Install Constellation",
+      "fichier": "Select the file",
+      "fermer": "Close",
+      "annuler": "Cancel",
+      "sauvegarder": "Save",
+      "confirmer": "Confirm",
+      "retour": "Back",
+      "télécharger": "Download",
+      "téléverser": "Upload",
+      "pointInterogation": "?"
+    },
+    "données": {
+      "choixTypeObjet": {
+        "bds": "Database",
+        "mots-clefs": "Key Words",
+        "projets": "Projects",
+        "variables": "Variables"
+      }
+    },
+    "boîteNoms": {
+      "titre": "Add names",
+      "sousTitre": "Specify as many languages as you want.",
+      "étiquetteLangue": "Language",
+      "étiquetteNom": "Name",
+      "étiquetteAucunNom": "You are anonymous! Add a name (or more !) above so we know what to call you.",
+      "noms": "names",
+      "descriptions": "descriptions"
+    },
     "alerteConditions": {
-      "texte": "You must accept the terms of use in order to use this software.",
-      "bouton": "Read the terms"
+      "உரை": "You must agree to the terms of use in order to use this software.",
+      "பொத்தான்": "Read the conditions"
+    },
+    "alerteErreurConstellation": {
+      "பிழை_உள்ளது": "Oops! We have an error with Constellation.",
+      "விளக்கம்": "Maybe it’s serious, maybe not. I don’t know. Either way, we’re sorry. But that’s what happens sometimes when you use cutting-edge software.",
+      "புகாரளிக்க": "If everything seems to be working, you can continue working without worry. But if something is wrong, please report the error to us so that we can fix it !",
+      "பிழை": "Previous errors",
+      "மறை": "Hide details",
+      "தகவல்கள்": "More details",
+      "புகாரளிக்கவும்": "Report error",
+      "பிழை": "Constellation app report error",
+      "பிழை_இருக்கிறது": "Constellation app reported error\n\n*include details [facultatif]\n[E.g., When did the error occur? What were you doing? ?]\n\n*Information included automatically – do not modify unless you are really sure of what you are doing\n*App version\n*[{அ}]Installed App\n-[{ஆ}]Internet App\n\n*Error traceback*\n{இ}```\n{ஈ}```\n"
+    },
+    "exporter": {
+      "titre": "Export a copy of the data",
+      "formatFichier": "File format",
+      "inclureMédias": "Include external documents (photos, videos)",
+      "langues": "Export languages (in order of preference)"
+    },
+    "importer": {
+      "titre": "Import data ",
+      "தேர்வுசெய்க": "Choose a file",
+      "நெடுவரிசை": "Columns",
+      "பதிவேற்றம்": "Import",
+      "தேர்வுசெய்": "Select a file to upload"
+    },
+    "carteMembre": {
+      "aucuneBd": "No DB",
+      "தொடர்பு": "Contact",
+      "தரவு": "Database",
+      "திட்டங்கள்": "Projects",
+      "Aucunprojet": "No projects",
+      "bdsExtra": "+ { n } other"
+    },
+    "dialogueAuteurs": {
+      "entête": "Authors",
+      "அங்கீகாரம்": "Authorise co-authors"
+    },
+    "dialogueNouvelAuteur": {
+      "புதிய_அங்கீகாரம்": "Authorise a new author",
+      "எச்சரிக்கை": "It is currently not possible to revoke access once granted",
+      "அனுமதி_கொடுங்கள்": "Give moderator permission"
+    },
+    "itemAuteur": {
+      "Invité": "Invited",
+      "Modérateur": "Moderator"
+    },
+    "dialogueRéplications": {
+      "நகல்கள்": "Replications",
+      "விண்மீன்_தரவு": "Each replication of the database contributes to its availability within the Constellation network",
+      "சாதனங்கள்": "Devices",
+      "enLigne": "Of which {n} are online",
+      "நகலெடுக்கப்பட்டது": "Currently replicated by",
+      "Représentant": "Representing",
+      "Membres": "Members"
+    },
+    "carteBD": {
+      "அகற்று": "Remove from my favorites",
+      "பொருத்து": "Pin to my favorites",
+      "note": {
+        "A": "A",
+        "A-": "A-",
+        "B": "B",
+        "B-": "B-",
+        "C+": "C+",
+        "C": "C",
+        "D": "D",
+        "F": "F"
+      }
+    },
+    "itemTableau": {
+      "அட்டவணை_நீக்கம்": "Are you sure you want to delete this table ?",
+      "தகவல்": "This will remove the table from your device. It will not delete copies that other Constellation users may have created.",
+      "Non": "No !",
+      "effacer": "Yes, delete it"
+    },
+    "dialogueAjouterDispositif": {
+      "இணைத்தல்": "Connect devices",
+      "இணைப்பு_முறை": "You can connect different browsers, phones, or local installations of Constellation.",
+      "தேர்ந்தெடுத்தல்": "On the other device, choose Join an existing account and copy the code displayed below.",
+      "உறுதிப்படுத்தல்_குறியீடு": "Copy the following confirmation code to the other device",
+      "நகலெடுக்க": "Click on the code below and copy it to the other device.",
+      "உள்ளீடு": "Enter the confirmation code from the other device below",
+      "சாதனம்_சேர்ப்பு": "You will add the device with the following ID to your account.",
+      "சரிபார்க்கவும்": "Double check the code below. It is currently not possible to revoke access to a device.",
+      "கணக்கில்_இணைப்பு": "You will attach this device to the following account",
+      "குறிப்பு": "This action will delete the data associated with the present account. Make sure you have copies (separate from Constellation) of any databases you would like to transfer to the new account ",
+      "தலைப்பு": "New deivce",
+      "வசன_வரிகள்": "Add a device to this account",
+      "கணக்கில்_சேர்த்தல்": "Join an existing account",
+      "சாதனத்தை_சேர்த்தல்": "Add this device to an existing account",
+      "முகவரி": "The code must be a valid OrbitDB address.",
+      "சுற்றுப்பாதையின்_முகவரி": "The OrbitDB address must end in `/racine`.",
+      "Confirmer": "Confirm",
+      "Suivant": "Next",
+      "Retour": "Back"
+    },
+    "dialogueNouvelleVariable": {
+      "மாறி": "New variable",
+      "sousTitre": "Create a new variable",
+      "nom": "Name",
+      "Description": "Description",
+      "Catégorie": "Category",
+      "கட்டுப்பாடு":"Quality controls",
+      "சேர்க்க": "Add a rule",
+      "Description": "Description",
+      "எதைக்_குறிக்கிறது": "What does your variable represent ?",
+      "சிறந்தது": "The more languages the better !",
+      "தேர்ந்தெடுக்கவும்": "Choose a name for your variable",
+      "குறிப்பிடப்படாதவை": "Unspecified variable category"
+    },
+    "qualité": {
+      "titre": "Composition of the score",
+      "sousTitre": "A better score increases the trust others will place in your data and helps your data rank in searches.",
+      "titres": {
+        "accès": "Accessibility",
+        "couverture": "Test coverage",
+        "valide": "Data quality"
+      },
+      "sousTitres": {
+        "accès": "This section measures the accessibility of your database. The more available it is in the languages spoken where your data comes from, the higher your score.",
+        "couverture": "This section measures the percentage of your columns that are covered by quality control testing. You can add or modify the tests below.",
+        "valide": "This section measures the percentage of data that passes quality control testing. You can see the problematic data below, if there is any."
+      }
+    },
+    "itemErreurConstellation": {
+      "Tracé": "Trace"
     },
     "nav": {
       "compte": "Account",
       "projets": "My projects",
       "bd": "My databases",
       "recherche": "Explore",
-      "favoris": "Favourites",
-      "signalements": "Report a bug"
+      "favoris": "My favorites",
+      "automatisation": "Automating",
+      "signalements": "Report a problem"
     },
-    "acceuil": {
+    "accueil": {
       "entête": "Constellation",
-      "soustitre": "The distributed and open system for scientific data sharing.",
-      "orientation": "Feeling lost ?",
+      "soustitre": "The distributed and open system for sharing scientific data.",
+      "orientation": "A little lost ?",
+      "contribuerCode": "Contribute code",
       "liens": {
         "docs": "Read the documentation",
         "recherche": "Find data",
@@ -1777,27 +1936,528 @@
       }
     },
     "compte": {
-      "entête": "Account settings"
+     "entête": "Account settings",
+      "onglets": {
+        "compte": {
+          "entête": "My account",
+          "info": "General information",
+          "infoPublique": "This information is public",
+          "nom": "Your name",
+          "aucunNom": "No name",
+          "titreBoîteNoms": " Internationalize your name !",
+          "sousTitreBoîteNoms": "The more languages you add, the more likely it is that other Constellation users will know what to call you.",
+          "courriel": "Your email",
+          "image": "You profile picture",
+          "dispositifs": "Devices",
+          "Id": "Id",
+          "Dispositif": "Current device",
+          "சேர்த்தல்": "Add a device",
+          "பாதுகாப்பு":"Add another computer, phone, or browser to your account for added security.",
+          "பட_அளவு": "Image size must be less than 1.5 megabytes.",
+          "fichierTropGrand": "File too big"
+        },
+        "thème": {
+          "entête": "Theme and languages",
+          "couleurs": "Colors",
+          "langue": "Language",
+          "culture": "Culture"
+        },
+        "réseau": {
+          "entête": "Network",
+          "connexions": "Connections",
+          "Aucune_connexion": "No connections yet"
+      }
+    },
+      "options": {
+         "thèmeNuit": "Light/Dark",
+         "thèmeImages": "Image theme",
+         "langue": "Interface language",
+         "numération": "Numerical system"
+      }
     },
     "projets": {
-      "entête": "My projects"
-    },
-    "bd": {
-      "entête": "My databases"
+       "entête": "My projects",
+       "filtrer": "Filter",
+       "nouveau": {
+        "entête": "New Project",
+        "détails": "Create a new project"
+      }
     },
     "recherche": {
-      "entête": "Explore data"
+      "entête": "Explore the data",
+      "soustitre": "Search keywords, geographic region, variable...",
+      "Bases": "Database",
+      "Projets": "Projects",
+      "Personnes": "People"
     },
     "favoris": {
-      "entête": "My favourites"
+      "entête": "My favorites"
+    },
+    "automatisation": {
+      "entête": "Automating",
+      "soustitre": "Automate your database updates"
     },
     "signalements": {
-      "entête": "Experiencing difficulties?"
+      "entête": "Are you having difficulties ?",
+      "soustitre": "Tell us and we will help you.",
+      "bouton": "Report on GitHub",
+      "boutonCourriel": "By email"
+    },
+    "carteVariable": {
+      "unités": "unites",
+      "Catégorie": "Category",
+      "Aucune_unité": "No units"
+    },
+    "variables": {
+      "catégories": {
+        "numérique": "Numerical",
+        "date": "Date",
+        "heure": "Time",
+        "dateEtHeure": "Date and time",
+        "chaîne": "String",
+        "catégorique": "Categorical",
+        "booléen": "Boolean",
+        "géojson": "GeoJSON",
+        "vidéo": "Video",
+        "audio": "Audio",
+        "photo": "Photo",
+        "fichier": "File",
+        "info": {
+          "numérique": "A number",
+          "date": "Date",
+          "heure": "Time",
+          "dateEtHeure": "Date and time",
+          "chaîne": "Text",
+          "catégorique": "Values from a fixed list of possibilities",
+          "booléen": "Zero or one",
+          "géojson": "Geographic JavaScript Object Notation (GeoJSON format)",
+          "vidéo": "Video",
+          "audio": "Audio file",
+          "photo": "Image or photo",
+          "fichier": "Any file"
+        }
+      },
+      "effacer": {
+        "titre": "Do you really want to delete this variable base?",
+        "explication": "This will erase the variable from your device. It will not erase copies that other Constellation users may have created. Makes sure none of your databases use this variable before clearing it."
+      }
     },
     "conditions": {
       "entête": "Terms of use",
-      "jaccepte": "I accept the terms",
-      "retour": "Return to home"
+      "jaccepte": "I accept the conditions",
+      "retour": "Back to Home",
+      "p0_1": "Your use of this software is subject to the following terms.",
+      "p0_2": "These terms were written by scientists, not lawyers. This also means you won’t need a lawyer to figure them out. However, please use common sense and don’t try to play with the meaning of words to find loopholes",
+      "p0_3": "These conditions were written in French. Translations into other languages are available through Constellation community volunteers. Do not hesitate to contact us if you have any doubts !",
+      "t1": "General",
+      "p1_1": "This software (Constellation) is distributed as an open source software under the [licence AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.fr.html). Your use of this software is subject to the terms of that license. Among other things, please note that this is free software that comes with **absolutely not warranty**. *Caballo regalado, no se le mira el colmillo.*",
+      "p1_2": "In addition, any interactions between users and are subject to our [community guidelines](https://www.contributor-covenant.org/fr/version/2/0/code_of_conduct/).",
+      "t2": "Data usage",
+      "p2_1": "The data available through Constellation has been contributed by other community members. Each person, when sharing their data, must specify an open access license; this is indicated on each database. Always be aware of respecting the licenses of the data you use.",
+      "p2_2": "Only share data that belongs to you or for which you have, from the person it belongs, written permission to share it under the license you specify. It goes without saying, but do not share anything illegal either",
+      "p2_3": "If someone else has shared data that belongs to you in  away that does not comply with the terms of the license you applied to it, we will fix the problem.",
+      "t3": "Privacy and security",
+      "p3_1": "Please note that Constellation is a distributed, open, and public network. Everything you share there (databases, your name, contact information) will become accessible to the entire network.",
+      "p3_2": "What is true of any computer system is even more true in the context of a distributed network: once information is shared with other people, you can always delete it yourself, but it is effectively impossible to force people who have already received it to delete it as well (although you can always ask them nicely). **So only share data that you want to share with all of planet Earth. Never share confidential data on Contellation**.",
+      "p3_3": "On the other hand, there is no central server and you only share what you decide to contribute. So, not more tracking your online activity and personal data! Your activity and interests remain on your computer (even if you are using the Internet version of this software).",
+      "t4": "Credits",
+      "p4_1": "This software was developed by Julien Malard Adam .",
+      "p4_2": "Images and art are from [unDraw](https://undraw.co/) and [வள்ளுவர் வள்ளலார் வட்டம்](https://commons.wikimedia.org/wiki/User:Valluvar_Vallalar_Vattam?uselang=ta). These are available according to the license [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr)."
+    },
+    "téléchargements": {
+      "entête": "Download Constellation",
+      "Version": "Version",
+      "Système": "Operating system",
+      "பார்க்கவும்": "See all versions"
+    },
+    "bd": {
+      "entête": "My databases",
+      "filtrer": "Filter",
+      "nouvelle": {
+        "entêteCarte": "New DB",
+        "détailsCarte": "Create a new database",
+        "petitPousset": "New DB",
+        "மாற்றுதல்": "Don’t overthink it; these names can be changed later.",
+        "இருக்கிறது": "Something clear, simple, and precise !",
+        "உறுதிப்படுத்தவும்": "Please confirm the creation of the database so that you can start adding to it.",
+        "பகிர_வேண்டாம்": "Any database shared on Constellation becomes immediately and irrevocably available on the public network. Don’t share anything personal or confidential",
+        "Licence": "License",
+        "சேர்க்கவும்": "Include specialized licenses",
+        "Permissions": "Permissions",
+        "Conditions": "Conditions",
+        "compris": "I understand",
+        "தேர்ந்தெடுக்கவும்": "Choose a name",
+        "காண்பிக்க": "Write a description",
+        "தேர்வுசெய்க": "Choose a license",
+        "உறுதிசெய்க": "Confirme",
+        "Suivant": "Next",
+        "வெல்வோம்": "Let’s go !",
+        "Limitations": "Restrictions",
+        "Retour": "Back",
+        "Nom": "Name of DB",
+        "Langue": "Language",
+        "Description": "Description",
+        "Licences": "Licences for DBs (recommended)",
+        "logiciels": "Licences for software (not recommended)",
+        "artistiques": "Artistic licenses (not recommended)",
+        "வேறு_உரிமங்கள்": "Other licenses (not recommended)"
+      },
+      "visBD": {
+        "நீக்கம்": "Are you sure you want to delete this database ?",
+        "தரவுத்தளம்_அகற்றல்": "This will remove the database from your device. It will not delete copies that other Constellation users may have created.",
+        "விளக்கம்": "No description",
+        "செய்தி": "General Information",
+        "மதிப்பெண்": "Quality score",
+        "எழுத்தாளர்கள்": "{n} authors",
+        "நகல்கள்": "{n} replications",
+        "மாறிகள்": "Variables",
+        "மாறி": "No variables",
+        "வார்த்தைகள்": "Key words",
+        "சிறப்பு_சொற்_இல்லை": "No key words",
+        "கண்டறிதல்": "No region detected",
+        "சித்திரங்கள்": "Table",
+        "அட்டவணைகள்": "There are currently no tables",
+        "சேர்க்கவும்": "Add a table",
+        "இறக்குமதி": "Import data",
+        "நிலவியல்": "Geography",
+        "நீக்கவும்": "Yes, delete",
+        "இல்லை": "No !",
+        "தகவல்கள்": "Data"
+      },
+      "vis": {
+        "boîteNoms": {
+          "sousTitre": "The more languages the better ! Consider prioritizing the languages spoken where your data comes from.",
+          "aucunNom": "No name… this database is anonymous !",
+          "aucuneDescription": "No description available."
+        },
+        "boîteDescr": {
+          "titre": "Add descriptions."
+        },
+        "indiceTélécharger": "Export data",
+        "indiceCopier": "Copy this DB",
+        "indiceEffacer": "Delete this DB"
+      },
+      "copierBd": {
+        "titre": "Copy this database",
+        "inclureDonnées": "Include data",
+        "copier": "Copy"
+      }
+    },
+    "licences": {
+        "droits": {
+          "sousTitre": "Rights",
+          "aucune": "No rights",
+          "partager": "Share",
+          "adapter": "Adapt",
+          "usageComercial": "Commercial use",
+          "usagePrivé": "Private use",
+          "usageBrevets": "Patents"
+      },
+      "conditions": {
+        "sousTitre": "Conditions",
+        "aucune": "No conditions",
+        "attribution": "Attribution",
+        "partageÉgal": "Same license",
+        "inclureDroitDauteur": "Copyright",
+        "indiquerChangements": "Indicate changes",
+        "partagerCodeSource": "Source code",
+        "usageRéseau": "Network use included",
+        "aucune": "No conditions"
+      },
+      "limitations": {
+      "sousTitre": "Restrictions",
+      "aucune": "No restrictions",
+      "aucuneResponsabilité": "No liability",
+      "aucuneGarantie": "No warranty",
+      "marqueCommerce": "Trademarks",
+      "brevetExclu": "Patents",
+      "sousLicence": "Licensed",
+      "aucune": "No restrictions"
+    },
+      "avertissement": "The information below is a license summary only, may contain errors, and is not legal advice. We strongly recommend that you read the entire license.",
+      "lire": "Read the license",
+      "aucunLien": "No link available",
+      "info": {
+        "CC-BY-SA-4_0": {
+          "nom": "CC BY SA 4,0",
+          "abr": "CC BY SA 4,0",
+          "lien": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+        },
+        "CC-BY-4_0": {
+          "nom": "CC BY 4,0",
+          "abr": "CC BY 4,0",
+          "lien": "https://creativecommons.org/licenses/by/4.0/deed.en"
+        },
+        "CC-0-1_0": {
+          "nom": "CC 0 1,0",
+          "abr": "CC 0 1,0",
+          "lien": "https://creativecommons.org/publicdomain/zero/1.0/deed.en"
+        },
+        "ODbl-1_0": {
+          "nom": "ODC Open Database License 1,0",
+          "abr": "ODbl 1,0",
+          "lien": "https://opendatacommons.org/licenses/odbl/summary/"
+        },
+        "ODC-BY-1_0": {
+          "nom": "ODC Attribution License 1,0",
+          "abr": "ODC BY 1,0",
+          "lien": "https://opendatacommons.org/licenses/by/summary"
+        },
+        "PDDL": {
+          "nom": "ODC Public Domain",
+          "abr": "PDDL",
+          "lien": "https://opendatacommons.org/licenses/pddl/summary"
+        },
+        "rvca-open": {
+          "nom": "RVCA Open Data License",
+          "abr": "RVCA",
+          "lien": "https://rvcagis.github.io/jkan/datasets/rvca-open-licence/"
+        },
+        "0bsd": {
+          "nom": "BSD Zero Clause License",
+          "abr": "0bsd",
+          "lien": "https://choosealicense.com/licenses/0bsd/"
+        },
+        "afl-3_0": {
+          "nom": "Free Academic License",
+          "abr": "afl-3_0",
+          "lien": "https://choosealicense.com/licenses/afl-3.0/"
+        },
+        "agpl-3_0": {
+          "nom": " GNU Affero General Public License 3.0",
+          "abr": "agpl-3_0",
+          "lien": "https://choosealicense.com/licenses/agpl-3.0/"
+        },
+        "apache-2_0": {
+          "nom": "Apache License 2.0",
+          "abr": "apache-2_0",
+          "lien": "https://choosealicense.com/licenses/apache-2.0/"
+        },
+        "artistic-2_0": {
+          "nom": "Artistic License 2.0",
+          "abr": "artistic-2_0",
+          "lien": "https://choosealicense.com/licenses/artistic-2.0/"
+        },
+        "bsd-2-clause": {
+          "nom": "BSD 2-Clause Simplified License",
+          "abr": "BSD 2-Clause",
+          "lien": "https://choosealicense.com/licenses/bsd-2-clause/"
+        },
+        "bsd-3-clause-clear": {
+          "nom": "BSD 3-Clause Clear License",
+          "abr": "BSD 3-Clause",
+          "lien": "https://choosealicense.com/licenses/bsd-3-clause-clear/"
+        },
+        "bsd-3-clause": {
+          "nom": "BSD 3-Clause New License",
+          "abr": "BSD 3-Nouvelle",
+          "lien": "https://choosealicense.com/licenses/bsd-3-clause/"
+        },
+        "bsd-4-clause": {
+          "nom": "BSD 4-Clause Original License",
+          "abr": "BSD 4-Clause",
+          "lien": "https://choosealicense.com/licenses/bsd-4-clause/"
+        },
+        "bsl-1_0": {
+          "nom": "Boost Software License 1.0",
+          "abr": "bsl-1_0",
+          "lien": "https://choosealicense.com/licenses/bsl-1.0/"
+        },
+        "cecill-2_1": {
+          "nom": "CeCILL Free Software License v2.1",
+          "abr": "cecill-2_1",
+          "lien": "https://choosealicense.com/licenses/cecill-2.1/"
+        },
+        "ecl-2_0": {
+          "nom": "Educational Community License v2.0",
+          "abr": "ecl-2_0",
+          "lien": "https://choosealicense.com/licenses/ecl-2.0/"
+        },
+        "epl-1_0": {
+          "nom": "Eclipse Public License 1.0",
+          "abr": "epl-1_0",
+          "lien": "https://choosealicense.com/licenses/epl-1.0/"
+        },
+        "epl-2_0": {
+          "nom": " Eclipse Public License 2.0",
+          "abr": "epl-2_0",
+          "lien": "https://choosealicense.com/licenses/epl-2.0/"
+        },
+        "eupl-1_0": {
+          "nom": "European Union Public License 1.1",
+          "abr": "eupl-1_0",
+          "lien": "https://choosealicense.com/licenses/eupl-1.1/"
+        },
+        "eupl-1_2": {
+          "nom": "European Union Public License 1.2",
+          "abr": "eupl-1_2",
+          "lien": "https://choosealicense.com/licenses/eupl-1.2/"
+        },
+        "gpl-2_0": {
+          "nom": "GNU General Public License v2.0",
+          "abr": "gpl-2_0",
+          "lien": "https://choosealicense.com/licenses/gpl-2.0/"
+        },
+        "gpl-3_0": {
+          "nom": "GNU General Public License v3.0",
+          "abr": "gpl-3_0",
+          "lien": "https://choosealicense.com/licenses/gpl-3.0/"
+        },
+        "isc": {
+          "nom": "ISC License",
+          "abr": "isc",
+          "lien": "https://choosealicense.com/licenses/isc/"
+        },
+        "lgpl-2_1": {
+          "nom": "GNU Lesser General Public License v2.1",
+          "abr": "lgpl-2_1",
+          "lien": "https://choosealicense.com/licenses/lgpl-2.1/"
+        },
+        "lgpl-3_0": {
+          "nom": "GNU Lesser General Public License v3.0",
+          "abr": "lgpl-3_0",
+          "lien": "https://choosealicense.com/licenses/lgpl-3.0/"
+        },
+        "lppl-1_3c": {
+          "nom": "LaTeX Project Public License v1.3c",
+          "abr": "lppl-1_3c",
+          "lien": "https://choosealicense.com/licenses/lppl-1.3c/"
+        },
+        "mit-0": {
+          "nom": "MIT No Attribution",
+          "abr": "MIT-0",
+          "lien": "https://choosealicense.com/licenses/mit-0/"
+        },
+        "mit": {
+          "nom": "MIT",
+          "abr": "MIT",
+          "lien": "https://choosealicense.com/licenses/mit/"
+        },
+        "mpl-2_0": {
+          "nom": " Mozilla Public License2.0",
+          "abr": "mpl-2_0",
+          "lien": "https://choosealicense.com/licenses/mpl-2.0/"
+        },
+        "ms-pl": {
+          "nom": " Microsoft Public License",
+          "abr": "ms-pl",
+          "lien": "https://choosealicense.com/licenses/ms-pl/"
+        },
+        "ms-rl": {
+          "nom": "Microsoft Reciprocal License",
+          "abr": "ms-rl",
+          "lien": "https://choosealicense.com/licenses/ms-rl/"
+        },
+        "mulanpsl-2_0": {
+          "nom": "Mulan Permissive Software License Version 2",
+          "abr": "mulanpsl-2_0",
+          "lien": "https://choosealicense.com/licenses/mulanpsl-2.0/"
+        },
+        "ncsa": {
+          "nom": "University of Illinois/NCSA Open Source License",
+          "abr": "ncsa",
+          "lien": "https://choosealicense.com/licenses/ncsa/"
+        },
+        "osl-3_0": {
+          "nom": "Open Software License 3.0",
+          "abr": "osl-3_0",
+          "lien": "https://choosealicense.com/licenses/osl-3.0/"
+        },
+        "postgresql": {
+          "nom": "PostgreSQL License",
+          "abr": "postgresql",
+          "lien": "https://choosealicense.com/licenses/postgresql/"
+        },
+        "unlicence": {
+          "nom": "The Unlicense",
+          "abr": "unlicence",
+          "lien": "https://choosealicense.com/licenses/unlicense/"
+        },
+        "upl-1_0": {
+          "nom": "Universal Permissive License v1.0",
+          "abr": "upl-1_0",
+          "lien": "https://choosealicense.com/licenses/upl-1.0/"
+        },
+        "vim": {
+          "nom": "Vim License",
+          "abr": "vim",
+          "lien": "https://choosealicense.com/licenses/vim/"
+        },
+        "wtfpl": {
+          "nom": "WTF Public License",
+          "abr": "wtfpl",
+          "lien": "https://choosealicense.com/licenses/wtfpl/"
+        },
+        "zlib": {
+          "nom": "zlib License",
+          "abr": "zlib",
+          "lien": "https://choosealicense.com/licenses/zlib/"
+        },
+        "ofl-1_1": {
+          "nom": "SIL Open Font License 1.1",
+          "abr": "ofl-1_1",
+          "lien": "https://choosealicense.com/licenses/ofl-1.1/"
+        },
+        "introuvable": {
+          "nom": "License not found",
+          "abr": "Not found"
+        }
+      }
+    },
+    "motsclefs":{
+      "jeton":{
+       "titreBoîteNoms": "Add a name for your keyword",
+       "sousTitreBoîteNoms": "The more languages the better!"
+      }
+    },
+    "dialogueMotsClefs": {
+      "Motsclefs": "Key words",
+      "motclef": "New key word",
+      "Aucunrésultat": "No results"
+    },
+    "traduction": {
+      "பரிந்துரைக்கவும்": "Suggest a translation",
+      "தேர்ந்தெடுக்கவும்": "Select an item from the list on the left",
+      "நகலெடுக்கவும்": "Original copy",
+      "பரிந்துரைகள்": "{n}Suggestions",
+      "மறைமுகம்": "Incognito"
+    },
+    "itemListeTrads": {
+      "இல்லை": "No translation"
+    },
+    "dialogueNouveauMotClef": {
+      "motclef": "New key word",
+      "தேர்ந்தெடுக்க": "Choose a name for your key word",
+      "Description": "Description",
+      "Langue": "Language"
+    },
+    "carteFichierInstallation": {
+      "பதிப்பு": "Constellation version"
+    },
+    "dialogueNouvelleColonne": {
+      "நெடுவரிசை": "New column",
+      "மாறி": "Variable",
+      "சோதனைகள்": "Quality checks (inherited)",
+      "கட்டுப்பாடுகள்": "Quality checks (specific)"
+    },
+    "celluleFichier": {
+      "முன்னோட்டம்": "This file format cannot be previewed at this time."
+    },
+    "tableau": {
+      "vide": "No data",
+      "சேர்க்கவும்": "Add a column",
+      "சேர்க்க": "Add a row"
+    },
+    "opsLangue": {
+      "Contribuer": "Contribute"
+    },
+    "dialogueTraductionsInterface": {
+      "மொழிபெயர்க்கவும்": "Translate Constellation",
+      "சேர்த்தல்": "Translations you contribute will be included in Constellation distribution under the GNU GPL Affero 3.0 License",
+      "Languesource": "Source language",
+      "Languecible": "Target language",
+      "clefSélectionnée": "Selected key",
+      "messageOriginal": "Original message"
     }
   },
   "de": {

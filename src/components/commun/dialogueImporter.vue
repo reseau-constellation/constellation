@@ -57,7 +57,12 @@
                   <v-col>
                     <v-autocomplete
                       v-model="colonneFichierSélectionnée"
-                      :items="(colonnesFichier || []).filter(c=>!Object.keys(correspondancesColonnes).includes(c))"
+                      :items="
+                        (colonnesFichier || []).filter(
+                          (c) =>
+                            !Object.keys(correspondancesColonnes).includes(c)
+                        )
+                      "
                       :label="$t('importer.colonneImporter')"
                       hide-details
                       outlined
@@ -72,22 +77,26 @@
                       outlined
                       dense
                     >
-                  </v-text-field>
+                    </v-text-field>
                   </v-col>
                   <v-col sm="12" md="3">
                     <v-autocomplete
                       v-model="colonneConstellationSélectionnée"
-                      :items="(colonnesTableauConstellation || []).filter(c=>!Object.values(correspondancesColonnes).map(v=>v.colConstellation).includes(c.id))"
+                      :items="
+                        (colonnesTableauConstellation || []).filter(
+                          (c) =>
+                            !Object.values(correspondancesColonnes)
+                              .map((v) => v.colConstellation)
+                              .includes(c.id)
+                        )
+                      "
                       :label="$t('importer.colonneCible')"
                       hide-details
                       outlined
                       dense
                     >
                       <template v-slot:item="{ on, item }">
-                        <item-liste-colonnes
-                          v-on="on"
-                          :colonne="item"
-                        />
+                        <item-liste-colonnes v-on="on" :colonne="item" />
                       </template>
                       <template v-slot:selection="{ on, attrs, item }">
                         <jeton-variable
@@ -97,9 +106,7 @@
                         />
                       </template>
                       <template v-slot:append-outer>
-                        <dialogue-nouvelle-colonne
-                          @sauvegarder="creerColonne"
-                        >
+                        <dialogue-nouvelle-colonne @sauvegarder="creerColonne">
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
                               v-on="on"
@@ -116,18 +123,28 @@
                     </v-autocomplete>
                   </v-col>
                   <v-col>
-                    <v-btn :disabled="!prêtPourSauvegarderCorrespondance" text outlined color="secondary" @click="sauvegarderCorrespondance">
+                    <v-btn
+                      :disabled="!prêtPourSauvegarderCorrespondance"
+                      text
+                      outlined
+                      color="secondary"
+                      @click="sauvegarderCorrespondance"
+                    >
                       {{ $t("communs.sauvegarder") }}
                     </v-btn>
                   </v-col>
                 </v-row>
-                <v-divider class="my-3"/>
+                <v-divider class="my-3" />
                 <v-list>
                   <item-liste-correspondance-colonnes
                     v-for="corresp in correspondancesColonnes"
                     :key="corresp.colFichier"
                     :corresp="corresp"
-                    :idVariable="colonnesTableauConstellation.find(c=>c.id===corresp.colConstellation).variable"
+                    :idVariable="
+                      colonnesTableauConstellation.find(
+                        (c) => c.id === corresp.colConstellation
+                      ).variable
+                    "
                     @effacer="() => effacerCorrespondance(corresp.colFichier)"
                   />
                 </v-list>
@@ -172,7 +189,7 @@
 <script lang="ts">
 import ImportateurFeuilleCalcul from "@/components/commun/xlsx";
 import mixins from "vue-typed-mixins";
-import XLSX, { read as readXLSX } from "xlsx";
+import { read as readXLSX } from "xlsx";
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 
@@ -180,14 +197,19 @@ import { tableaux, valid } from "@constl/ipa";
 
 import itemListeColonnes from "@/components/tableaux/colonnes/itemListeColonnes.vue";
 import jetonVariable from "@/components/commun/jetonVariable.vue";
-import itemListeCorrespondanceColonnes from "@/components/commun/itemListeCorrespondanceColonnes.vue"
+import itemListeCorrespondanceColonnes from "@/components/commun/itemListeCorrespondanceColonnes.vue";
 import dialogueNouvelleColonne from "@/components/tableaux/colonnes/dialogueNouvelleColonne.vue";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "dialogueTéléverser",
   props: ["id", "type"],
   mixins: [mixinLangues, mixinIPA],
-  components: { itemListeColonnes, jetonVariable, itemListeCorrespondanceColonnes, dialogueNouvelleColonne },
+  components: {
+    itemListeColonnes,
+    jetonVariable,
+    itemListeCorrespondanceColonnes,
+    dialogueNouvelleColonne,
+  },
   data: function () {
     return {
       dialogue: false,
@@ -200,9 +222,15 @@ export default mixins(mixinLangues, mixinIPA).extend({
       tableauSélectionné: undefined as string | undefined,
 
       colonneFichierSélectionnée: undefined as string | undefined,
-      colonneConstellationSélectionnée: undefined as tableaux.InfoColAvecCatégorie | undefined,
+      colonneConstellationSélectionnée: undefined as
+        | tableaux.InfoColAvecCatégorie
+        | undefined,
       conversion: undefined as undefined | string | number,
-      correspondancesColonnes: [] as { colFichier: string, colConstellation: string, conv?: string | number }[],
+      correspondancesColonnes: [] as {
+        colFichier: string;
+        colConstellation: string;
+        conv?: string | number;
+      }[],
 
       colonnesFichier: undefined as string[] | undefined,
       colonnesTableauConstellation: undefined as
@@ -214,16 +242,18 @@ export default mixins(mixinLangues, mixinIPA).extend({
     prêtPourSuivant: function (): boolean {
       switch (this.étape) {
         case 1:
-          return !!this.tableauSélectionné
+          return !!this.tableauSélectionné;
         case 2:
-          return !!this.correspondancesColonnes
+          return !!this.correspondancesColonnes;
         default:
-          return false
+          return false;
       }
     },
     prêtPourSauvegarderCorrespondance: function (): boolean {
-      return !!(this.colonneFichierSélectionnée && this.colonneConstellationSélectionnée)
-    }
+      return !!(
+        this.colonneFichierSélectionnée && this.colonneConstellationSélectionnée
+      );
+    },
   },
   watch: {
     fichier: async function (val: File | undefined) {
@@ -235,7 +265,8 @@ export default mixins(mixinLangues, mixinIPA).extend({
         }); // கோப்பை யாவாக்கிறீட்டில் திறக்கவும்
         this.importateur = new ImportateurFeuilleCalcul(doc); // விண்மீன் மூலம் பகுப்பாய்வு செய்யலாம்
         this.tableauxFichier = this.importateur.obtNomsTableaux();
-        if (this.tableauxFichier.length===1) this.tableauSélectionné = this.tableauxFichier[0]
+        if (this.tableauxFichier.length === 1)
+          this.tableauSélectionné = this.tableauxFichier[0];
         this.colonnesFichier = undefined;
       } else {
         this.tableauxFichier = undefined;
@@ -270,34 +301,47 @@ export default mixins(mixinLangues, mixinIPA).extend({
         });
       }
     },
-    sauvegarderCorrespondance: async function() {
-      if (!this.colonneFichierSélectionnée || !this.colonneConstellationSélectionnée) return;
+    sauvegarderCorrespondance: async function () {
+      if (
+        !this.colonneFichierSélectionnée ||
+        !this.colonneConstellationSélectionnée
+      )
+        return;
 
       this.correspondancesColonnes = [
-        ...this.correspondancesColonnes.filter(c=>c.colFichier !== this.colonneFichierSélectionnée),
+        ...this.correspondancesColonnes.filter(
+          (c) => c.colFichier !== this.colonneFichierSélectionnée
+        ),
         {
           colFichier: this.colonneFichierSélectionnée,
           colConstellation: this.colonneConstellationSélectionnée.id,
-          conv: this.conversion
-        }
-      ]
+          conv: this.conversion,
+        },
+      ];
       this.colonneFichierSélectionnée = undefined;
       this.colonneConstellationSélectionnée = undefined;
       this.conversion = undefined;
     },
     effacerCorrespondance: async function (idColFichier: string) {
-      this.correspondancesColonnes = this.correspondancesColonnes.filter(c=>c.colFichier !== idColFichier)
+      this.correspondancesColonnes = this.correspondancesColonnes.filter(
+        (c) => c.colFichier !== idColFichier
+      );
     },
     importer: async function () {
       this.enProgrès = true;
 
       const données = this.importateur!.obtDonnées(
         this.tableauSélectionné!,
-        Object.fromEntries(this.correspondancesColonnes.map(corresp => [corresp.colConstellation, corresp.colFichier]))
+        Object.fromEntries(
+          this.correspondancesColonnes.map((corresp) => [
+            corresp.colConstellation,
+            corresp.colFichier,
+          ])
+        )
       );
       await this.$ipa.tableaux!.importerDonnées({
         idTableau: this.id,
-        données
+        données,
       });
 
       this.dialogue = false;

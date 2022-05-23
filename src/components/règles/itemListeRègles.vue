@@ -38,9 +38,7 @@ import mixinLangues from "@/mixins/langues";
 
 import { valid } from "@constl/ipa";
 
-import {
-  icôneCatégorieVariable,
-} from "@/utils";
+import { icôneCatégorieVariable } from "@/utils";
 
 export default mixins(mixinLangues).extend({
   name: "itemListeRègles",

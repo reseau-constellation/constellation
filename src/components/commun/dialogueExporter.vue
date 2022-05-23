@@ -206,11 +206,7 @@ export default mixins(mixinLangues).extend({
               id: this.id,
               langues: this.languesPourExportation,
             });
-            this.$ipa.projets!.exporterDocumentDonnées({
-              données,
-              formatDoc: this.formatDoc,
-              inclureFichiersSFIP: this.inclureMédias,
-            });
+            await exporterFichierProjet(données);
             break;
           }
 

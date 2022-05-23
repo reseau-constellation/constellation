@@ -32,8 +32,12 @@ import jetonVariable from "@/components/commun/jetonVariable.vue";
 export default mixins(mixinLangues).extend({
   name: "itemNom",
   props: {
-    corresp: Object as PropType<{ colFichier: string, colConstellation: string, conv?: string | number }>,
-    idVariable: String
+    corresp: Object as PropType<{
+      colFichier: string;
+      colConstellation: string;
+      conv?: string | number;
+    }>,
+    idVariable: String,
   },
   components: { jetonVariable },
   mixins: [mixinLangues],

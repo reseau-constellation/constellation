@@ -28,9 +28,6 @@
 <script>
 import mixins from "vue-typed-mixins";
 
-import { BookType } from "xlsx";
-import { favoris } from "@constl/ipa";
-
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 

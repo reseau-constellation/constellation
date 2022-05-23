@@ -291,6 +291,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
         oublierDescriptions,
         oublierCatégorie,
         oublierUnités,
+        oublierRègles,
       ]);
     },
   },

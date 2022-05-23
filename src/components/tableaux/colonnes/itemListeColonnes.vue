@@ -1,7 +1,7 @@
 <template>
   <v-list-item v-bind="$attrs" v-on="$listeners">
     <v-list-item-avatar>
-      <v-icon>{{icôneCatégorieVariable(colonne.catégorie)}}</v-icon>
+      <v-icon>{{ icôneCatégorieVariable(colonne.catégorie) }}</v-icon>
     </v-list-item-avatar>
     <v-list-item-content>
       {{ couper(nom, 30) }}
@@ -16,8 +16,6 @@ import { couper, traduireNom } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 import { icôneCatégorieVariable } from "@/utils";
-
-import { favoris } from "@constl/ipa";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemListeColonnes",
@@ -46,7 +44,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
         },
       });
 
-      this.suivre([ oublierNoms ]);
+      this.suivre([oublierNoms]);
     },
   },
 });

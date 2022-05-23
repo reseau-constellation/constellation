@@ -369,7 +369,12 @@ export default mixins(mixinIPA, mixinLangues).extend({
         f: (index) => (this.colonnesIndex = index),
       });
 
-      this.suivre([oublierPermissionÉcrire, oublierColonnes, oublierDonnées]);
+      this.suivre([
+        oublierPermissionÉcrire,
+        oublierColonnes,
+        oublierDonnées,
+        oublierIndex,
+      ]);
     },
   },
 });

@@ -46,8 +46,6 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { BookType } from "xlsx";
-
 import mixinLangues from "@/mixins/langues";
 
 export default mixins(mixinLangues).extend({

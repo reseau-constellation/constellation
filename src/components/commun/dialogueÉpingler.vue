@@ -103,7 +103,6 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { BookType } from "xlsx";
 import { favoris } from "@constl/ipa";
 
 import mixinIPA from "@/mixins/ipa";
@@ -246,7 +245,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
         },
       });
 
-      this.suivre([oublierÉtatFavoris]);
+      this.suivre([oublierÉtatFavoris, oublierDispositifs]);
     },
   },
 });

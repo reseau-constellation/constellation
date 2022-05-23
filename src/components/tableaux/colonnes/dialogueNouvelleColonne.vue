@@ -88,7 +88,12 @@ import mixinIPA from "@/mixins/ipa";
 
 export default mixins(mixinIPA).extend({
   name: "dialogueNouvelleColonne",
-  components: { dialogueNouvelleVariable, itemVariable, jetonVariable, itemListeRègle },
+  components: {
+    dialogueNouvelleVariable,
+    itemVariable,
+    jetonVariable,
+    itemListeRègle,
+  },
   mixins: [mixinIPA],
   data: function () {
     return {

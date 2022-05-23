@@ -52,7 +52,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { valid, variables } from "@constl/ipa";
+import { valid } from "@constl/ipa";
 
 import { couper, traduireNom } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
@@ -97,7 +97,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     changerColonneIndex: async function () {
-      console.log("changerColIndex", this.index)
+      console.log("changerColIndex", this.index);
       await this.$ipa.tableaux!.changerColIndex({
         idTableau: this.idTableau,
         idColonne: this.idColonne,
@@ -122,15 +122,22 @@ export default mixins(mixinLangues, mixinIPA).extend({
 
       const oublierIndex = await this.$ipa.tableaux!.suivreIndex({
         idTableau: this.idTableau,
-        f: (colonnesIndex) => (this.index = colonnesIndex.includes(this.idColonne)),
+        f: (colonnesIndex) =>
+          (this.index = colonnesIndex.includes(this.idColonne)),
       });
 
       const oublierRègles = await this.$ipa.tableaux!.suivreRègles({
         idTableau: this.idTableau,
-        f: (règles) => this.règles = règles.filter(r=>r.colonne === this.idColonne)
-      })
+        f: (règles) =>
+          (this.règles = règles.filter((r) => r.colonne === this.idColonne)),
+      });
 
-      this.suivre([oublierNoms, oublierDescriptions, oublierIndex]);
+      this.suivre([
+        oublierNoms,
+        oublierDescriptions,
+        oublierIndex,
+        oublierRègles,
+      ]);
     },
   },
 });
