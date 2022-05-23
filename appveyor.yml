@@ -23,11 +23,11 @@ build_script:
 test: off
 
 artifacts:
-  - path: 'dist_electron\constellation.exe'
+  - path: 'dist_electron\win-unpacked\constellation.exe'
     name: MyApp
 
 deploy:
-  release: constellation-v$(APPVEYOR_BUILD_VERSION)
+  release: v$(APPVEYOR_BUILD_VERSION)
   description: 'Release description'
   provider: GitHub
   auth_token:
