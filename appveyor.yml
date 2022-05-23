@@ -1,0 +1,31 @@
+image: Visual Studio 2017
+
+platform:
+  - x64
+
+cache:
+  - node_modules
+  - '%USERPROFILE%\.electron'
+
+init:
+  - git config --global core.autocrlf input
+
+install:
+  - ps: Install-Product node 16 x64
+  - yarn
+
+build_script:
+  - yarn electron:build
+
+test: off
+
+deploy:
+  release: constellation-v$(APPVEYOR_BUILD_VERSION)
+  description: 'Release description'
+  provider: GitHub
+  auth_token:
+    secure: s7kJZxQutpKHRRZ1p3jA0zqEgiZXpKWRC2rJj8wkYDm97VJ2hizyxtJKtlDp8dLW # your encrypted token from GitHub
+  artifact: /.*\.exe/            # upload all exe files to release assets
+  on:
+    branch: master                 # release from master branch only
+    APPVEYOR_REPO_TAG: true        # deploy on tag push only
