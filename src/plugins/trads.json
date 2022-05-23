@@ -328,7 +328,7 @@
       "p2_1": "Les données disponibles à travers Constellation ont été contribuées par d'autres membres de la communauté. Chaque personne, au moment de partager ses données, doit spécifier une licence d'accès ouvert ; celle-ci est indiquée sur chaque base de données. Soyez toujours conscient de respecter les licences appartenant aux données que vous utilisez.",
       "p2_2": "Ne partagez que des données qui vous appartiennent ou dont vous détenez, de la part de la personne à qui elles appartiennent, la permission écrite de les partager sous la licence que vous y spécifierez. Cela va sans dire, mais ne partagez rien d'illégal non plus.",
       "p2_3": "Si quelqu'un d'autre a partagé des données qui vous appartiennent de manière non conforme aux termes de la licence que vous y aviez appliquée et nous résoudrons le problème.",
-      "t3": "Vie privée et சத் csécurité",
+      "t3": "Vie privée et sécurité",
       "p3_1": "Veuillez prendre note que Constellation est un réseau distribué, ouvert et publique. Tout ce que vous y partagerez (bases de données, votre nom, information de contact) deviendra accessible à tout le réseau.",
       "p3_2": "Ce qui est vrai de tout système informatique l'est encore plus dans le contexte d'un réseau distribué : une fois que de l'information est partagée avec d'autres personnes, vous pouvez toujours la supprimer vous-même, mais il est effectivement impossible de forcer les personnes qui l'ont déjà reçue de la supprimer également (même si vous pouvez toujours leur demander gentillement). **Ne partagez donc que des données que vous voulez partager avec toute la planète Terre. Ne partagez jamais des données confidentielles sur Constellation**.",
       "p3_3": "En revanche, il n'y a pas de serveur central et vous ne partagez que ce que vous décidez de contribuer. Donc, fini le suivi de vos activités en ligne et de vos données personnelles ! Votre activité d'utilisation, vos activités et intérêts, demeurent sur votre ordinateur (même si vous utilisez la version Internet de ce logiciel).",
@@ -355,7 +355,6 @@
         "பகிர_வேண்டாம்": "Toute base de données partagée sur Constellation devient immédiatement et irrévocablement disponible sur le réseau publique. Ne partagez rien de personnel ou confidentiel.",
         "Licence": "Licence",
         "சேர்க்கவும்": "Inclure les licences spécialisées",
-        "தலைப்பு": "titrePrésent",
         "Permissions": "Permissions",
         "Conditions": "Conditions",
         "compris": "J'ai compris",
@@ -2256,9 +2255,8 @@
       "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0",
       "Languesource": "Langue source",
       "Languecible": "Langue cible",
-      "clefSélectionnée": "clef Sélectionnée",
-      "messageOriginal": "message Original"
-    }
+      "clefSélectionnée": "Clef sélectionnée",
+      "messageOriginal": "Message original"
     }
   },
   "Ch'orti'": {
