@@ -7,6 +7,9 @@ cache:
   - node_modules
   - '%USERPROFILE%\.electron'
 
+environment:
+  NODE_OPTIONS: --max_old_space_size=16000
+
 init:
   - git config --global core.autocrlf input
 
