@@ -30,5 +30,4 @@ deploy:
     secure: s7kJZxQutpKHRRZ1p3jA0zqEgiZXpKWRC2rJj8wkYDm97VJ2hizyxtJKtlDp8dLW # your encrypted token from GitHub
   artifact: /.*\.exe/            # upload all exe files to release assets
   on:
-    branch: master                 # release from master branch only
     APPVEYOR_REPO_TAG: true        # deploy on tag push only
