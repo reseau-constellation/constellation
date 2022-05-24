@@ -32,20 +32,6 @@
       "dispositifsSpécifiques": "Les dispositifs suivants :",
       "récursif": "Épingler de manière récursive"
     },
-    "favoris": {
-      "aucun": {
-        "titre": "Vous n'avez aucun favoris pour l'instant",
-        "sousTitre": "Vous pouvez explorer les données et ajouter celles que vous aimez à vos favoris.",
-        "bouton": "Aller aux données"
-      },
-      "indiceÉpinglé": "Épinglé sur ce dispositif",
-      "indiceNonÉpinglé": "Non épinglé sur ce dispositif",
-      "effacer": {
-        "titre": "Désépingler cet item",
-        "sousTitre": "Ceci désépinglera l'objet de tous vos dispositifs. Constellation de garantiera plus la disponibilité de ces données sur les dispositifs vous appartenant.",
-        "indiceEffacer": "Désépingler cet item"
-      }
-    },
     "boîteNoms": {
       "titre": "Ajoutez des noms",
       "sousTitre": "Spécifiez autant que langues que vous voudrez",
@@ -274,7 +260,19 @@
       "Personnes": "Personnes"
     },
     "favoris": {
-      "entête": "Mes favoris"
+      "entête": "Mes favoris",
+      "aucun": {
+        "titre": "Vous n'avez aucun favoris pour l'instant",
+        "sousTitre": "Vous pouvez explorer les données et ajouter celles que vous aimez à vos favoris.",
+        "bouton": "Aller aux données"
+      },
+      "indiceÉpinglé": "Épinglé sur ce dispositif",
+      "indiceNonÉpinglé": "Non épinglé sur ce dispositif",
+      "effacer": {
+        "titre": "Désépingler cet item",
+        "sousTitre": "Ceci désépinglera l'objet de tous vos dispositifs. Constellation de garantiera plus la disponibilité de ces données sur les dispositifs vous appartenant.",
+        "indiceEffacer": "Désépingler cet item"
+      }
     },
     "automatisation": {
       "entête": "Automatisation",
@@ -2005,7 +2003,19 @@
       "Personnes": "People"
     },
     "favoris": {
-      "entête": "My favorites"
+      "entête": "My favourites",
+      "aucun": {
+        "titre": "You have no favourites for now",
+        "sousTitre": "You can find data and add those you like to your favourites.",
+        "bouton": "Go to data"
+      },
+      "indiceÉpinglé": "Pinned on this device",
+      "indiceNonÉpinglé": "Not pinned on this device",
+      "effacer": {
+        "titre": "Unpin this item",
+        "sousTitre": "This will unpin the object from all you devices. Constellation will no longer guarantee it's availability on devices belonging to you.",
+        "indiceEffacer": "Unpin this item"
+      }
     },
     "automatisation": {
       "entête": "Automating",
