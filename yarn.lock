@@ -1045,10 +1045,10 @@
   resolved "https://registry.yarnpkg.com/@chriscdn/promise-semaphore/-/promise-semaphore-1.0.9.tgz#bdd1f4922767bc965a5018b76dc375a8c0b2f7a9"
   integrity sha512-eiR69JvgO4EGHbH8YOKIWioh6icP25boCKvDZeRZfWav6KFRbsJLVU/pHBrV4fne/eLXapKlijp9WXX1skp56A==
 
-"@constl/ipa@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@constl/ipa/-/ipa-0.4.2.tgz#613ece16ad824c156fea506f5358cecb255a1b9b"
-  integrity sha512-jGSoctIaA6W2QxbxM1lHHurvxWcTo/WIcBi3lo9i9g1v6C+gokBKsvRLz9CXkt+4YU8FdBKGt8S3vWqdK5oR3g==
+"@constl/ipa@^0.4.4":
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@constl/ipa/-/ipa-0.4.4.tgz#ec815a4db03e2800cf2520b16194badc64a3c22b"
+  integrity sha512-Yq4q5CCVt25bMnBsNT1ynLHOVYLzuUFPRWqmV3xLXzKWAn4pWwXrSVALKFbKvUC+IUw+6n6MIOpiwXWNZA6HGQ==
   dependencies:
     "@babel/runtime" "^7.16.0"
     "@chriscdn/promise-semaphore" "^1.0.6"

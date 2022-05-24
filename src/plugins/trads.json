@@ -270,7 +270,7 @@
       "indiceNonÉpinglé": "Non épinglé sur ce dispositif",
       "effacer": {
         "titre": "Désépingler cet item",
-        "sousTitre": "Ceci désépinglera l'objet de tous vos dispositifs. Constellation de garantiera plus la disponibilité de ces données sur les dispositifs vous appartenant.",
+        "explication": "Ceci désépinglera l'objet de tous vos dispositifs. Constellation de garantiera plus la disponibilité de ces données sur les dispositifs vous appartenant.",
         "indiceEffacer": "Désépingler cet item"
       }
     },
@@ -2013,7 +2013,7 @@
       "indiceNonÉpinglé": "Not pinned on this device",
       "effacer": {
         "titre": "Unpin this item",
-        "sousTitre": "This will unpin the object from all you devices. Constellation will no longer guarantee it's availability on devices belonging to you.",
+        "explication": "This will unpin the object from all you devices. Constellation will no longer guarantee it's availability on devices belonging to you.",
         "indiceEffacer": "Unpin this item"
       }
     },
