@@ -73,10 +73,10 @@ export default mixins(mixinIPA).extend({
           page: "favoris",
           icône: "mdi-pin",
         },
-        {
+        /*{
           page: "automatisation",
           icône: "mdi-sync",
-        },
+        },*/
         {
           page: "signalements",
           icône: "mdi-bug",
