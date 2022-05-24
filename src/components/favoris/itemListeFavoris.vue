@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { PropType } from "Vue";
+import { PropType } from "vue";
 import mixins from "vue-typed-mixins";
 
 import { couper, traduireNom } from "@/utils";
