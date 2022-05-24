@@ -2461,20 +2461,40 @@
     }
   },
   "de": {
+    "données": {
+      "choixTypeObjet": {
+        "bds": "Datenbank",
+        "mots-clefs": "Schlüsselwörter",
+        "projets": "Projekte",
+        "variables": "Variablen"
+      }
+    },
+    "boîteNoms": {
+      "titre": "Füge Namen hinzu",
+      "sousTitre": "Wählen Sie so viele Sprachen aus wie Sie wollen.",
+      "étiquetteLangue": "Sprache",
+      "étiquetteNom": "Name",
+      "étiquetteAucunNom": "Sie sind anonym! Fügen Sie einen Namen (oder mehr !) oben hinzu so das wir wissen wie wir Sie nennen sollen.",
+      "noms": "Namen",
+      "descriptions": "Beschreibungen"
+    },
     "communs": {
       "auto": "Automatisch",
       "messageInstaller": "Die Browser-Version von Konstellation wird beschränkt von dem Speicherplatz der von Ihrem Browser zu verfügung gestellt wird. Es ist zu empfehlen das Programm zu installieren um die volle Kapazität nützen zu können.",
-      "btnInstaller": "Konstellation installieren"
+      "btnInstaller": "Konstellation installieren",
+      "fichier": "Datei auswählen",
+      "fermer": "Schließen",
+      "annuler": "Abbrechen",
+      "sauvegarder": "Speichern",
+      "confirmer": "Bestätigen",
+      "retour": "Zurück",
+      "télécharger": "Download",
+      "téléverser": "Hochladen",
+      "pointInterogation": "?"
     },
     "alerteConditions": {
       "texte": "Sie müssen den Nutzunsbestimmungen zustimmen bevor Sie die Software benutzen können.",
       "bouton": "Nutzunsbestimmungen lesen"
-    },
-    "boîteNoms": {
-      "titre": "Namen hinzufügen",
-      "sousTitre": "Wählen Sie so viele Sprachen wie Sie möchten.",
-      "étiquetteLangue": "Sprache",
-      "étiquetteNom": "Name"
     },
     "nav": {
       "compte": "Account",
@@ -2489,6 +2509,7 @@
       "entête": "Konstellation",
       "soustitre": "Das dezentralisierte und freie System für den Austausch Wissenschaftlicher Daten.",
       "orientation": "Haben Sie sich verirrt?",
+      "contribuerCode": "Zum Kode beitragen",
       "liens": {
         "docs": "Dokumentation Lesen",
         "recherche": "Daten finden",
@@ -2508,8 +2529,15 @@
           "sousTitreBoîteNoms": "Um so mehr sprachen sie hinzufügen, desto größere Chancen haben Sie das andere Mitglieder von Konstellation Sie bei Ihrem Namen nennen können.",
           "courriel": "Ihre E-mail Adresse",
           "image": "Ihr Profilbild",
-          "dispositifs": "Werkzeuge"
-        },
+          "dispositifs": "Werkzeuge",
+          "Id": "Id",
+          "Dispositif": "Aktuelles Gerät",
+          "சேர்த்தல்": "Gerät hinzufügen",
+          "பாதுகாப்பு":"Füge einen anderen Computer, ein Handy, oder Browser zu Ihrem Konto hinzu, für erhöhte Sicherheit.",
+          "பட_அளவு": "Bildgröße muss kleiner als 1.5 megabytes sein.",
+          "fichierTropGrand": "Datei zu groß"
+        }
+    },
         "thème": {
           "entête": "Ambiente und Sprachen",
           "couleurs": "Farben",
@@ -2518,7 +2546,8 @@
         },
         "réseau": {
           "entête": "Forschung",
-          "connexions": "Verbindungen"
+          "connexions": "Verbindungen",
+          "Aucune_connexion": "No connections yet"
         }
       },
       "options": {
@@ -2570,8 +2599,44 @@
       "bouton": "Mit GitHub berichten",
       "boutonCourriel": "Per E-mail"
     },
-    "tableau": {
-      "vide": "Keine Daten"
+    "carteVariable": {
+      "unités": "Einheiten",
+      "Catégorie": "Rubrik",
+      "Aucune_unité": "Keine Einheit"
+    },
+    "variables": {
+      "catégories": {
+        "numérique": "Numerisch",
+        "date": "Datum",
+        "heure": "Zeit",
+        "dateEtHeure": "Datum und Zeit",
+        "chaîne": "String",
+        "catégorique": "Kategorisch",
+        "booléen": "Boolean",
+        "géojson": "GeoJSON",
+        "vidéo": "Video",
+        "audio": "Audio",
+        "photo": "Foto",
+        "fichier": "Datei",
+        "info": {
+          "numérique": "Eine Zahl",
+          "date": "Datum",
+          "heure": "Zeit",
+          "dateEtHeure": "Datum und Zeit",
+          "chaîne": "Text",
+          "catégorique": "Werte von einer Liste von möglichkeiten",
+          "booléen": "Null oder eins",
+          "géojson": "Geographische JavaScript Object Notation (GeoJSON format)",
+          "vidéo": "Video",
+          "audio": "Audio Datei",
+          "photo": "Bild oder Foto",
+          "fichier": "Irgendeine Datei"
+        }
+      },
+      "effacer": {
+        "titre": "Willst du wirklich diese Variable löschen?",
+        "explication": "Das wird die Variable von deinem Gerät löschen. Es wird keine Kopien löschen die andere Konstellation-Benutzer gemacht haben. Stellen Sie sicher das keine Ihrer Datenbanken diese Variable benutzen bevor sie gelöscht wird."
+      }
     },
     "conditions": {
       "entête": "Nutzunsbedinungen",
