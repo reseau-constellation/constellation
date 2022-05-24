@@ -2844,77 +2844,77 @@
           "lien": "https://choosealicense.com/licenses/zlib/"
         },
         "ofl-1_1": {
-          "nom": "Licence de police source ouverte SIL 1,1",
+          "nom": "Open-Source-Schriftartenlizenz SIL 1,1",
           "abr": "ofl-1_1",
           "lien": "https://choosealicense.com/licenses/ofl-1.1/"
         },
         "introuvable": {
-          "nom": "Licence introuvable",
-          "abr": "Introuvable"
+          "nom": "Lizenz nicht gefunden",
+          "abr": "Unauffindbar"
         }
       }
     },
     "motsclefs":{
-      "indiceÉpinglé": "Épinglé sur ce dispositif",
-      "indiceNonÉpinglé": "Non épinglé sur ce dispositif",
+      "indiceÉpinglé": "Mit diesem Gerät verbunden",
+      "indiceNonÉpinglé": "Nicht mit diesem Gerät verbunden",
       "effacer": {
-        "titre": "Voulez-vous vraiment effacer ce mot-clef ?",
-        "explication": "Ceci effacera le mot-clef de votre dispositif. Elle n'effacera pas des copies que d'autres utilisatrices et utilisateurs de Constellation pourraient en avoir créées.",
-        "indiceEffacer": "Effacer ce mot-clef"
+        "titre": "Möchten Sie dieses Schlüsselwort wirklich löschen ?",
+        "explication": "Dieses Schlüsselwort wird von Ihrem Gerät gelöscht. Kopien die andere Konstellation-Benutzer möglicherweise erstellt haben werden dadurch nicht gelöscht.",
+        "indiceEffacer": "Schlüsselwort löschen"
       },
       "jeton":{
-       "titreBoîteNoms": "Ajoutez un nom pour votre mot-clef",
-       "sousTitreBoîteNoms": "Le plus de langues, le mieux !"
+       "titreBoîteNoms": "Fügen Sie einen Namen zu Ihrem Schlüsselwort hinzu.",
+       "sousTitreBoîteNoms": "Umso mehr Sprachen, umso besser!"
       }
     },
     "dialogueMotsClefs": {
-      "Motsclefs": "Mots clefs",
-      "motclef": "Nouveau mot clef",
-      "Aucunrésultat": "Aucun résultat"
+      "Motsclefs": "Schlüsselwort",
+      "motclef": "Neues Schlüsselwort",
+      "Aucunrésultat": "Nichts gefunden"
     },
     "traduction": {
-      "பரிந்துரைக்கவும்": "Proposez un traduction",
-      "தேர்ந்தெடுக்கவும்": "Sélectionnez un item de la liste à gauche",
-      "நகலெடுக்கவும்": "Copier originale",
-      "பரிந்துரைகள்": "{n}Suggestions",
-      "மறைமுகம்": "Incognito"
+      "பரிந்துரைக்கவும்": "Schlagen Sie eine Übersetzung vor",
+      "தேர்ந்தெடுக்கவும்": "Wählen Sie ein Element aus der Liste auf der linken Seite aus",
+      "நகலெடுக்கவும்": "Original kopieren",
+      "பரிந்துரைகள்": "{n}Vorschläge",
+      "மறைமுகம்": "Inkognito"
     },
     "itemListeTrads": {
-      "இல்லை": "Aucune traduction"
+      "இல்லை": "Keine Übersetzung"
     },
     "dialogueNouveauMotClef": {
-      "motclef": "Nouveau mot-clef",
-      "sousTitre": "Ajoutez un nouveau mot-clef",
-      "தேர்ந்தெடுக்க": "Choisissez un nom pour votre mot-clef"
+      "motclef": "Neues Schlüsselwort",
+      "sousTitre": "Fügen Sie ein neues Schlüsselwort hinzu",
+      "தேர்ந்தெடுக்க": "Wählen Sie einen Namen für Ihr Schlüsselwort"
     },
     "carteFichierInstallation": {
-      "பதிப்பு": "Constellation version"
+      "பதிப்பு": "Konstellation version"
     },
     "dialogueNouvelleColonne": {
-      "நெடுவரிசை": "Nouvelle colonne",
+      "நெடுவரிசை": "Neue Spalte",
       "மாறி": "Variable",
-      "சோதனைகள்": "Contrôles de qualité (hérités)",
-      "cetteColonne": "Cette colonne",
-      "கட்டுப்பாடுகள்": "Contrôles de qualité (propres)"
+      "சோதனைகள்": "Qualitätsprüfungen (Legacy)",
+      "cetteColonne": "Diese Spalte",
+      "கட்டுப்பாடுகள்": "Qualitätsprüfungen (eigene)"
     },
     "celluleFichier": {
-      "முன்னோட்டம்": "Ce format de fichier ne peut pas être prévisualisé pour le moment."
+      "முன்னோட்டம்": "Dieses Dateiformat kann derzeit nicht in der Vorschau angezeigt werden."
     },
     "tableau": {
-      "vide": "Aucune donnée",
-      "சேர்க்கவும்": "Ajouter une colonne",
-      "சேர்க்க": "Ajouter une rangée"
+      "vide": "Keine Daten",
+      "சேர்க்கவும்": "Sparte hinzufügen",
+      "சேர்க்க": "Reihe hinzufügen"
     },
     "opsLangue": {
-      "Contribuer": "Contribuer"
+      "Contribuer": "Beitragen"
     },
     "dialogueTraductionsInterface": {
-      "மொழிபெயர்க்கவும்": "Traduire Constellation",
-      "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0",
-      "Languesource": "Langue source",
-      "Languecible": "Langue cible",
-      "clefSélectionnée": "Clef sélectionnée",
-      "messageOriginal": "Message original"
+      "மொழிபெயர்க்கவும்": "Konstellation übersetzen",
+      "சேர்த்தல்": "Von Ihnen beigesteuerte Übersetzungen werden unter der GNU GPL Affero 3.0-Lizenz in Konstellation-Distributionen aufgenommen",
+      "Languesource": "Ausgangssprache",
+      "Languecible": "Zielsprache",
+      "clefSélectionnée": "Aussgewählter Schlüssel",
+      "messageOriginal": "Originale Nachricht"
     }
   },
   "Ch'orti'": {
