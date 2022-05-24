@@ -1,6 +1,6 @@
 {
   "name": "constellation",
-  "version": "0.1.25",
+  "version": "0.1.16",
   "description": "Le système distribué et ouvert pour le partage de données scientifiques.",
   "author": "Julien Jean Malard-Adam",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "@constl/ipa": "^0.4.2",
+    "@constl/ipa": "^0.4.4",
     "@constl/serveur": "^0.1.0",
     "@types/uuid": "^8.3.4",
     "abortable-iterator": "^3.0.0",
