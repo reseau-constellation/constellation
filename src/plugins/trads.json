@@ -32,6 +32,20 @@
       "dispositifsSpécifiques": "Les dispositifs suivants :",
       "récursif": "Épingler de manière récursive"
     },
+    "favoris": {
+      "aucun": {
+        "titre": "Vous n'avez aucun favoris pour l'instant",
+        "sousTitre": "Vous pouvez explorer les données et ajouter celles que vous aimez à vos favoris.",
+        "bouton": "Aller aux données"
+      },
+      "indiceÉpinglé": "Épinglé sur ce dispositif",
+      "indiceNonÉpinglé": "Non épinglé sur ce dispositif",
+      "effacer": {
+        "titre": "Désépingler cet item",
+        "sousTitre": "Ceci désépinglera l'objet de tous vos dispositifs. Constellation de garantiera plus la disponibilité de ces données sur les dispositifs vous appartenant.",
+        "indiceEffacer": "Désépingler cet item"
+      }
+    },
     "boîteNoms": {
       "titre": "Ajoutez des noms",
       "sousTitre": "Spécifiez autant que langues que vous voudrez",
