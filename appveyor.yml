@@ -15,7 +15,7 @@ init:
 
 install:
   - ps: Install-Product node 16 x64
-  - yarn
+  - yarn cache clean && yarn install
 
 build_script:
   - yarn electron:build
