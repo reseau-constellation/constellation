@@ -7,12 +7,18 @@
         type="list-item-avatar-two-line@2"
       />
       <span v-else-if="!favoris.length">
-        <h2>{{ $t('favoris.aucun.titre') }}</h2>
-        <p>{{ $t('favoris.aucun.sousTitre') }}</p>
-        <v-btn color="primary" outlined text @click="$router.push('/bd')">{{ $t('favoris.aucun.bouton') }}</v-btn>
+        <h2>{{ $t("favoris.aucun.titre") }}</h2>
+        <p>{{ $t("favoris.aucun.sousTitre") }}</p>
+        <v-btn color="primary" outlined text @click="$router.push('/bd')">{{
+          $t("favoris.aucun.bouton")
+        }}</v-btn>
       </span>
       <v-slide-x-transition group class="d-flex flex-wrap mx-10">
-        <item-liste-favoris v-for="f in favoris" :key="f.idObjet" :epingle="f"/>
+        <item-liste-favoris
+          v-for="f in favoris"
+          :key="f.idObjet"
+          :epingle="f"
+        />
       </v-slide-x-transition>
     </v-col>
   </v-container>
@@ -43,7 +49,7 @@ export default mixins(mixinImage, mixinIPA).extend({
       const oublierFavoris = await this.$ipa.favoris!.suivreFavoris({
         f: (favoris) => {
           this.favoris = favoris;
-        }
+        },
       });
 
       this.suivre([oublierFavoris]);

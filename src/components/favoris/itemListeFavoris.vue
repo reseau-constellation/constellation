@@ -68,7 +68,7 @@ import { favoris } from "@constl/ipa";
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemListeFavoris",
   props: {
-    epingle: Object as PropType<favoris.ÉlémentFavorisAvecObjet>
+    epingle: Object as PropType<favoris.ÉlémentFavorisAvecObjet>,
   },
   mixins: [mixinIPA, mixinLangues],
   components: { lienOrbite, dialogueEpingler, dialogueEffacer },
@@ -88,7 +88,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     effacerFavoris: async function () {
-      await this.$ipa.favoris!.désépinglerFavori({ id: this.epingle.idObjet});
+      await this.$ipa.favoris!.désépinglerFavori({ id: this.epingle.idObjet });
     },
     initialiserSuivi: async function () {
       const oublierÉpinglé =
