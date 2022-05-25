@@ -751,14 +751,7 @@
       "clefSélectionnée": "clef Sélectionnée",
       "messageOriginal": "message Original"
     }
- },
-
-  "kaq": {
-    "accueil": {
-      "entête": "Ch'umil"
-     }
-   },
-
+  },
   "த": {
     "communs": {
       "auto": "தானியங்கி",
@@ -1452,7 +1445,6 @@
       "messageOriginal": "அசல் இடுகை"
     }
   },
-
   "ខ្មែរ": {
    "communs": {
      "auto": "ស្វ័យប្រវត្តិកម្ម",
@@ -1733,14 +1725,12 @@
     }
   }
 },
-
-    "kaq": {
-      "accueil": {
-        "entête": "Ch'umil"
-      }
-    },
-
-    "ار": {
+  "kaq": {
+    "accueil": {
+      "entête": "Ch'umil"
+    }
+  },
+  "ار": {
     "acceuil": {
       "entête": "خوش آمدید!"
     }
@@ -1751,8 +1741,84 @@
     }
   },
   "हिं": {
-    "acceuil": {
-      "entête": "तारामंडल"
+    "accueil": {
+      "entête": "तारामंडल",
+      "soustitre": "वैज्ञानिक आँकड़ों के लिये वितरित और खुली प्रणाली",
+      "orientation": "खो गये क्या?",
+      "contribuerCode": "संकेत को योगदान कीजिये",
+      "liens": {
+        "docs": "प्रलेखन पढ़ें",
+        "recherche": "आँकड़ों ढूँढें",
+        "projet": "काम प्रारंभ कर दें"
+      }
+    },
+    "communs": {
+      "auto": "स्वचालित",
+      "btnInstaller": "तारामंडल को स्थापित करें",
+      "fichier": "संचिका को चयन करें",
+      "fermer": "बंद करना",
+      "annuler": "रद्द करना",
+      "sauvegarder": "रखना",
+      "confirmer": "ठीक है",
+      "retour": "पीछे",
+      "télécharger": "निर्यात करना",
+      "téléverser": "आयात करना",
+      "pointInterogation": "?"
+    },
+    "données": {
+      "choixTypeObjet": {
+        "bds": "आंकड़े",
+        "mots-clefs": "सूचकांक शब्द",
+        "projets": "संग्रह",
+        "variables": "परिवर्तणशील"
+      }
+    },
+    "épingler": {
+      "titre": "नत्थीयाँ",
+      "dispositifsÉpingle": "इन अँकड़ों को इन उपकरणों पर नत्थी करना :",
+      "dispositifsÉpingleFichier": "संचिकाओं इन उपकरणों पर नित्थी करना :",
+      "AUCUN": "कोई भी उपकरण नही",
+      "TOUS": "मेरे सारे उपकरण",
+      "INSTALLÉ": "सारे उपकरण, अंतरजाल पृष्ट के अपवाद के साथ",
+      "dispositifsSpécifiques": "निम्नलिखित उपकरण :",
+      "récursif": "पुनरावर्ती तरफ से नित्थी करना"
+    },
+    "boîteNoms": {
+      "titre": "नामे जोड़ना",
+      "sousTitre": "जितनी भाषाएँ में चाहिये उतने नामें जोड़िये",
+      "étiquetteLangue": "भाषा",
+      "étiquetteNom": "नाम",
+      "étiquetteAucunNom": "अब तक कोई नाम नहीं है। उपर एक (या अनेक) नाम जोड़ा देना।"
+    },
+    "nav": {
+      "compte": "खाता",
+      "projets": "मेरे संग्रह",
+      "bd": "मेरे आँकड़े",
+      "recherche": "अन्वेषण करें",
+      "favoris": "मेरे पसंदीदे",
+      "automatisation": "स्वचालित",
+      "signalements": "समस्या का प्रतिवेदन भेजना"
+    },
+    "exporter": {
+      "titre": "इन आँकड़ों की एक प्रतिलिपि को निर्यात करना",
+      "formatFichier": "संचिका का प्रारूप",
+      "inclureMédias": "बाहर संचिकाओं को शामिल करना (उदा॰ चित्र, चलचित्र)",
+      "langues": "निर्यात की भाषाएँ (वरियता के क्रम में)"
+    },
+    "importer": {
+      "titre": "आँकड़ों को आयात करना",
+      "தேர்வுசெய்க": "संचिका को चयन कीजिये",
+      "choisirTableau": "तालिका को चयन कीजिये",
+      "colonneImporter": "आयात के लिये स्तंभ",
+      "colonneCible": "तारामंडल में स्तंभ",
+      "நெடுவரிசை": "स्तंभें",
+      "பதிவேற்றம்": "आयात",
+      "importer": "आयात करना"
+    }
+  },
+  "ଓଡ଼ି": {
+    "accueil": {
+      "entête": "ତାରାମଂଡଲ"
     }
   },
   "বাং": {
