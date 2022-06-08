@@ -1572,9 +1572,12 @@
     "importer": {
       "titre": "Import data ",
       "தேர்வுசெய்க": "Choose a file",
+      "choisirTableau": "Choose a table",
+      "colonneImporter": "Column to import",
+      "colonneCible": "Target column",
       "நெடுவரிசை": "Columns",
       "பதிவேற்றம்": "Import",
-      "தேர்வுசெய்": "Select a file to upload"
+      "importer": "Import"
     },
     "carteMembre": {
       "aucuneBd": "No DB",
