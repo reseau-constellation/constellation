@@ -8,7 +8,7 @@
       <v-card-title class="headline mb-3">
         {{ $t("épingler.titre") }}
         <v-spacer />
-        <v-btn icon @click="dialogue = false">
+        <v-btn icon @click="fermer">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -82,7 +82,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" text outlined @click="dialogue = false">
+        <v-btn color="secondary" text outlined @click="fermer">
           {{ $t("communs.fermer") }}
         </v-btn>
         <v-btn
@@ -190,6 +190,11 @@ export default mixins(mixinLangues, mixinIPA).extend({
 
     désépingler: async function () {
       await this.$ipa.favoris!.désépinglerFavori({ id: this.id });
+    },
+
+    fermer: async function () {
+      this.dialogue = false;
+      await this.réInitialiserSuivi();
     },
 
     initialiserSuivi: async function () {
