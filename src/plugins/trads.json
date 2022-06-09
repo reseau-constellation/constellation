@@ -1609,6 +1609,10 @@
       "Représentant": "Representing",
       "Membres": "Members"
     },
+    "dialogueInfoColonne": {
+      "variable": "Variable",
+      "index": "Index column"
+    },
     "carteBD": {
       "அகற்று": "Remove from my favorites",
       "பொருத்து": "Pin to my favorites",
@@ -1664,6 +1668,11 @@
       "தேர்ந்தெடுக்கவும்": "Choose a name for your variable",
       "குறிப்பிடப்படாதவை": "Unspecified variable category"
     },
+    "itemListeRègles": {
+     "catégorie": {
+      "descr": "{varName} must be of category {cat}"
+      }
+    },
     "qualité": {
       "titre": "Composition of the score",
       "sousTitre": "A better score increases the trust others will place in your data and helps your data rank in searches.",
@@ -1712,6 +1721,7 @@
           "aucunNom": "No name",
           "titreBoîteNoms": " Internationalize your name !",
           "sousTitreBoîteNoms": "The more languages you add, the more likely it is that other Constellation users will know what to call you.",
+          "étiquetteAucunNom": "You are anonymous! Add a name (or more!) above so we know how to call you",
           "courriel": "Your email",
           "image": "You profile picture",
           "dispositifs": "Devices",
@@ -1815,6 +1825,9 @@
           "fichier": "Any file"
         }
       },
+      "indiceÉpinglé": "Pinned to this device",
+      "indiceNonÉpinglé": "Not pinned to this device",
+      "indiceEffacer": "Clear this variable",
       "effacer": {
         "titre": "Do you really want to delete this variable base?",
         "explication": "This will erase the variable from your device. It will not erase copies that other Constellation users may have created. Makes sure none of your databases use this variable before clearing it."
