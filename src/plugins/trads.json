@@ -1936,14 +1936,14 @@
       }
     },
     "licences": {
-        "droits": {
-          "sousTitre": "Rights",
-          "aucune": "No rights",
-          "partager": "Share",
-          "adapter": "Adapt",
-          "usageComercial": "Commercial use",
-          "usagePrivé": "Private use",
-          "usageBrevets": "Patents"
+      "droits": {
+        "sousTitre": "Rights",
+        "aucune": "No rights",
+        "partager": "Share",
+        "adapter": "Adapt",
+        "usageComercial": "Commercial use",
+        "usagePrivé": "Private use",
+        "usageBrevets": "Patents"
       },
       "conditions": {
         "sousTitre": "Conditions",
