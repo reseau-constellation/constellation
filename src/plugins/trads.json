@@ -1917,6 +1917,7 @@
       },
       "vis": {
         "boîteNoms": {
+          "titre": "Add names",
           "sousTitre": "The more languages the better ! Consider prioritizing the languages spoken where your data comes from.",
           "aucunNom": "No name… this database is anonymous !",
           "aucuneDescription": "No description available."
@@ -2196,6 +2197,13 @@
       }
     },
     "motsclefs":{
+      "indiceÉpinglé": "Pinned to this device",
+      "indiceNonÉpinglé": "Not pinned to this device",
+      "effacer": {
+      "titre": "Are you sure you want to delete this keyword ?",
+      "explication": "This will erase the tag from your device. It will not erase copies that other Constellation users may have made of it..",
+      "indiceEffacer": "Delete this keyword"
+     },
       "jeton":{
        "titreBoîteNoms": "Add a name for your keyword",
        "sousTitreBoîteNoms": "The more languages the better!"
@@ -2217,10 +2225,9 @@
       "இல்லை": "No translation"
     },
     "dialogueNouveauMotClef": {
-      "motclef": "New key word",
-      "தேர்ந்தெடுக்க": "Choose a name for your key word",
-      "Description": "Description",
-      "Langue": "Language"
+      "motclef": "New keyword",
+      "sousTitre": "Add a new keyword",
+      "தேர்ந்தெடுக்க": "Choose a name for your keyword"
     },
     "carteFichierInstallation": {
       "பதிப்பு": "Constellation version"
@@ -2229,6 +2236,7 @@
       "நெடுவரிசை": "New column",
       "மாறி": "Variable",
       "சோதனைகள்": "Quality checks (inherited)",
+      "cetteColonne": "This column",
       "கட்டுப்பாடுகள்": "Quality checks (specific)"
     },
     "celluleFichier": {
