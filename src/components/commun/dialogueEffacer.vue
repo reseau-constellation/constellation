@@ -32,7 +32,7 @@ import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
 export default mixins(mixinLangues, mixinIPA).extend({
-  name: "dialogueÉpingler",
+  name: "dialogueEffacer",
   props: {
     titre: {
       type: String,
