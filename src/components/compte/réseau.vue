@@ -30,6 +30,21 @@ import mixins from "vue-typed-mixins";
 
 import mixinIPA from "@/mixins/ipa";
 
+/*
+import geoip from "ipfs-geoip";
+await geoip.lookup(ipfs, exampleIp)
+{
+  "country_code": "US",
+  "country_name": "USA",
+  "region_code": "CA",
+  "city": "Mountain View",
+  "postal_code": "94040",
+  "latitude": 37.3860,
+  "longitude": -122.0838,
+  "planet": "Earth"
+}
+*/
+
 export default mixins(mixinIPA).extend({
   name: "ongletRéseau",
   mixins: [mixinIPA],
