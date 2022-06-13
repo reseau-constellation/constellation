@@ -87,10 +87,6 @@
             />
 
             <v-card v-if="licence" flat class="mx-3 mb-3">
-              <p>
-                <v-icon small>mdi-alert-circle-outline</v-icon>
-                {{ $t("licences.avertissement") }}
-              </p>
               <div class="d-flex flex-wrap">
                 <v-card flat min-width="200" max-width="350" class="mb-3 ma-2">
                   <p class="mb-0 text-overline">
