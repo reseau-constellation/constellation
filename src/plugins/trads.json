@@ -1660,7 +1660,7 @@
       "nom": "Name",
       "Description": "Description",
       "Catégorie": "Category",
-      "கட்டுப்பாடு":"Quality controls",
+      "règles":"Quality controls",
       "சேர்க்க": "Add a rule",
       "Description": "Description",
       "எதைக்_குறிக்கிறது": "What does your variable represent ?",
