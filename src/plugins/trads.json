@@ -1614,8 +1614,8 @@
       "index": "Index column"
     },
     "carteBD": {
-      "அகற்று": "Remove from my favorites",
-      "பொருத்து": "Pin to my favorites",
+      "indiceÉpinglé": "Database pinned to this device",
+      "indiceNonÉpinglé": "Database not pinned on this device",
       "note": {
         "A": "A",
         "A-": "A-",
