@@ -145,8 +145,14 @@ export default mixins(mixinImage).extend({
             height: ratio * hauteur,
             width: ratio * largeur,
           });
-          données = await fichierPlusPetit.arrayBuffer();
+
+          if (fichierPlusPetit.size > this.MAX_TAILLE_IMAGE) {
+            this.fichierTropGrand = true;
+            return;
+          }
+
           this.fichierTropGrand = false;
+          données = await fichierPlusPetit.arrayBuffer();
         } catch {
           this.fichierTropGrand = true;
           return;
