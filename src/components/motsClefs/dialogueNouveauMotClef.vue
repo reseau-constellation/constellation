@@ -39,7 +39,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary" text outlined @click="dialogue = false">
+        <v-btn color="secondary" text outlined @click="fermer">
           {{ $t("communs.annuler") }}
         </v-btn>
         <v-btn
@@ -115,8 +115,12 @@ export default mixins(mixinLangues).extend({
         noms: this.noms,
       });
       this.$emit("cree", { id: idMotClef });
-      this.dialogue = false;
+      this.fermer();
     },
+    fermer: function () {
+      this.dialogue = false;
+      this.noms = {};
+    }
   },
 });
 </script>
