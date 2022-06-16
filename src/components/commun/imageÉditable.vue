@@ -39,7 +39,7 @@
                 <v-row class="flex-column fill-height ma-0">
                   <div class="my-auto">
                     <v-btn
-                      :class="{ 'show-btns': hover }"
+                      :class="{ 'show-btns': hover, 'mx-2': true }"
                       color="rgba(255, 255, 255, 0)"
                       class="align-self-center"
                       icon
@@ -47,7 +47,7 @@
                       @click="choisirImage"
                     >
                       <v-icon
-                        :class="{ 'show-btns': hover, 'mx-4': true }"
+                        :class="{ 'show-btns': hover }"
                         color="rgba(255, 255, 255, 0)"
                         large
                       >
@@ -55,7 +55,7 @@
                       </v-icon>
                     </v-btn>
                     <v-btn
-                      :class="{ 'show-btns': hover }"
+                      :class="{ 'show-btns': hover, 'mx-2': true }"
                       color="rgba(255, 255, 255, 0)"
                       class="align-self-center"
                       icon
@@ -63,7 +63,7 @@
                       @click="effacerImage"
                     >
                       <v-icon
-                        :class="{ 'show-btns': hover, 'mx-4': true }"
+                        :class="{ 'show-btns': hover }"
                         color="rgba(255, 255, 255, 0)"
                         large
                       >
@@ -86,10 +86,35 @@ import mixins from "vue-typed-mixins";
 
 import mixinImage from "@/mixins/images";
 
+import convert from "image-file-resize";
+
+// https://stackoverflow.com/questions/7460272/getting-image-dimensions-using-javascript-file-api
+const obtHauteurEtLargeurDeFichierImage = (
+  file: File
+): Promise<{
+  hauteur: number;
+  largeur: number;
+}> =>
+  new Promise((resolve) => {
+    const dataURL = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      resolve({
+        hauteur: img.height,
+        largeur: img.width,
+      });
+    };
+    img.src = dataURL;
+  });
+
 export default mixins(mixinImage).extend({
   name: "ImageÉditable",
   mixins: [mixinImage],
-  props: ["srcImage", "MAX_TAILLE_IMAGE", "editable"],
+  props: {
+    srcImage: { type: String },
+    MAX_TAILLE_IMAGE: { type: Number },
+    editable: { type: Boolean },
+  },
   data: function () {
     return {
       fichierTropGrand: false,
@@ -108,14 +133,29 @@ export default mixins(mixinImage).extend({
       if (!choixFichier.files?.length) return;
 
       const fichier = choixFichier.files[0];
+      let données: ArrayBuffer;
+
       if (fichier.size > this.MAX_TAILLE_IMAGE) {
-        this.fichierTropGrand = true;
-        return;
+        const { hauteur, largeur } = await obtHauteurEtLargeurDeFichierImage(fichier);
+        const ratio = hauteur * largeur * 16 / (8 * 1024) / this.MAX_TAILLE_IMAGE;
+
+        try {
+          const fichierPlusPetit = await convert({
+            file: fichier,
+            height: ratio * hauteur,
+            width: ratio * largeur,
+          });
+          données = await fichierPlusPetit.arrayBuffer();
+          this.fichierTropGrand = false;
+        } catch {
+          this.fichierTropGrand = true;
+          return;
+        }
       } else {
+        données = await fichier.arrayBuffer();
         this.fichierTropGrand = false;
       }
 
-      const données = await fichier.arrayBuffer();
       await this.$emit("imageChoisie", { données });
     },
   },
