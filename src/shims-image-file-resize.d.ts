@@ -4,9 +4,9 @@ declare module "image-file-resize" {
     height = 300,
     type = "jpeg",
   }: {
-    file: File,
-    width?: number,
-    height?: number,
-    type?: "jpeg" | "jpg" | "gif" | "bmp" | "png"
+    file: File;
+    width?: number;
+    height?: number;
+    type?: "jpeg" | "jpg" | "gif" | "bmp" | "png";
   }): File;
 }

@@ -120,7 +120,7 @@ export default mixins(mixinLangues).extend({
     fermer: function () {
       this.dialogue = false;
       this.noms = {};
-    }
+    },
   },
 });
 </script>

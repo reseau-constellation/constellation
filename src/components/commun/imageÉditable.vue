@@ -136,8 +136,11 @@ export default mixins(mixinImage).extend({
       let données: ArrayBuffer;
 
       if (fichier.size > this.MAX_TAILLE_IMAGE) {
-        const { hauteur, largeur } = await obtHauteurEtLargeurDeFichierImage(fichier);
-        const ratio = hauteur * largeur * 16 / (8 * 1024) / this.MAX_TAILLE_IMAGE;
+        const { hauteur, largeur } = await obtHauteurEtLargeurDeFichierImage(
+          fichier
+        );
+        const ratio =
+          (hauteur * largeur * 16) / (8 * 1024) / this.MAX_TAILLE_IMAGE;
 
         try {
           const fichierPlusPetit = await convert({

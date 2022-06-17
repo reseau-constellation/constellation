@@ -8,8 +8,16 @@
         {{ couper(nom, 30) }}
       </v-list-item-title>
       <v-list-item-subtitle>
-        <jeton-membre :id="idAuteur"/>
-        <v-chip v-if="auteurs.length > 1" class="me-1 mb-1" label outlined @click.stop> + {{ formatterChiffre(auteurs.length - 1) }}</v-chip>
+        <jeton-membre :id="idAuteur" />
+        <v-chip
+          v-if="auteurs.length > 1"
+          class="me-1 mb-1"
+          label
+          outlined
+          @click.stop
+        >
+          + {{ formatterChiffre(auteurs.length - 1) }}</v-chip
+        >
       </v-list-item-subtitle>
     </v-list-item-content>
     <v-list-item-action-text>
@@ -92,8 +100,8 @@ export default mixins(mixinLangues, mixinIPA).extend({
         : this.id.slice(9);
     },
     idAuteur: function (): string | undefined {
-      return this.auteurs.filter(a=>a.accepté)[0]?.idBdCompte
-    }
+      return this.auteurs.filter((a) => a.accepté)[0]?.idBdCompte;
+    },
   },
   methods: {
     couper,
@@ -137,7 +145,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
       const oublierAuteurs = await this.$ipa.réseau!.suivreAuteursMotClef({
         idMotClef: this.id,
         f: (auteurs) => {
-          this.auteurs = auteurs
+          this.auteurs = auteurs;
         },
       });
 
@@ -149,7 +157,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
           },
         });
 
-      this.suivre([oublierPermissionÉcrire, oublierNoms, oublierÉpinglé]);
+      this.suivre([oublierPermissionÉcrire, oublierNoms, oublierAuteurs, oublierÉpinglé]);
     },
   },
 });
