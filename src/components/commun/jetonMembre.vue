@@ -1,5 +1,5 @@
 <template>
-  <v-chip class="me-1 mb-1" label outlined>
+  <v-chip class="me-1 mb-1" label outlined @click.stop>
     <avatar-profil :id="id" />
     {{ couper(nom, 25) }}
     <lien-orbite :lien="id" />
