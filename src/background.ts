@@ -14,7 +14,14 @@ import {
 
 const enDéveloppement = process.env.NODE_ENV !== "production";
 
-app.setAsDefaultProtocolClient("constl");
+if (enDéveloppement) {
+  // Utiliser un différent lien pour le développement. Sinon, toutes les requètes
+  // seront envoyées à Électron et non à l'appli installée
+  app.setAsDefaultProtocolClient("dév-constl");
+} else {
+  app.setAsDefaultProtocolClient("constl");
+}
+
 
 async function fermerAppli() {
   if (fermerConstellation) await fermerConstellation();
@@ -76,6 +83,7 @@ async function createWindow() {
       console.log(lien);
       // mainWindow.webContents.send('received-link', lien);
   });*/
+
   // Protocol handler for win32
   if (process.platform == "win32") {
     // Keep only command line / deep linked arguments

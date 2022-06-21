@@ -32,6 +32,7 @@
     "electron-updater": "^5.0.1",
     "ennikkai": "^1.2.7",
     "fibers": "^5.0.0",
+    "image-file-resize": "^1.0.5",
     "ipfs-geoip": "^7.0.0",
     "is-electron": "^2.2.0",
     "js-zip": "^1.0.1",

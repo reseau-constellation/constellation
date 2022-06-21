@@ -4,7 +4,21 @@
       <v-icon>mdi-key</v-icon>
     </v-list-item-avatar>
     <v-list-item-content>
-      {{ couper(nom, 30) }}
+      <v-list-item-title>
+        {{ couper(nom, 30) }}
+      </v-list-item-title>
+      <v-list-item-subtitle>
+        <jeton-membre :id="idAuteur" />
+        <v-chip
+          v-if="auteurs.length > 1"
+          class="me-1 mb-1"
+          label
+          outlined
+          @click.stop
+        >
+          + {{ formatterChiffre(auteurs.length - 1) }}</v-chip
+        >
+      </v-list-item-subtitle>
     </v-list-item-content>
     <v-list-item-action-text>
       <dialogue-epingler :id="id" :optionFichiers="false">
@@ -59,22 +73,24 @@ import { couper, traduireNom } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import dialogueEffacer from "@/components/commun/dialogueEffacer.vue";
 import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
+import jetonMembre from "@/components/commun/jetonMembre.vue";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
-import { favoris } from "@constl/ipa";
+import { favoris, utils } from "@constl/ipa";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemListeMotsClefs",
   props: ["id"],
   mixins: [mixinIPA, mixinLangues],
-  components: { lienOrbite, dialogueEffacer, dialogueEpingler },
+  components: { lienOrbite, dialogueEffacer, dialogueEpingler, jetonMembre },
   data: function () {
     return {
       noms: {} as { [key: string]: string },
       épinglé: undefined as undefined | favoris.épingleDispositif,
       permissionÉcrire: false,
+      auteurs: [] as utils.infoAuteur[],
     };
   },
   computed: {
@@ -82,6 +98,9 @@ export default mixins(mixinLangues, mixinIPA).extend({
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
         : this.id.slice(9);
+    },
+    idAuteur: function (): string | undefined {
+      return this.auteurs.filter((a) => a.accepté)[0]?.idBdCompte;
     },
   },
   methods: {
@@ -123,6 +142,13 @@ export default mixins(mixinLangues, mixinIPA).extend({
         },
       });
 
+      const oublierAuteurs = await this.$ipa.réseau!.suivreAuteursMotClef({
+        idMotClef: this.id,
+        f: (auteurs) => {
+          this.auteurs = auteurs;
+        },
+      });
+
       const oublierÉpinglé =
         await this.$ipa.favoris!.suivreEstÉpingléSurDispositif({
           idObjet: this.id,
@@ -131,7 +157,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
           },
         });
 
-      this.suivre([oublierPermissionÉcrire, oublierNoms, oublierÉpinglé]);
+      this.suivre([oublierPermissionÉcrire, oublierNoms, oublierAuteurs, oublierÉpinglé]);
     },
   },
 });
