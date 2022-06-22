@@ -17,9 +17,9 @@ const enDéveloppement = process.env.NODE_ENV !== "production";
 if (enDéveloppement) {
   // Utiliser un différent lien pour le développement. Sinon, toutes les requètes
   // seront envoyées à Électron et non à l'appli installée
-  app.setAsDefaultProtocolClient("dév-constl");
+  app.setAsDefaultProtocolClient("dév-constellation");
 } else {
-  app.setAsDefaultProtocolClient("constl");
+  app.setAsDefaultProtocolClient("constellation");
 }
 
 
