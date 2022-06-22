@@ -1,26 +1,12 @@
 <template>
   <v-list-item @click="$emit('click')">
     <v-list-item-content>
-      <v-card outlined max-width="300" class="mx-4 mb-2">
-        <v-card-text class="text--primary">
-          {{ texteOriginal || clef }}
-        </v-card-text>
-        <v-divider />
-        <v-card-actions class="px-4 text--secondary">
-          <v-icon left small>mdi-xml</v-icon>
-          {{ couper(clef, 30) }}
-        </v-card-actions>
-      </v-card>
-      <v-card outlined max-width="300" class="mx-4 mb-2">
-        <v-card-text :class="`text--${traduction ? 'primary' : 'disabled'}`">
-          {{ traduction || "[$t('itemListeTrads.இல்லை)']" }}
-        </v-card-text>
-        <v-divider />
-        <v-card-actions class="px-4 text--secondary">
-          <v-icon left small>mdi-xml</v-icon>
-          {{ couper(clef, 30) }}
-        </v-card-actions>
-      </v-card>
+      <v-list-item-title>
+        {{ couper(traduction || '[' + $t('itemListeTrads.இல்லை') + ']', 30) }}
+      </v-list-item-title>
+      <v-list-item-subtitle>
+        {{ couper(texteOriginal || clef, 30) }}
+      </v-list-item-subtitle>
     </v-list-item-content>
   </v-list-item>
 </template>
