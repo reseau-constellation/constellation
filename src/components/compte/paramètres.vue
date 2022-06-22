@@ -107,7 +107,7 @@ import mixinImages from "@/mixins/images";
 import mixinLangues from "@/mixins/langues";
 
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
-import dialogueAjouterDispositif from "@/components/compte/dialogueAjouterDispositif.vue";
+import dialogueAjouterDispositif from "@/components/compte/ajoutDispositifs/dialogueAjouterDispositif.vue";
 
 import { traduireNom } from "@/utils";
 
