@@ -81,10 +81,6 @@ export default mixins(mixinIPA).extend({
           page: "signalements",
           icône: "mdi-bug",
         },
-        {
-          page: "informations",
-          icône: "mdi-informations",
-        },
       ],
     };
   },
