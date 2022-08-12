@@ -2,7 +2,7 @@
   <v-app>
     <ops-langue />
     <alerte-erreur-constellation />
-    <v-main class="pl-4">
+    <v-main class="pl-14">
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
