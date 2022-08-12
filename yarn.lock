@@ -10480,10 +10480,10 @@ k-bucket@^5.1.0:
   dependencies:
     randombytes "^2.1.0"
 
-kairegai@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/kairegai/-/kairegai-0.0.2.tgz#4af316e4ac51a888c6a4f64bfceab6dd77953413"
-  integrity sha512-BGndsnCsdvzCkVUTWQxxJzU4IHi+wKOX2djlZQa+sj14g4hf4Q1cMbezp+NmprL2ZVh6I7qohXE4Su31kb4frg==
+kairegai@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/kairegai/-/kairegai-0.1.5.tgz#abf28720b21ec223af3c9bb6d4730282bd60057c"
+  integrity sha512-Ng6XxpmQM4bFV6ajvYzHZf8rZSBrPN7j+wz5PWqDf7VSu+ajsnsv66vz05Xt9U6xlphdGChkXEdeFAv5nAjKtQ==
   dependencies:
     multiformats "^9.6.4"
 
