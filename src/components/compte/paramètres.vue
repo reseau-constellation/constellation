@@ -83,8 +83,9 @@
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
-            {{ $t("compte.onglets.compte.Id") + " : " + idDispositif
-            }}<!-- {{ எழுத்து_மாறு({ d: "z" + கைரேகை, எழுத்து: écriture }) }}-->
+            {{
+              $t("compte.onglets.compte.Id") + " : " + traduireEmpreinte("z" + d)
+            }}
           </v-list-item-title>
           <v-list-item-subtitle class="success--text">
             {{
@@ -98,8 +99,6 @@
 </template>
 
 <script lang="ts">
-// import { எழுத்து_மாறு } from "kairegai";
-
 import mixins from "vue-typed-mixins";
 
 import mixinIPA from "@/mixins/ipa";

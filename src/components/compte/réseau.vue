@@ -7,11 +7,11 @@
     <v-list v-if="connexions.length" two-line dense>
       <v-list-item v-for="c in connexions" :key="c.addr">
         <v-list-item-avatar>
-          {{ c.peer[c.peer.length - 1] }}
+          {{ traduireEmpreinte(c.peer)[c.peer.length - 1] }}
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
-            {{ c.peer }}
+            {{ traduireEmpreinte(c.peer) }}
           </v-list-item-title>
           <v-list-item-subtitle>
             {{ c.addr }}
@@ -29,6 +29,7 @@
 import mixins from "vue-typed-mixins";
 
 import mixinIPA from "@/mixins/ipa";
+import mixinLangues from "@/mixins/langues";
 
 /*
 import geoip from "ipfs-geoip";
@@ -45,9 +46,9 @@ await geoip.lookup(ipfs, exampleIp)
 }
 */
 
-export default mixins(mixinIPA).extend({
+export default mixins(mixinIPA, mixinLangues).extend({
   name: "ongletRéseau",
-  mixins: [mixinIPA],
+  mixins: [mixinIPA, mixinLangues],
   data: function () {
     return {
       connexions: [] as { addr: string; peer: string }[],

@@ -10,6 +10,7 @@ import {
   runukChabäl as codeLangue,
 } from "nuchabal";
 import { எண்ணுக்கு as texteÀChiffre, உரைக்கு as chiffreÀTexte } from "ennikkai";
+import { எழுத்து_மாறு } from "kairegai";
 import { mapGetters } from "vuex";
 
 const ORIG = "fr";
@@ -66,7 +67,14 @@ export default Vue.extend({
     texteÀChiffre,
     droiteÀGauche(langue: string): boolean {
       const orientation = orientationÉcriture(écriture(langue));
-      return Boolean(orientation && orientation.includes("←"));
+      return Boolean(orientation && orientation[0] === "←");
+    },
+    traduireEmpreinte(empreinte: string) {
+      try {
+        return எழுத்து_மாறு({ கைரேகை: empreinte, எழுத்து: this.écriture || this.langue })
+      } catch {
+        return எழுத்து_மாறு({ கைரேகை: empreinte, எழுத்து: "ltn" })
+      }
     },
     changerLangue(lng: string) {
       this.sélectionnerLangue(lng);
