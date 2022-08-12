@@ -1,11 +1,14 @@
 <template>
   <v-list-item @click="$emit('click')">
+    <v-list-item-avatar size="20">
+      <v-icon>mdi-check</v-icon>
+    </v-list-item-avatar>
     <v-list-item-content>
       <v-list-item-title>
-        {{ couper(traduction || '[' + $t('itemListeTrads.இல்லை') + ']', 30) }}
+        {{ couper(texteOriginal || clef, 30) }}
       </v-list-item-title>
       <v-list-item-subtitle>
-        {{ couper(texteOriginal || clef, 30) }}
+        {{ couper(traduction || "[" + $t("itemListeTrads.இல்லை") + "]", 30) }}
       </v-list-item-subtitle>
     </v-list-item-content>
   </v-list-item>

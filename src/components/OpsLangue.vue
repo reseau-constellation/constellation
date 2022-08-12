@@ -22,14 +22,17 @@
     </template>
     <span>
       <v-list class="overflow-y-auto" style="max-height: 300px">
-        <op-langue
+        <v-list-item
           v-for="lng in langues"
           :key="lng"
-          :code="lng"
-          :sélectionnée="lng === langue"
-          :progrès="progrès(lng)"
           @click="changerLangue(lng)"
-        />
+        >
+          <op-langue
+            :code="lng"
+            :sélectionnée="lng === langue"
+            :progrès="progrès(lng)"
+          />
+        </v-list-item>
       </v-list>
       <v-divider />
       <dialogue-traductions-interface>

@@ -1,5 +1,5 @@
 <template>
-  <v-list-item @click="$emit('click')">
+  <v-layout align-center @click="$emit('click')">
     <v-list-item-action>
       <v-icon v-if="sélectionnée" color="primary"> mdi-check-bold </v-icon>
     </v-list-item-action>
@@ -16,7 +16,7 @@
         color="primary"
       ></v-progress-circular>
     </v-list-item-action>
-  </v-list-item>
+  </v-layout>
 </template>
 
 <script lang="ts">

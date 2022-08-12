@@ -22,7 +22,7 @@
       <v-card outlined>
         <div class="d-flex flex-wrap">
           <v-card flat max-width="200" class="ma-3">
-            <v-select
+            <v-autocomplete
               :items="
                 langues.map((l) => {
                   return { text: codeÀNomLangue(l) || l, value: l };
@@ -43,7 +43,7 @@
                   :progrès="progrès(item.value)"
                 />
               </template>
-            </v-select>
+            </v-autocomplete>
           </v-card>
           <v-card flat max-width="200" class="ma-3">
             <v-select
@@ -69,24 +69,38 @@
               </template>
             </v-select>
           </v-card>
+          <v-card flat max-width="200" class="ma-3">
+            <v-checkbox
+              v-model="cacherTraduits"
+              :label="$t('dialogueTraductionsInterface.cacherTraduits')"
+              hide-details
+            />
+          </v-card>
         </div>
       </v-card>
 
       <v-card-text class="mt-3">
         <v-row>
-          <v-col cols="6">
-            <v-list style="max-height: 500px" class="overflow-y-auto">
-              <item-liste-trads
-                v-for="message in messages"
-                :key="message.clef"
-                :clef="message.clef"
-                :texteOriginal="message.texteOriginal"
-                :traduction="message.traduction"
-                @click="() => sélectionner(message.clef)"
-              />
-            </v-list>
+          <v-col cols="4">
+            <v-virtual-scroll
+              :bench="benched"
+              :items="messages"
+              height="500"
+              :item-height="61.99"
+            >
+              <template v-slot:default="{ item }">
+                <item-liste-trads
+                  :key="item.clef"
+                  :clef="item.clef"
+                  :texteOriginal="item.texteOriginal"
+                  :traduction="item.traduction"
+                  @click="() => sélectionner(item.clef)"
+                />
+              </template>
+            </v-virtual-scroll>
+
           </v-col>
-          <v-col cols="6">
+          <v-col cols="8">
             <panneau-traduction
               :clef="$t('dialogueTraductionsInterface.clefSélectionnée')"
               :texteOriginal="
@@ -141,6 +155,7 @@ export default mixins(mixinLangues).extend({
       langueCible: null as null | string,
       clefSélectionnée: null as null | string,
       messageOriginal: null as null | string,
+      cacherTraduits: true,
     };
   },
   computed: {
