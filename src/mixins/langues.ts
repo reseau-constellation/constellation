@@ -151,7 +151,7 @@ export default Vue.extend({
     formatterChiffre: function (n: number) {
       return chiffreÀTexte(n, this.systèmeNumération);
     },
-    formatterDate: function (val: number) {
+    formatterDate: function (val: number | Date) {
       return new Date(val).toLocaleDateString(this.$i18n.locale);
     },
     formatterHeure: function (val: number) {
