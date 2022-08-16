@@ -84,7 +84,9 @@
         <v-list-item-content>
           <v-list-item-title>
             {{
-              $t("compte.onglets.compte.Id") + " : " + traduireEmpreinte("z" + d)
+              $t("compte.onglets.compte.Id") +
+              " : " +
+              traduireEmpreinte("z" + d)
             }}
           </v-list-item-title>
           <v-list-item-subtitle class="success--text">

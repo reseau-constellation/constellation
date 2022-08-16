@@ -81,7 +81,10 @@
                 {{
                   chifreÀTexte(
                     123.45,
-                    item.value === null ? (numLangue(langue) || (systèmesNum.includes(langue) ? langue : "latin")) : item
+                    item.value === null
+                      ? numLangue(langue) ||
+                          (systèmesNum.includes(langue) ? langue : "latin")
+                      : item
                   )
                 }}
               </v-list-item-action>
