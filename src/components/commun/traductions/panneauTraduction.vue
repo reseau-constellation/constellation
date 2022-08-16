@@ -90,7 +90,7 @@ import mixinIPA from "@/mixins/ipa";
 import { bds } from "@constl/ipa";
 
 import itemTradCommunauté from "@/components/commun/traductions/itemTradCommunauté.vue";
-import { TraductionRéseau} from "@/kilimukku/kilimukku";
+import { TraductionRéseau } from "@/kilimukku/kilimukku";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "panneauTraduction",
@@ -164,7 +164,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
 
       if (this.traductionExistante) {
         await this.$kilimukku.effacerSuggestion({
-          empreinte: this.traductionExistante.empreinte
+          empreinte: this.traductionExistante.empreinte,
         });
       }
     },
@@ -177,10 +177,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
         await this.$kilimukku.rechercherSuggestions({
           f: (suggestions) => (this.suggestions = suggestions),
         });
-      this.suivre([
-        oublierIdBdCompte,
-        oublierSuggestionsTrads,
-      ]);
+      this.suivre([oublierIdBdCompte, oublierSuggestionsTrads]);
     },
   },
 });

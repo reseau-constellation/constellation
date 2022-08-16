@@ -284,7 +284,7 @@ export class Kilimukku {
       [ID_COL_DATE]: new Date().getTime(),
     };
 
-    const idTableau = await this._obtIdTableauSuggestions()
+    const idTableau = await this._obtIdTableauSuggestions();
 
     return await this.constl.tableaux!.ajouterÉlément({
       idTableau: idTableau,
@@ -292,11 +292,7 @@ export class Kilimukku {
     });
   }
 
-  async effacerSuggestion({
-    empreinte
-  }: {
-    empreinte: string
-  }) {
+  async effacerSuggestion({ empreinte }: { empreinte: string }) {
     const idTableauSuggestions = await this._obtIdTableauSuggestions();
 
     await this.constl.tableaux!.effacerÉlément({

@@ -71,9 +71,12 @@ export default Vue.extend({
     },
     traduireEmpreinte(empreinte: string) {
       try {
-        return எழுத்து_மாறு({ கைரேகை: empreinte, எழுத்து: this.écriture || this.langue })
+        return எழுத்து_மாறு({
+          கைரேகை: empreinte,
+          எழுத்து: this.écriture || this.langue,
+        });
       } catch {
-        return எழுத்து_மாறு({ கைரேகை: empreinte, எழுத்து: "ltn" })
+        return எழுத்து_மாறு({ கைரேகை: empreinte, எழுத்து: "ltn" });
       }
     },
     changerLangue(lng: string) {
