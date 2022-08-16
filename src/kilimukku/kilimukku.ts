@@ -1,4 +1,4 @@
-import _Vue from "Vue";
+import _Vue from "vue";
 
 import { accès, utils, client, réseau, bds, valid } from "@constl/ipa";
 
