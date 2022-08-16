@@ -105,7 +105,6 @@ async function createWindow() {
   });
 
   win.once("close", () => {
-    console.log("fenêtre fermée");
     déconnecterFenêtreDeConstellation();
   });
 

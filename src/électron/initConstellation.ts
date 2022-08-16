@@ -21,7 +21,6 @@ class Fenêtres {
   }
 
   déconnecterFenêtre(idFenêtre: string): void {
-    console.log("déconnecterFenêtre");
     delete this.fenêtres[idFenêtre];
   }
 
@@ -55,7 +54,6 @@ class Fenêtres {
 const fenêtres = new Fenêtres();
 
 export const fermerConstellation = async () => {
-  console.log("fermerConstellation");
   if (clientConstellation) await clientConstellation.fermer();
   clientConstellation = undefined;
 };
