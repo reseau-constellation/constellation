@@ -11,16 +11,18 @@
   </v-app>
 </template>
 
-<script>
-import Vue from "vue";
+<script lang="ts">
+import mixins from "vue-typed-mixins";
+
 import Navigation from "@/components/Navigation.vue";
 import opsLangue from "@/components/OpsLangue.vue";
-import alerteErreurConstellation from "@/components/commun/alerteErreurConstellation";
+import alerteErreurConstellation from "@/components/commun/alerteErreurConstellation.vue";
 
-import initialiserKilimukku from "@/plugins/kilimukku";
+import initialiserKilimukku from "@/kilimukku/kilimukku-vue-i18n";
 import mixinLangue from "@/mixins/langues";
+import mixinIPA from "@/mixins/ipa";
 
-export default Vue.extend({
+export default mixins(mixinIPA, mixinLangue).extend({
   name: "App",
 
   components: {
@@ -33,16 +35,23 @@ export default Vue.extend({
     //
   }),
 
-  mixins: [mixinLangue],
+  mixins: [mixinLangue, mixinIPA],
 
-  mounted: async function () {
+  methods: {
+    initialiserSuivi: async function () {
+      const oublierKilimukkku = await initialiserKilimukku({ appli: this });
+
+      this.suivre([oublierKilimukkku]);
+    },
+  },
+
+  mounted: function () {
     const langue = this.$store.state.paramètres.langue;
     if (langue) this.changerLangue(langue);
     const thèmeNuit = this.$store.state.paramètres.thèmeNuit;
     this.$vuetify.theme.dark = thèmeNuit;
-
-    await initialiserKilimukku({ appli: this });
   },
+
 });
 </script>
 

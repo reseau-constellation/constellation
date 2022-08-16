@@ -42,7 +42,7 @@ export const ID_MOTCLEF_TRAD =
   "/orbitdb/zdpuAoNDXakfzK2DxJAozuR2V9TYha5bvzjQHN5VnAm4jvL6S/736889ad-a29b-4e6f-94fa-a78f8e92978d";
 export const ID_MOTCLEF_SUGGESTIONS_KILIMUKKU =
   "/orbitdb/zdpuAsViPqnpRhUwN6kL7cSyLFaxSEkK233cJAChJMtc2vwLT/fe6ab45c-dd39-4ca9-a695-f151d922704f";
-export const idUniqueTableauSuggestionsKilimukku = "traducs";
+export const idUniqueTableauSuggestionsKilimukku = "trads";
 
 export const schémaBdKilimukku: bds.schémaSpécificationBd = {
   motsClefs: [ID_MOTCLEF_TRAD, ID_MOTCLEF_SUGGESTIONS_KILIMUKKU],
@@ -198,21 +198,13 @@ export class Kilimukku {
     }
   }
 
-  async _obtIdTableauSuggestions(): Promise<string> {
-    const idTableau = await utils.uneFois(
-      async (fSuivi: utils.schémaFonctionSuivi<string>) => {
-        return await this.constl.bds!.suivreTableauUniqueDeBdUnique({
-          schémaBd: this.schémaBdSuggestions,
-          motClefUnique: this.idMotClefProjet,
-          idUniqueTableau: idUniqueTableauSuggestionsKilimukku,
-          f: (id?: string) => {
-            if (id) fSuivi(id);
-          },
-        });
-      }
-    );
-    return idTableau;
+  établirOriginales(traductions: dicTraductions) {
+    this.traductionsOriginales = traductions;
+
+    this._traductionsOriginalesSelonClefs = {};
+    this._remplirClefsOriginales();
   }
+
 
   async estGestionnaire(): Promise<boolean> {
     return await utils.uneFois(
@@ -275,6 +267,7 @@ export class Kilimukku {
     langueSource: string;
     texteOriginal: string;
   }): Promise<string> {
+    console.log("suggérer")
     const élément = {
       [ID_COL_CLEF]: clef,
       [ID_COL_LANGUE_SOURCE]: langueSource,
@@ -284,42 +277,40 @@ export class Kilimukku {
       [ID_COL_DATE]: new Date().getTime(),
     };
 
-    const idTableau = await this._obtIdTableauSuggestions();
-
-    return await this.constl.tableaux!.ajouterÉlément({
-      idTableau: idTableau,
+    return await this.constl.bds!.ajouterÉlémentÀTableauUnique({
+      schémaBd: this.schémaBdSuggestions,
+      motClefUnique: this.idMotClefProjet,
+      idUniqueTableau: idUniqueTableauSuggestionsKilimukku,
       vals: élément,
     });
   }
 
-  async effacerSuggestion({ empreinte }: { empreinte: string }) {
-    const idTableauSuggestions = await this._obtIdTableauSuggestions();
-
-    await this.constl.tableaux!.effacerÉlément({
-      idTableau: idTableauSuggestions,
-      empreinteÉlément: empreinte,
+  async effacerSuggestion({ empreinte }: { empreinte: string }): Promise<void> {
+    return await this.constl.bds!.effacerÉlémentDeTableauUnique({
+      schémaBd: this.schémaBdSuggestions,
+      motClefUnique: this.idMotClefProjet,
+      idUniqueTableau: idUniqueTableauSuggestionsKilimukku,
+      empreinte,
     });
   }
 
   async approuver({
-    clef,
-    traduction,
-    langueCible,
-    langueSource,
-    texteOriginal,
-    dateSuggestion,
-    auteur,
+    suggestion
   }: {
-    clef: string;
-    traduction: string;
-    langueCible: string;
-    langueSource: string;
-    texteOriginal: string;
-    dateSuggestion: Date;
-    auteur: string;
+    suggestion: TraductionRéseau;
   }): Promise<void> {
     if (!this.estGestionnaire)
       throw "Non autorisé pour approbation de traductions";
+
+    const {
+      clef,
+      langueCible,
+      langueSource,
+      texteOriginal,
+      auteur,
+      traduction,
+      date: dateSuggestion
+    } = suggestion;
 
     // Effacer les doublons
     const traductions = await utils.uneFois(
@@ -518,6 +509,7 @@ export class Kilimukku {
     const fFinale = (
       suggestions: réseau.élémentDeMembre<élémentBdSuggestion>[]
     ) => {
+      console.log({suggestions})
       if (langue)
         suggestions = suggestions.filter(
           (s) => s.élément.données[ID_COL_LANGUE_CIBLE] === langue
@@ -541,6 +533,9 @@ export class Kilimukku {
         })
       );
     };
+
+    console.log({motClefUnique: this.idMotClefProjet,
+    idUniqueTableau: this.schémaBdSuggestions.tableaux[0].idUnique!,})
 
     return await this.constl.réseau!.suivreÉlémentsDeTableauxUniques({
       motClefUnique: this.idMotClefProjet,

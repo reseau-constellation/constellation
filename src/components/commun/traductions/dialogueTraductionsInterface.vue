@@ -100,7 +100,7 @@
             <v-virtual-scroll
               v-else
               :items="messagesÀMontrer"
-              height="400"
+              height="500"
               :item-height="61.99"
             >
               <template v-slot:default="{ item }">

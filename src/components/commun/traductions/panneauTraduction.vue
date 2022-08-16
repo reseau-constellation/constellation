@@ -5,8 +5,6 @@
     </v-card-title>
     <v-card-text>
       <v-card flat>
-        {{ traductionExistante }}
-        {{ traduction }}
         <v-textarea
           v-model="texteOriginal"
           :label="clef ? 'Texte original' : $t('traduction.தேர்ந்தெடுக்கவும்')"
@@ -50,6 +48,7 @@
           <v-btn
             text
             :disabled="!tradPrêteÀSauvegarder"
+            :loading="enProgrès"
             outlined
             color="primary"
             @click="sauvegarderTraduction"
@@ -71,9 +70,11 @@
           <v-list style="max-height: 200px" class="overflow-y-auto">
             <itemTradCommunauté
               v-for="suggestion in suggestionsPourCetItem"
-              :key="suggestion.élément.hash"
+              :key="suggestion.empreinte"
               :suggestion="suggestion"
-              @click="utiliserSuggestion(suggestion)"
+              :autorisee="autorisée"
+              @approuver="()=>approuverSuggestion(suggestion)"
+              @copier="()=>utiliserSuggestion(suggestion)"
             />
           </v-list>
         </v-card-text>
@@ -99,7 +100,10 @@ export default mixins(mixinLangues, mixinIPA).extend({
   components: { itemTradCommunauté },
   data: function () {
     return {
+      enProgrès: false,
+
       idBdCompte: undefined as undefined | string,
+      autorisée: false,
       traduction: "",
       traductionExistante: undefined as undefined | TraductionRéseau,
       suggestions: [] as TraductionRéseau[],
@@ -149,7 +153,11 @@ export default mixins(mixinLangues, mixinIPA).extend({
         this.traductionExistante = suggestion;
       else this.traductionExistante = undefined;
     },
+    approuverSuggestion: async function (suggestion: TraductionRéseau) {
+      return await this.$kilimukku.approuver({suggestion})
+    },
     sauvegarderTraduction: async function () {
+      this.enProgrès = true;
       const traduction = this.traduction.trim();
 
       if (traduction.length) {
@@ -162,11 +170,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
         });
       }
 
-      if (this.traductionExistante) {
-        await this.$kilimukku.effacerSuggestion({
-          empreinte: this.traductionExistante.empreinte,
-        });
-      }
+      this.enProgrès = false;
     },
     initialiserSuivi: async function () {
       const oublierIdBdCompte = await this.$ipa.suivreIdBdCompte({
@@ -177,7 +181,11 @@ export default mixins(mixinLangues, mixinIPA).extend({
         await this.$kilimukku.rechercherSuggestions({
           f: (suggestions) => (this.suggestions = suggestions),
         });
-      this.suivre([oublierIdBdCompte, oublierSuggestionsTrads]);
+
+      const oublierAutorisée = await this.$kilimukku.suivreEstGestionnaire({
+        f: estGestionnaire => this.autorisée = estGestionnaire
+      })
+      this.suivre([oublierIdBdCompte, oublierSuggestionsTrads, oublierAutorisée]);
     },
   },
 });
