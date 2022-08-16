@@ -114,6 +114,13 @@ export default mixins(mixinLangues).extend({
         id: idMotClef,
         noms: this.noms,
       });
+
+      //On ajoute le nouveau mot-clef aux favoris automatiquement
+      await this.$ipa.favoris!.épinglerFavori({
+        id: idMotClef,
+        dispositifs: "TOUS",
+      });
+
       this.$emit("cree", { id: idMotClef });
       this.fermer();
     },

@@ -264,6 +264,13 @@ export default mixins(mixinLangues).extend({
           idUnité: this.unités,
         });
       }
+
+      //On ajoute la nouvelle variable aux favoris automatiquement
+      await this.$ipa.favoris!.épinglerFavori({
+        id: idVariable,
+        dispositifs: "TOUS",
+      });
+
       this.$emit("sauvegarde", { id: idVariable });
 
       this.fermer();
