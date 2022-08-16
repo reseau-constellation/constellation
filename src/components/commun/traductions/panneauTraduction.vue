@@ -1,22 +1,38 @@
 <template>
   <v-card outlined>
     <v-card-title>
-      {{
-        clef
-          ? $t("traduction.பரிந்துரைக்கவும்")
-          : $t("traduction.தேர்ந்தெடுக்கவும்")
-      }}
+      {{ $t("traduction.பரிந்துரைக்கவும்") }}
     </v-card-title>
     <v-card-text>
       <v-card flat>
+        {{ traductionExistante }}
+        {{ traduction }}
+        <v-textarea
+          v-model="texteOriginal"
+          :label="clef ? 'Texte original' : $t('traduction.தேர்ந்தெடுக்கவும்')"
+          readonly
+          outlined
+          no-resize
+          height="50"
+          :hint="
+            clef
+              ? `${$t('dialogueTraductionsInterface.clefSélectionnée')} ${clef}`
+              : ''
+          "
+          persistent-hint
+          :append-icon="clef ? 'mdi-content-copy' : ''"
+          @click:append="() => (traduction = texteOriginal)"
+        />
         <v-textarea
           v-model="traduction"
           :disabled="!clef"
+          class="mt-2"
+          clearable
           outlined
           no-resize
           height="100"
-          :hint="clef"
-          persistent-hint
+          :label="clef ? 'Proposez une traduction' : ''"
+          hide-details
         >
         </v-textarea>
         <v-card-actions>
@@ -47,14 +63,14 @@
         <v-card-title>
           {{
             $t("traduction.பரிந்துரைகள்", {
-              n: formatterChiffre(suggestions.length),
+              n: formatterChiffre(suggestionsPourCetItem.length),
             })
           }}
         </v-card-title>
         <v-card-text>
           <v-list style="max-height: 200px" class="overflow-y-auto">
             <itemTradCommunauté
-              v-for="suggestion in suggestions"
+              v-for="suggestion in suggestionsPourCetItem"
               :key="suggestion.élément.hash"
               :suggestion="suggestion"
               @click="utiliserSuggestion(suggestion)"
@@ -74,64 +90,7 @@ import mixinIPA from "@/mixins/ipa";
 import { bds } from "@constl/ipa";
 
 import itemTradCommunauté from "@/components/commun/traductions/itemTradCommunauté.vue";
-
-import {
-  suggestionTrad,
-  élémentBdTraduction,
-  ID_VAR_CLEF,
-  ID_VAR_LANGUE_SOURCE,
-  ID_VAR_LANGUE_CIBLE,
-  ID_VAR_TEXTE_ORIGINAL,
-  ID_VAR_TRADUCTION,
-  ID_VAR_DATE,
-  ID_COL_CLEF,
-  ID_COL_LANGUE_SOURCE,
-  ID_COL_LANGUE_CIBLE,
-  ID_COL_TEXTE_ORIGINAL,
-  ID_COL_TRADUCTION,
-  ID_COL_DATE,
-} from "./types";
-
-const ID_MOTCLEF_TRAD =
-  "/orbitdb/zdpuAsiATt21PFpiHj8qLX7X7kN3bgozZmhEVswGncZYVHidX/7e0cde32-7fee-487c-ad6e-4247f627488e";
-const ID_MOTCLEF_TRADS_CONSTELLATION =
-  "/orbitdb/zdpuAuk6kRoPQKfwuWi5qMYMSyUMeiTjtcFE23AaHy9MQsXcs/93c94a56-f681-4512-8c4b-5c213119ab4b";
-
-const schémaBdTrads: bds.schémaSpécificationBd = {
-  motsClefs: [ID_MOTCLEF_TRAD, ID_MOTCLEF_TRADS_CONSTELLATION],
-  licence: "ODbl-1_0",
-  tableaux: [
-    {
-      idUnique: "trads",
-      cols: [
-        {
-          idVariable: ID_VAR_CLEF,
-          idColonne: ID_COL_CLEF,
-        },
-        {
-          idVariable: ID_VAR_LANGUE_SOURCE,
-          idColonne: ID_COL_LANGUE_SOURCE,
-        },
-        {
-          idVariable: ID_VAR_LANGUE_CIBLE,
-          idColonne: ID_COL_LANGUE_CIBLE,
-        },
-        {
-          idVariable: ID_VAR_TEXTE_ORIGINAL,
-          idColonne: ID_COL_TEXTE_ORIGINAL,
-        },
-        {
-          idVariable: ID_VAR_TRADUCTION,
-          idColonne: ID_COL_TRADUCTION,
-        },
-        {
-          idVariable: ID_VAR_DATE,
-          idColonne: ID_COL_DATE,
-        },
-      ],
-    },
-  ],
-};
+import { TraductionRéseau} from "@/kilimukku/kilimukku";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "panneauTraduction",
@@ -140,12 +99,10 @@ export default mixins(mixinLangues, mixinIPA).extend({
   components: { itemTradCommunauté },
   data: function () {
     return {
-      idTableau: undefined as undefined | string,
       idBdCompte: undefined as undefined | string,
-
       traduction: "",
-      traductionExistante: undefined as undefined | suggestionTrad,
-      suggestions: [] as suggestionTrad[],
+      traductionExistante: undefined as undefined | TraductionRéseau,
+      suggestions: [] as TraductionRéseau[],
     };
   },
   watch: {
@@ -158,26 +115,26 @@ export default mixins(mixinLangues, mixinIPA).extend({
   },
   computed: {
     tradPrêteÀSauvegarder: function (): boolean {
+      if (this.traduction === null) return false;
+
       const traduction = this.traduction.trim();
       const existante = this.traductionExistante
-        ? this.traductionExistante.élément.données[ID_COL_TRADUCTION].trim()
+        ? this.traductionExistante.traduction.trim()
         : "";
       const changée = existante !== traduction;
 
       return Boolean(this.clef && changée);
     },
-    maSuggestion: function (): suggestionTrad | undefined {
-      if (!this.clef) return;
+    suggestionsPourCetItem: function (): TraductionRéseau[] {
       return this.suggestions.filter((s) => {
-        const sugg = s.élément.données;
-        const { [ID_COL_CLEF]: clef, [ID_COL_LANGUE_CIBLE]: langueCible } =
-          sugg;
-        return (
-          s.idBdCompte === this.idBdCompte &&
-          clef === this.clef &&
-          langueCible === this.langueCible
-        );
-      })[0];
+        return s.clef === this.clef && s.langueCible === this.langueCible;
+      });
+    },
+    maSuggestion: function (): TraductionRéseau | undefined {
+      if (!this.clef) return;
+      return this.suggestionsPourCetItem.filter(
+        (s) => s.auteur === this.idBdCompte
+      )[0];
     },
   },
   methods: {
@@ -185,37 +142,29 @@ export default mixins(mixinLangues, mixinIPA).extend({
       this.traduction = "";
       this.traductionExistante = this.maSuggestion;
     },
-    utiliserSuggestion: function (suggestion: suggestionTrad) {
-      this.traduction = suggestion.élément.données[ID_COL_TRADUCTION];
+    utiliserSuggestion: function (suggestion: TraductionRéseau) {
+      this.traduction = suggestion.traduction;
 
-      if (suggestion.idBdCompte === this.idBdCompte)
+      if (suggestion.auteur === this.idBdCompte)
         this.traductionExistante = suggestion;
       else this.traductionExistante = undefined;
     },
     sauvegarderTraduction: async function () {
-      if (!this.idTableau) throw new Error("idTableau non définie.");
       const traduction = this.traduction.trim();
 
       if (traduction.length) {
-        const élément = {
-          [ID_COL_CLEF]: this.clef,
-          [ID_COL_LANGUE_SOURCE]: this.langueSource,
-          [ID_COL_LANGUE_CIBLE]: this.langueCible,
-          [ID_COL_TRADUCTION]: traduction,
-          [ID_COL_TEXTE_ORIGINAL]: this.texteOriginal,
-          [ID_COL_DATE]: new Date().getTime(),
-        };
-
-        await this.$ipa.tableaux!.ajouterÉlément({
-          idTableau: this.idTableau,
-          vals: élément,
+        await this.$kilimukku.suggérer({
+          clef: this.clef,
+          traduction: this.traduction,
+          langueCible: this.langueCible,
+          langueSource: this.langueSource,
+          texteOriginal: this.texteOriginal,
         });
       }
 
       if (this.traductionExistante) {
-        await this.$ipa.tableaux!.effacerÉlément({
-          idTableau: this.idTableau,
-          empreinteÉlément: this.traductionExistante.élément.empreinte,
+        await this.$kilimukku.effacerSuggestion({
+          empreinte: this.traductionExistante.empreinte
         });
       }
     },
@@ -224,24 +173,12 @@ export default mixins(mixinLangues, mixinIPA).extend({
         f: (id) => (this.idBdCompte = id),
       });
 
-      const oublierTableauBdTrads =
-        await this.$ipa.bds!.suivreTableauUniqueDeBdUnique({
-          schémaBd: schémaBdTrads,
-          motClefUnique: ID_MOTCLEF_TRADS_CONSTELLATION,
-          idUniqueTableau: "trads",
-          f: (idTableau) => (this.idTableau = idTableau),
-        });
       const { fOublier: oublierSuggestionsTrads } =
-        await this.$ipa.réseau!.suivreÉlémentsDeTableauxUniques<élémentBdTraduction>(
-          {
-            motClefUnique: ID_MOTCLEF_TRADS_CONSTELLATION,
-            idUniqueTableau: "trads",
-            f: (suggestions) => (this.suggestions = suggestions),
-          }
-        );
+        await this.$kilimukku.rechercherSuggestions({
+          f: (suggestions) => (this.suggestions = suggestions),
+        });
       this.suivre([
         oublierIdBdCompte,
-        oublierTableauBdTrads,
         oublierSuggestionsTrads,
       ]);
     },

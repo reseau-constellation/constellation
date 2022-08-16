@@ -20,15 +20,18 @@ import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 import { couper, traduireNom } from "@/utils";
 
-import { suggestionTrad, ID_COL_TRADUCTION, ID_COL_DATE } from "./types";
+import { TraductionRéseau } from "@/kilimukku/kilimukku";
+
+import avatarProfil from "@/components/commun/avatarProfil.vue";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemTradCommunauté",
   props: {
     suggestion: {
-      type: Object as () => suggestionTrad,
+      type: Object as () => TraductionRéseau,
     },
   },
+  components: { avatarProfil },
   data: function () {
     return {
       nomsAuteur: {} as { [key: string]: string },
@@ -36,13 +39,13 @@ export default mixins(mixinLangues, mixinIPA).extend({
   },
   computed: {
     idAuteur: function (): string {
-      return this.suggestion.idBdCompte;
+      return this.suggestion.auteur;
     },
     traduction: function (): string {
-      return this.suggestion.élément.données[ID_COL_TRADUCTION];
+      return this.suggestion.traduction;
     },
     date: function (): string {
-      const date = this.suggestion.élément.données[ID_COL_DATE];
+      const date = this.suggestion.date;
       return this.formatterDate(date);
     },
     nom: function (): string {

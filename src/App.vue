@@ -17,6 +17,7 @@ import Navigation from "@/components/Navigation.vue";
 import opsLangue from "@/components/OpsLangue.vue";
 import alerteErreurConstellation from "@/components/commun/alerteErreurConstellation";
 
+import initialiserKilimukku from "@/plugins/kilimukku";
 import mixinLangue from "@/mixins/langues";
 
 export default Vue.extend({
@@ -34,11 +35,13 @@ export default Vue.extend({
 
   mixins: [mixinLangue],
 
-  mounted: function () {
+  mounted: async function () {
     const langue = this.$store.state.paramètres.langue;
     if (langue) this.changerLangue(langue);
     const thèmeNuit = this.$store.state.paramètres.thèmeNuit;
     this.$vuetify.theme.dark = thèmeNuit;
+
+    await initialiserKilimukku({ appli: this });
   },
 });
 </script>

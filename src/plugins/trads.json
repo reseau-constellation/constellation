@@ -708,10 +708,10 @@
       "Aucunrésultat": "Aucun résultat"
     },
     "traduction": {
-      "பரிந்துரைக்கவும்": "Proposez un traduction",
+      "பரிந்துரைக்கவும்": "Proposez une traduction",
       "தேர்ந்தெடுக்கவும்": "Sélectionnez un item de la liste à gauche",
       "நகலெடுக்கவும்": "Copier originale",
-      "பரிந்துரைகள்": "{n}Suggestions",
+      "பரிந்துரைகள்": "{n} suggestion(s)",
       "மறைமுகம்": "Incognito"
     },
     "itemListeTrads": {
@@ -748,8 +748,9 @@
       "சேர்த்தல்": "Les traductions que vous contribuez seront incluses dans les distributions de Constellation sous la licence GNU GPL Affero 3,0",
       "Languesource": "Langue source",
       "Languecible": "Langue cible",
-      "clefSélectionnée": "clef Sélectionnée",
-      "messageOriginal": "message Original"
+      "clefSélectionnée": "Clef sélectionnée : ",
+      "cacherTraduits": "Cacher traduits",
+      "rienÀTraduire": "Hourrah ! Il n'y a aucun message à traduire."
     }
   },
   "த": {
@@ -2219,7 +2220,7 @@
       "பரிந்துரைக்கவும்": "Suggest a translation",
       "தேர்ந்தெடுக்கவும்": "Select an item from the list on the left",
       "நகலெடுக்கவும்": "Original copy",
-      "பரிந்துரைகள்": "{n}Suggestions",
+      "பரிந்துரைகள்": "{n} suggestion(s)",
       "மறைமுகம்": "Incognito"
     },
     "itemListeTrads": {
@@ -3133,7 +3134,7 @@
       "பரிந்துரைக்கவும்": "Schlagen Sie eine Übersetzung vor",
       "தேர்ந்தெடுக்கவும்": "Wählen Sie ein Element aus der Liste auf der linken Seite aus",
       "நகலெடுக்கவும்": "Original kopieren",
-      "பரிந்துரைகள்": "{n}Vorschläge",
+      "பரிந்துரைகள்": "{n} Vorschläge",
       "மறைமுகம்": "Inkognito"
     },
     "itemListeTrads": {

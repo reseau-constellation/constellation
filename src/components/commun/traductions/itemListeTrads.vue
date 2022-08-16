@@ -1,7 +1,7 @@
 <template>
   <v-list-item @click="$emit('click')">
     <v-list-item-avatar size="20">
-      <v-icon>mdi-check</v-icon>
+      <v-icon v-if="traduction">mdi-check</v-icon>
     </v-list-item-avatar>
     <v-list-item-content>
       <v-list-item-title>

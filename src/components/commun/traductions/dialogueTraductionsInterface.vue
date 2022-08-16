@@ -20,7 +20,7 @@
         {{ $t("dialogueTraductionsInterface.சேர்த்தல்") }}
       </v-card-subtitle>
       <v-card outlined>
-        <div class="d-flex flex-wrap">
+        <div class="d-flex flex-wrap align-center">
           <v-card flat max-width="200" class="ma-3">
             <v-autocomplete
               :items="
@@ -44,6 +44,11 @@
                 />
               </template>
             </v-autocomplete>
+          </v-card>
+          <v-card flat max-width="200" class="ma-3">
+            <v-icon @click="() => échangerLangues()"
+              >mdi-swap-horizontal</v-icon
+            >
           </v-card>
           <v-card flat max-width="200" class="ma-3">
             <v-select
@@ -72,6 +77,7 @@
           <v-card flat max-width="200" class="ma-3">
             <v-checkbox
               v-model="cacherTraduits"
+              class="my-auto"
               :label="$t('dialogueTraductionsInterface.cacherTraduits')"
               hide-details
             />
@@ -82,10 +88,19 @@
       <v-card-text class="mt-3">
         <v-row>
           <v-col cols="4">
+            <div
+              v-if="!messagesÀMontrer.length"
+              class="pt-10 text-center"
+              style="height: 400px"
+            >
+              <h2>
+                {{ $t("dialogueTraductionsInterface.rienÀTraduire") }}
+              </h2>
+            </div>
             <v-virtual-scroll
-              :bench="benched"
-              :items="messages"
-              height="500"
+              v-else
+              :items="messagesÀMontrer"
+              height="400"
               :item-height="61.99"
             >
               <template v-slot:default="{ item }">
@@ -94,20 +109,18 @@
                   :clef="item.clef"
                   :texteOriginal="item.texteOriginal"
                   :traduction="item.traduction"
+                  :active="item.clef === clefSélectionnée"
                   @click="() => sélectionner(item.clef)"
                 />
               </template>
             </v-virtual-scroll>
-
           </v-col>
           <v-col cols="8">
             <panneau-traduction
-              :clef="$t('dialogueTraductionsInterface.clefSélectionnée')"
-              :texteOriginal="
-                $t('dialogueTraductionsInterface.messageOriginal')
-              "
-              :langueCible="$t('dialogueTraductionsInterface.Languecible')"
-              :langueSource="$t('dialogueTraductionsInterface.Languesource')"
+              :clef="clefSélectionnée"
+              :texteOriginal="messageOriginal"
+              :langueCible="langueCible"
+              :langueSource="langueSource"
               @annuler="clefSélectionnée = null"
             />
           </v-col>
@@ -175,13 +188,18 @@ export default mixins(mixinLangues).extend({
         };
       });
     },
+    messagesÀMontrer: function (): messageTrad[] {
+      return this.cacherTraduits
+        ? this.messages.filter((m) => !m.traduction)
+        : this.messages;
+    },
   },
   watch: {
     clefSélectionnée: function () {
       const message = this.messages.find(
         (m) => m.clef === this.clefSélectionnée
       );
-      this.messageOriginal = message!.texteOriginal || "";
+      this.messageOriginal = message?.texteOriginal || "";
     },
   },
   methods: {
@@ -192,13 +210,25 @@ export default mixins(mixinLangues).extend({
     changerLangueSource: function (langue: string) {
       this.langueSource = langue;
     },
+    échangerLangues: function () {
+      const langueSource = this.langueSource;
+      const langueCible = this.langueCible;
+
+      this.langueSource = langueCible;
+      this.langueCible = langueSource;
+    },
     sélectionner: function (clef: string) {
       this.clefSélectionnée = clef;
     },
   },
   mounted: function () {
     this.langueSource = this.langueOriginale;
-    this.langueCible = this.langue;
+    this.langueCible =
+      this.langueOriginale !== this.langue
+        ? this.langue
+        : this.languesRécentes.find((l) => l !== this.langueSource) ||
+          this.langues.find((l) => l !== this.langueSource) ||
+          null;
   },
 });
 </script>
