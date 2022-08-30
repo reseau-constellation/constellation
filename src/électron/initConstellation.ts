@@ -39,7 +39,7 @@ class Fenêtres {
     }
   }
 
-  envoyerErreur(e: Error) {
+  envoyerErreur(e: string) {
     console.log("Message erreur", e);
     const messageErreur: proxy.messages.MessageErreurDeTravailleur = {
       type: "erreur",
@@ -80,7 +80,7 @@ export const connecterFenêtreÀConstellation = (
         clientConstellation = new proxy.gestionnaireClient.default(
           (m: proxy.messages.MessageDeTravailleur) =>
             fenêtres.envoyerMessage(m),
-          (e: Error) => fenêtres.envoyerErreur(e),
+          (e: string) => fenêtres.envoyerErreur(e),
           Object.assign(message.opts, {
             orbite: {
               sfip: {

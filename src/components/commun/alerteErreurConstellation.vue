@@ -93,15 +93,15 @@ export default mixins().extend({
       détails: false,
       voirToutes: false,
 
-      nouvelleErreur: undefined as { erreur: Error; id?: string } | undefined,
-      toutesLesErreurs: [] as { erreur: Error; id?: string }[],
+      nouvelleErreur: undefined as { erreur: string; id?: string } | undefined,
+      toutesLesErreurs: [] as { erreur: string; id?: string }[],
 
       fOublierErreurs: undefined as undefined | (() => void),
     };
   },
 
   computed: {
-    autresErreurs: function (): { erreur: Error; id?: string }[] {
+    autresErreurs: function (): { erreur: string; id?: string }[] {
       if (this.toutesLesErreurs.length <= 1) return [];
       return this.toutesLesErreurs.slice(1, this.toutesLesErreurs.length);
     },
@@ -116,7 +116,7 @@ export default mixins().extend({
 
       const titre = this.$t("alerteErreurConstellation.பிழை") as string;
       const erreur = this.nouvelleErreur.erreur.toString();
-      const tracéErreur = this.nouvelleErreur.erreur.stack;
+      const tracéErreur = "" // this.nouvelleErreur.erreur.stack;
       //const autresErreurs = this.autresErreurs.length ? "\n*Erreurs précédentes* :\n" + this.autresErreurs.map(e=>`\n${e.toString()}\n\`\`\`${e.stack}\`\`\``).join("\n") : ""
       const contenu = this.$t("alerteErreurConstellation.பிழை_இருக்கிறது", {
         அ: isElectron() ? "X" : " ",
@@ -133,8 +133,8 @@ export default mixins().extend({
 
   mounted: async function () {
     const fSuivreErreurs = (erreurs: {
-      nouvelle: { erreur: Error; id?: string };
-      toutes: { erreur: Error; id?: string }[];
+      nouvelle: { erreur: string; id?: string };
+      toutes: { erreur: string; id?: string }[];
     }) => {
       this.active = true;
 

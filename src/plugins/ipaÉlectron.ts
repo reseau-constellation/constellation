@@ -21,8 +21,8 @@ declare global {
 
 export class ProxyClientÉlectronPrincipal extends proxy.proxy
   .ClientProxifiable {
-  constructor(opts: client.optsConstellation = {}, souleverErreurs = false) {
-    super(souleverErreurs);
+  constructor(opts: client.optsConstellation = {}) {
+    super();
     console.log("IPAÉlectronPrincipal");
 
     window.ipa.receive(
@@ -49,7 +49,7 @@ export default {
       compte: idBdCompte,
     };
     const ipa = proxy.proxy.générerProxy(
-      new ProxyClientÉlectronPrincipal(opts, false)
+      new ProxyClientÉlectronPrincipal(opts)
     );
     Vue.prototype.$ipa = ipa;
   },
