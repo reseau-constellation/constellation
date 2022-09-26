@@ -49,7 +49,7 @@ export const schémaBdKilimukku: bds.schémaSpécificationBd = {
   licence: "ODbl-1_0",
   tableaux: [
     {
-      idUnique: "trads",
+      clef: "trads",
       cols: [
         {
           idVariable: ID_VAR_CLEF,
@@ -280,7 +280,7 @@ export class Kilimukku {
     return await this.constl.bds!.ajouterÉlémentÀTableauUnique({
       schémaBd: this.schémaBdSuggestions,
       motClefUnique: this.idMotClefProjet,
-      idUniqueTableau: idUniqueTableauSuggestionsKilimukku,
+      clefTableau: idUniqueTableauSuggestionsKilimukku,
       vals: élément,
     });
   }
@@ -289,7 +289,7 @@ export class Kilimukku {
     return await this.constl.bds!.effacerÉlémentDeTableauUnique({
       schémaBd: this.schémaBdSuggestions,
       motClefUnique: this.idMotClefProjet,
-      idUniqueTableau: idUniqueTableauSuggestionsKilimukku,
+      clefTableau: idUniqueTableauSuggestionsKilimukku,
       empreinte,
     });
   }
@@ -486,7 +486,7 @@ export class Kilimukku {
       {
         schémaBd: this.schémaBdSuggestions,
         motClefUnique: this.idMotClefProjet,
-        idUniqueTableau: this.schémaBdSuggestions.tableaux[0].idUnique!,
+        clefTableau: this.schémaBdSuggestions.tableaux[0].clef!,
         f: (suggestions) =>
           f(
             suggestions.map((s) =>
@@ -535,11 +535,11 @@ export class Kilimukku {
     };
 
     console.log({motClefUnique: this.idMotClefProjet,
-    idUniqueTableau: this.schémaBdSuggestions.tableaux[0].idUnique!,})
+    idUniqueTableau: this.schémaBdSuggestions.tableaux[0].clef,})
 
     return await this.constl.réseau!.suivreÉlémentsDeTableauxUniques({
       motClefUnique: this.idMotClefProjet,
-      idUniqueTableau: this.schémaBdSuggestions.tableaux[0].idUnique!,
+      clef: this.schémaBdSuggestions.tableaux[0].clef,
       f: fFinale,
     });
   }
