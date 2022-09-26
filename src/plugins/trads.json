@@ -436,7 +436,14 @@
         "adapter": "Adapter",
         "usageComercial": "Utilisation commercial",
         "usagePrivé": "Utilisation privée",
-        "usageBrevets": "Brevets"
+        "usageBrevets": "Brevets",
+        "détails": {
+          "partager": "Vous pouvez distribuer ces données",
+          "adapter": "Vous pouvez modifier ces données",
+          "usageComercial": "Vous pouvez utiliser ces données à des fins commerciales",
+          "usagePrivé": "Vous pouvez modifier et utiliser les données à des fins d'utilisation privée",
+          "usageBrevets": "Les contributeurs vous offrent explicitement des droits au brevets"
+        }
       },
       "conditions": {
         "sousTitre": "Conditions",
@@ -447,7 +454,15 @@
         "indiquerChangements": "Indiquer modifications",
         "partagerCodeSource": "Code source",
         "usageRéseau": "Usage réseau compris",
-        "aucune": "Aucune condition"
+        "aucune": "Aucune condition",
+        "détails": {
+          "attribution": "Les auteurs originaux du matériel doivent être mentionnés dans les redistributions",
+          "partageÉgal": "Les modifications doivent être partagés sous la même licence",
+          "inclureDroitDauteur": "Une notice de droit d'auteur doit être incluse avec le matériel s'il est distribué",
+          "indiquerChangements": "Les modifications au matériel doivent être indiquées lorsqu'il est redistribué",
+          "partagerCodeSource": "Le code source doit être partagé avec les distributions du matériel",
+          "usageRéseau": "L'utilisation du matériel pour offrir des services en ligne est considérée en tant que distribution"
+        }
       },
       "limitations": {
         "sousTitre": "Limitations",
@@ -457,7 +472,14 @@
         "marqueCommerce": "Marques de commerce",
         "brevetExclu": "Brevets",
         "sousLicence": "Sous-licence",
-        "aucune": "Aucune limitation"
+        "aucune": "Aucune limitation",
+        "détails": {
+          "aucuneResponsabilité": "Limite la resposabilité des auteurs",
+          "aucuneGarantie": "Mentionne qu'aucune garantie n'est offerte ",
+          "marqueCommerce": "Exclut explicitement les marques de commerce des permissions octroyées par la licence",
+          "brevetExclu": "Exclut explicitement les brevets des permissions octroyées par la licence",
+          "sousLicence": "N'autorise pas la concession de sous-licences"
+        }
       },
       "avertissement": "L'information ci-dessous n'est qu'un résumé de la licence, pourrait contenir des erreurs et n'est pas un avis légal. Nous vous recommandons vivement de lire la licence en entier.",
       "lire": "Lire la licence",

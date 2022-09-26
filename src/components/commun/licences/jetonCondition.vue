@@ -1,8 +1,15 @@
 <template>
-  <v-chip outlined small label class="ma-1 my-1">
-    <v-icon small left color="blue"> mdi-information-outline </v-icon>
-    {{ $t(`licences.conditions.${condition}`) }}
-  </v-chip>
+  <v-tooltip>
+    <template v-slot:activator="{ on, attrs }">
+      <v-chip v-bind="attrs"
+      v-on="on"
+      outlined small label class="ma-1 my-1">
+        <v-icon small left color="blue"> mdi-information-outline </v-icon>
+        {{ $t(`licences.conditions.${condition}`) }}
+      </v-chip>
+    </template>
+    <span>{{ $t(`licences.conditions.détails.${condition}`) }}</span>
+  </v-tooltip>
 </template>
 
 <script lang="ts">
