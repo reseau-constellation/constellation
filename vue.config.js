@@ -6,13 +6,18 @@ module.exports = {
   transpileDependencies: ["vuetify"],
   productionSourceMap: false,
   configureWebpack: {
-    plugins: [new NodePolyfillPlugin(), new WorkerPlugin()],
+    plugins: [new WorkerPlugin()],
     resolve: {
       fallback: {
+        path: false,
         fs: false,
         net: false,
         dgram: false,
         chokidar: false,
+        os: false,
+        crypto: false,
+        stream: false,
+        constants: false
       },
     },
     experiments: { topLevelAwait: true },
@@ -32,6 +37,7 @@ module.exports = {
       preload: "src/preload.js",
       rendererProcessFile: "src/mainElectron.ts",
       chainWebpackMainProcess: (config) => {
+        // config.devtool(false);
         config.experiments = { topLevelAwait: true };
         config.module
           .rule("compile")
@@ -44,15 +50,15 @@ module.exports = {
             presets: [
               "@babel/preset-typescript",
               "@vue/cli-plugin-babel/preset",
-              ["@babel/env", { modules: "commonjs" }],
+//              ["@babel/env", { modules: "commonjs" }],
             ],
-            plugins: [
-              [
+          plugins: [
+  /*              [
                 "add-module-exports",
                 {
                   addDefaultProperty: false,
                 },
-              ],
+              ],*/
               "@babel/plugin-syntax-top-level-await",
             ],
           });
