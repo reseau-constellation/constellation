@@ -9,7 +9,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import {  traduireNom } from "@/utils";
+import { traduireNom } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 import texteTronqué from "@/components/commun/texteTronqué.vue";
@@ -40,7 +40,6 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
   },
   methods: {
-    
     initialiserSuivi: async function () {
       this.noms = {};
       const oublierNoms = await this.$ipa.réseau!.suivreNomsMembre({

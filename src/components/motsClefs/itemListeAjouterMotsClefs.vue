@@ -13,7 +13,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import {  traduireNom } from "@/utils";
+import { traduireNom } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import dialogueEffacer from "@/components/commun/dialogueEffacer.vue";
 import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
@@ -44,7 +44,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    
     sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
       this.$ipa.motsClefs!.sauvegarderNomMotClef({ id: this.id, langue, nom });
     },

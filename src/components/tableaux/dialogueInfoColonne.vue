@@ -54,7 +54,7 @@ import mixins from "vue-typed-mixins";
 
 import { valid } from "@constl/ipa";
 
-import {  traduireNom } from "@/utils";
+import { traduireNom } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
@@ -72,7 +72,13 @@ export default mixins(mixinLangues, mixinIPA).extend({
     permissionModifier: Boolean,
   },
   mixins: [mixinLangues, mixinIPA],
-  components: { lienOrbite, boîteNoms, jetonVariable, itemListeRègle, texteTronqué },
+  components: {
+    lienOrbite,
+    boîteNoms,
+    jetonVariable,
+    itemListeRègle,
+    texteTronqué,
+  },
   data: function () {
     return {
       dialogue: false,
@@ -96,7 +102,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    
     changerColonneIndex: async function () {
       console.log("changerColIndex", this.index);
       await this.$ipa.tableaux!.changerColIndex({

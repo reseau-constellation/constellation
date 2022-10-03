@@ -244,14 +244,18 @@
                     <v-list-item-content>
                       <v-skeleton-loader v-if="licence === null" type="chip" />
                       <span v-else>
-                        <texteTronqué :texte="
-                        licence && !licenceApprouvée
-                          ? licence
-                          : $t(
-                              `licences.info.${
-                                licence || 'introuvable'
-                              }.abr`
-                            )" :longueurMax="20" />
+                        <texteTronqué
+                          :texte="
+                            licence && !licenceApprouvée
+                              ? licence
+                              : $t(
+                                  `licences.info.${
+                                    licence || 'introuvable'
+                                  }.abr`
+                                )
+                          "
+                          :longueurMax="20"
+                        />
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -415,7 +419,7 @@ import mixins from "vue-typed-mixins";
 
 import { accès, bds, réseau, utils } from "@constl/ipa";
 
-import { traduireNom,  couleurScore, ouvrirLien } from "@/utils";
+import { traduireNom, couleurScore, ouvrirLien } from "@/utils";
 
 import imageÉditable from "@/components/commun/imageÉditable.vue";
 import dialogueQualité from "@/components/commun/dialogueQualité.vue";
@@ -457,7 +461,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       dialogueAjouterMotsClefs,
       dialogueRéplications,
       boîteNoms,
-      texteTronqué
+      texteTronqué,
     },
     mixins: [mixinImage, mixinLangues, mixinIPA, mixinLicences],
     data: function () {
@@ -520,7 +524,6 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
     },
 
     methods: {
-
       couleurScore,
       ouvrirLien,
       ajouterTableau: async function (): Promise<void> {

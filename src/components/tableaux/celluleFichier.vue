@@ -94,12 +94,7 @@
 import mixins from "vue-typed-mixins";
 
 import { valid } from "@constl/ipa";
-import {
-  itérableÀFlux,
-  téléchargerFlux,
-  téléchargerURL,
-
-} from "@/utils";
+import { itérableÀFlux, téléchargerFlux, téléchargerURL } from "@/utils";
 
 import mixinImage from "@/mixins/images";
 import texteTronqué from "@/components/commun/texteTronqué.vue";
@@ -164,7 +159,6 @@ export default mixins(mixinImage).extend({
   },
 
   methods: {
-
     choisirFichier() {
       //@ts-ignore
       this.$refs.fileInput.click();

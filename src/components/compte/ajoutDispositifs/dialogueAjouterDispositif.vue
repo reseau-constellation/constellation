@@ -227,7 +227,7 @@ import mixins from "vue-typed-mixins";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
-import { copier,  traduireNom } from "@/utils";
+import { copier, traduireNom } from "@/utils";
 
 import avatarProfil from "@/components/commun/avatarProfil.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
@@ -339,7 +339,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
   },
   methods: {
     copier,
-    
+
     retourAuDébut: function () {
       this.étape = 1;
       this.idOrbiteNouveau = undefined;

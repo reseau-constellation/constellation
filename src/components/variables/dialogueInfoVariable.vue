@@ -111,7 +111,6 @@ import mixins from "vue-typed-mixins";
 import { valid, variables } from "@constl/ipa";
 
 import {
-
   traduireNom,
   icôneCatégorieVariable,
   catégoriesVariable,
@@ -128,7 +127,13 @@ export default mixins(mixinLangues, mixinIPA).extend({
   name: "dialogueInfoVariable",
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
-  components: { lienOrbite, boîteNoms, itemListeRègle, itemListeCatégories, texteTronqué },
+  components: {
+    lienOrbite,
+    boîteNoms,
+    itemListeRègle,
+    itemListeCatégories,
+    texteTronqué,
+  },
   data: function () {
     return {
       dialogue: false,
@@ -160,7 +165,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-
     sauvegarderNom: async function ({
       langue,
       nom,

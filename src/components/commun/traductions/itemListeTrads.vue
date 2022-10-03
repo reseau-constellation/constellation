@@ -24,7 +24,7 @@ import texteTronqué from "@/components/commun/texteTronqué.vue";
 export default {
   name: "itemListeTrads",
   props: ["clef", "texteOriginal", "traduction"],
-  components: {texteTronqué},
+  components: { texteTronqué },
   mixins: [mixinLangues],
 };
 </script>

@@ -35,7 +35,7 @@ import mixins from "vue-typed-mixins";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
-import {  traduireNom } from "@/utils";
+import { traduireNom } from "@/utils";
 import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 import { TraductionRéseau } from "@/kilimukku/kilimukku";
@@ -77,7 +77,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    
     effacer: async function () {
       await this.$kilimukku.effacerSuggestion({
         empreinte: this.suggestion.empreinte,

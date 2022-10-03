@@ -43,7 +43,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import {  traduireNom } from "@/utils";
+import { traduireNom } from "@/utils";
 import texteTronqué from "@/components/commun/texteTronqué.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import mixinIPA from "@/mixins/ipa";
@@ -71,7 +71,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    
     sauvegarderNom: async function ({
       langue,
       nom,

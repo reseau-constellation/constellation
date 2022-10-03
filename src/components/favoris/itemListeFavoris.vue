@@ -55,7 +55,7 @@
 import { PropType } from "vue";
 import mixins from "vue-typed-mixins";
 
-import {  traduireNom } from "@/utils";
+import { traduireNom } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
 import dialogueEffacer from "@/components/commun/dialogueEffacer.vue";
@@ -87,7 +87,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    
     effacerFavoris: async function () {
       await this.$ipa.favoris!.désépinglerFavori({ id: this.epingle.idObjet });
     },

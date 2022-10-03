@@ -66,7 +66,7 @@ import mixins from "vue-typed-mixins";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
-import { traduireNom,  icôneCatégorieVariable } from "@/utils";
+import { traduireNom, icôneCatégorieVariable } from "@/utils";
 import dialogueEffacer from "@/components/commun/dialogueEffacer.vue";
 import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
 import texteTronqué from "@/components/commun/texteTronqué.vue";
@@ -105,7 +105,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    
     effacerVariable: async function () {
       await this.$ipa.variables!.effacerVariable({ id: this.id });
     },

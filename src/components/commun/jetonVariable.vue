@@ -12,7 +12,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { traduireNom,  icôneCatégorieVariable } from "@/utils";
+import { traduireNom, icôneCatégorieVariable } from "@/utils";
 
 import dialogueInfoVariable from "@/components/variables/dialogueInfoVariable.vue";
 import texteTronqué from "@/components/commun/texteTronqué.vue";
@@ -54,7 +54,6 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
   },
   methods: {
-    
     initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.variables!.suivreNomsVariable({
         id: this.id,

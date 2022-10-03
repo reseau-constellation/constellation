@@ -21,7 +21,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import {  traduireNom } from "@/utils";
+import { traduireNom } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
@@ -46,7 +46,6 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
   },
   methods: {
-    
     initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.motsClefs!.suivreNomsMotClef({
         id: this.id,
