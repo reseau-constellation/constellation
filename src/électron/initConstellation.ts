@@ -1,7 +1,9 @@
 import { BrowserWindow, ipcMain, app } from "electron";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
-import { client, proxy } from "@constl/ipa";
+import type { client, proxy } from "@constl/ipa";
+
+const ipa = import("@constl/ipa");
 
 const enDéveloppement = process.env.NODE_ENV !== "production";
 
@@ -64,7 +66,7 @@ export const connecterFenêtreÀConstellation = (
   const id = uuidv4();
   fenêtres.connecterFenêtre(fenêtre, id);
 
-  const fSuivreIPCPrincipal = (
+  const fSuivreIPCPrincipal = async (
     _event: Event,
     message:
       | proxy.messages.MessagePourTravailleur
@@ -72,12 +74,13 @@ export const connecterFenêtreÀConstellation = (
           type: "init";
           opts: client.optsConstellation;
         }
-  ) => {
+  ): Promise<void> => {
     console.log("Message pour travailleur", message);
 
     if (!clientConstellation) {
       if (message.type === "init") {
-        clientConstellation = new proxy.gestionnaireClient.default(
+        const { gestionnaireClient } = (await ipa).proxy
+        clientConstellation = new gestionnaireClient.default(
           (m: proxy.messages.MessageDeTravailleur) =>
             fenêtres.envoyerMessage(m),
           (e: string) => fenêtres.envoyerErreur(e),

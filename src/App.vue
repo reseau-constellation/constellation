@@ -51,7 +51,6 @@ export default mixins(mixinIPA, mixinLangue).extend({
     const thèmeNuit = this.$store.state.paramètres.thèmeNuit;
     this.$vuetify.theme.dark = thèmeNuit;
   },
-
 });
 </script>
 

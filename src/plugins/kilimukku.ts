@@ -8,7 +8,6 @@ import {
   ID_MOTCLEF_KILIMUKKU_INTERFACE_CONSTELLATION,
 } from "@/utils/config";
 
-
 export default {
   install(Vue: typeof _Vue): void {
     const kilimukku = new Kilimukku({

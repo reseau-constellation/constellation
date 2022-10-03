@@ -73,8 +73,8 @@
               :key="suggestion.empreinte"
               :suggestion="suggestion"
               :autorisee="autorisée"
-              @approuver="()=>approuverSuggestion(suggestion)"
-              @copier="()=>utiliserSuggestion(suggestion)"
+              @approuver="() => approuverSuggestion(suggestion)"
+              @copier="() => utiliserSuggestion(suggestion)"
             />
           </v-list>
         </v-card-text>
@@ -154,7 +154,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
       else this.traductionExistante = undefined;
     },
     approuverSuggestion: async function (suggestion: TraductionRéseau) {
-      return await this.$kilimukku.approuver({suggestion})
+      return await this.$kilimukku.approuver({ suggestion });
     },
     sauvegarderTraduction: async function () {
       this.enProgrès = true;
@@ -183,9 +183,13 @@ export default mixins(mixinLangues, mixinIPA).extend({
         });
 
       const oublierAutorisée = await this.$kilimukku.suivreEstGestionnaire({
-        f: estGestionnaire => this.autorisée = estGestionnaire
-      })
-      this.suivre([oublierIdBdCompte, oublierSuggestionsTrads, oublierAutorisée]);
+        f: (estGestionnaire) => (this.autorisée = estGestionnaire),
+      });
+      this.suivre([
+        oublierIdBdCompte,
+        oublierSuggestionsTrads,
+        oublierAutorisée,
+      ]);
     },
   },
 });

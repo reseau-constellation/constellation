@@ -11,18 +11,17 @@
       <span class="text--secondary">{{ traduction }}</span>
     </v-list-item-content>
     <v-list-item-actions>
-      <v-btn
-       v-if="autorisee"
-       icon @click="()=>$emit('approuver')"
-      >
+      <v-btn v-if="autorisee" icon @click="() => $emit('approuver')">
         <v-icon>mdi-check</v-icon>
       </v-btn>
-      <v-btn icon @click="()=>$emit('copier')">
+      <v-btn icon @click="() => $emit('copier')">
         <v-icon>mdi-content-copy</v-icon>
       </v-btn>
       <v-btn
-        v-if="suggestion.auteur=idBdCompte"
-        icon @click="()=>effacer()">
+        v-if="(suggestion.auteur = idBdCompte)"
+        icon
+        @click="() => effacer()"
+      >
         <v-icon color="error">mdi-delete</v-icon>
       </v-btn>
     </v-list-item-actions>
@@ -48,7 +47,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
     autorisee: {
       type: Boolean,
-    }
+    },
   },
   components: { avatarProfil },
   data: function () {
@@ -77,10 +76,14 @@ export default mixins(mixinLangues, mixinIPA).extend({
   methods: {
     couper,
     effacer: async function () {
-      await this.$kilimukku.effacerSuggestion({empreinte: this.suggestion.empreinte});
+      await this.$kilimukku.effacerSuggestion({
+        empreinte: this.suggestion.empreinte,
+      });
     },
     initialiserSuivi: async function () {
-      const oublierIdBdCompte = await this.$ipa.suivreIdBdCompte({f: id=>this.idBdCompte = id});
+      const oublierIdBdCompte = await this.$ipa.suivreIdBdCompte({
+        f: (id) => (this.idBdCompte = id),
+      });
       const oublierNomsAuteur = await this.$ipa.réseau!.suivreNomsMembre({
         idCompte: this.idAuteur,
         f: (noms) => {

@@ -205,7 +205,6 @@ export class Kilimukku {
     this._remplirClefsOriginales();
   }
 
-
   async estGestionnaire(): Promise<boolean> {
     return await utils.uneFois(
       async (fSuivi: utils.schémaFonctionSuivi<boolean>) => {
@@ -267,7 +266,7 @@ export class Kilimukku {
     langueSource: string;
     texteOriginal: string;
   }): Promise<string> {
-    console.log("suggérer")
+    console.log("suggérer");
     const élément = {
       [ID_COL_CLEF]: clef,
       [ID_COL_LANGUE_SOURCE]: langueSource,
@@ -295,7 +294,7 @@ export class Kilimukku {
   }
 
   async approuver({
-    suggestion
+    suggestion,
   }: {
     suggestion: TraductionRéseau;
   }): Promise<void> {
@@ -309,7 +308,7 @@ export class Kilimukku {
       texteOriginal,
       auteur,
       traduction,
-      date: dateSuggestion
+      date: dateSuggestion,
     } = suggestion;
 
     // Effacer les doublons
@@ -509,7 +508,7 @@ export class Kilimukku {
     const fFinale = (
       suggestions: réseau.élémentDeMembre<élémentBdSuggestion>[]
     ) => {
-      console.log({suggestions})
+      console.log({ suggestions });
       if (langue)
         suggestions = suggestions.filter(
           (s) => s.élément.données[ID_COL_LANGUE_CIBLE] === langue
@@ -534,8 +533,10 @@ export class Kilimukku {
       );
     };
 
-    console.log({motClefUnique: this.idMotClefProjet,
-    idUniqueTableau: this.schémaBdSuggestions.tableaux[0].clef,})
+    console.log({
+      motClefUnique: this.idMotClefProjet,
+      idUniqueTableau: this.schémaBdSuggestions.tableaux[0].clef,
+    });
 
     return await this.constl.réseau!.suivreÉlémentsDeTableauxUniques({
       motClefUnique: this.idMotClefProjet,

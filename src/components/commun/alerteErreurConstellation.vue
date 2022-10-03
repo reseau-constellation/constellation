@@ -116,7 +116,7 @@ export default mixins().extend({
 
       const titre = this.$t("alerteErreurConstellation.பிழை") as string;
       const erreur = this.nouvelleErreur.erreur.toString();
-      const tracéErreur = "" // this.nouvelleErreur.erreur.stack;
+      const tracéErreur = ""; // this.nouvelleErreur.erreur.stack;
       //const autresErreurs = this.autresErreurs.length ? "\n*Erreurs précédentes* :\n" + this.autresErreurs.map(e=>`\n${e.toString()}\n\`\`\`${e.stack}\`\`\``).join("\n") : ""
       const contenu = this.$t("alerteErreurConstellation.பிழை_இருக்கிறது", {
         அ: isElectron() ? "X" : " ",

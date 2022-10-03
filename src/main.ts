@@ -11,7 +11,7 @@ import Kilimukku from "./plugins/kilimukku";
 
 Vue.config.productionTip = false;
 Vue.use(ClientIPA);
-Vue.use(Kilimukku)
+Vue.use(Kilimukku);
 Vue.use(VuePlyr);
 
 new Vue({

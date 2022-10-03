@@ -1,7 +1,6 @@
 import { LocaleMessages, LocaleMessage } from "vue-i18n";
 import { dicTraductions } from "@/kilimukku/kilimukku";
 
-
 const auFormatVi18n = (traducs: dicTraductions): LocaleMessages => {
   type dicFinal = { [clef: string]: LocaleMessage | dicFinal };
   const dicFinalLangue: {
@@ -49,4 +48,4 @@ export default async ({
   });
 
   return oublierTraductions;
-}
+};
