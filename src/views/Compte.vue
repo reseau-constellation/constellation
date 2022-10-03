@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import oùSommesNous from "wherearewe";
+import { isElectron } from "wherearewe";
 import mixins from "vue-typed-mixins";
 
 import titre from "@/components/commun/Titre.vue";
@@ -65,7 +65,7 @@ export default mixins(mixinImage, mixinIPA).extend({
       onglet: null,
       imageCompte: null as null | string,
       serveur: false,
-      électron: oùSommesNous.isElectron,
+      électron: isElectron,
       MAX_TAILLE_IMAGE,
     };
   },
