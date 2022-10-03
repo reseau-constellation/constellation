@@ -9,7 +9,7 @@ const thirdLog = `${emoji.get('rocket')} ${chalk.green('Your app successfully de
 ;(async () => {
   try {
     const { stdout: currentBranch } = await execa('git', ['branch', '--show-current'])
-    await execa('git', ['checkout', '--orphan gh-pages'])
+    await execa('git', ['checkout', '--orphan', 'gh-pages'])
     console.log(firstLog)
     await execa('yarn', ['build'], { stdio: 'inherit' })
 
