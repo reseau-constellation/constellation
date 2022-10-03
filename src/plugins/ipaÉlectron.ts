@@ -28,7 +28,7 @@ export class ProxyClientÉlectronPrincipal extends proxy.proxy
     window.ipa.receive(
       "dePrincipal:constellation",
       (m: proxy.messages.MessageDeTravailleur) => {
-        console.log(`Message ${m} reçu du processus principal`);
+        console.log(`Message reçu du processus principal`, m);
         this.événements.emit("message", m);
       }
     );

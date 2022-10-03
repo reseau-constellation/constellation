@@ -6,10 +6,12 @@ import store from "./store";
 import vuetify, { i18n } from "./plugins/vuetify";
 import VuePlyr from "vue-plyr";
 import "vue-plyr/dist/vue-plyr.css";
-import clientIPAElectron from "./plugins/ipaÉlectron";
+import ClientIPAElectron from "./plugins/ipaÉlectron";
+import Kilimukku from "./plugins/kilimukku";
 
 Vue.config.productionTip = false;
-Vue.use(clientIPAElectron);
+Vue.use(ClientIPAElectron);
+Vue.use(Kilimukku);
 Vue.use(VuePlyr);
 
 new Vue({

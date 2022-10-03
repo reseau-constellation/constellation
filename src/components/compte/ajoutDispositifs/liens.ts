@@ -1,4 +1,3 @@
-
 export function générerLien(
   contact: string | number,
   invitation: {
@@ -11,8 +10,8 @@ export function générerLien(
 
   const message = {
     type: "ajout dispositif",
-    info: invitation
-  }
+    info: invitation,
+  };
   const messageEncodé = encodeURIComponent(JSON.stringify(message));
   const lienFinal = `constellation://${messageEncodé}`;
 
@@ -24,18 +23,17 @@ export function générerLien(
       return `sms:${contact}?&body=${encodeURIComponent(messageFinal)}`;
 
     case "whatsapp":
-      return `whatsapp://send?phone=${contact}&text=${messageFinal}`
+      return `whatsapp://send?phone=${contact}&text=${messageFinal}`;
 
     case "courriel":
-      return `mailto:${contact}?subject=${sujet}&body=${encodeURIComponent(messageFinal)}`
+      return `mailto:${contact}?subject=${sujet}&body=${encodeURIComponent(
+        messageFinal
+      )}`;
 
     case "simple":
-      return lienFinal
+      return lienFinal;
 
     default:
       throw `Type de lien ${type} inconnu.`;
   }
 }
-
-
-""

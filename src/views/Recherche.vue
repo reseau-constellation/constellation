@@ -14,10 +14,10 @@
         disabled
       ></v-radio>
       <v-radio :label="$t('recherche.Personnes')" value="personnes"></v-radio>
-     </v-radio-group>
+    </v-radio-group>
     <résultatsRecherchePersonnes v-if="catégorie === 'personnes'" />
     <résultatsRechercheBds v-else-if="catégorie === 'bds'" />
-   </v-container>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -30,7 +30,7 @@ import mixinImage from "@/mixins/images";
 
 export default Vue.extend({
   name: "PageRecherche",
-  components: { Titre, résultatsRecherchePersonnes, résultatsRechercheBds,},
+  components: { Titre, résultatsRecherchePersonnes, résultatsRechercheBds },
   mixins: [mixinImage],
   data: function () {
     return {

@@ -157,7 +157,12 @@ export default mixins(mixinLangues, mixinIPA).extend({
           },
         });
 
-      this.suivre([oublierPermissionÉcrire, oublierNoms, oublierAuteurs, oublierÉpinglé]);
+      this.suivre([
+        oublierPermissionÉcrire,
+        oublierNoms,
+        oublierAuteurs,
+        oublierÉpinglé,
+      ]);
     },
   },
 });

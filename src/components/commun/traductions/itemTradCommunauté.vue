@@ -10,6 +10,22 @@
       <v-divider />
       <span class="text--secondary">{{ traduction }}</span>
     </v-list-item-content>
+    <v-list-item-actions>
+      <v-btn
+       v-if="autorisee"
+       icon @click="()=>$emit('approuver')"
+      >
+        <v-icon>mdi-check</v-icon>
+      </v-btn>
+      <v-btn icon @click="()=>$emit('copier')">
+        <v-icon>mdi-content-copy</v-icon>
+      </v-btn>
+      <v-btn
+        v-if="suggestion.auteur=idBdCompte"
+        icon @click="()=>effacer()">
+        <v-icon color="error">mdi-delete</v-icon>
+      </v-btn>
+    </v-list-item-actions>
   </v-list-item>
 </template>
 
@@ -20,29 +36,36 @@ import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 import { couper, traduireNom } from "@/utils";
 
-import { suggestionTrad, ID_COL_TRADUCTION, ID_COL_DATE } from "./types";
+import { TraductionRéseau } from "@/kilimukku/kilimukku";
+
+import avatarProfil from "@/components/commun/avatarProfil.vue";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemTradCommunauté",
   props: {
     suggestion: {
-      type: Object as () => suggestionTrad,
+      type: Object as () => TraductionRéseau,
     },
+    autorisee: {
+      type: Boolean,
+    }
   },
+  components: { avatarProfil },
   data: function () {
     return {
+      idBdCompte: undefined as string | undefined,
       nomsAuteur: {} as { [key: string]: string },
     };
   },
   computed: {
     idAuteur: function (): string {
-      return this.suggestion.idBdCompte;
+      return this.suggestion.auteur;
     },
     traduction: function (): string {
-      return this.suggestion.élément.données[ID_COL_TRADUCTION];
+      return this.suggestion.traduction;
     },
     date: function (): string {
-      const date = this.suggestion.élément.données[ID_COL_DATE];
+      const date = this.suggestion.date;
       return this.formatterDate(date);
     },
     nom: function (): string {
@@ -53,14 +76,18 @@ export default mixins(mixinLangues, mixinIPA).extend({
   },
   methods: {
     couper,
+    effacer: async function () {
+      await this.$kilimukku.effacerSuggestion({empreinte: this.suggestion.empreinte});
+    },
     initialiserSuivi: async function () {
+      const oublierIdBdCompte = await this.$ipa.suivreIdBdCompte({f: id=>this.idBdCompte = id});
       const oublierNomsAuteur = await this.$ipa.réseau!.suivreNomsMembre({
         idCompte: this.idAuteur,
         f: (noms) => {
           this.nomsAuteur = noms;
         },
       });
-      this.suivre([oublierNomsAuteur]);
+      this.suivre([oublierIdBdCompte, oublierNomsAuteur]);
     },
   },
 });
