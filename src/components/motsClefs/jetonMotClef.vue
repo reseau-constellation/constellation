@@ -12,7 +12,7 @@
         close-icon="mdi-close"
         @click:close="$emit('effacer', { id })"
       >
-        {{ couper(nom, 15) }}
+        <texteTronqué :texte="nom" :longueurMax="15" />
       </v-chip>
     </template>
   </dialogue-info-motclef>
@@ -21,17 +21,18 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { couper, traduireNom } from "@/utils";
+import {  traduireNom } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
 import dialogueInfoMotclef from "@/components/motsClefs/dialogueInfoMotClef.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 export default mixins(mixinIPA, mixinLangues).extend({
   name: "jetonMotClef",
   props: ["id", "permissionModifier"],
   mixins: [mixinLangues, mixinIPA],
-  components: { dialogueInfoMotclef },
+  components: { dialogueInfoMotclef, texteTronqué },
   data: function () {
     return {
       noms: {} as { [key: string]: string },
@@ -45,7 +46,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
   },
   methods: {
-    couper,
+    
     initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.motsClefs!.suivreNomsMotClef({
         id: this.id,

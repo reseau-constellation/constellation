@@ -46,10 +46,10 @@ module.exports = {
             presets: [
               "@babel/preset-typescript",
               "@vue/cli-plugin-babel/preset",
-//              ["@babel/env", { modules: "commonjs" }],
+              //              ["@babel/env", { modules: "commonjs" }],
             ],
-          plugins: [
-  /*              [
+            plugins: [
+              /*              [
                 "add-module-exports",
                 {
                   addDefaultProperty: false,

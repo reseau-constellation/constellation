@@ -8,7 +8,7 @@
     <template v-slot:activator="{ on, attrs }">
       <span v-bind="attrs" v-on="on">
         <v-icon v-show="index" left small>mdi-crown-outline</v-icon>
-        {{ couper(titre, 20) }}
+        <texteTronqué :texte="titre" :longueurMax="20" />
       </span>
     </template>
   </dialogue-info-colonne>
@@ -18,8 +18,9 @@
 import mixins from "vue-typed-mixins";
 
 import dialogueInfoColonne from "@/components/tableaux/dialogueInfoColonne.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
-import { traduireNom, couper } from "@/utils";
+import { traduireNom } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
@@ -33,7 +34,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
     permissionModifier: Boolean,
   },
   mixins: [mixinLangues, mixinIPA],
-  components: { dialogueInfoColonne },
+  components: { dialogueInfoColonne, texteTronqué },
   data: function () {
     return {
       noms: {},
@@ -47,7 +48,6 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
   },
   methods: {
-    couper,
     initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.variables!.suivreNomsVariable({
         id: this.idVariable,

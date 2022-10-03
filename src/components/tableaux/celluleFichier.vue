@@ -38,7 +38,7 @@
       </template>
       <v-card>
         <v-card-title>
-          {{ couper(nomFichier, 10) }}
+          <texteTronqué :texte="nomFichier" :longueurMax="10" />
           <span class="text--disabled">[ {{ val.ext }} ]</span>
           <v-spacer />
           <v-btn icon @click="() => télécharger()">
@@ -98,16 +98,18 @@ import {
   itérableÀFlux,
   téléchargerFlux,
   téléchargerURL,
-  couper,
+
 } from "@/utils";
 
 import mixinImage from "@/mixins/images";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 const { formatsFichiers } = valid;
 
 export default mixins(mixinImage).extend({
   name: "celluleFichier",
   props: ["val", "editer", "couleurActive", "type"],
+  components: { texteTronqué },
   mixins: [mixinImage],
   data: function () {
     return {
@@ -162,7 +164,7 @@ export default mixins(mixinImage).extend({
   },
 
   methods: {
-    couper,
+
     choisirFichier() {
       //@ts-ignore
       this.$refs.fileInput.click();

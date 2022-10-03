@@ -7,13 +7,6 @@ import { WritableStream } from "web-streams-polyfill/ponyfill";
 import { rutzibChabäl as écritureLangue } from "nuchabal";
 
 streamSaver.WritableStream = WritableStream;
-export function couper(texte: string, nChar: number): string {
-  if (texte.length <= nChar) {
-    return texte;
-  } else {
-    return texte.slice(0, nChar - 3).concat("...");
-  }
-}
 
 export async function copier(texte: string): Promise<void> {
   if (!navigator.clipboard) return;

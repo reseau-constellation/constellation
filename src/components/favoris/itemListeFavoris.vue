@@ -4,7 +4,7 @@
       <v-icon>mdi-pin-outline</v-icon>
     </v-list-item-avatar>
     <v-list-item-content>
-      {{ couper(nom, 30) }}
+      <texteTronqué :texte="nom" :longueurMax="30" />
     </v-list-item-content>
     <v-list-item-action-text>
       <dialogue-epingler :id="epingle.idObjet" :optionFichiers="false">
@@ -55,10 +55,11 @@
 import { PropType } from "vue";
 import mixins from "vue-typed-mixins";
 
-import { couper, traduireNom } from "@/utils";
+import {  traduireNom } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
 import dialogueEffacer from "@/components/commun/dialogueEffacer.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
@@ -71,7 +72,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     epingle: Object as PropType<favoris.ÉlémentFavorisAvecObjet>,
   },
   mixins: [mixinIPA, mixinLangues],
-  components: { lienOrbite, dialogueEpingler, dialogueEffacer },
+  components: { lienOrbite, dialogueEpingler, dialogueEffacer, texteTronqué },
   data: function () {
     return {
       noms: {} as { [key: string]: string },
@@ -86,7 +87,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    couper,
+    
     effacerFavoris: async function () {
       await this.$ipa.favoris!.désépinglerFavori({ id: this.epingle.idObjet });
     },

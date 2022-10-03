@@ -1,7 +1,7 @@
 <template>
   <v-chip class="me-1 mb-1" label outlined @click.stop>
     <avatar-profil :id="id" />
-    {{ couper(nom, 25) }}
+    <texteTronqué :texte="nom" :longueurMax="25" />
     <lien-orbite :lien="id" />
   </v-chip>
 </template>
@@ -9,9 +9,10 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { couper, traduireNom } from "@/utils";
+import {  traduireNom } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import avatarProfil from "@/components/commun/avatarProfil.vue";
@@ -20,7 +21,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
   name: "jetonMembre",
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
-  components: { avatarProfil, lienOrbite },
+  components: { avatarProfil, lienOrbite, texteTronqué },
   data: function () {
     return {
       noms: {},
@@ -39,7 +40,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
   },
   methods: {
-    couper,
+    
     initialiserSuivi: async function () {
       this.noms = {};
       const oublierNoms = await this.$ipa.réseau!.suivreNomsMembre({

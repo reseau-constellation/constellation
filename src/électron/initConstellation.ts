@@ -79,7 +79,7 @@ export const connecterFenêtreÀConstellation = (
 
     if (!clientConstellation) {
       if (message.type === "init") {
-        const { gestionnaireClient } = (await ipa).proxy
+        const { gestionnaireClient } = (await ipa).proxy;
         clientConstellation = new gestionnaireClient.default(
           (m: proxy.messages.MessageDeTravailleur) =>
             fenêtres.envoyerMessage(m),

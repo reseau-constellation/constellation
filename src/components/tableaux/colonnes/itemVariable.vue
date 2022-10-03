@@ -4,9 +4,9 @@
       <v-icon>{{ icôneCatégorie }}</v-icon>
     </v-list-item-avatar>
     <v-list-item-content class="text--primary">
-      {{ couper(nom, 25) }}
+      <texteTronqué :texte="nom" :longueurMax="25" />
       <v-list-item-subtitle class="text--secondary">
-        {{ couper(descr, 50) }}
+        <texteTronqué :texte="descr" :longueurMax="50" />
       </v-list-item-subtitle>
     </v-list-item-content>
     <v-list-item-action>
@@ -20,15 +20,16 @@ import mixins from "vue-typed-mixins";
 
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 
-import { traduireNom, couper, icôneCatégorieVariable } from "@/utils";
+import { traduireNom,  icôneCatégorieVariable } from "@/utils";
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemAuteur",
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
-  components: { lienOrbite },
+  components: { lienOrbite, texteTronqué },
   data: function () {
     return {
       dialogue: false,
@@ -54,7 +55,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    couper,
+    
     effacerVariable: async function () {
       await this.$ipa.variables!.effacerVariable({ id: this.id });
     },

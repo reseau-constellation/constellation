@@ -5,7 +5,9 @@
     </v-list-item-avatar>
 
     <v-list-item-content>
-      <v-list-item-title> {{ couper(nom, 20) }} </v-list-item-title>
+      <v-list-item-title>
+        <texteTronqué :texte="nom" :longueurMax="20" />
+      </v-list-item-title>
       <v-list-item-subtitle> {{ date }} </v-list-item-subtitle>
       <v-divider />
       <span class="text--secondary">{{ traduction }}</span>
@@ -33,7 +35,8 @@ import mixins from "vue-typed-mixins";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
-import { couper, traduireNom } from "@/utils";
+import {  traduireNom } from "@/utils";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 import { TraductionRéseau } from "@/kilimukku/kilimukku";
 
@@ -49,7 +52,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
       type: Boolean,
     },
   },
-  components: { avatarProfil },
+  components: { avatarProfil, texteTronqué },
   data: function () {
     return {
       idBdCompte: undefined as string | undefined,
@@ -74,7 +77,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    couper,
+    
     effacer: async function () {
       await this.$kilimukku.effacerSuggestion({
         empreinte: this.suggestion.empreinte,

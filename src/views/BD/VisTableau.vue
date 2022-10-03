@@ -13,7 +13,7 @@
               :disabled="item.disabled"
               @click="$router.push(item.href)"
             >
-              {{ item.text }}
+              <texteTronqué :texte="item.text" :longueurMax="15" />
             </v-breadcrumbs-item>
           </template>
         </v-breadcrumbs>
@@ -26,7 +26,7 @@
         @effacerImage="effacerImageBd"
       />
       <v-card-title>
-        {{ couper(nom, 45) }}
+        <texteTronqué :texte="nom" :longueurMax="45" />
         <span v-if="permissionÉcrire">
           <boîteNoms
             :noms="nomsTableau"
@@ -73,12 +73,13 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { traduireNom, couper } from "@/utils";
+import { traduireNom } from "@/utils";
 import { bds } from "@constl/ipa";
 
 import tableau from "@/components/tableaux/tableau.vue";
 
 import imageÉditable from "@/components/commun/imageÉditable.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import dialogueExporter from "@/components/commun/dialogueExporter.vue";
@@ -94,6 +95,7 @@ export default mixins(mixinLangues, mixinIPA, mixinImage).extend({
   name: "visTableau",
   components: {
     lienOrbite,
+    texteTronqué,
     dialogueExporter,
     dialogueImporter,
     boîteNoms,
@@ -139,18 +141,17 @@ export default mixins(mixinLangues, mixinIPA, mixinImage).extend({
       return [
         { text: this.$t("bd.visBD.தகவல்கள்") as string, href: "/bd" },
         {
-          text: couper(this.nomBD, 15),
+          text: this.nomBD,
           href: `/bd/visualiser/${encodeURIComponent(this.idBd)}`,
         },
         {
-          text: couper(this.nom, 15),
+          text: this.nom,
           disabled: true,
         },
       ];
     },
   },
   methods: {
-    couper,
     effacerImageBd: async function () {
       await this.$ipa.bds!.effacerImage({ idBd: this.idBd });
     },

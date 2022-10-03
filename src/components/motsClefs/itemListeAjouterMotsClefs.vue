@@ -4,7 +4,7 @@
       <v-icon>mdi-key</v-icon>
     </v-list-item-avatar>
     <v-list-item-content>
-      {{ couper(nom, 30) }}
+      <texteTronqué :texte="nom" :longueurMax="30" />
     </v-list-item-content>
     <v-list-item-action-text v-if="permissionÉcrire"> </v-list-item-action-text>
   </v-list-item>
@@ -13,10 +13,11 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { couper, traduireNom } from "@/utils";
+import {  traduireNom } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import dialogueEffacer from "@/components/commun/dialogueEffacer.vue";
 import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
@@ -27,7 +28,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemListeAjouterMotsClefs",
   props: ["id"],
   mixins: [mixinIPA, mixinLangues],
-  components: { lienOrbite, dialogueEffacer, dialogueEpingler },
+  components: { lienOrbite, dialogueEffacer, dialogueEpingler, texteTronqué },
   data: function () {
     return {
       noms: {} as { [key: string]: string },
@@ -43,7 +44,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    couper,
+    
     sauvegarderNom({ langue, nom }: { langue: string; nom: string }) {
       this.$ipa.motsClefs!.sauvegarderNomMotClef({ id: this.id, langue, nom });
     },

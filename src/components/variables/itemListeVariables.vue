@@ -4,7 +4,9 @@
       <v-icon>{{ icôneCatégorie }}</v-icon>
     </v-list-item-avatar>
     <v-list-item-content>
-      <v-list-item-title>{{ nom }}</v-list-item-title>
+      <v-list-item-title>
+        <texteTronqué :texte="nom" :longueurMax="30" />
+      </v-list-item-title>
       <v-list-item-subtitle>{{ descr }}</v-list-item-subtitle>
     </v-list-item-content>
     <v-list-item-action>
@@ -64,9 +66,10 @@ import mixins from "vue-typed-mixins";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
-import { traduireNom, couper, icôneCatégorieVariable } from "@/utils";
+import { traduireNom,  icôneCatégorieVariable } from "@/utils";
 import dialogueEffacer from "@/components/commun/dialogueEffacer.vue";
 import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 import { favoris } from "@constl/ipa";
 
@@ -74,7 +77,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemListeVariables",
   props: ["id"],
   mixins: [mixinIPA, mixinLangues],
-  components: { dialogueEpingler, dialogueEffacer },
+  components: { dialogueEpingler, dialogueEffacer, texteTronqué },
   data: function () {
     return {
       noms: {} as { [key: string]: string },
@@ -88,7 +91,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     nom: function (): string {
       return Object.keys(this.noms).length
         ? traduireNom(this.noms, this.languesPréférées)
-        : couper(this.id, 30);
+        : this.id;
     },
     descr: function (): string {
       return Object.keys(this.descriptions).length
@@ -102,7 +105,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    couper,
+    
     effacerVariable: async function () {
       await this.$ipa.variables!.effacerVariable({ id: this.id });
     },

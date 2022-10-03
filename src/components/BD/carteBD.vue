@@ -11,8 +11,8 @@
       contain
     ></v-img>
 
-    <v-card-title
-      >{{ couper(nom, 20) }}
+    <v-card-title>
+      <texteTronqué :texte="nom" :longueurMax="20" />
       <v-spacer />
       <lien-orbite :lien="idBd" />
     </v-card-title>
@@ -125,9 +125,10 @@ import mixins from "vue-typed-mixins";
 
 import { bds, favoris } from "@constl/ipa";
 
-import { traduireNom, couper, couleurScore } from "@/utils";
+import { traduireNom, couleurScore } from "@/utils";
 
 import lienOrbite from "@/components/commun/lienOrbite.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
 import dialogueQualité from "@/components/commun/dialogueQualité.vue";
 import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
@@ -141,6 +142,7 @@ export default mixins(mixinIPA, mixinLicences).extend({
   },
   components: {
     lienOrbite,
+    texteTronqué,
     dialogueLicence,
     dialogueQualité,
     dialogueEpingler,
@@ -175,7 +177,6 @@ export default mixins(mixinIPA, mixinLicences).extend({
     },
   },
   methods: {
-    couper,
     couleurScore,
     changerLicence({ licence }: { licence: string }) {
       this.$ipa.bds!.changerLicenceBd({ idBd: this.idBd, licence });

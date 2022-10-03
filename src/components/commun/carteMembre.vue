@@ -2,7 +2,7 @@
   <v-card v-show="actif" width="300" class="ma-2 text-start">
     <v-card-title>
       <avatar-profil :id="id" :vuIlyA="vuIlyA" />
-      {{ couper(nom, 17) }}
+      <texteTronqué :texte="nom" :longueurMax="17" />
       <v-spacer />
       <lien-orbite :lien="id" />
     </v-card-title>
@@ -14,7 +14,7 @@
         </p>
         <v-chip label outlined small>
           <v-icon left small>mdi-email</v-icon>
-          {{ couper(courriel, 50) }}
+          <texteTronqué :texte="courriel" :longueurMax="50" />
         </v-chip>
       </span>
       <p class="mb-0 text-overline">
@@ -52,8 +52,9 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { traduireNom, couper } from "@/utils";
+import { traduireNom } from "@/utils";
 
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import jetonBd from "@/components/commun/jetonBd.vue";
 import avatarProfil from "@/components/commun/avatarProfil.vue";
@@ -65,7 +66,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
   name: "carteMembre",
   props: ["id", "vuIlyA"],
   mixins: [mixinLangues, mixinIPA],
-  components: { lienOrbite, jetonBd, avatarProfil },
+  components: { lienOrbite, jetonBd, avatarProfil, texteTronqué },
   data: function () {
     return {
       noms: {} as { [key: string]: string },
@@ -96,7 +97,6 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
   },
   methods: {
-    couper,
     initialiserSuivi: async function () {
       const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte({
         f: (id) => (this.monIdBdRacine = id),

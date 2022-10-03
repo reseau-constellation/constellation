@@ -5,7 +5,7 @@
     </template>
     <v-card>
       <v-card-title>
-        {{ couper(nom, 20) }}
+        <texteTronqué :texte="nom" :longueurMax="20" />
         <v-spacer />
       </v-card-title>
       <v-card-subtitle>
@@ -54,13 +54,14 @@ import mixins from "vue-typed-mixins";
 
 import { valid } from "@constl/ipa";
 
-import { couper, traduireNom } from "@/utils";
+import {  traduireNom } from "@/utils";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import itemListeRègle from "@/components/règles/itemListeRègles.vue";
 import jetonVariable from "@/components/commun/jetonVariable.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "dialogueInfoColonne",
@@ -71,7 +72,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     permissionModifier: Boolean,
   },
   mixins: [mixinLangues, mixinIPA],
-  components: { lienOrbite, boîteNoms, jetonVariable, itemListeRègle },
+  components: { lienOrbite, boîteNoms, jetonVariable, itemListeRègle, texteTronqué },
   data: function () {
     return {
       dialogue: false,
@@ -95,7 +96,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    couper,
+    
     changerColonneIndex: async function () {
       console.log("changerColIndex", this.index);
       await this.$ipa.tableaux!.changerColIndex({

@@ -7,14 +7,16 @@
     @click="$router.push(`/bd/visualiser/${encodeURIComponent(id)}`)"
   >
     <v-icon left small>mdi-database-outline</v-icon>
-    {{ couper(nom, 15) }}
+    <texteTronqué :texte="nom" :longueurMax="15" />
   </v-chip>
 </template>
 
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { couper, traduireNom } from "@/utils";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
+
+import { traduireNom } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
@@ -22,6 +24,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   name: "jetonBd",
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
+  components: { texteTronqué },
   data: function () {
     return {
       noms: {},
@@ -36,7 +39,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    couper,
     initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.bds!.suivreNomsBd({
         id: this.id,

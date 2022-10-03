@@ -5,27 +5,27 @@
     </v-list-item-avatar>
     <v-list-item-content>
       <v-list-item-title>
-        {{ couper(texteOriginal || clef, 30) }}
+        <texteTronqué :texte="texteOriginal || clef" :longueurMax="30" />
       </v-list-item-title>
       <v-list-item-subtitle>
-        {{ couper(traduction || "[" + $t("itemListeTrads.இல்லை") + "]", 30) }}
+        <texteTronqué
+          :texte="traduction || '[' + $t('itemListeTrads.இல்லை') + ']'"
+          :longueurMax="30"
+        />
       </v-list-item-subtitle>
     </v-list-item-content>
   </v-list-item>
 </template>
 
 <script>
-import { couper } from "@/utils";
-
 import mixinLangues from "@/mixins/langues";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 export default {
   name: "itemListeTrads",
   props: ["clef", "texteOriginal", "traduction"],
+  components: {texteTronqué},
   mixins: [mixinLangues],
-  methods: {
-    couper,
-  },
 };
 </script>
 

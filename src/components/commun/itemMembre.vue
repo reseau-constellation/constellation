@@ -3,7 +3,7 @@
     <avatar-profil :id="id" />
     <v-list-item-content>
       <span>
-        <p class="mb-2 mx-2">{{ couper(nom, 25) }}</p>
+        <p class="mb-2 mx-2"><texteTronqué :texte="nom" :longueurMax="25" /></p>
       </span>
     </v-list-item-content>
     <v-list-item-action>
@@ -17,8 +17,9 @@ import mixins from "vue-typed-mixins";
 
 import avatarProfil from "@/components/commun/avatarProfil.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
-import { traduireNom, couper } from "@/utils";
+import { traduireNom } from "@/utils";
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
 
@@ -26,7 +27,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemMembre",
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
-  components: { avatarProfil, lienOrbite },
+  components: { avatarProfil, lienOrbite, texteTronqué },
   data: function () {
     return {
       dialogue: false,
@@ -41,7 +42,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    couper,
     initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.réseau!.suivreNomsMembre({
         idCompte: this.id,

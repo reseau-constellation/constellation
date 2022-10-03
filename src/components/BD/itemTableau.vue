@@ -1,7 +1,7 @@
 <template>
   <v-list-item @click="$emit('click')">
     <v-list-item-content>
-      {{ couper(nom, 25) }}
+      <texteTronqué :texte="nom" :longueurMax="25" />
       <div>
         <jeton-variable v-for="m in variables" :key="m" :id="m" />
       </div>
@@ -41,9 +41,10 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { traduireNom, couper } from "@/utils";
+import { traduireNom } from "@/utils";
 
 import jetonVariable from "@/components/commun/jetonVariable.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 import mixinLangues from "@/mixins/langues";
 import mixinIPA from "@/mixins/ipa";
@@ -54,7 +55,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     id: String,
     idBd: String,
   },
-  components: { jetonVariable },
+  components: { jetonVariable, texteTronqué },
   mixins: [mixinLangues, mixinIPA],
   data: function () {
     return {
@@ -78,7 +79,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    couper,
     effacerTableau: async function () {
       await this.$ipa.bds!.effacerTableauBd({
         id: this.idBd,

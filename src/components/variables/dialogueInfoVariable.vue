@@ -5,7 +5,7 @@
     </template>
     <v-card>
       <v-card-title>
-        {{ couper(nom, 20) }}
+        <texteTronqué :texte="nom" :longueurMax="20" />
         <span v-if="permissionÉcrire">
           <boîteNoms
             :noms="noms"
@@ -111,7 +111,7 @@ import mixins from "vue-typed-mixins";
 import { valid, variables } from "@constl/ipa";
 
 import {
-  couper,
+
   traduireNom,
   icôneCatégorieVariable,
   catégoriesVariable,
@@ -122,12 +122,13 @@ import mixinLangues from "@/mixins/langues";
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import itemListeRègle from "@/components/règles/itemListeRègles.vue";
 import itemListeCatégories from "@/components/variables/itemListeCatégories.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "dialogueInfoVariable",
   props: ["id"],
   mixins: [mixinLangues, mixinIPA],
-  components: { lienOrbite, boîteNoms, itemListeRègle, itemListeCatégories },
+  components: { lienOrbite, boîteNoms, itemListeRègle, itemListeCatégories, texteTronqué },
   data: function () {
     return {
       dialogue: false,
@@ -159,7 +160,7 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    couper,
+
     sauvegarderNom: async function ({
       langue,
       nom,

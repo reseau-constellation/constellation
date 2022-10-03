@@ -92,9 +92,9 @@
               <v-list-item-avatar
                 ><v-icon>mdi-content-copy</v-icon></v-list-item-avatar
               >
-              <v-list-item-content>{{
-                couper(idBdCompte || "", 30)
-              }}</v-list-item-content>
+              <v-list-item-content>
+                <texteTronqué :texte="idBdCompte || ''" :longueurMax="30" />
+              </v-list-item-content>
             </v-list-item>
           </v-window-item>
           <v-window-item :value="3">
@@ -120,9 +120,9 @@
               <v-list-item-avatar
                 ><v-icon>mdi-content-copy</v-icon></v-list-item-avatar
               >
-              <v-list-item-content>{{
-                couper(idDispositif || "", 30)
-              }}</v-list-item-content>
+              <v-list-item-content>
+                <texteTronqué :texte="idDispositif || ''" :longueurMax="30" />
+              </v-list-item-content>
             </v-list-item>
             <v-list-item class="text-left">
               <v-list-item-avatar class="ma-0">
@@ -165,7 +165,10 @@
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{ couper(nomNouveauCompte || idBdCompteNouveau, 25) }}
+                    <texteTronqué
+                      :texte="nomNouveauCompte || idBdCompteNouveau"
+                      :longueurMax="25"
+                    />
                   </v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-action>
@@ -224,10 +227,11 @@ import mixins from "vue-typed-mixins";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 
-import { copier, couper, traduireNom } from "@/utils";
+import { copier,  traduireNom } from "@/utils";
 
 import avatarProfil from "@/components/commun/avatarProfil.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 import { réseau, utils } from "@constl/ipa";
 
@@ -236,7 +240,7 @@ const { adresseOrbiteValide } = utils;
 export default mixins(mixinIPA, mixinLangues).extend({
   name: "dialogueAjouterDispositif",
   mixins: [mixinIPA, mixinLangues],
-  components: { avatarProfil, lienOrbite },
+  components: { avatarProfil, lienOrbite, texteTronqué },
   data: function () {
     return {
       dialogue: false,
@@ -335,7 +339,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
   },
   methods: {
     copier,
-    couper,
+    
     retourAuDébut: function () {
       this.étape = 1;
       this.idOrbiteNouveau = undefined;

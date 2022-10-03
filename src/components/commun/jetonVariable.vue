@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on, attrs }">
       <v-chip outlined label small v-bind="attrs" v-on="on" class="mx-1 my-1">
         <v-icon v-if="catégorie" left small>{{ icôneCatégorie }}</v-icon>
-        {{ couper(nom, longueur) }}
+        <texteTronqué :texte="nom" :longueurMax="longueur" />
       </v-chip>
     </template>
   </dialogue-info-variable>
@@ -12,9 +12,10 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { traduireNom, couper, icôneCatégorieVariable } from "@/utils";
+import { traduireNom,  icôneCatégorieVariable } from "@/utils";
 
 import dialogueInfoVariable from "@/components/variables/dialogueInfoVariable.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
@@ -28,7 +29,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
     id: String,
   },
-  components: { dialogueInfoVariable },
+  components: { dialogueInfoVariable, texteTronqué },
   mixins: [mixinLangues, mixinIPA],
   data: function () {
     return {
@@ -53,7 +54,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
   },
   methods: {
-    couper,
+    
     initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.variables!.suivreNomsVariable({
         id: this.id,

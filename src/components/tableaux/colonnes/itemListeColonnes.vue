@@ -4,7 +4,7 @@
       <v-icon>{{ icôneCatégorieVariable(colonne.catégorie) }}</v-icon>
     </v-list-item-avatar>
     <v-list-item-content>
-      {{ couper(nom, 30) }}
+      <texteTronqué :texte="nom" :longueurMax="30" />
     </v-list-item-content>
   </v-list-item>
 </template>
@@ -12,15 +12,17 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { couper, traduireNom } from "@/utils";
+import { traduireNom } from "@/utils";
 import mixinIPA from "@/mixins/ipa";
 import mixinLangues from "@/mixins/langues";
 import { icôneCatégorieVariable } from "@/utils";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 export default mixins(mixinLangues, mixinIPA).extend({
   name: "itemListeColonnes",
   props: ["colonne"],
   mixins: [mixinIPA, mixinLangues],
+  components: { texteTronqué },
   data: function () {
     return {
       noms: {} as { [key: string]: string },
@@ -34,7 +36,6 @@ export default mixins(mixinLangues, mixinIPA).extend({
     },
   },
   methods: {
-    couper,
     icôneCatégorieVariable,
     initialiserSuivi: async function () {
       const oublierNoms = await this.$ipa.variables!.suivreNomsVariable({

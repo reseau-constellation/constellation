@@ -13,7 +13,7 @@
               :disabled="item.disabled"
               @click="$router.push(item.href)"
             >
-              {{ item.text }}
+              <texteTronqué :texte="item.text" :longueurMax="35" />
             </v-breadcrumbs-item>
           </template>
         </v-breadcrumbs>
@@ -28,7 +28,7 @@
       />
 
       <v-card-title>
-        {{ couper(nom, 40) }}
+        <texteTronqué :texte="nom" :longueurMax="40" />
         <span v-if="permissionÉcrire">
           <boîteNoms
             :noms="nomsBD"
@@ -244,18 +244,14 @@
                     <v-list-item-content>
                       <v-skeleton-loader v-if="licence === null" type="chip" />
                       <span v-else>
-                        {{
-                          couper(
-                            licence && !licenceApprouvée
-                              ? licence
-                              : $t(
-                                  `licences.info.${
-                                    licence || "introuvable"
-                                  }.abr`
-                                ),
-                            20
-                          )
-                        }}
+                        <texteTronqué :texte="
+                        licence && !licenceApprouvée
+                          ? licence
+                          : $t(
+                              `licences.info.${
+                                licence || 'introuvable'
+                              }.abr`
+                            )" :longueurMax="20" />
                       </span>
                     </v-list-item-content>
                   </v-list-item>
@@ -419,7 +415,7 @@ import mixins from "vue-typed-mixins";
 
 import { accès, bds, réseau, utils } from "@constl/ipa";
 
-import { traduireNom, couper, couleurScore, ouvrirLien } from "@/utils";
+import { traduireNom,  couleurScore, ouvrirLien } from "@/utils";
 
 import imageÉditable from "@/components/commun/imageÉditable.vue";
 import dialogueQualité from "@/components/commun/dialogueQualité.vue";
@@ -434,6 +430,7 @@ import itemTableau from "@/components/BD/itemTableau.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import jetonVariable from "@/components/commun/jetonVariable.vue";
 import jetonMotClef from "@/components/motsClefs/jetonMotClef.vue";
+import texteTronqué from "@/components/commun/texteTronqué.vue";
 
 import mixinImage from "@/mixins/images";
 import mixinLangues from "@/mixins/langues";
@@ -460,6 +457,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       dialogueAjouterMotsClefs,
       dialogueRéplications,
       boîteNoms,
+      texteTronqué
     },
     mixins: [mixinImage, mixinLangues, mixinIPA, mixinLicences],
     data: function () {
@@ -509,7 +507,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       }[] {
         return [
           { text: this.$t("bd.visBD.தகவல்கள்") as string, href: "/bd" },
-          { text: couper(this.nom, 35), disabled: true },
+          { text: this.nom, disabled: true },
         ];
       },
       permissionModerateur: function (): boolean {
@@ -522,7 +520,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
     },
 
     methods: {
-      couper,
+
       couleurScore,
       ouvrirLien,
       ajouterTableau: async function (): Promise<void> {
