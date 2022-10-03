@@ -9,7 +9,7 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "déployer": "node ./scripts/gh-pages-deploy.js",
+    "déployer": "node ./scripts/gh-pages-deploy.mjs",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve"
   },
@@ -126,6 +126,7 @@
     "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.7.1",
+    "execa": "^6.1.0",
     "mocha": "^9.0.3",
     "mocha-steps": "^1.3.0",
     "node-emoji": "^1.11.0",
