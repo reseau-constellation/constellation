@@ -1,23 +1,19 @@
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const WorkerPlugin = require("worker-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
   transpileDependencies: ["vuetify"],
   productionSourceMap: false,
   configureWebpack: {
-    plugins: [new WorkerPlugin()],
+    plugins: [new WorkerPlugin(), new NodePolyfillPlugin()],
     resolve: {
       fallback: {
-        path: false,
         fs: false,
         net: false,
         dgram: false,
         chokidar: false,
-        os: false,
-        crypto: false,
-        stream: false,
-        constants: false
       },
     },
     experiments: { topLevelAwait: true },
