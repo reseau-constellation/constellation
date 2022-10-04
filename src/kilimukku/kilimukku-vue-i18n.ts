@@ -19,7 +19,7 @@ const auFormatVi18n = (traducs: dicTraductions): LocaleMessages => {
           finaleLangueClef[c] = {};
         finaleLangueClef = finaleLangueClef[c] as dicFinal;
       }
-      finaleLangueClef[lClefs[-1]] = traducLangue;
+      finaleLangueClef[lClefs[lClefs.length - 1]] = traducLangue;
     }
   }
 
