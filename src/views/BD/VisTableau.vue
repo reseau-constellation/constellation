@@ -43,7 +43,7 @@
             </template>
           </boîteNoms>
         </span>
-        <lien-orbite :lien="idBd" />
+        <lien-orbite :lien="idTableau" />
 
         <v-spacer />
         <dialogue-exporter :id="idTableau" type="tableau">
