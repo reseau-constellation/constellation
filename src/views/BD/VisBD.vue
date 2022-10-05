@@ -50,6 +50,29 @@
         </span>
         <v-spacer />
         <span>
+          <dialogue-epingler :id="idBd" :optionFichiers="false">
+            <template v-slot:activator="{ on, attrs }">
+              <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
+                <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
+                  <span v-bind="tooltipAttrs" v-on="tooltipOn">
+                    <v-btn v-bind="attrs" v-on="on" icon>
+                      <v-icon>{{
+                        épinglée && épinglée.bd ? "mdi-pin" : "mdi-pin-outline"
+                      }}</v-icon>
+                    </v-btn>
+                  </span>
+                </template>
+                <span>{{
+                  $t(
+                    épinglée && épinglée.bd
+                      ? "carteBD.indiceÉpinglé"
+                      : "carteBD.indiceNonÉpinglé"
+                  )
+                }}</span>
+              </v-tooltip>
+            </template>
+          </dialogue-epingler>
+
           <dialogue-exporter :id="idBd" type="bd">
             <template v-slot:activator="{ on, attrs }">
               <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
@@ -417,7 +440,7 @@
 <script lang="ts">
 import mixins from "vue-typed-mixins";
 
-import { accès, bds, réseau, utils } from "@constl/ipa";
+import { accès, bds, favoris, réseau, utils } from "@constl/ipa";
 
 import { traduireNom, couleurScore, ouvrirLien } from "@/utils";
 
@@ -429,6 +452,8 @@ import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
 import dialogueAjouterMotsClefs from "@/components/motsClefs/dialogueAjouterMotsClefs.vue";
 import dialogueRéplications from "@/components/BD/réplications/dialogueRéplications.vue";
 import dialogueAuteurs from "@/components/BD/auteurs/dialogueAuteurs.vue";
+import dialogueEpingler from "@/components/commun/dialogueÉpingler.vue";
+
 import boîteNoms from "@/components/commun/boîteNoms/boîte.vue";
 import itemTableau from "@/components/BD/itemTableau.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
@@ -460,6 +485,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       dialogueAuteurs,
       dialogueAjouterMotsClefs,
       dialogueRéplications,
+      dialogueEpingler,
       boîteNoms,
       texteTronqué,
     },
@@ -478,6 +504,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
         score: null as null | bds.infoScore,
         variables: [] as string[],
         réplications: null as null | réseau.infoRéplications,
+        épinglée: undefined as undefined | favoris.épingleDispositif,
 
         géog: [] as string[],
         motsClefs: [] as string[],
@@ -708,6 +735,15 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
               this.réplications = réplications;
             },
           });
+
+        const oublierÉpinglé =
+          await this.$ipa.favoris!.suivreEstÉpingléSurDispositif({
+            idObjet: this.idBd,
+            f: (épinglée) => {
+              this.épinglée = épinglée;
+            },
+          });
+
         this.suivre([
           oublierPermissionÉcrire,
           oublierIdBdRacine,
@@ -721,6 +757,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
           oublierVariables,
           oublierMotsClefs,
           oublierRéplications,
+          oublierÉpinglé,
         ]);
       },
     },
