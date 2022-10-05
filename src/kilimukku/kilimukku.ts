@@ -450,7 +450,6 @@ export class Kilimukku {
           ajouterTrad(s);
         }
       });
-
       f(tradsFinales);
     };
 
@@ -508,7 +507,6 @@ export class Kilimukku {
     const fFinale = (
       suggestions: réseau.élémentDeMembre<élémentBdSuggestion>[]
     ) => {
-      console.log({ suggestions });
       if (langue)
         suggestions = suggestions.filter(
           (s) => s.élément.données[ID_COL_LANGUE_CIBLE] === langue
@@ -532,11 +530,6 @@ export class Kilimukku {
         })
       );
     };
-
-    console.log({
-      motClefUnique: this.idMotClefProjet,
-      idUniqueTableau: this.schémaBdSuggestions.tableaux[0].clef,
-    });
 
     return await this.constl.réseau!.suivreÉlémentsDeTableauxUniques({
       motClefUnique: this.idMotClefProjet,
