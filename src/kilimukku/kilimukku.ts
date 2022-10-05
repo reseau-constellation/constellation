@@ -266,7 +266,6 @@ export class Kilimukku {
     langueSource: string;
     texteOriginal: string;
   }): Promise<string> {
-    console.log("suggérer");
     const élément = {
       [ID_COL_CLEF]: clef,
       [ID_COL_LANGUE_SOURCE]: langueSource,
@@ -432,6 +431,7 @@ export class Kilimukku {
       );
 
       const ajouterTrad = (t: TraductionRéseau) => {
+
         if (!tradsFinales[t.clef]) tradsFinales[t.clef] = {};
         tradsFinales[t.clef][t.langueCible] = t.traduction;
       };
