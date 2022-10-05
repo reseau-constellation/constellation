@@ -6,7 +6,6 @@ const auFormatVi18n = (traducs: dicTraductions): LocaleMessages => {
   const dicFinalLangue: {
     [langue: string]: dicFinal;
   } = {};
-
   for (const [clef, traducsClef] of Object.entries(traducs)) {
     const lClefs = clef.split(".");
 
