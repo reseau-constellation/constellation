@@ -200,7 +200,7 @@ export default mixins(mixinLangues, mixinIPA, mixinImage).extend({
     initialiserSuivi: async function () {
       const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire({
         id: this.idTableau,
-        f: (permission) => (this.permissionÉcrire = permission),
+        f: (permission) => (this.permissionÉcrire = permission || true),
       });
 
       const oublierNoms = await this.$ipa.tableaux!.suivreNomsTableau({
