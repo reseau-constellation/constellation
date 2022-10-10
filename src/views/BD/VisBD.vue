@@ -53,7 +53,9 @@
           <dialogue-epingler :id="idBd" :optionFichiers="false">
             <template v-slot:activator="{ on, attrs }">
               <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
-                <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
+                <template
+                  v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }"
+                >
                   <span v-bind="tooltipAttrs" v-on="tooltipOn">
                     <v-btn v-bind="attrs" v-on="on" icon>
                       <v-icon>{{

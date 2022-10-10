@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Accueil from "@/views/Accueil.vue";
-import { i18n } from '@/plugins/vuetify'
+import { i18n } from "@/plugins/vuetify";
 
 Vue.use(VueRouter);
 
@@ -76,12 +76,12 @@ const router = new VueRouter({
 });
 
 router.afterEach((to) => {
-  const { lg } = to.query
-  console.log(to.query)
-  if (lg && typeof lg === "string"){
-    i18n.locale = lg
-    console.log(i18n.locale)
+  const { lg } = to.query;
+  console.log(to.query);
+  if (lg && typeof lg === "string") {
+    i18n.locale = lg;
+    console.log(i18n.locale);
   }
-})
+});
 
 export default router;

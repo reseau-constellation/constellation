@@ -41,7 +41,6 @@ export default async ({
 
       // @ts-ignore Là on exagère un peu...mais il n'y a pas d'autre façon !!
       appli.$i18n._vm.$set(appli.$i18n._vm, "messages", traducsPourVi18n);
-
     },
   });
 

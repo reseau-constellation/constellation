@@ -411,7 +411,7 @@ export class Kilimukku {
 
   async suivreTraductions({
     f,
-    inclureMesSuggestions
+    inclureMesSuggestions,
   }: {
     f: utils.schémaFonctionSuivi<dicTraductions>;
     inclureMesSuggestions?: boolean;
@@ -432,7 +432,6 @@ export class Kilimukku {
       );
 
       const ajouterTrad = (t: TraductionRéseau) => {
-
         if (!tradsFinales[t.clef]) tradsFinales[t.clef] = {};
         tradsFinales[t.clef][t.langueCible] = t.traduction;
       };
