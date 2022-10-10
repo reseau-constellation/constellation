@@ -47,7 +47,7 @@ export default mixins(mixinIPA, mixinLangue).extend({
 
   mounted: function () {
     const langue = this.$store.state.paramètres.langue;
-    if (langue) this.changerLangue(langue);
+    if (langue && !("lg" in this.$route.query)) this.changerLangue(langue);
     const thèmeNuit = this.$store.state.paramètres.thèmeNuit;
     this.$vuetify.theme.dark = thèmeNuit;
   },

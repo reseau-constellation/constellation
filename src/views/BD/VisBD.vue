@@ -411,6 +411,7 @@
               {{ $t("bd.visBD.இறக்குமதி") }}
             </v-btn>
           </div>
+
           <transition-group
             v-else
             name="fade"
@@ -419,14 +420,14 @@
           >
             <item-tableau
               v-for="t in tableaux"
-              :key="t"
-              :id="t"
+              :key="t.id"
+              :id="t.id"
               :idBd="idBd"
               @click="
                 $router.push(
                   `/bd/visualiser/${encodeURIComponent(
                     idBd
-                  )}/tableau/${encodeURIComponent(t)}`
+                  )}/tableau/${encodeURIComponent(t.id)}`
                 )
               "
             />
@@ -554,7 +555,7 @@ export default mixins(mixinImage, mixinLangues, mixinIPA, mixinLicences).extend(
       couleurScore,
       ouvrirLien,
       ajouterTableau: async function (): Promise<void> {
-        await this.$ipa.bds!.ajouterTableauBd({ id: this.idBd });
+        await this.$ipa.bds!.ajouterTableauBd({ idBd: this.idBd });
       },
       ajouterMotClef: async function (idMotClef: string): Promise<void> {
         await this.$ipa.bds!.ajouterMotsClefsBd({

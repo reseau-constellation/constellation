@@ -27,7 +27,7 @@ const auFormatVi18n = (traducs: dicTraductions): LocaleMessages => {
 
 export default async ({
   appli,
-  inclureMesSuggestions,
+  inclureMesSuggestions = true,
 }: {
   appli: Vue;
   inclureMesSuggestions?: boolean;

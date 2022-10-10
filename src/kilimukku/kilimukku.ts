@@ -411,6 +411,7 @@ export class Kilimukku {
 
   async suivreTraductions({
     f,
+    inclureMesSuggestions
   }: {
     f: utils.schémaFonctionSuivi<dicTraductions>;
     inclureMesSuggestions?: boolean;
