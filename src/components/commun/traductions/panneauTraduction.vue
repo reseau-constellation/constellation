@@ -9,7 +9,6 @@
           v-model="texteOriginal"
           :label="clef ? 'Texte original' : $t('traduction.தேர்ந்தெடுக்கவும்')"
           readonly
-          outlined
           no-resize
           height="50"
           :hint="
@@ -26,7 +25,6 @@
           :disabled="!clef"
           class="mt-2"
           clearable
-          outlined
           no-resize
           height="100"
           :label="clef ? 'Proposez une traduction' : ''"
