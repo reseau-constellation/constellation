@@ -1,4 +1,9 @@
 # Constellation
+<p align="center">
+  <a href="https://codecov.io/gh/reseau-constellation/constellation" > 
+    <img src="https://codecov.io/gh/reseau-constellation/constellation/branch/master/graph/badge.svg?token=c8BPlMOwzM"/> 
+  </a>
+</p>
 ![Logo Constellation](https://raw.githubusercontent.com/julienmalard/constellation/master/src/assets/logo.png)  
 [![Apli Mac & Linux](https://github.com/julienmalard/constellation/actions/workflows/electron.yml/badge.svg)](https://github.com/julienmalard/constellation/actions/workflows/electron.yml)
 [![Apli Windows](https://ci.appveyor.com/api/projects/status/6rl7m3eroj219fqb?svg=true)](https://ci.appveyor.com/project/julienmalard/constellation)
