@@ -1,13 +1,22 @@
-# Constellation
+<p align="center">
+  <img src="https://raw.githubusercontent.com/julienmalard/constellation/master/src/assets/logo.svg" width="400"/>
+  <h1 align="center">Constellation</h1>
+</p>
+
 <p align="center">
   <a href="https://codecov.io/gh/reseau-constellation/constellation" > 
     <img src="https://codecov.io/gh/reseau-constellation/constellation/branch/master/graph/badge.svg?token=c8BPlMOwzM"/> 
   </a>
+  <a href="https://github.com/julienmalard/constellation/actions/workflows/gh-pages-deploy.yml" > 
+    <img src="https://github.com/julienmalard/constellation/actions/workflows/gh-pages-deploy.yml/badge.svg"/> 
+  </a>
+  <a href="https://github.com/julienmalard/constellation/actions/workflows/electron.yml" > 
+    <img src="https://github.com/julienmalard/constellation/actions/workflows/electron.yml/badge.svg"/> 
+  </a>
+  <a href="https://ci.appveyor.com/project/julienmalard/constellation" > 
+    <img src="https://ci.appveyor.com/api/projects/status/6rl7m3eroj219fqb?svg=true"/> 
+  </a>
 </p>
-![Logo Constellation](https://raw.githubusercontent.com/julienmalard/constellation/master/src/assets/logo.png)  
-[![Apli Mac & Linux](https://github.com/julienmalard/constellation/actions/workflows/electron.yml/badge.svg)](https://github.com/julienmalard/constellation/actions/workflows/electron.yml)
-[![Apli Windows](https://ci.appveyor.com/api/projects/status/6rl7m3eroj219fqb?svg=true)](https://ci.appveyor.com/project/julienmalard/constellation)
-[![Apli Internet](https://github.com/julienmalard/constellation/actions/workflows/gh-pages-deploy.yml/badge.svg)](https://github.com/julienmalard/constellation/actions/workflows/gh-pages-deploy.yml)
 
 Un réseau distribué et ouvert pour le partage des bases de données scientifiques.
 
