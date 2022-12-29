@@ -1,25 +1,33 @@
 <template>
   <span>
-    <nouvelleBd>
+    <v-slide-x-transition group class="d-flex flex-wrap justify-center">
+      <nouvelle-bd :key="0">
         <template v-slot:activator="{ on, attrs }">
-          <slot name="activator" v-bind="{ on, attrs }"></slot>
           <v-card
-          v-on="on"
-          v-bind="attrs"
+            v-bind="attrs"
+            v-on="on"
+            class="mx-4 my-5 px-3 py-5 justify-start text-start"
+            min-height="200px"
+            max-width="300px"
           >
-           <v-list-item-title>
-             <v-list-item-avatar>
-              <v-icon>mdi-plus</v-icon>
-              </v-list-item-avatar>
-               {{ $t("bd.nouvelle.entêteCarte") }}
-               </v-list-item-title>
-             <v-list-item-subtitle>
-              <p class="grey--text text--darken-1">
-            {{ $t("bd.nouvelle.détailsCarte") }}
-          </p></v-list-item-subtitle>
-        </v-card>
-      </template>
-    </nouvelleBd>
+            <v-img
+              :src="require('@/assets/undraw/undraw_blank_canvas_3rbb.svg')"
+              height="100px"
+              contain
+            ></v-img>
+
+            <v-card-title
+              >{{ $t("bd.nouvelle.entêteCarte") }}
+              <v-spacer />
+            </v-card-title>
+            <v-divider />
+            <v-card-subtitle>
+              {{ $t("bd.nouvelle.détailsCarte") }}</v-card-subtitle
+            >
+            <v-card-text></v-card-text>
+          </v-card>
+        </template>
+      </nouvelle-bd>
 
       <carte-bd
         v-for="id in idsBds"
@@ -27,7 +35,8 @@
         :bd="id"
         @click="$router.push(`bd/visualiser/${encodeURIComponent(id)}`)"
       />
-   </span>
+    </v-slide-x-transition>
+  </span>
 </template>
 
 <script lang="ts">

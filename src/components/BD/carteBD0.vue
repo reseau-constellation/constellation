@@ -1,31 +1,19 @@
 <template>
-  <v-list-item
-    v-bind="$attrs" v-on="$தகவல்கள்"
+  <v-card
+    class="mx-4 my-5 px-3 py-5 justify-start text-start"
+    min-height="200px"
+    max-width="300px"
     @click="$emit('click')"
   >
-  <v-list-item-avatar>
-    <v-icon>mdi-key</v-icon>
-  </v-list-item-avatar>
-  <v-list-item-content>
-    <v-list-item-title>
-      <texteTronqué :texte="nom" :longueurMax="30" />
+    
+    <v-card-title>
+      <texteTronqué :texte="nom" :longueurMax="20" />
+      <v-spacer />
       <lien-orbite :lien="idBd" />
-      <jeton-membre :auteurs="AuteursBd" />
-      </v-list-item-title>
-
-    <v-list-item-subtitle>{{ détails }}
-      <v-chip
-        v-if="auteurs.length > 1"
-        class="me-1 mb-1"
-        label
-        outlined
-        @click.stop
-      >
-        + {{ formatterChiffre(auteurs.length - 1) }}</v-chip
-      >
-    </v-list-item-subtitle>
-    </v-list-item-content>
-    <v-list-item-text>
+    </v-card-title>
+    <v-divider />
+    <v-card-subtitle>{{ détails }}</v-card-subtitle>
+    <v-card-text>
       <dialogueQualité
         v-if="false"
         :score="score"
@@ -97,24 +85,25 @@
           </v-chip>
         </template>
       </dialogue-licence>
-    </v-list-item-text>
+    </v-card-text>
 
-      <v-list-item-action-text>
-       <dialogue-epingler :id="idBd" :optionFichiers="false">
+    <v-card-actions>
+      <v-spacer />
+      <dialogue-epingler :id="idBd" :optionFichiers="false">
         <template v-slot:activator="{ on, attrs }">
           <v-tooltip v-bind="attrs" v-on="on" open-delay="200" bottom>
             <template v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }">
               <span v-bind="tooltipAttrs" v-on="tooltipOn">
                 <v-btn v-bind="attrs" v-on="on" icon>
                   <v-icon>{{
-                    épinglé && épinglé.bd ? "mdi-pin" : "mdi-pin-outline"
+                    épinglée && épinglée.bd ? "mdi-pin" : "mdi-pin-outline"
                   }}</v-icon>
                 </v-btn>
               </span>
             </template>
             <span>{{
               $t(
-                épinglé && épinglé.bd
+                épinglée && épinglée.bd
                   ? "carteBD.indiceÉpinglé"
                   : "carteBD.indiceNonÉpinglé"
               )
@@ -122,52 +111,8 @@
           </v-tooltip>
         </template>
       </dialogue-epingler>
-      <v-dialog
-        v-if="permissionÉcrire"
-        v-model="dialogueEffacerBd"
-        width="500"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-tooltip open-delay="200" bottom>
-            <template
-              v-slot:activator="{ on: tooltipOn, attrs: tooltipAttrs }"
-            >
-              <span v-bind="tooltipAttrs" v-on="tooltipOn">
-                <v-btn v-bind="attrs" v-on="on" icon color="error">
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </span>
-            </template>
-            <span>{{ $t("bd.vis.indiceEffacer") }}</span>
-          </v-tooltip>
-        </template>
-       <v-card>
-          <v-card-title class="headline red--text">
-            {{ $t("bd.visBD.நீக்கம்") }}
-          </v-card-title>
-          <v-card-text>
-            {{ $t("bd.visBD.தரவுத்தளம்_அகற்றல்") }}
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="error"
-              text
-              outlined
-              @click="dialogueEffacerBd = false"
-            >
-              {{ $t("bd.visBD.இல்லை") }}
-            </v-btn>
-            <v-btn color="error" depressed @click="effacerBd">
-              {{ $t("bd.visBD.நீக்கவும்") }}
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-    </v-list-item-action-text>
-  </v-list-item>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -178,7 +123,6 @@ import { bds, favoris } from "@constl/ipa";
 import { traduireNom, couleurScore } from "@/utils";
 
 import lienOrbite from "@/components/commun/lienOrbite.vue";
-import dialogueEffacer from "@/components/commun/dialogueEffacer.vue";
 import texteTronqué from "@/components/commun/texteTronqué.vue";
 import dialogueLicence from "@/components/commun/licences/dialogueLicence.vue";
 import dialogueQualité from "@/components/commun/dialogueQualité.vue";
@@ -193,7 +137,6 @@ export default mixins(mixinIPA, mixinLicences).extend({
   },
   components: {
     lienOrbite,
-    dialogueEffacer,
     texteTronqué,
     dialogueLicence,
     dialogueQualité,
@@ -202,15 +145,12 @@ export default mixins(mixinIPA, mixinLicences).extend({
   mixins: [mixinIPA, mixinLicences],
   data: function () {
     return {
-      dialogueEffacerBd: false,
-
       épinglée: undefined as undefined | favoris.épingleDispositif,
       licence: null as null | string,
       logo: null as null | string,
       score: null as null | bds.infoScore,
       permissionÉcrire: false,
       nomsBD: {} as { [key: string]: string },
-      auteurs: [] as bds.infoAuteur[],
       détailsBD: {} as { [key: string]: string },
       variables: [] as string[],
     };
@@ -218,9 +158,6 @@ export default mixins(mixinIPA, mixinLicences).extend({
   computed: {
     idBd: function (): string {
       return decodeURIComponent(this.bd);
-    },
-    idAuteur: function (): string | undefined {
-      return this.auteurs.filter((a) => a.accepté)[0]?.idBdCompte;
     },
     langues: function (): string[] {
       return [this.$i18n.locale, ...(this.$i18n.fallbackLocale as string)];
@@ -238,10 +175,6 @@ export default mixins(mixinIPA, mixinLicences).extend({
     couleurScore,
     changerLicence({ licence }: { licence: string }) {
       this.$ipa.bds!.changerLicenceBd({ idBd: this.idBd, licence });
-    },
-    effacerBd: async function (): Promise<void> {
-      await this.$ipa.bds!.effacerBd({ id: this.idBd });
-      this.$router.push("/bd");
     },
     initialiserSuivi: async function () {
       const oublierPermissionÉcrire = await this.$ipa.suivrePermissionÉcrire({
@@ -281,15 +214,6 @@ export default mixins(mixinIPA, mixinLicences).extend({
           this.détailsBD = détails;
         },
       });
-      const oublierAuteurs = await this.$ipa.bds!.suivreAuteursBd({
-        id: this.idBd,
-        f: (auteurs) => {
-          this.auteursBD = auteurs;
-        },
-        });
-
-
-
       const oublierScore = await this.$ipa.bds!.suivreScoreBd({
         id: this.idBd,
         f: (score) => (this.score = score),
