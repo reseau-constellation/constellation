@@ -1,13 +1,13 @@
 <template>
-  <v-card v-show="actif" width="300" class="ma-2 text-start">
-    <v-card-title>
+  <v-list-item v-show="actif" width="300" class="ma-2 text-start">
+    <v-list-item-title>
       <avatar-profil :id="id" :vuIlyA="vuIlyA" />
       <texteTronqué :texte="nom" :longueurMax="17" />
-      <v-spacer />
+
       <lien-orbite :lien="id" />
-    </v-card-title>
-    <v-divider />
-    <v-card-text class="text-left">
+    </v-list-item-title>
+
+    <v-list-item-text class="text-left">
       <span v-if="courriel">
         <p class="mb-0 text-overline">
           {{ $t("carteMembre.தொடர்பு") }}
@@ -45,8 +45,8 @@
       <v-chip v-if="!projets.length" label outlined small disabled>
         {{ $t("carteMembre.Aucunprojet") }}
       </v-chip>
-    </v-card-text>
-  </v-card>
+    </v-list-item-text>
+  </v-list-item>
 </template>
 
 <script lang="ts">

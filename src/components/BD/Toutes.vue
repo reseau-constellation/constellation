@@ -1,25 +1,29 @@
 <template>
   <span>
-    <nouvelleBd>
-        <template v-slot:activator="{ on, attrs }">
-          <slot name="activator" v-bind="{ on, attrs }"></slot>
+    <nouvelle-bd :key="0">
+      <template v-slot:activator="{ on, attrs }">
+        <slot name="activator" v-bind="{ on, attrs }"></slot>
           <v-card
-          v-on="on"
-          v-bind="attrs"
-          >
-           <v-list-item-title>
-             <v-list-item-avatar>
-              <v-icon>mdi-plus</v-icon>
-              </v-list-item-avatar>
-               {{ $t("bd.nouvelle.entêteCarte") }}
-               </v-list-item-title>
-             <v-list-item-subtitle>
-              <p class="grey--text text--darken-1">
-            {{ $t("bd.nouvelle.détailsCarte") }}
-          </p></v-list-item-subtitle>
-        </v-card>
-      </template>
-    </nouvelleBd>
+           v-on="on"
+           v-bind="attrs"
+            >
+            <v-list-item-title>
+              <v-list-item-avatar>
+               <v-img
+                 :src="require('@/assets/undraw/undraw_blank_canvas_3rbb.svg')"
+                 height="50px"
+                 contain
+                 ></v-img>
+                 </v-list-item-avatar>
+                 {{ $t("bd.nouvelle.entêteCarte") }}
+                 </v-list-item-title>
+              <v-list-item-subtitle>
+            <p class="grey--text text--darken-1">
+           {{ $t("bd.nouvelle.détailsCarte") }}
+        </p></v-list-item-subtitle>
+      </v-card>
+    </template>
+  </nouvelle-bd>
 
       <carte-bd
         v-for="id in idsBds"

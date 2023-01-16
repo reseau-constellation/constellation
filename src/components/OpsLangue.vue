@@ -18,10 +18,12 @@
         class="mt-8"
       >
         <v-icon>mdi-earth</v-icon>
+        <v-spacer />
       </v-btn>
     </template>
     <span>
       <v-list class="overflow-y-auto" style="max-height: 300px">
+
         <v-list-item
           v-for="lng in langues"
           :key="lng"

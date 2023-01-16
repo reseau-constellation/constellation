@@ -5,7 +5,7 @@
     max-width="300px"
     @click="$emit('click')"
   >
-    
+
     <v-card-title>
       <texteTronqué :texte="nom" :longueurMax="20" />
       <v-spacer />

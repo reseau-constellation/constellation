@@ -3,77 +3,35 @@
     v-bind="$attrs" v-on="$தகவல்கள்"
     @click="$emit('click')"
   >
-  <v-list-item-avatar>
-    <v-icon>mdi-key</v-icon>
-  </v-list-item-avatar>
-  <v-list-item-content>
-    <v-list-item-title>
-      <texteTronqué :texte="nom" :longueurMax="30" />
-      <lien-orbite :lien="idBd" />
-      <jeton-membre :auteurs="AuteursBd" />
-      </v-list-item-title>
+   <v-list-item-avatar>
+    <v-img :src="logo || require('@/assets/undraw/undraw_Projections_re_1mrh.svg')"
+      height="25px"
+      contain></v-img>
+    </v-list-item-avatar>
+  <v-spacer />
+    <template>
+      <v-list-item-text>
+         <v-radio-group v-model="catégorie" column>
+       <v-list-item-title>
+         <texteTronqué :texte="nom" :longueurMax="30" />
+        </v-list-item-title>
+      <v-list-item-subtitle>
+       <p class="grey--text text--darken-1">
+        {{ détails }}
+       </p></v-list-item-subtitle>
+        </v-radio-group>
+     </v-list-item-text>
+       </template>
+       <v-spacer />
 
-    <v-list-item-subtitle>{{ détails }}
-      <v-chip
-        v-if="auteurs.length > 1"
-        class="me-1 mb-1"
-        label
-        outlined
-        @click.stop
-      >
-        + {{ formatterChiffre(auteurs.length - 1) }}</v-chip
-      >
-    </v-list-item-subtitle>
-    </v-list-item-content>
-    <v-list-item-text>
-      <dialogueQualité
-        v-if="false"
-        :score="score"
-        :permissionModifier="permissionÉcrire"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-chip
-            outlined
-            label
-            small
-            class="me-1 my-1"
-            v-bind="attrs"
-            v-on="on"
-          >
-            <v-progress-circular
-              :rotate="score ? 270 : undefined"
-              :value="score && score.total ? score.total * 100 : 0"
-              :indeterminate="!score"
-              :color="
-                score ? couleurScore(score.total).couleur : 'grey lighten-2'
-              "
-              :size="15"
-              :width="3"
-            />
-            <span class="ms-2">
-              Qualité :
-              <span
-                :style="`color:${
-                  couleurScore(score ? score.total : null).couleur
-                }`"
-                class="font-weight-bold"
-                >{{
-                  score
-                    ? $t("carteBD.note." + couleurScore(score.total).note)
-                    : $t("communs.pointInterrogation")
-                }}
-              </span>
-            </span>
-          </v-chip>
-        </template>
-      </dialogueQualité>
-
-      <dialogue-licence
+<v-list-item-text>
+    <dialogue-licence
         :idLicence="licence"
         :permissionModifier="permissionÉcrire"
         @changerLicence="changerLicence"
       >
-        <template v-slot:activator="{ on, attrs }">
+
+      <template v-slot:activator="{ on, attrs }">
           <v-chip
             v-bind="attrs"
             v-on="on"
@@ -95,6 +53,10 @@
                 : $t(`licences.info.${licence || "introuvable"}.abr`)
             }}
           </v-chip>
+          <v-spacer />
+          <v-list-item-avatar>
+             <lien-orbite :lien="idBd" />
+           </v-list-item-avatar>
         </template>
       </dialogue-licence>
     </v-list-item-text>
@@ -202,6 +164,7 @@ export default mixins(mixinIPA, mixinLicences).extend({
   mixins: [mixinIPA, mixinLicences],
   data: function () {
     return {
+      noms: {} as { [key: string]: string },
       dialogueEffacerBd: false,
 
       épinglée: undefined as undefined | favoris.épingleDispositif,
@@ -210,7 +173,6 @@ export default mixins(mixinIPA, mixinLicences).extend({
       score: null as null | bds.infoScore,
       permissionÉcrire: false,
       nomsBD: {} as { [key: string]: string },
-      auteurs: [] as bds.infoAuteur[],
       détailsBD: {} as { [key: string]: string },
       variables: [] as string[],
     };
@@ -254,7 +216,7 @@ export default mixins(mixinIPA, mixinLicences).extend({
         f: (logo) => {
           if (logo) {
             const url = URL.createObjectURL(
-              new Blob([logo.buffer], { type: "image/png" })
+              new Blob([logo.buffer], { type: "image" })
             );
             this.logo = url;
           } else {
@@ -281,16 +243,7 @@ export default mixins(mixinIPA, mixinLicences).extend({
           this.détailsBD = détails;
         },
       });
-      const oublierAuteurs = await this.$ipa.bds!.suivreAuteursBd({
-        id: this.idBd,
-        f: (auteurs) => {
-          this.auteursBD = auteurs;
-        },
-        });
-
-
-
-      const oublierScore = await this.$ipa.bds!.suivreScoreBd({
+     const oublierScore = await this.$ipa.bds!.suivreScoreBd({
         id: this.idBd,
         f: (score) => (this.score = score),
       });
