@@ -1,62 +1,62 @@
 <template>
   <v-list-item
+    v-bind="$attrs" v-on="$actif"
+    @click="$emit('click')"
   >
-<v-list-item-avatar>
-  <avatar-profil :id="id" :vuIlyA="vuIlyA" />
-    </v-list-item-avatar>
-  <v-list-item-title>
-    <texteTronqué :texte="nom" :longueurMax="7" />
-      <v-list-item-avatar>
+      <v-card v-show="actif" width="300" class="ma-2 text-start">
+        <v-card-title>
+          <avatar-profil :id="id" :vuIlyA="vuIlyA" />
+          <texteTronqué :texte="nom" :longueurMax="17" />
+          <v-spacer />
           <lien-orbite :lien="id" />
-      </v-list-item-avatar>
-   </v-list-item-title>
+        </v-card-title>
+        <v-divider />
 
-  <v-list-item-text>
-    <p class="mb-0 text-overline">
-      {{ $t("carteMembre.தொடர்பு") }}
-    </p>
-    <span v-if="courriel">
-        <v-chip label outlined small>
-        <v-icon left small>mdi-email</v-icon>
-        <texteTronqué :texte="courriel" :longueurMax="50" />
-      </v-chip>
-    </span>
-  </v-list-item-text>
+<v-dialog texte="courriel" :longueurMax="50">
 
-<v-list-item-text>
-  <p>
-    {{ $t("carteMembre.aucuneBd") }}
-  </p>
-  <jeton-bd v-for="bd in bds.slice(0, N_MAX_LISTE)" :key="bd" :id="bd" />
-  <v-chip
-    v-if="bds.length > N_MAX_LISTE"
-    class="me-1 mb-1"
-    label
-    outlined
-    small
-  >
-    {{
-      $t("carteMembre.bdsExtra", {
-        n: formatterChiffre(bds.length - N_MAX_LISTE),
-      })
-    }}
-  </v-chip>
+      <v-card-text class="text-left">
+        <span v-if="courriel">
+          <p class="mb-0 text-overline">
+            {{ $t("carteMembre.தொடர்பு") }}
+          </p>
+          <v-chip label outlined small>
+            <v-icon left small>mdi-email</v-icon>
+            <texteTronqué :texte="courriel" :longueurMax="50" />
+          </v-chip>
+        </span>
 
-  </v-list-item-text>
+        <p class="mb-0 text-overline">
+          {{ $t("carteMembre.தரவு") }}
+        </p>
+        <jeton-bd v-for="bd in bds.slice(0, N_MAX_LISTE)" :key="bd" :id="bd" />
+        <v-chip
+          v-if="bds.length > N_MAX_LISTE"
+          class="me-1 mb-1"
+          label
+          outlined
+          small
+        >
+          {{
+            $t("carteMembre.bdsExtra", {
+              n: formatterChiffre(bds.length - N_MAX_LISTE),
+            })
+          }}
+        </v-chip>
+        <v-chip v-if="!bds.length" label outlined small disabled>
+          {{ $t("carteMembre.aucuneBd") }}
+        </v-chip>
 
-
-
-
-<v-list-item-text>
-      <p class="mb-0 text-overline">
-        {{ $t("carteMembre.திட்டங்கள்") }}
-      </p>
-      <jeton-bd v-for="projet in projets" :key="projet" :id="projet" />
-      <v-chip v-if="!projets.length" label outlined small disabled>
-        {{ $t("carteMembre.Aucunprojet") }}
-      </v-chip>
-    </v-list-item-text>
-  </v-list-item>
+        <p class="mb-0 text-overline">
+          {{ $t("carteMembre.திட்டங்கள்") }}
+        </p>
+        <jeton-bd v-for="projet in projets" :key="projet" :id="projet" />
+        <v-chip v-if="!projets.length" label outlined small disabled>
+          {{ $t("carteMembre.Aucunprojet") }}
+        </v-chip>
+      </v-card-text>
+    </v-dialog>
+</v-card>
+</v-list-item>
 </template>
 
 <script lang="ts">

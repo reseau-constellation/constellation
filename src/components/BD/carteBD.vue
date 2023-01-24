@@ -25,6 +25,7 @@
        <v-spacer />
 
 <v-list-item-text>
+  <v-radio-group v-model="catégorie" row>
     <dialogue-licence
         :idLicence="licence"
         :permissionModifier="permissionÉcrire"
@@ -59,6 +60,7 @@
            </v-list-item-avatar>
         </template>
       </dialogue-licence>
+      </v-radio-group>
     </v-list-item-text>
 
       <v-list-item-action-text>
