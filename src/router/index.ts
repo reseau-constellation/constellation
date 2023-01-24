@@ -80,7 +80,6 @@ router.afterEach((to) => {
   console.log(to.query);
   if (lg && typeof lg === "string") {
     i18n.locale = lg;
-    console.log(i18n.locale);
   }
 });
 

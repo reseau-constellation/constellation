@@ -3,6 +3,7 @@
   "version": "0.1.29",
   "description": "Le système distribué et ouvert pour le partage de données scientifiques.",
   "author": "Julien Jean Malard-Adam",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -154,6 +155,5 @@
   },
   "bin": {
     "cnstl": "./ipa/index.js"
-  },
-  "license": "AGPL-3.0-or-later"
+  }
 }
