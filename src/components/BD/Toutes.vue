@@ -3,21 +3,19 @@
   <nouvelle-bd :key="0">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
-       <v-card 
+       <v-card
           v-bind="attrs"
           v-on="on"
           height="75"
           width="1100"
-          class="mx-auto">
+          class="mx-auto"
+          color="white"
+          outlined>
 
        <div class="text-left">
          <v-list-item>
            <v-list-item-avatar>
-             <v-img
-               :src="require('@/assets/undraw/undraw_blank_canvas_3rbb.svg')"
-               height="50px"
-               contain
-               ></v-img>
+             <v-icon>mdi-plus</v-icon>
            </v-list-item-avatar>
             <v-list-item-content>
              <v-list-item-title>
