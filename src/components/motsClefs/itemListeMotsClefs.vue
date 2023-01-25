@@ -2,7 +2,7 @@
   <v-list-item v-bind="$attrs" v-on="$listeners">
     <v-list-item-avatar>
       <v-icon>mdi-key</v-icon>
-    </v-list-item-avatar>
+     </v-list-item-avatar>
     <v-list-item-content>
       <v-list-item-title>
         <texteTronqué :texte="nom" :longueurMax="30" />
