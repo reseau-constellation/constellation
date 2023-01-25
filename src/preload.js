@@ -28,7 +28,7 @@ contextBridge.exposeInMainWorld("ipa", {
       console.log("preload.js", channel, func);
 
       // Deliberately strip event as it includes `sender`
-      ipcRenderer.on(channel, (event, ...args) => {
+      ipcRenderer.on(channel, (_event, ...args) => {
         console.log("preload.js, f", channel, args);
         func(...args);
       });
