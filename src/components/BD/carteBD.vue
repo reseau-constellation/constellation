@@ -3,28 +3,26 @@
     v-bind="$attrs" v-on="$தகவல்கள்"
     @click="$emit('click')"
   >
-   <v-list-item-avatar>
-    <v-img :src="logo || require('@/assets/undraw/undraw_Projections_re_1mrh.svg')"
-      height="25px"
-      contain></v-img>
-    </v-list-item-avatar>
-  <v-spacer />
-    <template>
-      <v-list-item-text>
-         <v-radio-group v-model="catégorie" column>
-       <v-list-item-title>
-         <texteTronqué :texte="nom" :longueurMax="30" />
-        </v-list-item-title>
-      <v-list-item-subtitle>
-       <p class="grey--text text--darken-1">
-        {{ détails }}
-       </p></v-list-item-subtitle>
-        </v-radio-group>
-     </v-list-item-text>
-       </template>
-       <v-spacer />
+  <div class="text-left">
+    <v-list-item>
+     <v-list-item-avatar>
+      <v-img :src="logo || require('@/assets/undraw/undraw_Projections_re_1mrh.svg')"
+       height="25px"
+       contain></v-img>
+      </v-list-item-avatar>
+        <v-list-item-content>
+         <v-list-item-title>
+          <texteTronqué :texte="nom" :longueurMax="30" />
+          </v-list-item-title>
+          <v-list-item-subtitle>
+           {{ détails }}
+         </v-list-item-subtitle>
+       </v-list-item-content>
+     </v-list-item>
+   </div>
+<v-spacer />
 
-<v-list-item-text>
+<v-list-item-action-text>
   <v-radio-group v-model="catégorie" row>
     <dialogue-licence
         :idLicence="licence"
@@ -61,7 +59,7 @@
         </template>
       </dialogue-licence>
       </v-radio-group>
-    </v-list-item-text>
+    </v-list-item-action-text>
 
       <v-list-item-action-text>
        <dialogue-epingler :id="idBd" :optionFichiers="false">
@@ -86,7 +84,9 @@
           </v-tooltip>
         </template>
       </dialogue-epingler>
-      <v-dialog
+      </v-list-item-action-text>
+    <v-list-item-action-text>
+        <v-dialog
         v-if="permissionÉcrire"
         v-model="dialogueEffacerBd"
         width="500"

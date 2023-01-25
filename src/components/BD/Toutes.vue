@@ -1,29 +1,37 @@
 <template>
   <span>
-    <nouvelle-bd :key="0">
-      <template v-slot:activator="{ on, attrs }">
-        <slot name="activator" v-bind="{ on, attrs }"></slot>
-          <v-card
-           v-on="on"
-           v-bind="attrs"
-            >
-            <v-list-item-title>
-              <v-list-item-avatar>
-               <v-img
-                 :src="require('@/assets/undraw/undraw_blank_canvas_3rbb.svg')"
-                 height="50px"
-                 contain
-                 ></v-img>
-                 </v-list-item-avatar>
-                 {{ $t("bd.nouvelle.entêteCarte") }}
-                 </v-list-item-title>
-              <v-list-item-subtitle>
-            <p class="grey--text text--darken-1">
-           {{ $t("bd.nouvelle.détailsCarte") }}
-        </p></v-list-item-subtitle>
-      </v-card>
-    </template>
-  </nouvelle-bd>
+  <nouvelle-bd :key="0">
+    <template v-slot:activator="{ on, attrs }">
+      <slot name="activator" v-bind="{ on, attrs }"></slot>
+       <v-card 
+          v-bind="attrs"
+          v-on="on"
+          height="75"
+          width="1100"
+          class="mx-auto">
+
+       <div class="text-left">
+         <v-list-item>
+           <v-list-item-avatar>
+             <v-img
+               :src="require('@/assets/undraw/undraw_blank_canvas_3rbb.svg')"
+               height="50px"
+               contain
+               ></v-img>
+           </v-list-item-avatar>
+            <v-list-item-content>
+             <v-list-item-title>
+             {{ $t("bd.nouvelle.entêteCarte") }}
+             </v-list-item-title>
+             <v-list-item-subtitle>
+              {{ $t("bd.nouvelle.détailsCarte") }}
+              </v-list-item-subtitle>
+             </v-list-item-content>
+           </v-list-item>
+          </div>
+        </v-card>
+      </template>
+    </nouvelle-bd>
 
       <carte-bd
         v-for="id in idsBds"
@@ -41,11 +49,12 @@ import Titre from "@/components/commun/Titre.vue";
 import carteBd from "@/components/BD/carteBD.vue";
 import nouvelleBd from "@/components/BD/NouvelleBD.vue";
 
+
 import mixinIPA from "@/mixins/ipa";
 
 export default mixins(mixinIPA).extend({
   name: "BD",
-  components: { Titre, carteBd, nouvelleBd },
+  components: { Titre, carteBd,nouvelleBd },
   mixins: [mixinIPA],
   data: function () {
     return {
