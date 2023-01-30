@@ -1,25 +1,28 @@
 <template>
-  <v-list-item
-    v-bind="$attrs" v-on="$actif"
-    @click="$emit('click')"
-  >
-      <v-card v-show="actif" width="300" class="ma-2 text-start">
-        <v-card-title>
-          <avatar-profil :id="id" :vuIlyA="vuIlyA" />
-          <texteTronqué :texte="nom" :longueurMax="17" />
-          <v-spacer />
-          <lien-orbite :lien="id" />
-        </v-card-title>
-        <v-divider />
-
-<v-dialog texte="courriel" :longueurMax="50">
-
-      <v-card-text class="text-left">
-        <span v-if="courriel">
-          <p class="mb-0 text-overline">
+    <v-dialog v-model="dialog" width="1000" height="1000">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn v-bind="attrs" v-on="on">
+          <div class="text-left">
+            <v-card-title>
+              <avatar-profil :id="id" :vuIlyA="vuIlyA" />
+              <texteTronqué :texte="nom" :longueurMax="17" />
+              <v-spacer />
+               <lien-orbite :lien="id" />
+              </v-card-title>
+             </div>
+            </v-btn>
+          </template>
+         <v-card>
+          <v-card-title class="text-h5 grey lighten-2">
+          {{ $t("carteMembre.முகவரி") }}
+          </v-card-title>
+         <v-card-actions>
+          <v-card-text class="text-left">
+           <span v-if="courriel">
+           <p class="mb-0 text-overline">
             {{ $t("carteMembre.தொடர்பு") }}
-          </p>
-          <v-chip label outlined small>
+           </p>
+           <v-chip label outlined small>
             <v-icon left small>mdi-email</v-icon>
             <texteTronqué :texte="courriel" :longueurMax="50" />
           </v-chip>
@@ -29,22 +32,19 @@
           {{ $t("carteMembre.தரவு") }}
         </p>
         <jeton-bd v-for="bd in bds.slice(0, N_MAX_LISTE)" :key="bd" :id="bd" />
-        <v-chip
+        <v-list
           v-if="bds.length > N_MAX_LISTE"
           class="me-1 mb-1"
-          label
-          outlined
-          small
-        >
+         >
           {{
             $t("carteMembre.bdsExtra", {
               n: formatterChiffre(bds.length - N_MAX_LISTE),
             })
           }}
-        </v-chip>
-        <v-chip v-if="!bds.length" label outlined small disabled>
+        </v-list>
+        <v-list-item v-if="!bds.length" label outlined small disabled>
           {{ $t("carteMembre.aucuneBd") }}
-        </v-chip>
+        </v-list-item>
 
         <p class="mb-0 text-overline">
           {{ $t("carteMembre.திட்டங்கள்") }}
@@ -54,9 +54,10 @@
           {{ $t("carteMembre.Aucunprojet") }}
         </v-chip>
       </v-card-text>
-    </v-dialog>
+ </v-card-actions>
 </v-card>
-</v-list-item>
+</v-dialog>
+
 </template>
 
 <script lang="ts">
