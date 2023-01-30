@@ -9,17 +9,17 @@
       <v-img :src="logo || require('@/assets/undraw/undraw_Projections_re_1mrh.svg')"
        height="25px"
        contain></v-img>
-      </v-list-item-avatar>
+       </v-list-item-avatar>
         <v-list-item-content>
-         <v-list-item-title>
-          <texteTronqué :texte="nom" :longueurMax="30" />
+          <v-list-item-title>
+           <texteTronqué :texte="nom" :longueurMax="30" />
           </v-list-item-title>
-          <v-list-item-subtitle>
+           <v-list-item-subtitle>
            {{ détails }}
-         </v-list-item-subtitle>
-       </v-list-item-content>
-     </v-list-item>
-   </div>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </div>
 <v-spacer />
 
 <v-list-item-action-text>
@@ -53,11 +53,11 @@
             }}
           </v-chip>
           <v-spacer />
-          <v-list-item-avatar>
+           <v-list-item-avatar>
              <lien-orbite :lien="idBd" />
-           </v-list-item-avatar>
-        </template>
-      </dialogue-licence>
+          </v-list-item-avatar>
+         </template>
+       </dialogue-licence>
       </v-radio-group>
     </v-list-item-action-text>
 
@@ -84,7 +84,7 @@
           </v-tooltip>
         </template>
       </dialogue-epingler>
-      </v-list-item-action-text>
+    </v-list-item-action-text>
     <v-list-item-action-text>
         <v-dialog
         v-if="permissionÉcrire"
@@ -106,31 +106,30 @@
           </v-tooltip>
         </template>
        <v-card>
-          <v-card-title class="headline red--text">
-            {{ $t("bd.visBD.நீக்கம்") }}
-          </v-card-title>
-          <v-card-text>
-            {{ $t("bd.visBD.தரவுத்தளம்_அகற்றல்") }}
+        <v-card-title class="headline red--text">
+          {{ $t("bd.visBD.நீக்கம்") }}
+        </v-card-title>
+         <v-card-text>
+          {{ $t("bd.visBD.தரவுத்தளம்_அகற்றல்") }}
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
+             <v-btn
               color="error"
               text
               outlined
               @click="dialogueEffacerBd = false"
-            >
+              >
               {{ $t("bd.visBD.இல்லை") }}
-            </v-btn>
+             </v-btn>
             <v-btn color="error" depressed @click="effacerBd">
               {{ $t("bd.visBD.நீக்கவும்") }}
             </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-    </v-list-item-action-text>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+   </v-list-item-action-text>
   </v-list-item>
 </template>
 

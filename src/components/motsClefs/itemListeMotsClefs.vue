@@ -3,21 +3,21 @@
     <v-list-item-avatar>
       <v-icon>mdi-key</v-icon>
      </v-list-item-avatar>
-    <v-list-item-content>
+     <v-list-item-content>
       <v-list-item-title>
-        <texteTronqué :texte="nom" :longueurMax="30" />
-      </v-list-item-title>
-      <v-list-item-subtitle>
-        <jeton-membre :id="idAuteur" />
-        <v-chip
-          v-if="auteurs.length > 1"
-          class="me-1 mb-1"
-          label
-          outlined
-          @click.stop
-        >
+       <texteTronqué :texte="nom" :longueurMax="30" />
+       </v-list-item-title>
+       <v-list-item-subtitle>
+         <jeton-membre :id="idAuteur" />
+         <v-chip
+           v-if="auteurs.length > 1"
+           class="me-1 mb-1"
+           label
+           outlined
+           @click.stop
+         >
           + {{ formatterChiffre(auteurs.length - 1) }}</v-chip
-        >
+         >
       </v-list-item-subtitle>
     </v-list-item-content>
     <v-list-item-action-text>
