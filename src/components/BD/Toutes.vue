@@ -16,18 +16,18 @@
          <v-list-item>
            <v-list-item-avatar>
              <v-icon>mdi-plus</v-icon>
-           </v-list-item-avatar>
-            <v-list-item-content>
-             <v-list-item-title>
-             {{ $t("bd.nouvelle.entêteCarte") }}
-             </v-list-item-title>
-             <v-list-item-subtitle>
-              {{ $t("bd.nouvelle.détailsCarte") }}
-              </v-list-item-subtitle>
-             </v-list-item-content>
-           </v-list-item>
-          </div>
-        </v-card>
+            </v-list-item-avatar>
+              <v-list-item-content>
+               <v-list-item-title>
+                {{ $t("bd.nouvelle.entêteCarte") }}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ $t("bd.nouvelle.détailsCarte") }}
+                </v-list-item-subtitle>
+               </v-list-item-content>
+             </v-list-item>
+           </div>
+         </v-card>
       </template>
     </nouvelle-bd>
 
