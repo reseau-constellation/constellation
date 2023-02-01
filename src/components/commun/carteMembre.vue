@@ -4,18 +4,22 @@
       <slot name="activator" v-bind="{ on, attrs }"></slot>
         <v-card v-bind="attrs"
            v-on="on"
+           height="75"
+           width="1100"
            class="mx-auto"
            color="white"
            outlined>
-          <div class="text-left">
+           <div class="text-left">
             <avatar-profil :id="id" :vuIlyA="vuIlyA" />
              <texteTronqué :texte="nom" :longueurMax="30" />
-           </div>
-           <v-spacer />
-          </v-card>
-          <lien-orbite :lien="id" />
-        </template>
-      <v-card>
+              <lien-orbite :lien="id" />
+            </div>
+         </v-card>
+         </template>
+         <v-chip
+         height="1000"
+         width="1100"
+         class="mx-auto">
        <v-card-title class="text-h5 grey lighten-2">
         {{ $t("carteMembre.முகவரி") }}
        </v-card-title>
@@ -57,7 +61,7 @@
           </v-chip>
         </v-card-text>
       </v-card-actions>
-    </v-card>
+    </v-chip>
   </v-dialog>
 </template>
 
@@ -67,6 +71,7 @@ import mixins from "vue-typed-mixins";
 import { traduireNom } from "@/utils";
 
 import texteTronqué from "@/components/commun/texteTronqué.vue";
+import dialogueEffacer from "@/components/commun/dialogueEffacer.vue";
 import lienOrbite from "@/components/commun/lienOrbite.vue";
 import jetonBd from "@/components/commun/jetonBd.vue";
 import avatarProfil from "@/components/commun/avatarProfil.vue";
@@ -78,10 +83,11 @@ export default mixins(mixinIPA, mixinLangues).extend({
   name: "carteMembre",
   props: ["id", "vuIlyA"],
   mixins: [mixinLangues, mixinIPA],
-  components: { lienOrbite, jetonBd, avatarProfil, texteTronqué },
+  components: { lienOrbite,  dialogueEffacer, jetonBd, avatarProfil, texteTronqué },
   data: function () {
     return {
       noms: {} as { [key: string]: string },
+      dialogueEffacerBd: false,
       courriel: undefined as undefined | string | null,
       bds: [] as string[],
       projets: [] as string[],
@@ -109,6 +115,10 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
   },
   methods: {
+    effacerBd: async function (): Promise<void> {
+      await this.$ipa.bds!.effacerBd({ id: this.idBd });
+      this.$router.push("/bd");
+    },
     initialiserSuivi: async function () {
       const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte({
         f: (id) => (this.monIdBdRacine = id),
