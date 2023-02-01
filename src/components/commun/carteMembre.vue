@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="1000" height="1000">
+  <v-dialog v-model="dialogue" width="1000" height="1000">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
         <v-card v-bind="attrs"
@@ -16,12 +16,13 @@
             </div>
          </v-card>
          </template>
-         <v-chip
-         height="1000"
-         width="1100"
-         class="mx-auto">
-       <v-card-title class="text-h5 grey lighten-2">
+         <v-card class="text-h5 grey lighten-2">
+       <v-card-title class="headline mb-3">
         {{ $t("carteMembre.முகவரி") }}
+        <v-spacer />
+        <v-btn icon @click="dialogue = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
        </v-card-title>
        <v-card-actions>
         <v-card-text class="text-left">
@@ -61,7 +62,7 @@
           </v-chip>
         </v-card-text>
       </v-card-actions>
-    </v-chip>
+    </v-card>
   </v-dialog>
 </template>
 
@@ -83,11 +84,11 @@ export default mixins(mixinIPA, mixinLangues).extend({
   name: "carteMembre",
   props: ["id", "vuIlyA"],
   mixins: [mixinLangues, mixinIPA],
-  components: { lienOrbite,  dialogueEffacer, jetonBd, avatarProfil, texteTronqué },
+  components: { lienOrbite, jetonBd, avatarProfil, texteTronqué },
   data: function () {
     return {
       noms: {} as { [key: string]: string },
-      dialogueEffacerBd: false,
+      dialogue: false,
       courriel: undefined as undefined | string | null,
       bds: [] as string[],
       projets: [] as string[],
@@ -115,11 +116,7 @@ export default mixins(mixinIPA, mixinLangues).extend({
     },
   },
   methods: {
-    effacerBd: async function (): Promise<void> {
-      await this.$ipa.bds!.effacerBd({ id: this.idBd });
-      this.$router.push("/bd");
-    },
-    initialiserSuivi: async function () {
+      initialiserSuivi: async function () {
       const oublierIdBdRacine = await this.$ipa.suivreIdBdCompte({
         f: (id) => (this.monIdBdRacine = id),
       });
