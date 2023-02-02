@@ -6,6 +6,7 @@
    height="1000">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
+
         <v-card v-bind="attrs"
            v-on="on"
            height="75"
@@ -13,15 +14,20 @@
            class="mx-auto"
            color="white"
            outlined>
-           <div class="text-left">
-            <avatar-profil :id="id" :vuIlyA="vuIlyA" />
+
+             <v-card-title>
+               <div class="text-left">
              <texteTronqué :texte="nom" :longueurMax="30" />
-              <lien-orbite :lien="id" />
-            </div>
-         </v-card>
+          </div>
+            <v-spacer />
+           <v-card-action>
+           <lien-orbite :lien="id" />
+          </v-card-action>
+           </v-card-title>
+          </v-card>
          </template>
-         <v-card >
-       <v-card-title  class="text-h5 grey lighten-2">
+         <v-card  class="text-h5 grey lighten-2">
+       <v-card-title>
         {{ $t("carteMembre.முகவரி") }}
         <v-spacer />
         <v-btn icon @click="dialogue = false">
