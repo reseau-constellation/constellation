@@ -1,5 +1,9 @@
 <template>
-  <v-dialog v-model="dialogue" width="1000" height="1000">
+  <v-dialog
+   v-model="dialogue"
+   scrollable
+   width="1000"
+   height="1000">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
         <v-card v-bind="attrs"
@@ -17,15 +21,20 @@
          </v-card>
          </template>
          <v-card class="text-h5 grey lighten-2">
-       <v-card-title class="headline mb-3">
+       <v-card-title>
         {{ $t("carteMembre.முகவரி") }}
-        <v-spacer />
-        <v-btn icon @click="dialogue = false">
+         <v-btn
+         icon @click="dialogue = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
        </v-card-title>
        <v-card-actions>
         <v-card-text class="text-left">
+          <v-radio-group
+            v-model="dialogue"
+            column
+            scrollable
+          >
          <span v-if="courriel">
           <p class="mb-0 text-overline">
             {{ $t("carteMembre.தொடர்பு") }}
@@ -60,6 +69,7 @@
           <v-chip v-if="!projets.length" label outlined small disabled>
           {{ $t("carteMembre.Aucunprojet") }}
           </v-chip>
+          </v-radio-group>
         </v-card-text>
       </v-card-actions>
     </v-card>
