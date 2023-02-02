@@ -20,11 +20,11 @@
             </div>
          </v-card>
          </template>
-         <v-card class="text-h5 grey lighten-2">
-       <v-card-title>
+         <v-card >
+       <v-card-title  class="text-h5 grey lighten-2">
         {{ $t("carteMembre.முகவரி") }}
-         <v-btn
-         icon @click="dialogue = false">
+        <v-spacer />
+        <v-btn icon @click="dialogue = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
        </v-card-title>
