@@ -27,7 +27,7 @@
                </v-list-item-content>
              </v-list-item>
            </div>
-         </v-card>
+        </v-card>
       </template>
     </nouvelle-bd>
 

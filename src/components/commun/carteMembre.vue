@@ -6,7 +6,7 @@
    height="1000">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
-
+<v-list-item>
         <v-card v-bind="attrs"
            v-on="on"
            height="75"
@@ -14,7 +14,7 @@
            class="mx-auto"
            color="white"
            outlined>
-
+           <v-list-item-content>
              <v-card-title>
                <div class="text-left">
              <texteTronqué :texte="nom" :longueurMax="30" />
@@ -24,7 +24,9 @@
            <lien-orbite :lien="id" />
           </v-card-action>
            </v-card-title>
+         </v-list-item-content>
           </v-card>
+        </v-list-item>
          </template>
          <v-card  class="text-h5 grey lighten-2">
        <v-card-title>
