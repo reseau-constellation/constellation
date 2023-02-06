@@ -3,16 +3,20 @@
   <nouvelle-bd :key="0">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
-       <v-card
+
+      <v-row
+      align="left"
+      >
+       <v-btn
           v-bind="attrs"
           v-on="on"
           height="75"
           width="1100"
-          class="mx-auto"
-          color="white"
-          outlined>
+          text
+          class="mx-2"
+          >
 
-       <div class="text-left">
+      <div class="text-left">
          <v-list-item>
            <v-list-item-avatar>
              <v-icon>mdi-plus</v-icon>
@@ -26,8 +30,10 @@
                 </v-list-item-subtitle>
                </v-list-item-content>
              </v-list-item>
-           </div>
-        </v-card>
+          </div>
+        </v-btn>
+        </v-row>
+
       </template>
     </nouvelle-bd>
 

@@ -1,34 +1,21 @@
 <template>
-  <v-dialog
-   v-model="dialogue"
-   scrollable
-   width="1000"
-   height="1000">
+  <v-dialog v-model="dialogue" scrollable max-width="700">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" v-bind="{ on, attrs }"></slot>
-<v-list-item>
-        <v-card v-bind="attrs"
-           v-on="on"
-           height="75"
-           width="1100"
-           class="mx-auto"
-           color="white"
-           outlined>
-           <v-list-item-content>
-             <v-card-title>
-               <div class="text-left">
-             <texteTronqué :texte="nom" :longueurMax="30" />
-          </div>
-            <v-spacer />
-           <v-card-action>
+        <v-btn v-bind="attrs" v-on="on"
+            height="75"
+            width="1100"
+            text
+            >
+           <div class="text-left">
+            <texteTronqué :texte="nom" :longueurMax="30" />
+           </div>
+          <v-spacer />
            <lien-orbite :lien="id" />
-          </v-card-action>
-           </v-card-title>
-         </v-list-item-content>
-          </v-card>
-        </v-list-item>
-         </template>
-         <v-card  class="text-h5 grey lighten-2">
+        </v-btn>
+      </template>
+
+     <v-card  class="text-h5 grey lighten-2">
        <v-card-title>
         {{ $t("carteMembre.முகவரி") }}
         <v-spacer />
