@@ -23,6 +23,7 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
        </v-card-title>
+       <v-divider></v-divider>
        <v-card-actions>
         <v-card-text class="text-left">
           <v-radio-group
