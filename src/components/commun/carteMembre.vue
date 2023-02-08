@@ -8,6 +8,7 @@
             text
             >
            <div class="text-left">
+               <avatar-profil :id="id" :vuIlyA="vuIlyA" />
             <texteTronqué :texte="nom" :longueurMax="30" />
            </div>
           <v-spacer />
