@@ -11,8 +11,7 @@
       <v-radio
         :label="$t('recherche.Projets')"
         value="projets"
-        disabled
-      ></v-radio>
+       ></v-radio>
       <v-radio :label="$t('recherche.Personnes')" value="personnes"></v-radio>
     </v-radio-group>
     <résultatsRecherchePersonnes v-if="catégorie === 'personnes'" />

@@ -16,7 +16,7 @@
     <v-card-title
       >{{ nom }}
       <v-spacer />
-      <v-btn v-if="பதிவிறக்கம்.கிட்"
+      <!--<v-btn v-if="பதிவிறக்கம்.கிட்"
         :href="பதிவிறக்கம்.கிட்"
         icon
         rel=”noopener”
@@ -29,12 +29,12 @@
         rel=”noopener”
         target="_blank">
         <v-icon>mdi-file-document-multiple-outline</v-icon>
-      </v-btn>
+      </v-btn> -->
     </v-card-title>
     <v-divider />
     <v-card-subtitle>{{ projet.détails }}</v-card-subtitle>
     <v-card-text>
-
+      <!--
       <v-chip v-if="பதிவிறக்கம்.வகை"
        outlined label small class="ma-1"
        @click="வகைகள்=[பதிவிறக்கம்.வகை]"
@@ -77,7 +77,7 @@
             </v-btn>
           </v-chip>
         </div>
-      </div> 
+      </div> -->
     </v-card-text>
   </v-card>
 </template>
