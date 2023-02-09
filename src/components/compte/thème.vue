@@ -27,7 +27,9 @@
           class="mt-0"
           @change="(e) => changerThèmeImages(e)"
         >
-          <v-radio value="unDraw" label="unDraw" />
+          <v-radio value="unDraw"
+          :label="$t('compte.options.unDraw')"/>
+
           <v-radio value="வவவ" label="வள்ளுவர் வள்ளலார் வட்டம்" />
         </v-radio-group>
       </v-card>

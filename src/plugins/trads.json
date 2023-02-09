@@ -242,7 +242,8 @@
         "thèmeNuit": "Claire/Sombre",
         "thèmeImages": "Thème images",
         "langue": "Langage d'interface",
-        "numération": "Système de numération"
+        "numération": "Système de numération",
+        "unDraw":"unDraw"
       }
     },
     "projets": {
@@ -1127,7 +1128,8 @@
        "thèmeNuit": "ஒளி/இருள்",
        "thèmeImages": "படத்தின் வடிவூட்டம்",
        "langue": "இடைமுக மொழி",
-       "numération": "எண் அமைப்பு"
+       "numération": "எண் அமைப்பு",
+       "unDraw":"இல்லை"
       }
     },
     "projets": {
