@@ -110,6 +110,11 @@
     "carteBD": {
       "indiceÉpinglé": "BD épinglée sur ce dispositif",
       "indiceNonÉpinglé": "BD non épinglée sur ce dispositif",
+      "indiceEffacer": "Supprimer ces données",
+      "effacer": {
+        "titre": "Vous souhaitez supprimer ces données?",
+        "explication": "Cela effacera les données de votre appareil. Il ne détruit pas les copies faites par d'autres utilisateurs de Galaxy. Assurez-vous qu'aucune de vos bases de données n'utilise ces données avant de les supprimer."
+      },
       "note": {
         "A": "A",
         "A-": "A-",
