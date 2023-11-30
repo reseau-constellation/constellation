@@ -1,0 +1,1 @@
+"use strict";(self["webpackChunkconstellation"]=self["webpackChunkconstellation"]||[]).push([[134],{53134:function(t,n,e){e.r(n),e.d(n,{default:function(){return s}});var c=e(81642),r=e(50168);async function s(t,n="./orbite-cnstl"){return await c.createInstance(t,{directory:n,AccessControllers:r["default"]})}}}]);
