@@ -20,6 +20,8 @@
 
 Un réseau distribué et ouvert pour le partage des bases de données scientifiques.
 
+**Obsolète ; voir [@constl/iug](https://github.com/reseau-constellation/iug) pour le nouvel interface Vue3 + Vite**
+
 ## Installation
 Vous pouvez utiliser Constellation ou bien en tant qu'[appli Internet](https://réseau-constellation.ca), ou bien en tant qu'[application installable](https://github.com/reseau-constellation/constellation/releases).
 > Note d'installation importante pour MacOS: voir [ici](https://www.cnet.com/tech/computing/how-to-install-unidentified-app-on-a-macbook/)
